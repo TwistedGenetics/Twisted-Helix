@@ -32,12 +32,14 @@ void Engine::prepare(double sampleRate, int maxBlockSize)
     maxBlock_ = maxBlockSize;
     ctx_.sampleRate = (float)sampleRate;
     for (Voice& v : voices_) v.prepare((float)sampleRate);
+    fx_.prepare((float)sampleRate);
     reset();
 }
 
 void Engine::reset()
 {
     for (Voice& v : voices_) v.kill();
+    fx_.reset();
     pitchBend_ = modWheel_ = chanPressure_ = 0.0f;
     sustain_ = false;
     noteStackSize_ = 0;
@@ -259,6 +261,22 @@ void Engine::renderBlock(float* l, float* r, int n)
     activeVoices_.store(count, std::memory_order_relaxed);
 }
 
+void Engine::runFx(float* l, float* r, int n)
+{
+    // Global effects follow the newest voice's modulation (like most wavetable synths do).
+    std::memcpy(fxp_, ctx_.p, sizeof(float) * kNumParams);
+    const Voice* newest = nullptr;
+    for (const Voice& v : voices_) if (v.active() && (!newest || v.age() > newest->age())) newest = &v;
+    if (newest)
+        for (int k = 0; k < newest->numModOffsets(); ++k)
+        {
+            const int pi = newest->modOffset(k).param;
+            if (pi >= P_FX_ORDER1) fxp_[pi] = newest->modulatedParams()[pi];
+        }
+    fx_.process(l, r, n, fxp_, ctx_.bpm, ctx_.oversample);
+    heavyFx_.store(fx_.heavyActive(), std::memory_order_relaxed);
+}
+
 void Engine::publishLive()
 {
     const Voice* newest = nullptr;
@@ -313,6 +331,7 @@ void Engine::process(float* l, float* r, int n, const MidiMsg* events, int numEv
         snapshotParams(transport, end - pos);
         while (ev < numEvents && events[ev].offset <= pos) handleMidi(events[ev++]);
         renderBlock(l + pos, r + pos, end - pos);
+        runFx(l + pos, r + pos, end - pos);
         pos = end;
     }
     while (ev < numEvents) handleMidi(events[ev++]);

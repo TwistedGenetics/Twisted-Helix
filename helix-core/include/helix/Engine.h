@@ -8,6 +8,7 @@
 //    collectGarbage() (also non-audio).
 #pragma once
 #include "helix/Config.h"
+#include "helix/Effects.h"
 #include "helix/Midi.h"
 #include "helix/ModSystem.h"
 #include "helix/Params.h"
@@ -74,6 +75,9 @@ public:
     // The CPU guard's target, fraction of one core (default 0.35, the HELIX budget).
     void setCpuBudget(float fraction) { cpuBudget_.store(fraction, std::memory_order_relaxed); }
 
+    // True while the heavy effect (OTT) is on, for the CPU meter.
+    bool heavyFxActive() const { return heavyFx_.load(std::memory_order_relaxed); }
+
     double sampleRate() const { return sampleRate_; }
 
 private:
@@ -85,6 +89,7 @@ private:
     void snapshotParams(const Transport& tr, int n);
     void swapTables();
     void publishLive();
+    void runFx(float* l, float* r, int n);
     void updateGuard(double seconds, int n);
     NoteStart makeStart(int note, int vel, bool glide);
     Voice* findVoiceFor(int note);
@@ -94,6 +99,9 @@ private:
     LfoShapes lfoShapes_;
     EngineContext ctx_;
     Voice voices_[kMaxVoices];
+    FxChain fx_;
+    float fxp_[kNumParams];
+    std::atomic<bool> heavyFx_{false};
     uint32_t ageCounter_ = 0;
     double sampleRate_ = 44100.0;
     int maxBlock_ = 512;

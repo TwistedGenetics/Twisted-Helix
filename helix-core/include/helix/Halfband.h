@@ -54,3 +54,39 @@ private:
 };
 
 } // namespace helix
+
+namespace helix {
+
+// 1 -> 2 interpolator with the same half-band kernel (gain 2 so the level is unchanged).
+class HalfbandInterpolator
+{
+public:
+    void reset() { for (float& v : x_) v = 0.0f; pos_ = 0; }
+    inline void process(float in, float& outA, float& outB)
+    {
+        push(in);
+        outA = filter();
+        push(0.0f);
+        outB = filter();
+    }
+private:
+    inline float filter() const
+    {
+        const HalfbandCoefs& h = HalfbandCoefs::get();
+        const float* x = x_ + pos_;
+        float y = x[23];                        // centre tap 0.5 x gain 2
+        for (int k = 0; k < 12; ++k) y += 2.0f * h.c[k] * (x[23 - (2 * k + 1)] + x[23 + (2 * k + 1)]);
+        return y;
+    }
+    inline void push(float v)
+    {
+        pos_ = pos_ == 0 ? kLen - 1 : pos_ - 1;
+        x_[pos_] = v;
+        x_[pos_ + kLen] = v;
+    }
+    static constexpr int kLen = 48;
+    float x_[2 * kLen] = {};
+    int pos_ = 0;
+};
+
+} // namespace helix
