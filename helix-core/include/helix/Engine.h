@@ -54,6 +54,8 @@ public:
     void collectGarbage();
 
     // Monitoring (any thread)
+    // Live (modulated) value of a parameter, normalised 0..1, from the most recently played voice. For mod rings.
+    float liveNormalised(int index) const { return params_.getNormalised(index); }
     int activeVoices() const { return activeVoices_.load(std::memory_order_relaxed); }
 
     double sampleRate() const { return sampleRate_; }
