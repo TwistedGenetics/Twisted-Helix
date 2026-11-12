@@ -9,31 +9,83 @@ void Voice::prepare(float sampleRate)
 {
     sr_ = sampleRate;
     amp_.setSampleRate(sampleRate);
+    for (auto& e : env_) e.setSampleRate(sampleRate);
     for (auto& o : osc_) o.setSampleRate(sampleRate);
     sub_.setSampleRate(sampleRate);
     noise_.setSampleRate(sampleRate);
     for (auto& f : filt_) f.prepare(sampleRate);
     std::memset(prevM_, 0, sizeof prevM_);
+    stealLen_ = std::max(1, (int)(0.003f * sampleRate));   // 3 ms steal fade
 }
 
-void Voice::start(int note, float velocity, uint32_t age, bool legato, uint32_t seed)
+void Voice::startNow(const NoteStart& s)
 {
+    note_ = s.note;
+    vel_ = s.velocity;
+    age_ = s.age;
+    held_ = true;
+    sustained_ = false;
+    pressure_ = 0.0f;
+    rng_ = Rng(s.seed * 2654435761u + 12345u);
+    random_ = rng_.bi();
+    glideFrom_ = s.glideFrom;
+    glide_ = s.glideFrom >= 0.0f;
+    pitch_ = glide_ ? s.glideFrom : (float)s.note;
+    beatsSinceStart_ = 0.0;
+    fresh_ = true;
+    for (auto& f : filt_) f.reset();
+    std::memset(prevM_, 0, sizeof prevM_);
+    amp_.hardReset();
+    amp_.gate(true);
+    for (auto& e : env_) { e.hardReset(); e.gate(true); }
+}
+
+void Voice::start(const NoteStart& s) { stealing_ = false; startNow(s); }
+
+void Voice::steal(const NoteStart& s)
+{
+    if (!amp_.active()) { start(s); return; }
+    pending_ = s;
+    held_ = true;
+    sustained_ = false;
+    if (!stealing_) { stealing_ = true; stealLeft_ = stealLen_; }
+}
+
+void Voice::legatoTo(int note, float velocity, bool glide, bool retrigger)
+{
+    if (stealing_) { pending_.note = note; pending_.velocity = velocity; return; }
     note_ = note;
     vel_ = velocity;
-    age_ = age;
     held_ = true;
-    if (!legato)
+    sustained_ = false;
+    glide_ = glide;
+    if (!glide) pitch_ = (float)note;
+    if (retrigger)
     {
-        rng_ = Rng(seed * 2654435761u + 12345u);
-        fresh_ = true;
-        for (auto& f : filt_) f.reset();
-        std::memset(prevM_, 0, sizeof prevM_);
+        amp_.gate(true);
+        for (auto& e : env_) e.gate(true);
+        beatsSinceStart_ = 0.0;
     }
-    amp_.gate(true, legato);
 }
 
-void Voice::release() { held_ = false; amp_.gate(false); }
-void Voice::kill() { held_ = false; amp_.hardReset(); for (auto& f : filt_) f.reset(); }
+void Voice::release()
+{
+    held_ = false;
+    sustained_ = false;
+    if (stealing_) return;   // the pending note will start held; release it when it starts
+    amp_.gate(false);
+    for (auto& e : env_) e.gate(false);
+}
+
+void Voice::kill()
+{
+    held_ = false;
+    sustained_ = false;
+    stealing_ = false;
+    amp_.hardReset();
+    for (auto& e : env_) e.hardReset();
+    for (auto& f : filt_) f.reset();
+}
 
 static inline bool warpUsesOther(float mode)
 {
@@ -41,17 +93,116 @@ static inline bool warpUsesOther(float mode)
     return w == Warp::FmOther || w == Warp::Am || w == Warp::Rm;
 }
 
-void Voice::renderOsc(const EngineContext& ctx, int s, const float* other, int n)
+// ------------------------------------------------------------------------------------------- modulation
+
+void Voice::computeModulation(const EngineContext& ctx, int n)
 {
     const float* p = ctx.p;
-    const int o = s == 0 ? 0 : (P_B_ON - P_A_ON);   // parameter offset of oscillator B
+    float src[kNumModSources];
+    src[SRC_NONE] = 0.0f;
+    src[SRC_ENV1] = amp_.value();
+    const int eOff = P_E2_A - P_E1_A;
+    for (int e = 0; e < 3; ++e)
+    {
+        const int b = P_E2_A + e * eOff;
+        env_[e].set(p[b], p[b + 1], p[b + 2], p[b + 3], p[b + 4], p[b + 5], p[b + 6]);
+        src[SRC_ENV2 + e] = env_[e].advance(n);
+    }
+
+    const int lOff = P_L2_SHAPE - P_L1_SHAPE;
+    for (int l = 0; l < kNumLfos; ++l)
+    {
+        const int b = P_L1_SHAPE + l * lOff;
+        const bool sync = p[b + 2] >= 0.5f;
+        const LfoMode mode = (LfoMode)(int)p[b + 1];
+        float rate;
+        if (sync) rate = (float)(ctx.bpm / 60.0 / syncDivBeats((int)p[b + 4]));
+        else
+        {
+            const ParamDef& d = paramDef(b + 3);
+            rate = d.toPlain(clamp(d.toNormalised(p[b + 3]) + lfoRateOffset_[l], 0.0f, 1.0f));
+        }
+        const float freePhase = mode == LfoMode::Free ? wrap01(ctx.lfoFreePhase[l] + p[b + 7]) : -1.0f;
+        if (fresh_) lfo_[l].reset(p[b + 7], (uint32_t)(age_ * 7919u + (uint32_t)l * 104729u + 1u));
+        src[SRC_LFO1 + l] = lfo_[l].advance(n, sr_, rate, (LfoShape)(int)p[b], mode, p[b + 5], p[b + 6], freePhase, l,
+                                            *ctx.lfoShapes, (int)p[b + 8]);
+    }
+
+    beatsSinceStart_ += (double)n / sr_ * ctx.bpm / 60.0;
+    for (int k = 0; k < kNumPerformers; ++k)
+    {
+        const int b = k == 0 ? P_P1_DIV : P_P2_DIV;
+        const double stepBeats = syncDivBeats((int)p[b]);
+        const int mode = (int)p[b + 2];
+        const int len = clamp((int)p[b + 1], 1, kMaxSteps);
+        double pos = (mode == 1 ? ctx.songBeats : beatsSinceStart_) / stepBeats;
+        if (mode == 2) pos = std::min(pos, (double)len - 1e-6);   // one-shot holds the last step
+        src[SRC_PERF1 + k] = performerValue(p, k, pos);
+    }
+
+    src[SRC_VELOCITY] = vel_;
+    src[SRC_PRESSURE] = pressure_;
+    src[SRC_CHAN_AT] = ctx.channelPressure;
+    src[SRC_MODWHEEL] = ctx.modWheel;
+    src[SRC_PITCHBEND] = ctx.pitchBend;
+    src[SRC_NOTE] = ((float)note_ - 60.0f) / 60.0f;
+    src[SRC_RANDOM] = random_;
+    for (int m = 0; m < kNumMacros; ++m) src[SRC_MACRO1 + m] = p[P_MACRO1 + m];
+
+    // Matrix
+    std::memcpy(vp_, p, sizeof(float) * kNumParams);
+    pitchMod_ = pitchModA_ = pitchModB_ = ampMod_ = panMod_ = 0.0f;
+    numOffsets_ = 0;
+    for (int l = 0; l < kNumLfos; ++l) lfoRateOffset_[l] = 0.0f;
+    const int sOff = P_M2_SRC - P_M1_SRC;
+    for (int m = 0; m < kNumModSlots; ++m)
+    {
+        const int b = P_M1_SRC + m * sOff;
+        const int s = (int)p[b], d = (int)p[b + 1], aux = (int)p[b + 3];
+        const float amt = p[b + 2];
+        if (s <= SRC_NONE || s >= kNumModSources || d <= DST_NONE || amt == 0.0f) continue;
+        float v = modCurve(src[s], p[b + 4]) * amt;
+        if (aux > SRC_NONE && aux < kNumModSources) v *= src[aux];
+        switch (d)
+        {
+            case DST_PITCH: pitchMod_ += v * 24.0f; continue;
+            case DST_A_PITCH: pitchModA_ += v * 24.0f; continue;
+            case DST_B_PITCH: pitchModB_ += v * 24.0f; continue;
+            case DST_AMP: ampMod_ += v; continue;
+            case DST_PAN: panMod_ += v; continue;
+            default: break;
+        }
+        const int pi = modDestParam(d);
+        if (pi < 0) continue;
+        int k = 0;
+        while (k < numOffsets_ && offsets_[k].param != pi) ++k;
+        if (k == numOffsets_) { offsets_[numOffsets_++] = {pi, 0.0f}; }
+        offsets_[k].norm += v;
+    }
+    for (int k = 0; k < numOffsets_; ++k)
+    {
+        const int pi = offsets_[k].param;
+        const ParamDef& d = paramDef(pi);
+        vp_[pi] = d.toPlain(clamp(d.toNormalised(p[pi]) + offsets_[k].norm, 0.0f, 1.0f));
+        for (int l = 0; l < kNumLfos; ++l)
+            if (pi == P_L1_RATE + l * lOff) lfoRateOffset_[l] = offsets_[k].norm;   // applied next block
+    }
+}
+
+// ------------------------------------------------------------------------------------------- render
+
+void Voice::renderOsc(const EngineContext& ctx, int s, const float* other, int n)
+{
+    const float* p = vp_;
+    const int o = s == 0 ? 0 : (P_B_ON - P_A_ON);
     bufClear(oscL_[s], n);
     bufClear(oscR_[s], n);
     if (p[P_A_ON + o] < 0.5f) { bufClear(oscM_[s], n); return; }
 
     OscBlock b;
-    const float semis = (float)note_ + p[P_A_OCT + o] * 12.0f + p[P_A_SEMI + o] + p[P_A_FINE + o] * 0.01f + ctx.pitchBendSemis;
-    b.freqHz = noteToHz(semis);
+    const float semis = pitch_ + p[P_A_OCT + o] * 12.0f + p[P_A_SEMI + o] + p[P_A_FINE + o] * 0.01f +
+                        ctx.pitchBendSemis + pitchMod_ + (s == 0 ? pitchModA_ : pitchModB_);
+    b.freqHz = noteToHz(clamp(semis, -24.0f, 150.0f));
     b.pos1 = p[P_A_POS + o];
     b.level1 = p[P_A_LEVEL + o];
     b.warp[0] = (Warp)(int)p[P_A_W1_MODE + o];
@@ -63,7 +214,7 @@ void Voice::renderOsc(const EngineContext& ctx, int s, const float* other, int n
     b.level0 = lastLevel_[s];
     b.warpAmt0[0] = lastWarp_[s][0];
     b.warpAmt0[1] = lastWarp_[s][1];
-    b.pan = p[P_A_PAN + o];
+    b.pan = clamp(p[P_A_PAN + o] + panMod_, -1.0f, 1.0f);
     b.unison = std::min((int)p[P_A_UNISON + o], ctx.unisonCap);
     b.detune = p[P_A_DETUNE + o];
     b.blend = p[P_A_BLEND + o];
@@ -86,35 +237,45 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
     const float* p = ctx.p;
     amp_.set(p[P_E1_A], p[P_E1_D], p[P_E1_S], p[P_E1_R], p[P_E1_AC], p[P_E1_DC], p[P_E1_RC]);
 
+    // Glide (portamento): exponential approach, ~95% of the way after the glide time.
+    if (glide_ && p[P_GLIDE] > 0.0f)
+    {
+        const float tau = p[P_GLIDE] * 0.001f / 3.0f * sr_;
+        pitch_ += ((float)note_ - pitch_) * (1.0f - std::exp(-(float)n / std::max(tau, 1.0f)));
+        if (std::fabs((float)note_ - pitch_) < 0.001f) pitch_ = (float)note_;
+    }
+    else pitch_ = (float)note_;
+
+    computeModulation(ctx, n);
+    const float* vp = vp_;
+
     if (fresh_)
     {
-        // Phases are set when the voice first renders, so start phase / random phase use current params.
         for (int s = 0; s < 2; ++s)
         {
             const int o = s == 0 ? 0 : (P_B_ON - P_A_ON);
-            osc_[s].start(p[P_A_PHASE + o], p[P_A_RAND + o], rng_);
+            osc_[s].start(vp[P_A_PHASE + o], vp[P_A_RAND + o], rng_);
         }
         sub_.start(0.0f);
-        noise_.start(rng_, p[P_NOISE_LOOP] >= 0.5f);
+        noise_.start(rng_, vp[P_NOISE_LOOP] >= 0.5f);
     }
 
-    // Sub and noise first: they can modulate the oscillators.
-    if (p[P_SUB_ON] >= 0.5f)
+    const float bend = ctx.pitchBendSemis + pitchMod_;
+    if (vp[P_SUB_ON] >= 0.5f)
     {
-        const float div = p[P_SUB_OCT] >= 0.5f ? 24.0f : 12.0f;
-        sub_.render((int)p[P_SUB_SHAPE], noteToHz((float)note_ - div + ctx.pitchBendSemis), p[P_SUB_LEVEL], sub_buf_, n);
+        const float div = vp[P_SUB_OCT] >= 0.5f ? 24.0f : 12.0f;
+        sub_.render((int)vp[P_SUB_SHAPE], noteToHz(clamp(pitch_ - div + bend, -24.0f, 140.0f)), vp[P_SUB_LEVEL], sub_buf_, n);
     }
     else bufClear(sub_buf_, n);
-    if (p[P_NOISE_ON] >= 0.5f)
+    if (vp[P_NOISE_ON] >= 0.5f)
     {
-        const float ratio = p[P_NOISE_PITCH] >= 0.5f ? fastExp2(((float)note_ - 60.0f + ctx.pitchBendSemis) / 12.0f) : 1.0f;
-        noise_.render((int)p[P_NOISE_TYPE], ratio, p[P_NOISE_LOOP] >= 0.5f, p[P_NOISE_LEVEL], noise_buf_, n);
+        const float ratio = vp[P_NOISE_PITCH] >= 0.5f ? fastExp2((pitch_ - 60.0f + bend) / 12.0f) : 1.0f;
+        noise_.render((int)vp[P_NOISE_TYPE], ratio, vp[P_NOISE_LOOP] >= 0.5f, vp[P_NOISE_LEVEL], noise_buf_, n);
     }
     else bufClear(noise_buf_, n);
 
-    // Oscillator order follows who modulates whom. When both modulate each other, B hears A one block late.
-    const bool aNeedsB = warpUsesOther(p[P_A_W1_MODE]) || warpUsesOther(p[P_A_W2_MODE]);
-    const bool bNeedsA = warpUsesOther(p[P_B_W1_MODE]) || warpUsesOther(p[P_B_W2_MODE]);
+    const bool aNeedsB = warpUsesOther(vp[P_A_W1_MODE]) || warpUsesOther(vp[P_A_W2_MODE]);
+    const bool bNeedsA = warpUsesOther(vp[P_B_W1_MODE]) || warpUsesOther(vp[P_B_W2_MODE]);
     if (bNeedsA && !aNeedsB)
     {
         renderOsc(ctx, 0, nullptr, n);
@@ -128,51 +289,51 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
     std::memcpy(prevM_[0], oscM_[0], sizeof(float) * (size_t)n);
     std::memcpy(prevM_[1], oscM_[1], sizeof(float) * (size_t)n);
 
-    // Sources -> filter buses. Each source has a send to F1 and to F2 (Massive style); the sub can instead go
-    // straight to the output (direct-out), past both filters, so a Reese's sub stays clean.
+    // Sources -> filter buses (per-source sends), sub direct-out past both filters.
     for (int f = 0; f < 2; ++f) { bufClear(busL_[f], n); bufClear(busR_[f], n); }
     bufClear(directL_, n); bufClear(directR_, n);
-    const int sendOff = P_A_TO_F2 - P_A_TO_F1;   // same layout for every source
+    const int sendOff = P_A_TO_F2 - P_A_TO_F1;
     for (int s = 0; s < 2; ++s)
     {
         const int o = s == 0 ? 0 : (P_B_ON - P_A_ON);
         for (int f = 0; f < 2; ++f)
         {
-            const float send = p[P_A_TO_F1 + o + f * sendOff];
+            const float send = vp[P_A_TO_F1 + o + f * sendOff];
             if (send <= 0.0f) continue;
             bufMixIn(busL_[f], oscL_[s], send, n);
             bufMixIn(busR_[f], oscR_[s], send, n);
         }
     }
     auto panGains = [](float pan, float& gl, float& gr) {
+        pan = clamp(pan, -1.0f, 1.0f);
         gl = std::sqrt(0.5f * (1.0f - pan)) * 1.41421356f;
         gr = std::sqrt(0.5f * (1.0f + pan)) * 1.41421356f;
     };
-    if (p[P_SUB_ON] >= 0.5f)
+    if (vp[P_SUB_ON] >= 0.5f)
     {
-        float gl, gr; panGains(p[P_SUB_PAN], gl, gr);
-        if (p[P_SUB_DIRECT] >= 0.5f) { bufMixIn(directL_, sub_buf_, gl, n); bufMixIn(directR_, sub_buf_, gr, n); }
+        float gl, gr; panGains(vp[P_SUB_PAN] + panMod_, gl, gr);
+        if (vp[P_SUB_DIRECT] >= 0.5f) { bufMixIn(directL_, sub_buf_, gl, n); bufMixIn(directR_, sub_buf_, gr, n); }
         else
             for (int f = 0; f < 2; ++f)
             {
-                const float send = f == 0 ? p[P_SUB_TO_F1] : p[P_SUB_TO_F2];
+                const float send = f == 0 ? vp[P_SUB_TO_F1] : vp[P_SUB_TO_F2];
                 bufMixIn(busL_[f], sub_buf_, gl * send, n);
                 bufMixIn(busR_[f], sub_buf_, gr * send, n);
             }
     }
-    if (p[P_NOISE_ON] >= 0.5f)
+    if (vp[P_NOISE_ON] >= 0.5f)
     {
-        float gl, gr; panGains(p[P_NOISE_PAN], gl, gr);
+        float gl, gr; panGains(vp[P_NOISE_PAN] + panMod_, gl, gr);
         for (int f = 0; f < 2; ++f)
         {
-            const float send = f == 0 ? p[P_NOISE_TO_F1] : p[P_NOISE_TO_F2];
+            const float send = f == 0 ? vp[P_NOISE_TO_F1] : vp[P_NOISE_TO_F2];
             bufMixIn(busL_[f], noise_buf_, gl * send, n);
             bufMixIn(busR_[f], noise_buf_, gr * send, n);
         }
     }
 
-    // Filters. Blend 0 = parallel (F1 + F2), 1 = serial (F1 feeds F2, only F2 is heard), in between = both.
-    const float blend = clamp(p[P_FILTER_BLEND], 0.0f, 1.0f);
+    // Filters. Blend 0 = parallel (F1 + F2), 1 = serial (F1 -> F2).
+    const float blend = clamp(vp[P_FILTER_BLEND], 0.0f, 1.0f);
     const int fOff = P_F2_ON - P_F1_ON;
     for (int f = 0; f < 2; ++f)
     {
@@ -180,33 +341,52 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
         float* bl = busL_[f];
         float* br = busR_[f];
         if (f == 1 && blend > 0.0f) { bufMixIn(bl, busL_[0], blend, n); bufMixIn(br, busR_[0], blend, n); }
-        if (p[P_F1_ON + o] >= 0.5f)
+        if (vp[P_F1_ON + o] >= 0.5f)
         {
             Filter& flt = filt_[f];
-            flt.setType((FilterType)(int)p[P_F1_TYPE + o]);
-            const float kt = p[P_F1_KEYTRK + o] * ((float)note_ - 60.0f) / 12.0f;
-            flt.update(p[P_F1_CUTOFF + o] * fastExp2(kt), p[P_F1_RES + o], p[P_F1_DRIVE + o], p[P_F1_FAT + o]);
+            flt.setType((FilterType)(int)vp[P_F1_TYPE + o]);
+            const float kt = vp[P_F1_KEYTRK + o] * (pitch_ - 60.0f) / 12.0f;
+            flt.update(vp[P_F1_CUTOFF + o] * fastExp2(kt), vp[P_F1_RES + o], vp[P_F1_DRIVE + o], vp[P_F1_FAT + o]);
             for (int i = 0; i < n; ++i) flt.process(bl[i], br[i]);
-            bufScale(bl, p[P_F1_LEVEL + o], n);
-            bufScale(br, p[P_F1_LEVEL + o], n);
+            bufScale(bl, vp[P_F1_LEVEL + o], n);
+            bufScale(br, vp[P_F1_LEVEL + o], n);
         }
     }
-    // out = (1 - blend) * F1 + F2 (+ direct)
     bufScale(busL_[0], 1.0f - blend, n);
     bufScale(busR_[0], 1.0f - blend, n);
     bufMixIn(busL_[0], busL_[1], 1.0f, n);
     bufMixIn(busR_[0], busR_[1], 1.0f, n);
-    float* outL = busL_[0];
-    float* outR = busR_[0];
+    const float* outL = busL_[0];
+    const float* outR = busR_[0];
 
+    // Amp: envelope x velocity x Amp modulation, plus the steal fade.
     const float velGain = 1.0f - p[P_VEL_SENS] * (1.0f - vel_);
+    const float ampMul = std::max(0.0f, 1.0f + ampMod_) * velGain;
+    const float g0 = fresh_ ? ampMul : lastAmpGain_, dg = (ampMul - g0) / (float)n;
+    float g = g0;
+    const float stealStep = 1.0f / (float)stealLen_;
     for (int i = 0; i < n; ++i)
     {
-        const float a = amp_.process() * velGain;
+        float a = amp_.process() * g;
+        if (stealing_)
+        {
+            a *= (float)stealLeft_ * stealStep;
+            if (stealLeft_ > 0) --stealLeft_;
+        }
         l[i] += (outL[i] + directL_[i]) * a;
         r[i] += (outR[i] + directR_[i]) * a;
+        g += dg;
     }
+    lastAmpGain_ = ampMul;
     fresh_ = false;
+
+    if (stealing_ && stealLeft_ <= 0)
+    {
+        stealing_ = false;
+        const bool stillHeld = held_;
+        startNow(pending_);
+        if (!stillHeld) release();
+    }
 }
 
 } // namespace helix

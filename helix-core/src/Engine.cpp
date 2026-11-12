@@ -2,20 +2,25 @@
 #include "helix/Denormals.h"
 #include "helix/Simd.h"
 #include "helix/WavetableGen.h"
+#include <chrono>
 #include <cstring>
 
 namespace helix {
 
+using Clock = std::chrono::steady_clock;
+
 Engine::Engine()
 {
     NoiseSource::buildSharedLoops();
-    ctx_.params = &params_;
     for (int s = 0; s < kNumTableSlots; ++s)
     {
         // A default table so a fresh engine makes sound. Built here, on the constructing (non-audio) thread.
         active_[s] = makeBuiltinTable(BuiltinTable::BasicShapes);
         uiTables_[s] = active_[s];
     }
+    for (int i = 0; i < kNumParams; ++i) live_[i].store(params_.getNormalised(i), std::memory_order_relaxed);
+    for (auto& v : voiceLoad_) v.store(0.0f, std::memory_order_relaxed);
+    ctx_.lfoShapes = &lfoShapes_;
     prepare(44100.0, 512);
 }
 
@@ -33,8 +38,13 @@ void Engine::prepare(double sampleRate, int maxBlockSize)
 void Engine::reset()
 {
     for (Voice& v : voices_) v.kill();
-    pitchBend_ = 0.0f;
+    pitchBend_ = modWheel_ = chanPressure_ = 0.0f;
+    sustain_ = false;
+    noteStackSize_ = 0;
+    lastPitch_ = -1.0f;
 }
+
+// ------------------------------------------------------------------------------------------- tables
 
 bool Engine::setTable(int slot, WavetablePtr table)
 {
@@ -56,7 +66,6 @@ void Engine::collectGarbage()
 
 void Engine::swapTables()
 {
-    // Only swap when the old table can be handed back without freeing it here.
     while (!retired_.full())
     {
         TableHandle h;
@@ -67,15 +76,138 @@ void Engine::swapTables()
     }
 }
 
-void Engine::snapshotParams()
+// ------------------------------------------------------------------------------------------- per block
+
+void Engine::snapshotParams(const Transport& tr, int n)
 {
     for (int i = 0; i < kNumParams; ++i) ctx_.p[i] = params_.get(i);
     for (int s = 0; s < kNumTableSlots; ++s) ctx_.table[s] = active_[s].get();
     const int quality = (int)ctx_.p[P_QUALITY];
-    ctx_.mipCrossfade = quality > 0;
-    ctx_.unisonCap = quality == 0 ? 3 : kMaxUnison;
-    ctx_.oversample = quality == 2;
+    const int guard = ctx_.p[P_AUTO_SCALE] >= 0.5f ? guardLevel_.load(std::memory_order_relaxed) : 0;
+    ctx_.mipCrossfade = quality > 0 && guard < 2;
+    ctx_.oversample = quality == 2 && guard < 1;
+    static const int caps[] = {kMaxUnison, kMaxUnison, 5, 3, 2};
+    ctx_.unisonCap = std::min(quality == 0 ? 3 : kMaxUnison, caps[clamp(guard, 0, 4)]);
+    ctx_.pitchBend = pitchBend_;
     ctx_.pitchBendSemis = pitchBend_ * ctx_.p[P_BEND_RANGE];
+    ctx_.modWheel = modWheel_;
+    ctx_.channelPressure = chanPressure_;
+    ctx_.bpm = tr.valid && tr.bpm > 1.0 ? tr.bpm : 120.0;
+    ctx_.songBeats = ownBeats_;
+    for (int l = 0; l < kNumLfos; ++l)
+    {
+        const int b = P_L1_SHAPE + l * (P_L2_SHAPE - P_L1_SHAPE);
+        if (ctx_.p[b + 2] >= 0.5f)   // synced: lock to the song position
+            ctx_.lfoFreePhase[l] = (float)std::fmod(ownBeats_ / syncDivBeats((int)ctx_.p[b + 4]), 1.0);
+        else
+        {
+            ctx_.lfoFreePhase[l] = freePhase_[l];
+            freePhase_[l] = wrap01(freePhase_[l] + ctx_.p[b + 3] * (float)n / (float)sampleRate_);
+        }
+    }
+    ownBeats_ += (double)n / sampleRate_ * ctx_.bpm / 60.0;
+}
+
+// ------------------------------------------------------------------------------------------- notes
+
+NoteStart Engine::makeStart(int note, int vel, bool glide)
+{
+    NoteStart s;
+    s.note = note;
+    s.velocity = (float)vel / 127.0f;
+    s.age = ++ageCounter_;
+    s.seed = ageCounter_;
+    s.glideFrom = glide && ctx_.p[P_GLIDE] > 0.0f && lastPitch_ >= 0.0f ? lastPitch_ : -1.0f;
+    return s;
+}
+
+Voice* Engine::findVoiceFor(int note)
+{
+    const int maxV = clamp((int)ctx_.p[P_VOICES], 1, kMaxVoices);
+    // 1. The same note still sounding: retrigger it (steal = click-free).
+    for (int i = 0; i < maxV; ++i) if (voices_[i].active() && voices_[i].note() == note) return &voices_[i];
+    // 2. A free voice.
+    for (int i = 0; i < maxV; ++i) if (!voices_[i].active()) return &voices_[i];
+    // 3. Steal: prefer voices already released, then by mode.
+    const bool quietest = (int)ctx_.p[P_STEAL] == 1;
+    Voice* best = nullptr;
+    auto better = [&](Voice& v) {
+        if (!best) return true;
+        const bool vr = !v.held(), br = !best->held();
+        if (vr != br) return vr;
+        return quietest ? v.level() < best->level() : v.age() < best->age();
+    };
+    for (int i = 0; i < maxV; ++i) if (better(voices_[i])) best = &voices_[i];
+    return best;
+}
+
+void Engine::noteOn(int note, int vel)
+{
+    const int mode = (int)ctx_.p[P_POLY_MODE];   // 0 poly, 1 mono, 2 legato
+    const bool glideAlways = (int)ctx_.p[P_GLIDE_MODE] == 0;
+    if (mode == 0)
+    {
+        Voice* v = findVoiceFor(note);
+        const NoteStart s = makeStart(note, vel, glideAlways);
+        if (v->active()) v->steal(s); else v->start(s);
+        lastPitch_ = (float)note;
+        return;
+    }
+    // Mono / legato: one voice, last-note priority, a note stack for returning to held notes.
+    for (int i = 0; i < noteStackSize_; ++i)
+        if (noteStack_[i] == note) { std::memmove(noteStack_ + i, noteStack_ + i + 1, sizeof(int) * (size_t)(noteStackSize_ - i - 1)); --noteStackSize_; break; }
+    if (noteStackSize_ == 16) { std::memmove(noteStack_, noteStack_ + 1, sizeof(int) * 15); --noteStackSize_; }
+    noteStack_[noteStackSize_++] = note;
+
+    Voice& v = voices_[monoVoice()];
+    for (int i = 1; i < kMaxVoices; ++i) if (voices_[i].active()) voices_[i].release();
+    const bool overlapping = v.active() && v.held() && !v.stealing();
+    const bool glide = ctx_.p[P_GLIDE] > 0.0f && (glideAlways || overlapping);
+    if (overlapping)
+        v.legatoTo(note, (float)vel / 127.0f, glide, mode == 1);
+    else
+    {
+        NoteStart s = makeStart(note, vel, glide);
+        if (v.active()) { s.glideFrom = glide ? v.pitch() : -1.0f; v.steal(s); }
+        else v.start(s);
+    }
+    lastPitch_ = (float)note;
+}
+
+void Engine::noteOff(int note)
+{
+    const int mode = (int)ctx_.p[P_POLY_MODE];
+    if (mode == 0)
+    {
+        for (Voice& v : voices_)
+            if (v.active() && v.held() && v.note() == note)
+            {
+                if (sustain_) v.setSustained(true); else v.release();
+            }
+        return;
+    }
+    int idx = -1;
+    for (int i = 0; i < noteStackSize_; ++i) if (noteStack_[i] == note) idx = i;
+    if (idx < 0) return;
+    const bool wasTop = idx == noteStackSize_ - 1;
+    std::memmove(noteStack_ + idx, noteStack_ + idx + 1, sizeof(int) * (size_t)(noteStackSize_ - idx - 1));
+    --noteStackSize_;
+    Voice& v = voices_[monoVoice()];
+    if (!wasTop) return;
+    if (noteStackSize_ > 0)
+    {
+        const int back = noteStack_[noteStackSize_ - 1];
+        v.legatoTo(back, v.level() > 0.0f ? 1.0f : 0.8f, ctx_.p[P_GLIDE] > 0.0f, false);
+        lastPitch_ = (float)back;
+    }
+    else if (sustain_) v.setSustained(true);
+    else v.release();
+}
+
+void Engine::allNotesOff(bool hard)
+{
+    for (Voice& v : voices_) { if (hard) v.kill(); else v.release(); }
+    noteStackSize_ = 0;
 }
 
 void Engine::handleMidi(const MidiMsg& m)
@@ -84,66 +216,102 @@ void Engine::handleMidi(const MidiMsg& m)
     {
         case 0x90: if (m.data[2] > 0) noteOn(m.data[1], m.data[2]); else noteOff(m.data[1]); break;
         case 0x80: noteOff(m.data[1]); break;
+        case 0xA0:   // poly aftertouch (pad pressure)
+            for (Voice& v : voices_) if (v.active() && v.note() == m.data[1]) v.setPressure((float)m.data[2] / 127.0f);
+            break;
+        case 0xD0: chanPressure_ = (float)m.data[1] / 127.0f; break;
         case 0xE0: pitchBend_ = (float)(((int)m.data[1] | ((int)m.data[2] << 7)) - 8192) / 8192.0f; break;
         case 0xB0:
-            if (m.data[1] == 120) allNotesOff(true);
-            else if (m.data[1] == 123) allNotesOff(false);
+            switch (m.data[1])
+            {
+                case 1: modWheel_ = (float)m.data[2] / 127.0f; break;
+                case 64:
+                {
+                    const bool on = m.data[2] >= 64;
+                    if (sustain_ && !on)
+                        for (Voice& v : voices_) if (v.sustained()) v.release();
+                    sustain_ = on;
+                    break;
+                }
+                case 120: allNotesOff(true); break;
+                case 123: allNotesOff(false); break;
+                default: break;
+            }
             break;
         default: break;
     }
 }
 
-void Engine::noteOn(int note, int vel)
-{
-    const int maxV = std::max(1, std::min(kMaxVoices, (int)ctx_.p[P_VOICES]));
-    Voice* target = nullptr;
-    for (int i = 0; i < maxV; ++i) if (!voices_[i].active()) { target = &voices_[i]; break; }
-    if (!target)
-    {
-        target = &voices_[0];
-        for (int i = 1; i < maxV; ++i) if (voices_[i].age() < target->age()) target = &voices_[i];
-    }
-    ++ageCounter_;
-    target->start(note, (float)vel / 127.0f, ageCounter_, false, ageCounter_);
-}
-
-void Engine::noteOff(int note)
-{
-    for (Voice& v : voices_) if (v.active() && v.held() && v.note() == note) v.release();
-}
-
-void Engine::allNotesOff(bool hard)
-{
-    for (Voice& v : voices_) { if (hard) v.kill(); else v.release(); }
-}
+// ------------------------------------------------------------------------------------------- render
 
 void Engine::renderBlock(float* l, float* r, int n)
 {
     int count = 0;
-    for (Voice& v : voices_)
+    for (int i = 0; i < kMaxVoices; ++i)
     {
+        Voice& v = voices_[i];
         if (!v.active()) continue;
+        const auto t0 = Clock::now();
         v.render(ctx_, l, r, n);
+        voiceTime_[i] += std::chrono::duration<double>(Clock::now() - t0).count();
         ++count;
     }
     activeVoices_.store(count, std::memory_order_relaxed);
 }
 
+void Engine::publishLive()
+{
+    const Voice* newest = nullptr;
+    for (const Voice& v : voices_) if (v.active() && (!newest || v.age() > newest->age())) newest = &v;
+    for (int i = 0; i < kNumParams; ++i)
+        if (paramDef(i).modulatable) live_[i].store(params_.getNormalised(i), std::memory_order_relaxed);
+    if (!newest) return;
+    for (int k = 0; k < newest->numModOffsets(); ++k)
+    {
+        const auto& o = newest->modOffset(k);
+        live_[o.param].store(clamp(params_.getNormalised(o.param) + o.norm, 0.0f, 1.0f), std::memory_order_relaxed);
+    }
+}
+
+void Engine::updateGuard(double seconds, int n)
+{
+    const double real = (double)n / sampleRate_;
+    const float load = (float)(seconds / std::max(real, 1e-9));
+    const float smoothed = cpuLoad_.load(std::memory_order_relaxed) * 0.97f + load * 0.03f;
+    cpuLoad_.store(smoothed, std::memory_order_relaxed);
+
+    voiceWindow_ += real;
+    if (voiceWindow_ >= 1.0)
+    {
+        for (int i = 0; i < kMaxVoices; ++i) { voiceLoad_[i].store((float)(voiceTime_[i] / voiceWindow_), std::memory_order_relaxed); voiceTime_[i] = 0.0; }
+        voiceWindow_ = 0.0;
+    }
+
+    // CPU guard with hysteresis: step up quickly when over budget, step down slowly when well under.
+    const float budget = cpuBudget_.load(std::memory_order_relaxed);
+    guardTimer_ += real;
+    int level = guardLevel_.load(std::memory_order_relaxed);
+    if (smoothed > budget && guardTimer_ > 0.25 && level < 4) { guardLevel_.store(level + 1); guardTimer_ = 0.0; }
+    else if (smoothed < 0.6f * budget && guardTimer_ > 2.0 && level > 0) { guardLevel_.store(level - 1); guardTimer_ = 0.0; }
+    else if (smoothed >= 0.6f * budget && smoothed <= budget && guardTimer_ > 2.0) guardTimer_ = 2.0;
+}
+
 void Engine::process(float* l, float* r, int n, const MidiMsg* events, int numEvents, const Transport& transport)
 {
-    (void)transport;
+    const auto t0 = Clock::now();
     ScopedFlushDenormals noDenormals;
     swapTables();
     bufClear(l, n);
     bufClear(r, n);
+    if (transport.valid && transport.playing) ownBeats_ = transport.ppq;
 
     int ev = 0, pos = 0;
     while (pos < n)
     {
-        while (ev < numEvents && events[ev].offset <= pos) handleMidi(events[ev++]);
         int end = std::min(n, pos + kCtrlBlock);
-        if (ev < numEvents && events[ev].offset < end) end = std::max(pos + 1, events[ev].offset);
-        snapshotParams();
+        if (ev < numEvents && events[ev].offset > pos && events[ev].offset < end) end = events[ev].offset;
+        snapshotParams(transport, end - pos);
+        while (ev < numEvents && events[ev].offset <= pos) handleMidi(events[ev++]);
         renderBlock(l + pos, r + pos, end - pos);
         pos = end;
     }
@@ -152,6 +320,8 @@ void Engine::process(float* l, float* r, int n, const MidiMsg* events, int numEv
     const float master = dbToGain(params_.get(P_MASTER));
     bufScale(l, master, n);
     bufScale(r, master, n);
+    publishLive();
+    updateGuard(std::chrono::duration<double>(Clock::now() - t0).count(), n);
 }
 
 } // namespace helix
