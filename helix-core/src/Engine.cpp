@@ -8,6 +8,7 @@ namespace helix {
 
 Engine::Engine()
 {
+    NoiseSource::buildSharedLoops();
     ctx_.params = &params_;
     for (int s = 0; s < kNumTableSlots; ++s)
     {
@@ -70,7 +71,10 @@ void Engine::snapshotParams()
 {
     for (int i = 0; i < kNumParams; ++i) ctx_.p[i] = params_.get(i);
     for (int s = 0; s < kNumTableSlots; ++s) ctx_.table[s] = active_[s].get();
-    ctx_.mipCrossfade = true;
+    const int quality = (int)ctx_.p[P_QUALITY];
+    ctx_.mipCrossfade = quality > 0;
+    ctx_.unisonCap = quality == 0 ? 3 : kMaxUnison;
+    ctx_.oversample = quality == 2;
     ctx_.pitchBendSemis = pitchBend_ * ctx_.p[P_BEND_RANGE];
 }
 
@@ -99,7 +103,8 @@ void Engine::noteOn(int note, int vel)
         target = &voices_[0];
         for (int i = 1; i < maxV; ++i) if (voices_[i].age() < target->age()) target = &voices_[i];
     }
-    target->start(note, (float)vel / 127.0f, ++ageCounter_, false);
+    ++ageCounter_;
+    target->start(note, (float)vel / 127.0f, ageCounter_, false, ageCounter_);
 }
 
 void Engine::noteOff(int note)

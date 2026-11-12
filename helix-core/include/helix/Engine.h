@@ -27,6 +27,8 @@ struct EngineContext
     const Wavetable* table[kNumTableSlots] = {nullptr, nullptr};
     float sampleRate = 44100.0f;
     bool mipCrossfade = true;
+    int unisonCap = kMaxUnison;
+    bool oversample = false;          // 2x oscillators (Quality: High)
     float pitchBendSemis = 0.0f;
 };
 

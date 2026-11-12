@@ -1,0 +1,12 @@
+worst alias, dB          normal:bass  normal:lead   high:bass   high:lead
+warp None                   -71.3       -72.3       -71.1       -72.3
+warp PWM                    -48.9       -28.2       -56.9       -39.0
+warp Bend+                  -75.1       -39.9       -83.1       -50.7
+warp Asym                   -44.0       -27.8       -52.0       -37.3
+warp Mirror                 -35.8       -23.2       -43.8       -33.4
+warp Sync                   -82.1       -50.9       -90.6       -61.7
+warp Formant                -60.5       -32.5       -68.5       -39.1
+unison 7 vs 1: 3.0 dB
+unison side/mid: 0.23
+sub direct 0.2130 vs through HP filter 0.0000
+OK
