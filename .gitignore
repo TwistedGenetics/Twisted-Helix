@@ -1,0 +1,8 @@
+build*/
+out/
+*.wav
+!tests/data/*.wav
+.sdk-tools/
+.DS_Store
+__pycache__/
+helix-desktop/JUCE/
