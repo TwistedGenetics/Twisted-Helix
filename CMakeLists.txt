@@ -20,6 +20,7 @@ endif()
 
 add_subdirectory(helix-core)
 add_subdirectory(helix-render)
+add_subdirectory(helix-mpc)
 if(HELIX_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)

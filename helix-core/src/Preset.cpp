@@ -111,7 +111,14 @@ Preset capturePreset(const Engine& e, const TableLibrary* lib)
 {
     Preset p;
     for (int i = 0; i < kNumParams; ++i) p.params[i] = e.params().get(i);
-    if (lib) for (int s = 0; s < 2; ++s) p.tables[s] = lib->slotId(s);
+    if (lib)
+        for (int s = 0; s < 2; ++s)
+        {
+            // A library table is named by the table parameter (it may not have finished loading yet);
+            // a loose file or Sample -> Table result by the slot's own id.
+            const std::string slot = lib->slotId(s);
+            p.tables[s] = TableLibrary::isLibraryId(slot) || slot.empty() ? lib->idAt(e.params().getInt(s == 0 ? P_A_TABLE : P_B_TABLE)) : slot;
+        }
     const LfoShapes& sh = e.lfoShapes();
     for (int l = 0; l < kNumLfos; ++l)
     {
@@ -138,9 +145,10 @@ void applyPreset(const Preset& p, Engine& e, TableLibrary* lib)
         {
             const int idx = lib->indexOfId(p.tables[s]);
             const int param = s == 0 ? P_A_TABLE : P_B_TABLE;
-            // A table outside the library (a loose file, Sample -> Table) keeps the browser index where it is,
-            // so the index never points the loader at a different table.
-            params[param] = idx >= 0 ? (float)idx : e.params().get(param);
+            // Keep the saved index when it already names this table (the index wraps); point it at the table
+            // otherwise. A table outside the library (loose file, Sample -> Table) leaves the index alone.
+            if (idx >= 0) { if (lib->wrap((int)params[param]) != idx) params[param] = (float)idx; }
+            else params[param] = e.params().get(param);
             lib->requestLoadId(s, p.tables[s]);
         }
     for (int i = 0; i < kNumParams; ++i) e.params().set(i, params[i]);

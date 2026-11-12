@@ -144,7 +144,7 @@ void HelixProcessor::timerCallback()
     for (int slot = 0; slot < helix::kNumTableSlots; ++slot)
     {
         const int idx = engine_.params().getInt(slot == 0 ? helix::P_A_TABLE : helix::P_B_TABLE);
-        if (idx != lastTableIndex_[slot] && idx < library_.count())
+        if (idx != lastTableIndex_[slot])
         {
             if (lastTableIndex_[slot] >= 0) library_.requestLoad(slot, idx);
             lastTableIndex_[slot] = idx;

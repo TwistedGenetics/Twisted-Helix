@@ -10,6 +10,9 @@ struct UiSection
 {
     std::string title;
     std::vector<int> params;    // ParamId values, at most 4; -1 = empty slot
+    std::string group;          // MPC page this block goes on (<= 8 chars); "" = fill pages in order
+    UiSection() = default;
+    UiSection(std::string t, std::vector<int> p, std::string g = {}) : title(std::move(t)), params(std::move(p)), group(std::move(g)) {}
 };
 
 struct UiPage

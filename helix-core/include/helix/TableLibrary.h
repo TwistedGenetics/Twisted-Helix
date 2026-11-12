@@ -45,6 +45,11 @@ public:
     int count() const;
     std::string nameAt(int index) const;            // "" when out of range
     int indexOfId(const std::string& id) const;     // -1 when unknown
+    // The table parameter wraps: index i means entry (i mod count), so every knob position is a table.
+    int wrap(int index) const;
+    std::string idAt(int index) const;              // id of entry wrap(index)
+    // True for slot ids that name a library entry (builtin:, file:, folder:), false for path: / sample:
+    static bool isLibraryId(const std::string& id);
 
     // Load entry `index` into an engine slot, asynchronously. The slot's id updates when the table is live.
     void requestLoad(int slot, int index);

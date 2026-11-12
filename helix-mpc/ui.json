@@ -1,0 +1,1895 @@
+{
+  "kit": {
+    "theme": "mono",
+    "accent": "ffd6402b"
+  },
+  "pages": [
+    {
+      "name": "OSC A 1",
+      "controls": [
+        {
+          "param": "Osc A",
+          "widget": "switch"
+        },
+        {
+          "param": "A Table",
+          "widget": "slider"
+        },
+        {
+          "param": "A WT Pos",
+          "widget": "knob"
+        },
+        {
+          "param": "A Level",
+          "widget": "fader"
+        },
+        {
+          "param": "A Octave",
+          "widget": "slider"
+        },
+        {
+          "param": "A Semi",
+          "widget": "slider"
+        },
+        {
+          "param": "A Fine",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "A Pan",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "A Warp 1",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "A Warp 1 Amt",
+          "widget": "knob"
+        },
+        {
+          "param": "A Warp 2",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "A Warp 2 Amt",
+          "widget": "knob"
+        },
+        {
+          "param": "A Unison",
+          "widget": "slider"
+        },
+        {
+          "param": "A Detune",
+          "widget": "knob"
+        },
+        {
+          "param": "A Blend",
+          "widget": "knob"
+        },
+        {
+          "param": "A Spread",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "OSC A 2",
+      "controls": [
+        {
+          "param": "A Phase",
+          "widget": "knob"
+        },
+        {
+          "param": "A Rnd Phase",
+          "widget": "knob"
+        },
+        {
+          "param": "A > F1",
+          "widget": "knob"
+        },
+        {
+          "param": "A > F2",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "OSC B 1",
+      "controls": [
+        {
+          "param": "Osc B",
+          "widget": "switch"
+        },
+        {
+          "param": "B Table",
+          "widget": "slider"
+        },
+        {
+          "param": "B WT Pos",
+          "widget": "knob"
+        },
+        {
+          "param": "B Level",
+          "widget": "fader"
+        },
+        {
+          "param": "B Octave",
+          "widget": "slider"
+        },
+        {
+          "param": "B Semi",
+          "widget": "slider"
+        },
+        {
+          "param": "B Fine",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "B Pan",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "B Warp 1",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "B Warp 1 Amt",
+          "widget": "knob"
+        },
+        {
+          "param": "B Warp 2",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "B Warp 2 Amt",
+          "widget": "knob"
+        },
+        {
+          "param": "B Unison",
+          "widget": "slider"
+        },
+        {
+          "param": "B Detune",
+          "widget": "knob"
+        },
+        {
+          "param": "B Blend",
+          "widget": "knob"
+        },
+        {
+          "param": "B Spread",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "OSC B 2",
+      "controls": [
+        {
+          "param": "B Phase",
+          "widget": "knob"
+        },
+        {
+          "param": "B Rnd Phase",
+          "widget": "knob"
+        },
+        {
+          "param": "B > F1",
+          "widget": "knob"
+        },
+        {
+          "param": "B > F2",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "SUB/NSE",
+      "controls": [
+        {
+          "param": "Sub",
+          "widget": "switch"
+        },
+        {
+          "param": "Sub Shape",
+          "widget": "switch"
+        },
+        {
+          "param": "Sub Octave",
+          "widget": "switch"
+        },
+        {
+          "param": "Sub Level",
+          "widget": "fader"
+        },
+        {
+          "param": "Sub Pan",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "Sub Direct",
+          "widget": "switch"
+        },
+        {
+          "param": "Sub > F1",
+          "widget": "knob"
+        },
+        {
+          "param": "Sub > F2",
+          "widget": "knob"
+        },
+        {
+          "param": "Noise",
+          "widget": "switch"
+        },
+        {
+          "param": "Noise Type",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Noise Level",
+          "widget": "fader"
+        },
+        {
+          "param": "Noise Pan",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "Noise Track",
+          "widget": "switch"
+        },
+        {
+          "param": "Noise Loop",
+          "widget": "switch"
+        },
+        {
+          "param": "Noise > F1",
+          "widget": "knob"
+        },
+        {
+          "param": "Noise > F2",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "FILTER 1",
+      "controls": [
+        {
+          "param": "Filter 1",
+          "widget": "switch"
+        },
+        {
+          "param": "F1 Type",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "F1 Cutoff",
+          "widget": "knob"
+        },
+        {
+          "param": "F1 Reso",
+          "widget": "knob"
+        },
+        {
+          "param": "F1 Drive",
+          "widget": "knob"
+        },
+        {
+          "param": "F1 Key Trk",
+          "widget": "knob"
+        },
+        {
+          "param": "F1 Fat",
+          "widget": "knob"
+        },
+        {
+          "param": "F1 Level",
+          "widget": "fader"
+        },
+        {
+          "param": "Filter 2",
+          "widget": "switch"
+        },
+        {
+          "param": "F2 Type",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "F2 Cutoff",
+          "widget": "knob"
+        },
+        {
+          "param": "F2 Reso",
+          "widget": "knob"
+        },
+        {
+          "param": "F2 Drive",
+          "widget": "knob"
+        },
+        {
+          "param": "F2 Key Trk",
+          "widget": "knob"
+        },
+        {
+          "param": "F2 Fat",
+          "widget": "knob"
+        },
+        {
+          "param": "F2 Level",
+          "widget": "fader"
+        }
+      ]
+    },
+    {
+      "name": "FILTER 2",
+      "controls": [
+        {
+          "param": "Ser/Par",
+          "widget": "knob"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "widget": "empty"
+        }
+      ]
+    },
+    {
+      "name": "ENV 1",
+      "controls": [
+        {
+          "param": "E1 Attack",
+          "widget": "knob"
+        },
+        {
+          "param": "E1 Decay",
+          "widget": "knob"
+        },
+        {
+          "param": "E1 Sustain",
+          "widget": "fader"
+        },
+        {
+          "param": "E1 Release",
+          "widget": "knob"
+        },
+        {
+          "param": "E1 A Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "E1 D Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "E1 R Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "param": "E2 Attack",
+          "widget": "knob"
+        },
+        {
+          "param": "E2 Decay",
+          "widget": "knob"
+        },
+        {
+          "param": "E2 Sustain",
+          "widget": "fader"
+        },
+        {
+          "param": "E2 Release",
+          "widget": "knob"
+        },
+        {
+          "param": "E2 A Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "E2 D Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "E2 R Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "widget": "empty"
+        }
+      ]
+    },
+    {
+      "name": "ENV 2",
+      "controls": [
+        {
+          "param": "E3 Attack",
+          "widget": "knob"
+        },
+        {
+          "param": "E3 Decay",
+          "widget": "knob"
+        },
+        {
+          "param": "E3 Sustain",
+          "widget": "fader"
+        },
+        {
+          "param": "E3 Release",
+          "widget": "knob"
+        },
+        {
+          "param": "E3 A Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "E3 D Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "E3 R Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "param": "E4 Attack",
+          "widget": "knob"
+        },
+        {
+          "param": "E4 Decay",
+          "widget": "knob"
+        },
+        {
+          "param": "E4 Sustain",
+          "widget": "fader"
+        },
+        {
+          "param": "E4 Release",
+          "widget": "knob"
+        },
+        {
+          "param": "E4 A Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "E4 D Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "E4 R Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "widget": "empty"
+        }
+      ]
+    },
+    {
+      "name": "LFO 1-2",
+      "controls": [
+        {
+          "param": "L1 Shape",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "L1 Mode",
+          "widget": "switch"
+        },
+        {
+          "param": "L1 Sync",
+          "widget": "switch"
+        },
+        {
+          "param": "L1 Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "L1 Div",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "L1 Rise",
+          "widget": "knob"
+        },
+        {
+          "param": "L1 Smooth",
+          "widget": "knob"
+        },
+        {
+          "param": "L1 Phase",
+          "widget": "knob"
+        },
+        {
+          "param": "L2 Shape",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "L2 Mode",
+          "widget": "switch"
+        },
+        {
+          "param": "L2 Sync",
+          "widget": "switch"
+        },
+        {
+          "param": "L2 Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "L2 Div",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "L2 Rise",
+          "widget": "knob"
+        },
+        {
+          "param": "L2 Smooth",
+          "widget": "knob"
+        },
+        {
+          "param": "L2 Phase",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "LFO 3-4",
+      "controls": [
+        {
+          "param": "L3 Shape",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "L3 Mode",
+          "widget": "switch"
+        },
+        {
+          "param": "L3 Sync",
+          "widget": "switch"
+        },
+        {
+          "param": "L3 Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "L3 Div",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "L3 Rise",
+          "widget": "knob"
+        },
+        {
+          "param": "L3 Smooth",
+          "widget": "knob"
+        },
+        {
+          "param": "L3 Phase",
+          "widget": "knob"
+        },
+        {
+          "param": "L4 Shape",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "L4 Mode",
+          "widget": "switch"
+        },
+        {
+          "param": "L4 Sync",
+          "widget": "switch"
+        },
+        {
+          "param": "L4 Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "L4 Div",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "L4 Rise",
+          "widget": "knob"
+        },
+        {
+          "param": "L4 Smooth",
+          "widget": "knob"
+        },
+        {
+          "param": "L4 Phase",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "PERF",
+      "controls": [
+        {
+          "param": "L1 Steps",
+          "widget": "slider"
+        },
+        {
+          "param": "L2 Steps",
+          "widget": "slider"
+        },
+        {
+          "param": "L3 Steps",
+          "widget": "slider"
+        },
+        {
+          "param": "L4 Steps",
+          "widget": "slider"
+        },
+        {
+          "param": "P1 Step",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Length",
+          "widget": "slider"
+        },
+        {
+          "param": "P1 Mode",
+          "widget": "switch"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "param": "P2 Step",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Length",
+          "widget": "slider"
+        },
+        {
+          "param": "P2 Mode",
+          "widget": "switch"
+        },
+        {
+          "widget": "empty"
+        }
+      ]
+    },
+    {
+      "name": "P1 STEP",
+      "controls": [
+        {
+          "param": "P1 Step 1",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 2",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 3",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 4",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 5",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 6",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 7",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 8",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 9",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 10",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 11",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 12",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 13",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 14",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 15",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P1 Step 16",
+          "widget": "knob",
+          "polarity": "bipolar"
+        }
+      ]
+    },
+    {
+      "name": "P1 SHAPE",
+      "controls": [
+        {
+          "param": "P1 Shape 1",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 2",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 3",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 4",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 5",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 6",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 7",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 8",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 9",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 10",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 11",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 12",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 13",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 14",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 15",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P1 Shape 16",
+          "widget": "slider",
+          "overlay": "menu"
+        }
+      ]
+    },
+    {
+      "name": "P2 STEP",
+      "controls": [
+        {
+          "param": "P2 Step 1",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 2",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 3",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 4",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 5",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 6",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 7",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 8",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 9",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 10",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 11",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 12",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 13",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 14",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 15",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "P2 Step 16",
+          "widget": "knob",
+          "polarity": "bipolar"
+        }
+      ]
+    },
+    {
+      "name": "P2 SHAPE",
+      "controls": [
+        {
+          "param": "P2 Shape 1",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 2",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 3",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 4",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 5",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 6",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 7",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 8",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 9",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 10",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 11",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 12",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 13",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 14",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 15",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "P2 Shape 16",
+          "widget": "slider",
+          "overlay": "menu"
+        }
+      ]
+    },
+    {
+      "name": "M1-4",
+      "controls": [
+        {
+          "param": "M1 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M1 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M1 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M1 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M2 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M2 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M2 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M2 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M3 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M3 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M3 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M3 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M4 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M4 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M4 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M4 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        }
+      ]
+    },
+    {
+      "name": "M5-8",
+      "controls": [
+        {
+          "param": "M5 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M5 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M5 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M5 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M6 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M6 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M6 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M6 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M7 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M7 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M7 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M7 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M8 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M8 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M8 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M8 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        }
+      ]
+    },
+    {
+      "name": "M9-12",
+      "controls": [
+        {
+          "param": "M9 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M9 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M9 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M9 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M10 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M10 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M10 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M10 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M11 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M11 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M11 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M11 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M12 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M12 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M12 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M12 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        }
+      ]
+    },
+    {
+      "name": "M13-16",
+      "controls": [
+        {
+          "param": "M13 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M13 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M13 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M13 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M14 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M14 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M14 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M14 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M15 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M15 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M15 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M15 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M16 Source",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M16 Dest",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "M16 Amount",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M16 Aux",
+          "widget": "slider",
+          "overlay": "menu"
+        }
+      ]
+    },
+    {
+      "name": "CURVES",
+      "controls": [
+        {
+          "param": "M1 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M2 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M3 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M4 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M5 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M6 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M7 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M8 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M9 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M10 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M11 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M12 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M13 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M14 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M15 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "M16 Curve",
+          "widget": "knob",
+          "polarity": "bipolar"
+        }
+      ]
+    },
+    {
+      "name": "FX 1",
+      "controls": [
+        {
+          "param": "FX Slot 1",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "FX Slot 2",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "FX Slot 3",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "FX Slot 4",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "FX Slot 5",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "FX Slot 6",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "FX Slot 7",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "param": "Distortion",
+          "widget": "switch"
+        },
+        {
+          "param": "Dist Type",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Dist Drive",
+          "widget": "knob"
+        },
+        {
+          "param": "Dist Mix",
+          "widget": "fader"
+        },
+        {
+          "param": "Dist Tone",
+          "widget": "knob"
+        },
+        {
+          "param": "Crush Bits",
+          "widget": "knob"
+        },
+        {
+          "param": "Crush Rate",
+          "widget": "knob"
+        },
+        {
+          "widget": "empty"
+        }
+      ]
+    },
+    {
+      "name": "FX 2",
+      "controls": [
+        {
+          "param": "Chorus",
+          "widget": "switch"
+        },
+        {
+          "param": "Chorus Mode",
+          "widget": "switch"
+        },
+        {
+          "param": "Chorus Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "Chorus Mix",
+          "widget": "fader"
+        },
+        {
+          "param": "Chorus Depth",
+          "widget": "knob"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "param": "Phaser",
+          "widget": "switch"
+        },
+        {
+          "param": "Phaser Rate",
+          "widget": "knob"
+        },
+        {
+          "param": "Phaser Depth",
+          "widget": "knob"
+        },
+        {
+          "param": "Phaser Mix",
+          "widget": "fader"
+        },
+        {
+          "param": "Phaser Freq",
+          "widget": "knob"
+        },
+        {
+          "param": "Phaser Fdbk",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "widget": "empty"
+        }
+      ]
+    },
+    {
+      "name": "FX 3",
+      "controls": [
+        {
+          "param": "Delay",
+          "widget": "switch"
+        },
+        {
+          "param": "Delay Mode",
+          "widget": "switch"
+        },
+        {
+          "param": "Delay Fdbk",
+          "widget": "knob"
+        },
+        {
+          "param": "Delay Mix",
+          "widget": "fader"
+        },
+        {
+          "param": "Delay Sync",
+          "widget": "switch"
+        },
+        {
+          "param": "Delay Div",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Delay Time",
+          "widget": "knob"
+        },
+        {
+          "param": "Delay Tone",
+          "widget": "knob"
+        },
+        {
+          "param": "Reverb",
+          "widget": "switch"
+        },
+        {
+          "param": "Reverb Type",
+          "widget": "switch"
+        },
+        {
+          "param": "Rev Decay",
+          "widget": "knob"
+        },
+        {
+          "param": "Reverb Mix",
+          "widget": "fader"
+        },
+        {
+          "param": "Rev Size",
+          "widget": "knob"
+        },
+        {
+          "param": "Rev Damp",
+          "widget": "knob"
+        },
+        {
+          "param": "Rev Predelay",
+          "widget": "knob"
+        },
+        {
+          "widget": "empty"
+        }
+      ]
+    },
+    {
+      "name": "FX 4",
+      "controls": [
+        {
+          "param": "OTT",
+          "widget": "switch"
+        },
+        {
+          "param": "OTT Depth",
+          "widget": "knob"
+        },
+        {
+          "param": "OTT Time",
+          "widget": "knob"
+        },
+        {
+          "param": "OTT Out",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "OTT Upward",
+          "widget": "knob"
+        },
+        {
+          "param": "OTT Down",
+          "widget": "knob"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "param": "EQ",
+          "widget": "switch"
+        },
+        {
+          "param": "Low Freq",
+          "widget": "knob"
+        },
+        {
+          "param": "Low Gain",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "Mid Freq",
+          "widget": "knob"
+        },
+        {
+          "param": "Mid Gain",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "Mid Q",
+          "widget": "knob"
+        },
+        {
+          "param": "High Freq",
+          "widget": "knob"
+        },
+        {
+          "param": "High Gain",
+          "widget": "knob",
+          "polarity": "bipolar"
+        }
+      ]
+    },
+    {
+      "name": "MACROS",
+      "controls": [
+        {
+          "param": "Macro 1",
+          "widget": "knob"
+        },
+        {
+          "param": "Macro 2",
+          "widget": "knob"
+        },
+        {
+          "param": "Macro 3",
+          "widget": "knob"
+        },
+        {
+          "param": "Macro 4",
+          "widget": "knob"
+        },
+        {
+          "param": "Macro 5",
+          "widget": "knob"
+        },
+        {
+          "param": "Macro 6",
+          "widget": "knob"
+        },
+        {
+          "param": "Macro 7",
+          "widget": "knob"
+        },
+        {
+          "param": "Macro 8",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "BROWSE 1",
+      "controls": [
+        {
+          "param": "Preset",
+          "widget": "slider"
+        },
+        {
+          "param": "Load",
+          "widget": "switch"
+        },
+        {
+          "param": "Pad Browse",
+          "widget": "switch"
+        },
+        {
+          "param": "Pad Bank",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "Mutate 10%",
+          "widget": "switch"
+        },
+        {
+          "param": "CPU",
+          "widget": "knob"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "param": "Sample",
+          "widget": "slider"
+        },
+        {
+          "param": "Frames",
+          "widget": "slider",
+          "overlay": "menu"
+        },
+        {
+          "param": "To Osc",
+          "widget": "switch"
+        },
+        {
+          "param": "Make Table",
+          "widget": "switch"
+        },
+        {
+          "param": "Master",
+          "widget": "knob",
+          "polarity": "bipolar"
+        },
+        {
+          "param": "Poly Mode",
+          "widget": "switch"
+        },
+        {
+          "param": "Voices",
+          "widget": "slider"
+        },
+        {
+          "param": "Glide",
+          "widget": "knob"
+        }
+      ]
+    },
+    {
+      "name": "BROWSE 2",
+      "controls": [
+        {
+          "param": "Glide Mode",
+          "widget": "switch"
+        },
+        {
+          "param": "Steal",
+          "widget": "switch"
+        },
+        {
+          "param": "Bend Range",
+          "widget": "slider"
+        },
+        {
+          "param": "Vel Sens",
+          "widget": "knob"
+        },
+        {
+          "param": "Quality",
+          "widget": "switch"
+        },
+        {
+          "param": "CPU Guard",
+          "widget": "switch"
+        },
+        {
+          "widget": "empty"
+        },
+        {
+          "widget": "empty"
+        }
+      ]
+    }
+  ],
+  "style": {
+    "background": "fff3f1ec",
+    "text": "ff15171a",
+    "muted": "ff3b3f45",
+    "accent": "ffd6402b"
+  }
+}

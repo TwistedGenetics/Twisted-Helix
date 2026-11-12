@@ -52,21 +52,23 @@ static std::vector<UiPage> build()
     {
         const int base = P_L1_SHAPE + l * (P_L2_SHAPE - P_L1_SHAPE);
         const std::string n = std::to_string(l + 1);
-        lfo.sections.push_back({"LFO " + n, {base, base + 1, base + 2, base + 3}});
-        lfo.sections.push_back({"LFO " + n + " Opts", {base + 4, base + 5, base + 6, base + 7}});
-        lfo.sections.push_back({"LFO " + n + " Steps", {base + 8, -1, -1, -1}});
+        const std::string grp = l < 2 ? "LFO 1-2" : "LFO 3-4";
+        lfo.sections.push_back({"LFO " + n, {base, base + 1, base + 2, base + 3}, grp});
+        lfo.sections.push_back({"LFO " + n + " Opts", {base + 4, base + 5, base + 6, base + 7}, grp});
     }
+    lfo.sections.push_back({"LFO Steps", {P_L1_STEPS, P_L2_STEPS, P_L3_STEPS, P_L4_STEPS}, "PERF"});
+    lfo.sections.push_back({"Perf 1", {P_P1_DIV, P_P1_STEPS, P_P1_MODE, -1}, "PERF"});
+    lfo.sections.push_back({"Perf 2", {P_P2_DIV, P_P2_STEPS, P_P2_MODE, -1}, "PERF"});
     for (int p = 0; p < 2; ++p)
     {
         const int base = P_P1_DIV + p * (P_P2_DIV - P_P1_DIV);
         const std::string n = std::to_string(p + 1);
-        lfo.sections.push_back({"Perf " + n, {base, base + 1, base + 2, -1}});
         for (int s = 0; s < 16; s += 4)
             lfo.sections.push_back({"P" + n + " Steps " + std::to_string(s + 1) + "-" + std::to_string(s + 4),
-                                    {base + 3 + s, base + 4 + s, base + 5 + s, base + 6 + s}});
+                                    {base + 3 + s, base + 4 + s, base + 5 + s, base + 6 + s}, "P" + n + " STEP"});
         for (int s = 0; s < 16; s += 4)
             lfo.sections.push_back({"P" + n + " Shapes " + std::to_string(s + 1) + "-" + std::to_string(s + 4),
-                                    {base + 19 + s, base + 20 + s, base + 21 + s, base + 22 + s}});
+                                    {base + 19 + s, base + 20 + s, base + 21 + s, base + 22 + s}, "P" + n + " SHAPE"});
     }
     pages.push_back(lfo);
 
@@ -74,11 +76,12 @@ static std::vector<UiPage> build()
     for (int m = 0; m < 16; ++m)
     {
         const int base = P_M1_SRC + m * (P_M2_SRC - P_M1_SRC);
-        mx.sections.push_back({"Slot " + std::to_string(m + 1), {base, base + 1, base + 2, base + 3}});
+        mx.sections.push_back({"Slot " + std::to_string(m + 1), {base, base + 1, base + 2, base + 3},
+                               "M" + std::to_string(m / 4 * 4 + 1) + "-" + std::to_string(m / 4 * 4 + 4)});
     }
     for (int m = 0; m < 16; m += 4)
         mx.sections.push_back({"Curves " + std::to_string(m + 1) + "-" + std::to_string(m + 4),
-                               {P_M1_CURVE + m * 5, P_M1_CURVE + (m + 1) * 5, P_M1_CURVE + (m + 2) * 5, P_M1_CURVE + (m + 3) * 5}});
+                               {P_M1_CURVE + m * 5, P_M1_CURVE + (m + 1) * 5, P_M1_CURVE + (m + 2) * 5, P_M1_CURVE + (m + 3) * 5}, "CURVES"});
     pages.push_back(mx);
 
     pages.push_back({"FX", {

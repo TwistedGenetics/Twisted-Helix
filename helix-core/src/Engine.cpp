@@ -339,6 +339,13 @@ void Engine::process(float* l, float* r, int n, const MidiMsg* events, int numEv
     const float master = dbToGain(params_.get(P_MASTER));
     bufScale(l, master, n);
     bufScale(r, master, n);
+    // Decaying tails (reverb, delay, releases) end in tiny but normal floats (< 1e-20, far below -300 dBFS):
+    // zero them so nothing downstream ever sees near-denormal values.
+    for (int i = 0; i < n; ++i)
+    {
+        if (std::fabs(l[i]) < 1e-20f) l[i] = 0.0f;
+        if (std::fabs(r[i]) < 1e-20f) r[i] = 0.0f;
+    }
     publishLive();
     updateGuard(std::chrono::duration<double>(Clock::now() - t0).count(), n);
 }

@@ -102,6 +102,7 @@ void Json::dumpTo(std::string& out, int indent, int depth) const
 namespace {
 struct Parser
 {
+    explicit Parser(const std::string& text) : s(text) {}
     const std::string& s;
     size_t i = 0;
     std::string err;
@@ -204,7 +205,7 @@ struct Parser
 
 bool Json::parse(const std::string& text, Json& out, std::string* error)
 {
-    Parser p{text};
+    Parser p(text);
     Json v;
     if (!p.value(v)) { if (error) *error = p.err; return false; }
     p.ws();

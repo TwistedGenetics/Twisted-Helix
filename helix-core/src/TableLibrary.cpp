@@ -43,7 +43,23 @@ int TableLibrary::count() const { std::lock_guard<std::mutex> lk(mutex_); return
 std::string TableLibrary::nameAt(int i) const
 {
     std::lock_guard<std::mutex> lk(mutex_);
-    return i >= 0 && i < (int)entries_.size() ? entries_[(size_t)i].name : std::string();
+    if (entries_.empty() || i < 0) return std::string();
+    return entries_[(size_t)i % entries_.size()].name;
+}
+int TableLibrary::wrap(int i) const
+{
+    std::lock_guard<std::mutex> lk(mutex_);
+    return entries_.empty() || i < 0 ? 0 : i % (int)entries_.size();
+}
+std::string TableLibrary::idAt(int i) const
+{
+    std::lock_guard<std::mutex> lk(mutex_);
+    if (entries_.empty() || i < 0) return std::string();
+    return entries_[(size_t)i % entries_.size()].id;
+}
+bool TableLibrary::isLibraryId(const std::string& id)
+{
+    return id.rfind("builtin:", 0) == 0 || id.rfind("file:", 0) == 0 || id.rfind("folder:", 0) == 0;
 }
 int TableLibrary::indexOfId(const std::string& id) const
 {
@@ -100,7 +116,7 @@ void TableLibrary::worker()
             case Job::LoadIndex:
             {
                 TableEntry e; bool ok = false;
-                { std::lock_guard<std::mutex> lk(mutex_); if (j.index >= 0 && j.index < (int)entries_.size()) { e = entries_[(size_t)j.index]; ok = true; } }
+                { std::lock_guard<std::mutex> lk(mutex_); if (j.index >= 0 && !entries_.empty()) { e = entries_[(size_t)j.index % entries_.size()]; ok = true; } }
                 if (ok) doLoad(j.slot, e);
                 break;
             }
