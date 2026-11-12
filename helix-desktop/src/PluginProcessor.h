@@ -1,6 +1,8 @@
 #pragma once
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "helix/Engine.h"
+#include "helix/TableLibrary.h"
+#include <functional>
 #include <vector>
 
 // One HELIX parameter as JUCE sees it. The value lives in the engine's ParamStore (the single source of truth),
@@ -9,6 +11,8 @@ class HelixParameter : public juce::RangedAudioParameter
 {
 public:
     HelixParameter(helix::ParamStore& store, int index);
+    // Optional value text override (table names come from the library).
+    std::function<juce::String(float plain)> formatter;
     float getValue() const override { return store_.getNormalised(index_); }
     void setValue(float newValue) override { store_.setNormalised(index_, newValue); }
     float getDefaultValue() const override;
@@ -58,6 +62,9 @@ public:
     void setStateInformation(const void* data, int sizeInBytes) override;
 
     helix::Engine& engine() { return engine_; }
+    helix::TableLibrary& library() { return library_; }
+    // Wavetables folder the library scans (created on first run).
+    static juce::File userWavetableFolder();
     HelixParameter* parameter(int index) { return params_[(size_t)index]; }
     float cpuLoad() const { return cpuLoad_.load(); }
 
@@ -65,6 +72,8 @@ private:
     void timerCallback() override;
 
     helix::Engine engine_;
+    helix::TableLibrary library_{engine_};
+    int lastTableIndex_[helix::kNumTableSlots] = {-1, -1};
     std::vector<HelixParameter*> params_;
     std::vector<helix::MidiMsg> midi_;
     std::vector<float> scratch_ = std::vector<float>(8192, 0.0f);

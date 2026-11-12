@@ -20,6 +20,7 @@ juce::String HelixParameter::getLabel() const { return helix::paramDef(index_).u
 juce::String HelixParameter::getText(float n, int maxLen) const
 {
     const auto& d = helix::paramDef(index_);
+    if (formatter) return limit(formatter(d.toPlain(n)), maxLen);
     return limit(juce::String(d.format(d.toPlain(n))), maxLen);
 }
 float HelixParameter::getValueForText(const juce::String& text) const
@@ -57,7 +58,21 @@ HelixProcessor::HelixProcessor()
         addParameter(p);
     }
     midi_.reserve(4096);
+    for (int slot = 0; slot < helix::kNumTableSlots; ++slot)
+        params_[(size_t)(slot == 0 ? helix::P_A_TABLE : helix::P_B_TABLE)]->formatter = [this](float plain) {
+            const auto name = library_.nameAt((int)plain);
+            return name.empty() ? juce::String((int)plain) : juce::String(name);
+        };
+    library_.setRoots({userWavetableFolder().getFullPathName().toStdString()});
+    library_.rescan();
     startTimerHz(10);
+}
+
+juce::File HelixProcessor::userWavetableFolder()
+{
+    auto dir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("HELIX").getChildFile("Wavetables");
+    dir.createDirectory();
+    return dir;
 }
 
 HelixProcessor::~HelixProcessor() { stopTimer(); }
@@ -122,7 +137,20 @@ void HelixProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBu
     cpuLoad_.store(cpuLoad_.load() * 0.9f + load * 0.1f);
 }
 
-void HelixProcessor::timerCallback() { engine_.collectGarbage(); }
+void HelixProcessor::timerCallback()
+{
+    engine_.collectGarbage();
+    // Table parameters drive the (asynchronous) table loader.
+    for (int slot = 0; slot < helix::kNumTableSlots; ++slot)
+    {
+        const int idx = engine_.params().getInt(slot == 0 ? helix::P_A_TABLE : helix::P_B_TABLE);
+        if (idx != lastTableIndex_[slot] && idx < library_.count())
+        {
+            if (lastTableIndex_[slot] >= 0) library_.requestLoad(slot, idx);
+            lastTableIndex_[slot] = idx;
+        }
+    }
+}
 
 juce::AudioProcessorEditor* HelixProcessor::createEditor() { return new HelixEditor(*this); }
 

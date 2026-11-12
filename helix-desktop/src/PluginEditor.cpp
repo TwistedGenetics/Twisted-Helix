@@ -143,6 +143,39 @@ void ParamControl::paintOverChildren(juce::Graphics& g)
 
 // ------------------------------------------------------------------------------------------- wavetable view
 
+WavetableView::WavetableView(HelixProcessor& p, int slot) : proc_(p), slot_(slot)
+{
+    loadButton_.onClick = [this] { chooseFile(false); };
+    s2tButton_.onClick = [this] { chooseFile(true); };
+    for (int f : {8, 16, 32, 64, 128, 256}) frames_.addItem(juce::String(f) + " frames", f);
+    frames_.setSelectedId(64, juce::dontSendNotification);
+    addAndMakeVisible(loadButton_);
+    addAndMakeVisible(s2tButton_);
+    addAndMakeVisible(frames_);
+}
+
+void WavetableView::resized()
+{
+    auto r = getLocalBounds().reduced(10).removeFromTop(30);
+    loadButton_.setBounds(r.removeFromRight(130));
+    r.removeFromRight(6);
+    s2tButton_.setBounds(r.removeFromRight(150));
+    r.removeFromRight(6);
+    frames_.setBounds(r.removeFromRight(120));
+}
+
+void WavetableView::chooseFile(bool s2t)
+{
+    chooser_ = std::make_unique<juce::FileChooser>(s2t ? "Make a wavetable from a sample" : "Load a wavetable",
+                                                   HelixProcessor::userWavetableFolder(), "*.wav");
+    const int frames = s2t ? frames_.getSelectedId() : 0;
+    chooser_->launchAsync(juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+                          [this, frames](const juce::FileChooser& fc) {
+                              const auto f = fc.getResult();
+                              if (f.existsAsFile()) proc_.library().requestLoadFile(slot_, f.getFullPathName().toStdString(), frames);
+                          });
+}
+
 void WavetableView::paint(juce::Graphics& g)
 {
     auto r = getLocalBounds().toFloat();

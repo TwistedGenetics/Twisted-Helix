@@ -50,11 +50,16 @@ private:
 class WavetableView : public juce::Component
 {
 public:
-    WavetableView(HelixProcessor& p, int slot) : proc_(p), slot_(slot) {}
+    WavetableView(HelixProcessor& p, int slot);
     void paint(juce::Graphics&) override;
+    void resized() override;
 private:
+    void chooseFile(bool sampleToTable);
     HelixProcessor& proc_;
     int slot_;
+    juce::TextButton loadButton_{"Load WAV..."}, s2tButton_{"Sample > Table..."};
+    juce::ComboBox frames_;
+    std::unique_ptr<juce::FileChooser> chooser_;
 };
 
 class HelixEditor : public juce::AudioProcessorEditor, private juce::Timer
