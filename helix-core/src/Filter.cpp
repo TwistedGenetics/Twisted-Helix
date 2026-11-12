@@ -41,6 +41,7 @@ void Filter::update(float cutoffHz, float res, float drive, float fat)
         case FilterType::LP12: case FilterType::BP12: case FilterType::HP12: case FilterType::Notch12:
         case FilterType::LP24: case FilterType::BP24: case FilterType::HP24: case FilterType::Notch24:
             svf_.set(g, res_);
+            svf2_.set(g, 0.25f * res_);
             break;
         case FilterType::Ladder24:
             ladG_ = g / (1.0f + g);         // TPT one-pole gain
@@ -49,7 +50,7 @@ void Filter::update(float cutoffHz, float res, float drive, float fat)
         case FilterType::CombPlus: case FilterType::CombMinus:
             combDelay_ = clamp(sr_ / cutoffHz, 2.0f, (float)combSize_ - 4.0f);
             combFb_ = 0.98f * res_;
-            combDamp_ = 0.15f + 0.5f * fat_ * 0.0f;   // fixed damping; fat is the post saturation
+            combDamp_ = 0.03f;   // a touch of loop damping keeps very high resonance from fizzing
             break;
         case FilterType::Formant:
         {
@@ -86,16 +87,22 @@ float Filter::processChan(Chan& c, float x)
     switch (type_)
     {
         case FilterType::LP12: c.s1.tick(svf_, x, lp, bp, hp); return lp;
-        case FilterType::BP12: c.s1.tick(svf_, x, lp, bp, hp); return bp;
+        case FilterType::BP12: c.s1.tick(svf_, x, lp, bp, hp); return bp * svf_.k;   // unity at the centre
         case FilterType::HP12: c.s1.tick(svf_, x, lp, bp, hp); return hp;
         case FilterType::Notch12: c.s1.tick(svf_, x, lp, bp, hp); return lp + hp;
-        case FilterType::LP24: c.s1.tick(svf_, x, lp, bp, hp); c.s2.tick(svf_, lp, lp, bp, hp); return lp;
-        case FilterType::BP24: c.s1.tick(svf_, x, lp, bp, hp); c.s2.tick(svf_, bp, lp, bp, hp); return bp;
-        case FilterType::HP24: c.s1.tick(svf_, x, lp, bp, hp); c.s2.tick(svf_, hp, lp, bp, hp); return hp;
+        case FilterType::LP24: c.s1.tick(svf_, x, lp, bp, hp); c.s2.tick(svf2_, lp, lp, bp, hp); return lp;
+        case FilterType::BP24:
+        {
+            c.s1.tick(svf_, x, lp, bp, hp);
+            const float b1 = bp * svf_.k;
+            c.s2.tick(svf2_, b1, lp, bp, hp);
+            return bp * svf2_.k;
+        }
+        case FilterType::HP24: c.s1.tick(svf_, x, lp, bp, hp); c.s2.tick(svf2_, hp, lp, bp, hp); return hp;
         case FilterType::Notch24:
         {
             c.s1.tick(svf_, x, lp, bp, hp); const float n1 = lp + hp;
-            c.s2.tick(svf_, n1, lp, bp, hp); return lp + hp;
+            c.s2.tick(svf2_, n1, lp, bp, hp); return lp + hp;
         }
         case FilterType::Ladder24:
         {
@@ -123,7 +130,7 @@ float Filter::processChan(Chan& c, float x)
             c.combLp += (d - c.combLp) * (1.0f - combDamp_);
             const float fb = (type_ == FilterType::CombPlus ? 1.0f : -1.0f) * combFb_ * c.combLp;
             const float y = x + fb;
-            c.comb[c.combPos] = fastTanh(y);
+            c.comb[c.combPos] = 8.0f * fastTanh(y * 0.125f);   // saturates only well above unity
             c.combPos = (c.combPos + 1) & mask;
             return y * (1.0f - 0.5f * combFb_);
         }

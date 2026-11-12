@@ -39,7 +39,7 @@ private:
     WtOscillator osc_[2];
     SubOscillator sub_;
     NoiseSource noise_;
-    Filter f1_;
+    Filter filt_[2];
     float lastPos_[2] = {0, 0}, lastLevel_[2] = {0, 0}, lastWarp_[2][2] = {{0, 0}, {0, 0}};
     bool fresh_ = true;   // first block after a start: no ramps from stale values
 
@@ -47,7 +47,7 @@ private:
     float oscL_[2][kCtrlBlock], oscR_[2][kCtrlBlock], oscM_[2][kCtrlBlock];
     float prevM_[2][kCtrlBlock];   // last block's mono output, for mutual cross-modulation
     float sub_buf_[kCtrlBlock], noise_buf_[kCtrlBlock];
-    float busL_[kCtrlBlock], busR_[kCtrlBlock], directL_[kCtrlBlock], directR_[kCtrlBlock];
+    float busL_[2][kCtrlBlock], busR_[2][kCtrlBlock], directL_[kCtrlBlock], directR_[kCtrlBlock];
 };
 
 } // namespace helix

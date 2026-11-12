@@ -12,7 +12,7 @@ void Voice::prepare(float sampleRate)
     for (auto& o : osc_) o.setSampleRate(sampleRate);
     sub_.setSampleRate(sampleRate);
     noise_.setSampleRate(sampleRate);
-    f1_.prepare(sampleRate);
+    for (auto& f : filt_) f.prepare(sampleRate);
     std::memset(prevM_, 0, sizeof prevM_);
 }
 
@@ -26,14 +26,14 @@ void Voice::start(int note, float velocity, uint32_t age, bool legato, uint32_t 
     {
         rng_ = Rng(seed * 2654435761u + 12345u);
         fresh_ = true;
-        f1_.reset();
+        for (auto& f : filt_) f.reset();
         std::memset(prevM_, 0, sizeof prevM_);
     }
     amp_.gate(true, legato);
 }
 
 void Voice::release() { held_ = false; amp_.gate(false); }
-void Voice::kill() { held_ = false; amp_.hardReset(); f1_.reset(); }
+void Voice::kill() { held_ = false; amp_.hardReset(); for (auto& f : filt_) f.reset(); }
 
 static inline bool warpUsesOther(float mode)
 {
@@ -128,42 +128,83 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
     std::memcpy(prevM_[0], oscM_[0], sizeof(float) * (size_t)n);
     std::memcpy(prevM_[1], oscM_[1], sizeof(float) * (size_t)n);
 
-    // Mix the sources into the filter bus (sends) and the direct bus (sub direct-out).
-    bufClear(busL_, n); bufClear(busR_, n); bufClear(directL_, n); bufClear(directR_, n);
+    // Sources -> filter buses. Each source has a send to F1 and to F2 (Massive style); the sub can instead go
+    // straight to the output (direct-out), past both filters, so a Reese's sub stays clean.
+    for (int f = 0; f < 2; ++f) { bufClear(busL_[f], n); bufClear(busR_[f], n); }
+    bufClear(directL_, n); bufClear(directR_, n);
+    const int sendOff = P_A_TO_F2 - P_A_TO_F1;   // same layout for every source
     for (int s = 0; s < 2; ++s)
     {
         const int o = s == 0 ? 0 : (P_B_ON - P_A_ON);
-        const float send = p[P_A_TO_F1 + o];
-        bufMixIn(busL_, oscL_[s], send, n);
-        bufMixIn(busR_, oscR_[s], send, n);
+        for (int f = 0; f < 2; ++f)
+        {
+            const float send = p[P_A_TO_F1 + o + f * sendOff];
+            if (send <= 0.0f) continue;
+            bufMixIn(busL_[f], oscL_[s], send, n);
+            bufMixIn(busR_[f], oscR_[s], send, n);
+        }
     }
+    auto panGains = [](float pan, float& gl, float& gr) {
+        gl = std::sqrt(0.5f * (1.0f - pan)) * 1.41421356f;
+        gr = std::sqrt(0.5f * (1.0f + pan)) * 1.41421356f;
+    };
+    if (p[P_SUB_ON] >= 0.5f)
     {
-        const float pan = p[P_SUB_PAN], gl = std::sqrt(0.5f * (1.0f - pan)) * 1.41421356f, gr = std::sqrt(0.5f * (1.0f + pan)) * 1.41421356f;
+        float gl, gr; panGains(p[P_SUB_PAN], gl, gr);
         if (p[P_SUB_DIRECT] >= 0.5f) { bufMixIn(directL_, sub_buf_, gl, n); bufMixIn(directR_, sub_buf_, gr, n); }
-        else { bufMixIn(busL_, sub_buf_, gl * p[P_SUB_TO_F1], n); bufMixIn(busR_, sub_buf_, gr * p[P_SUB_TO_F1], n); }
+        else
+            for (int f = 0; f < 2; ++f)
+            {
+                const float send = f == 0 ? p[P_SUB_TO_F1] : p[P_SUB_TO_F2];
+                bufMixIn(busL_[f], sub_buf_, gl * send, n);
+                bufMixIn(busR_[f], sub_buf_, gr * send, n);
+            }
     }
+    if (p[P_NOISE_ON] >= 0.5f)
     {
-        const float pan = p[P_NOISE_PAN], gl = std::sqrt(0.5f * (1.0f - pan)) * 1.41421356f, gr = std::sqrt(0.5f * (1.0f + pan)) * 1.41421356f;
-        bufMixIn(busL_, noise_buf_, gl * p[P_NOISE_TO_F1], n);
-        bufMixIn(busR_, noise_buf_, gr * p[P_NOISE_TO_F1], n);
+        float gl, gr; panGains(p[P_NOISE_PAN], gl, gr);
+        for (int f = 0; f < 2; ++f)
+        {
+            const float send = f == 0 ? p[P_NOISE_TO_F1] : p[P_NOISE_TO_F2];
+            bufMixIn(busL_[f], noise_buf_, gl * send, n);
+            bufMixIn(busR_[f], noise_buf_, gr * send, n);
+        }
     }
 
-    if (p[P_F1_ON] >= 0.5f)
+    // Filters. Blend 0 = parallel (F1 + F2), 1 = serial (F1 feeds F2, only F2 is heard), in between = both.
+    const float blend = clamp(p[P_FILTER_BLEND], 0.0f, 1.0f);
+    const int fOff = P_F2_ON - P_F1_ON;
+    for (int f = 0; f < 2; ++f)
     {
-        f1_.setType((FilterType)(int)p[P_F1_TYPE]);
-        const float kt = p[P_F1_KEYTRK] * ((float)note_ - 60.0f) / 12.0f;
-        f1_.update(p[P_F1_CUTOFF] * fastExp2(kt), p[P_F1_RES], p[P_F1_DRIVE], p[P_F1_FAT]);
-        for (int i = 0; i < n; ++i) f1_.process(busL_[i], busR_[i]);
-        bufScale(busL_, p[P_F1_LEVEL], n);
-        bufScale(busR_, p[P_F1_LEVEL], n);
+        const int o = f * fOff;
+        float* bl = busL_[f];
+        float* br = busR_[f];
+        if (f == 1 && blend > 0.0f) { bufMixIn(bl, busL_[0], blend, n); bufMixIn(br, busR_[0], blend, n); }
+        if (p[P_F1_ON + o] >= 0.5f)
+        {
+            Filter& flt = filt_[f];
+            flt.setType((FilterType)(int)p[P_F1_TYPE + o]);
+            const float kt = p[P_F1_KEYTRK + o] * ((float)note_ - 60.0f) / 12.0f;
+            flt.update(p[P_F1_CUTOFF + o] * fastExp2(kt), p[P_F1_RES + o], p[P_F1_DRIVE + o], p[P_F1_FAT + o]);
+            for (int i = 0; i < n; ++i) flt.process(bl[i], br[i]);
+            bufScale(bl, p[P_F1_LEVEL + o], n);
+            bufScale(br, p[P_F1_LEVEL + o], n);
+        }
     }
+    // out = (1 - blend) * F1 + F2 (+ direct)
+    bufScale(busL_[0], 1.0f - blend, n);
+    bufScale(busR_[0], 1.0f - blend, n);
+    bufMixIn(busL_[0], busL_[1], 1.0f, n);
+    bufMixIn(busR_[0], busR_[1], 1.0f, n);
+    float* outL = busL_[0];
+    float* outR = busR_[0];
 
     const float velGain = 1.0f - p[P_VEL_SENS] * (1.0f - vel_);
     for (int i = 0; i < n; ++i)
     {
         const float a = amp_.process() * velGain;
-        l[i] += (busL_[i] + directL_[i]) * a;
-        r[i] += (busR_[i] + directR_[i]) * a;
+        l[i] += (outL[i] + directL_[i]) * a;
+        r[i] += (outR[i] + directR_[i]) * a;
     }
     fresh_ = false;
 }

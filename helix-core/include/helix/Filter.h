@@ -35,7 +35,7 @@ private:
 
     FilterType type_ = FilterType::LP12;
     float sr_ = 44100.0f, invSr_ = 1.0f / 44100.0f;
-    SvfCoefs svf_;
+    SvfCoefs svf_, svf2_;   // svf2_: the second stage of the 24 dB modes (low Q, so the resonance is not squared)
     // ladder
     float ladG_ = 0, ladK_ = 0;
     // comb
