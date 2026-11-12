@@ -111,7 +111,7 @@ so a fix stays in the platform layer:
 3. Real CPU numbers on an RK3288 (Gen1) and on Gen2. Only x86 numbers can be measured here (`docs/PERF.md`).
 4. Whether the generated skin's font sizes and light palette read well on the 7" screen.
 5. Memory limits. "The MPC locks its memory and checks free memory before loading a plugin." HELIX caps a
-   table at 256 × 2048 and stores mip levels compactly (about 7.6 MB for a full 256-frame table).
+   table at 256 × 2048 and stores mip levels compactly (about 8.6 MB for a full 256-frame table, 2.2 MB for a typical 64-frame one).
 
 ## Sources
 - MPC Plugin SDK: https://github.com/inmusic-software/mpc-plugin-builder-sdk. Files used: `docs/host-contract.md`,
