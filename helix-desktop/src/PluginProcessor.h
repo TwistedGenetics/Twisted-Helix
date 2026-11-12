@@ -2,6 +2,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "helix/Engine.h"
 #include "helix/TableLibrary.h"
+#include "helix/Preset.h"
 #include <functional>
 #include <vector>
 
@@ -52,11 +53,17 @@ public:
     bool isMidiEffect() const override { return false; }
     double getTailLengthSeconds() const override { return 2.0; }
 
-    int getNumPrograms() override { return 1; }
-    int getCurrentProgram() override { return 0; }
-    void setCurrentProgram(int) override {}
-    const juce::String getProgramName(int) override { return "Init"; }
+    int getNumPrograms() override { return (int)helix::factoryPresets().size(); }
+    int getCurrentProgram() override { return currentProgram_; }
+    void setCurrentProgram(int index) override;
+    const juce::String getProgramName(int index) override;
     void changeProgramName(int, const juce::String&) override {}
+
+    // Presets (message thread)
+    void loadPreset(const helix::Preset& p);
+    helix::Preset currentPreset() const;
+    juce::String presetName() const { return presetName_; }
+    static juce::File userPresetFolder();
 
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
@@ -74,6 +81,8 @@ private:
     helix::Engine engine_;
     helix::TableLibrary library_{engine_};
     int lastTableIndex_[helix::kNumTableSlots] = {-1, -1};
+    int currentProgram_ = 0;
+    juce::String presetName_ = "Init";
     std::vector<HelixParameter*> params_;
     std::vector<helix::MidiMsg> midi_;
     std::vector<float> scratch_ = std::vector<float>(8192, 0.0f);

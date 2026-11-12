@@ -221,6 +221,119 @@ void WavetableView::paint(juce::Graphics& g)
                r.reduced(12.0f, 6.0f), juce::Justification::topLeft);
 }
 
+// ------------------------------------------------------------------------------------------- presets
+
+PresetBrowser::PresetBrowser(HelixProcessor& p) : proc_(p)
+{
+    list_.setRowHeight(30);
+    list_.setColour(juce::ListBox::backgroundColourId, HelixColours::panel());
+    list_.setColour(juce::ListBox::outlineColourId, HelixColours::line());
+    list_.setOutlineThickness(1);
+    addAndMakeVisible(list_);
+    for (auto* b : {&loadB_, &saveB_, &initB_, &mutateB_, &prevB_, &nextB_}) addAndMakeVisible(b);
+    current_.setFont(juce::FontOptions(24.0f, juce::Font::bold));
+    current_.setColour(juce::Label::textColourId, HelixColours::ink());
+    addAndMakeVisible(current_);
+    loadB_.onClick = [this] { load(list_.getSelectedRow()); };
+    saveB_.onClick = [this] { save(); };
+    initB_.onClick = [this] { helix::Preset init; proc_.loadPreset(init); refresh(); };
+    mutateB_.onClick = [this] {
+        helix::Preset m = proc_.currentPreset();
+        helix::mutatePreset(m, 0.1f, mutateSeed_++);
+        m.name = proc_.presetName().toStdString();
+        if (m.name.find(" (mutated)") == std::string::npos) m.name += " (mutated)";
+        proc_.loadPreset(m);
+        refresh();
+    };
+    prevB_.onClick = [this] { const int r = juce::jmax(0, list_.getSelectedRow() - 1); list_.selectRow(r); load(r); };
+    nextB_.onClick = [this] { const int r = juce::jmin((int)items_.size() - 1, list_.getSelectedRow() + 1); list_.selectRow(r); load(r); };
+    refresh();
+}
+
+void PresetBrowser::refresh()
+{
+    items_.clear();
+    const auto& f = helix::factoryPresets();
+    for (int i = 0; i < (int)f.size(); ++i) items_.push_back({f[(size_t)i].category, f[(size_t)i].name, {}, i});
+    for (const auto& file : HelixProcessor::userPresetFolder().findChildFiles(juce::File::findFiles, true, "*.json"))
+        items_.push_back({"User / " + file.getParentDirectory().getFileName(), file.getFileNameWithoutExtension(), file, -1});
+    list_.updateContent();
+    current_.setText(proc_.presetName(), juce::dontSendNotification);
+    repaint();
+}
+
+void PresetBrowser::paintListBoxItem(int row, juce::Graphics& g, int w, int h, bool selected)
+{
+    if (row < 0 || row >= (int)items_.size()) return;
+    if (selected) g.fillAll(HelixColours::ink());
+    g.setColour(selected ? HelixColours::bg() : HelixColours::muted());
+    g.setFont(juce::FontOptions(15.0f));
+    g.drawText(items_[(size_t)row].category, 10, 0, 140, h, juce::Justification::centredLeft);
+    g.setColour(selected ? HelixColours::bg() : HelixColours::ink());
+    g.setFont(juce::FontOptions(18.0f, juce::Font::bold));
+    g.drawText(items_[(size_t)row].name, 160, 0, w - 170, h, juce::Justification::centredLeft);
+}
+
+void PresetBrowser::load(int row)
+{
+    if (row < 0 || row >= (int)items_.size()) return;
+    const Item& it = items_[(size_t)row];
+    if (it.factory >= 0) proc_.setCurrentProgram(it.factory);
+    else
+    {
+        helix::Preset p; std::string err;
+        if (helix::Preset::fromString(it.file.loadFileAsString().toStdString(), p, &err)) { if (p.name.empty()) p.name = it.name.toStdString(); proc_.loadPreset(p); }
+        else juce::AlertWindow::showMessageBoxAsync(juce::MessageBoxIconType::WarningIcon, "HELIX", "Could not load the preset: " + juce::String(err));
+    }
+    current_.setText(proc_.presetName(), juce::dontSendNotification);
+}
+
+void PresetBrowser::save()
+{
+    saveDialog_ = std::make_unique<juce::AlertWindow>("Save preset", "Name and category", juce::MessageBoxIconType::NoIcon);
+    saveDialog_->addTextEditor("name", proc_.presetName(), "Name");
+    saveDialog_->addComboBox("category", {"Bass", "Lead", "Pad", "Atmos", "Stab", "FX", "Misc"}, "Category");
+    saveDialog_->addButton("Save", 1);
+    saveDialog_->addButton("Cancel", 0);
+    saveDialog_->enterModalState(true, juce::ModalCallbackFunction::create([this](int result) {
+        if (result == 1 && saveDialog_)
+        {
+            auto name = saveDialog_->getTextEditorContents("name").trim();
+            auto* cat = saveDialog_->getComboBoxComponent("category");
+            const auto category = cat ? cat->getText() : juce::String("Misc");
+            if (name.isNotEmpty())
+            {
+                helix::Preset p = proc_.currentPreset();
+                p.name = name.toStdString();
+                p.category = category.toStdString();
+                const auto dir = HelixProcessor::userPresetFolder().getChildFile(category);
+                dir.createDirectory();
+                dir.getChildFile(juce::File::createLegalFileName(name) + ".json").replaceWithText(p.toString());
+                refresh();
+            }
+        }
+        saveDialog_.reset();
+    }), false);
+}
+
+void PresetBrowser::paint(juce::Graphics& g)
+{
+    g.setColour(HelixColours::muted());
+    g.setFont(juce::FontOptions(15.0f));
+    g.drawText("PRESET", 0, 0, 200, 20, juce::Justification::left);
+}
+
+void PresetBrowser::resized()
+{
+    auto r = getLocalBounds();
+    auto head = r.removeFromTop(56);
+    head.removeFromTop(20);
+    current_.setBounds(head.removeFromLeft(head.getWidth() / 2));
+    for (auto* b : {&mutateB_, &initB_, &saveB_, &loadB_, &nextB_, &prevB_}) { b->setBounds(head.removeFromRight(b == &prevB_ || b == &nextB_ ? 44 : 110).reduced(3)); }
+    r.removeFromTop(6);
+    list_.setBounds(r);
+}
+
 // ------------------------------------------------------------------------------------------- editor
 
 namespace {
@@ -263,7 +376,9 @@ HelixEditor::HelixEditor(HelixProcessor& p) : AudioProcessorEditor(&p), proc_(p)
     setResizable(true, true);
     setResizeLimits(900, 560, 2400, 1600);
     setSize(1180, 760);
-    showPage(0);
+    // HELIX_START_PAGE=<n> opens another page first (screenshots and UI checks).
+    const char* start = std::getenv("HELIX_START_PAGE");
+    showPage(start ? juce::jlimit(0, (int)pages.size() - 1, std::atoi(start)) : 0);
     startTimerHz(30);
 }
 
@@ -274,6 +389,7 @@ HelixEditor::~HelixEditor()
     controls_.clear();
     owned_.clear();
     wtView_.reset();
+    browser_.reset();
     page_.reset();
     setLookAndFeel(nullptr);
 }
@@ -286,6 +402,7 @@ void HelixEditor::showPage(int index)
     controls_.clear();
     owned_.clear();     // children first, then their parent page
     wtView_.reset();
+    browser_.reset();
     page_ = std::make_unique<juce::Component>();
 
     const auto& pg = uiPages()[(size_t)index];
@@ -299,6 +416,13 @@ void HelixEditor::showPage(int index)
         wtView_->setBounds(4, 4, width - 8, 220);
         page_->addAndMakeVisible(*wtView_);
         y = 232;
+    }
+    if (pg.name == "BROWSER")
+    {
+        browser_ = std::make_unique<PresetBrowser>(proc_);
+        browser_->setBounds(4, 4, width - 8, 360);
+        page_->addAndMakeVisible(*browser_);
+        y = 372;
     }
     for (size_t s = 0; s < pg.sections.size(); ++s)
     {
@@ -337,7 +461,7 @@ void HelixEditor::resized()
     auto r = getLocalBounds();
     auto top = r.removeFromTop(52);
     top.removeFromLeft(140);
-    cpu_.setBounds(top.removeFromRight(140).reduced(8));
+    cpu_.setBounds(top.removeFromRight(190).reduced(8));
     const int tw = top.getWidth() / juce::jmax(1, tabs_.size());
     for (auto* t : tabs_) t->setBounds(top.removeFromLeft(tw).reduced(2, 8));
     viewport_.setBounds(r.reduced(8));
@@ -348,5 +472,8 @@ void HelixEditor::timerCallback()
 {
     for (auto* c : controls_) c->refreshLive();
     if (wtView_) wtView_->repaint();
-    cpu_.setText("CPU " + juce::String(juce::roundToInt(proc_.cpuLoad() * 100.0f)) + "%", juce::dontSendNotification);
+    juce::String cpu = "CPU " + juce::String(juce::roundToInt(proc_.engine().cpuLoad() * 100.0f)) + "%";
+    if (proc_.engine().heavyFxActive()) cpu += " OTT";
+    if (proc_.engine().guardLevel() > 0) cpu += " ECO" + juce::String(proc_.engine().guardLevel());
+    cpu_.setText(cpu, juce::dontSendNotification);
 }

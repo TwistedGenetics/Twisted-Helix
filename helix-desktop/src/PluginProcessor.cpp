@@ -154,22 +154,54 @@ void HelixProcessor::timerCallback()
 
 juce::AudioProcessorEditor* HelixProcessor::createEditor() { return new HelixEditor(*this); }
 
+// The plugin state is the HELIX preset JSON: the same format as preset files and the MPC's state chunk.
 void HelixProcessor::getStateInformation(juce::MemoryBlock& dest)
 {
-    juce::XmlElement xml("HELIX");
-    xml.setAttribute("version", 1);
-    for (int i = 0; i < helix::kNumParams; ++i)
-        xml.setAttribute(helix::paramDef(i).id, (double)engine_.params().get(i));
-    copyXmlToBinary(xml, dest);
+    const std::string text = currentPreset().toString();
+    dest.replaceAll(text.data(), text.size());
 }
 
 void HelixProcessor::setStateInformation(const void* data, int size)
 {
-    auto xml = getXmlFromBinary(data, size);
-    if (!xml || !xml->hasTagName("HELIX")) return;
-    for (int i = 0; i < helix::kNumParams; ++i)
-        if (xml->hasAttribute(helix::paramDef(i).id))
-            engine_.params().set(i, (float)xml->getDoubleAttribute(helix::paramDef(i).id));
+    helix::Preset p;
+    if (helix::Preset::fromString(std::string((const char*)data, (size_t)size), p)) loadPreset(p);
+}
+
+helix::Preset HelixProcessor::currentPreset() const
+{
+    helix::Preset p = helix::capturePreset(engine_, &library_);
+    p.name = presetName_.toStdString();
+    return p;
+}
+
+void HelixProcessor::loadPreset(const helix::Preset& p)
+{
+    helix::applyPreset(p, engine_, &library_);
+    presetName_ = p.name;
+    for (int slot = 0; slot < helix::kNumTableSlots; ++slot)
+        lastTableIndex_[slot] = engine_.params().getInt(slot == 0 ? helix::P_A_TABLE : helix::P_B_TABLE);   // loaded by id already
+    updateHostDisplay(juce::AudioProcessorListener::ChangeDetails().withParameterInfoChanged(true));
+}
+
+void HelixProcessor::setCurrentProgram(int index)
+{
+    const auto& f = helix::factoryPresets();
+    if (index < 0 || index >= (int)f.size()) return;
+    currentProgram_ = index;
+    loadPreset(f[(size_t)index]);
+}
+
+const juce::String HelixProcessor::getProgramName(int index)
+{
+    const auto& f = helix::factoryPresets();
+    return index >= 0 && index < (int)f.size() ? juce::String(f[(size_t)index].name) : juce::String();
+}
+
+juce::File HelixProcessor::userPresetFolder()
+{
+    auto dir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("HELIX").getChildFile("Presets");
+    dir.createDirectory();
+    return dir;
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new HelixProcessor(); }

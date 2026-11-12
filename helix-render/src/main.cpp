@@ -8,13 +8,25 @@
 //     --block N          host block size (default 128)
 //     --set id=value     set a parameter (plain value), repeatable
 //     --table A=N        built-in table N for slot A or B
+//     --preset FILE      load a preset (.json)
+//     --factory NAME|N   load a factory preset by name or index
+//     --mutate PCT       mutate the preset by PCT percent (with --seed N)
+//     --save-preset FILE write the (possibly mutated) preset
+//     --list-factory     list the factory presets
+//     --write-factory DIR  write the factory presets as DIR/<Category>/<Name>.json
+//     --tables DIR       scan DIR for wavetables (presets that use user tables)
 //     --float            write 32-bit float WAV
-//     --bench            benchmark instead of writing audio (see docs/PERF.md)
+//     --bench            benchmark the full-spec patch instead of writing audio (see docs/PERF.md)
 #include "helix/Engine.h"
 #include "helix/Simd.h"
 #include "helix/Math.h"
 #include "helix/WavIO.h"
 #include "helix/WavetableGen.h"
+#include "helix/Preset.h"
+#include "helix/TableLibrary.h"
+#include <filesystem>
+#include <fstream>
+#include <sstream>
 #include "MidiFile.h"
 #include <chrono>
 #include <cstdio>
@@ -50,7 +62,10 @@ struct Options
     std::string midi, out = "helix.wav";
     double seconds = -1;
     int sr = 44100, block = 128;
-    bool float32 = false, bench = false;
+    bool float32 = false, bench = false, listFactory = false;
+    std::string preset, factory, savePreset, writeFactory, tablesDir;
+    float mutate = 0.0f;
+    uint32_t seed = 1;
     std::vector<std::pair<std::string, float>> sets;
     std::vector<std::pair<int, int>> tables;
 };
@@ -67,6 +82,14 @@ static bool parseArgs(int argc, char** argv, Options& o)
         else if (a == "--sr") { const char* v = next(); if (!v) return false; o.sr = std::atoi(v); }
         else if (a == "--block") { const char* v = next(); if (!v) return false; o.block = std::atoi(v); }
         else if (a == "--float") o.float32 = true;
+        else if (a == "--preset") { const char* v = next(); if (!v) return false; o.preset = v; }
+        else if (a == "--factory") { const char* v = next(); if (!v) return false; o.factory = v; }
+        else if (a == "--mutate") { const char* v = next(); if (!v) return false; o.mutate = (float)std::atof(v) / 100.0f; }
+        else if (a == "--seed") { const char* v = next(); if (!v) return false; o.seed = (uint32_t)std::strtoul(v, nullptr, 10); }
+        else if (a == "--save-preset") { const char* v = next(); if (!v) return false; o.savePreset = v; }
+        else if (a == "--write-factory") { const char* v = next(); if (!v) return false; o.writeFactory = v; }
+        else if (a == "--tables") { const char* v = next(); if (!v) return false; o.tablesDir = v; }
+        else if (a == "--list-factory") o.listFactory = true;
         else if (a == "--bench") o.bench = true;
         else if (a == "--set")
         {
@@ -95,8 +118,57 @@ int main(int argc, char** argv)
         return 2;
     }
 
+    const auto& factory = factoryPresets();
+    if (o.listFactory)
+    {
+        for (size_t i = 0; i < factory.size(); ++i) std::printf("%2zu  %-8s %s\n", i, factory[i].category.c_str(), factory[i].name.c_str());
+        return 0;
+    }
+    if (!o.writeFactory.empty())
+    {
+        namespace fs = std::filesystem;
+        for (const Preset& p : factory)
+        {
+            const fs::path dir = fs::path(o.writeFactory) / p.category;
+            fs::create_directories(dir);
+            std::string file = p.name;
+            for (char& c : file) if (c == '/' || c == '\\' || c == ':' || c == '*' || c == '?' || c == '"' || c == '<' || c == '>' || c == '|') c = '-';
+            std::ofstream(dir / (file + ".json")) << p.toString();
+        }
+        std::printf("wrote %zu presets to %s\n", factory.size(), o.writeFactory.c_str());
+        return 0;
+    }
+
     Engine engine;
     engine.prepare(o.sr, o.block);
+    TableLibrary library(engine);
+    if (!o.tablesDir.empty()) { library.setRoots({o.tablesDir}); library.rescan(); library.waitIdle(); }
+
+    Preset preset;
+    bool havePreset = false;
+    if (!o.preset.empty())
+    {
+        std::ifstream f(o.preset);
+        std::stringstream ss; ss << f.rdbuf();
+        std::string err;
+        if (!Preset::fromString(ss.str(), preset, &err)) { std::fprintf(stderr, "preset: %s\n", err.c_str()); return 1; }
+        havePreset = true;
+    }
+    else if (!o.factory.empty())
+    {
+        char* end = nullptr;
+        const long idx = std::strtol(o.factory.c_str(), &end, 10);
+        if (end && *end == '\0' && idx >= 0 && idx < (long)factory.size()) { preset = factory[(size_t)idx]; havePreset = true; }
+        else for (const Preset& p : factory) if (p.name == o.factory) { preset = p; havePreset = true; }
+        if (!havePreset) { std::fprintf(stderr, "no factory preset '%s' (try --list-factory)\n", o.factory.c_str()); return 2; }
+    }
+    if (havePreset)
+    {
+        if (o.mutate > 0.0f) mutatePreset(preset, o.mutate, o.seed);
+        applyPreset(preset, engine, &library);
+        library.waitIdle();
+        if (!o.savePreset.empty()) std::ofstream(o.savePreset) << preset.toString();
+    }
     for (auto& t : o.tables)
         engine.setTable(t.first, makeBuiltinTable((BuiltinTable)std::max(0, std::min(t.second, (int)BuiltinTable::Count - 1))));
     for (auto& s : o.sets)

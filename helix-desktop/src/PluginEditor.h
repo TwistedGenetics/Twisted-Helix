@@ -62,6 +62,30 @@ private:
     std::unique_ptr<juce::FileChooser> chooser_;
 };
 
+// Preset browser: factory presets and the user's Documents/HELIX/Presets/<Category>/*.json.
+class PresetBrowser : public juce::Component, private juce::ListBoxModel
+{
+public:
+    explicit PresetBrowser(HelixProcessor& p);
+    void resized() override;
+    void paint(juce::Graphics&) override;
+    void refresh();
+private:
+    int getNumRows() override { return (int)items_.size(); }
+    void paintListBoxItem(int row, juce::Graphics&, int w, int h, bool selected) override;
+    void listBoxItemDoubleClicked(int row, const juce::MouseEvent&) override { load(row); }
+    void load(int row);
+    void save();
+    struct Item { juce::String category, name; juce::File file; int factory = -1; };
+    HelixProcessor& proc_;
+    std::vector<Item> items_;
+    juce::ListBox list_{"presets", this};
+    juce::TextButton loadB_{"Load"}, saveB_{"Save..."}, initB_{"Init"}, mutateB_{"Mutate 10%"}, prevB_{"<"}, nextB_{">"};
+    juce::Label current_;
+    std::unique_ptr<juce::AlertWindow> saveDialog_;
+    uint32_t mutateSeed_ = 1;
+};
+
 class HelixEditor : public juce::AudioProcessorEditor, private juce::Timer
 {
 public:
@@ -81,6 +105,7 @@ private:
     std::vector<ParamControl*> controls_;
     std::vector<std::unique_ptr<juce::Component>> owned_;
     std::unique_ptr<WavetableView> wtView_;
+    std::unique_ptr<PresetBrowser> browser_;
     juce::Label cpu_;
     int pageIndex_ = 0;
 };
