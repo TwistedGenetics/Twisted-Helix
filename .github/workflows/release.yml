@@ -1,11 +1,24 @@
-# Push a tag like v0.1.0 -> builds the MPC plugin zip and the macOS desktop plugins and publishes a GitHub Release.
+# Builds the MPC plugin zip and the macOS desktop plugins and publishes a GitHub Release named after the version in
+# helix-mpc/plugin.json (tag v<version>, created by the workflow). Runs when that version (or this file) changes on
+# main, when a v* tag is pushed, or by hand (Actions > release > Run workflow).
 name: release
 on:
   push:
+    branches: [main]
+    paths: ['helix-mpc/plugin.json', '.github/workflows/release.yml']
     tags: ['v*']
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
+  version:
+    runs-on: ubuntu-24.04
+    outputs:
+      v: ${{ steps.v.outputs.v }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        run: echo "v=$(python3 -c 'import json; print(json.load(open("helix-mpc/plugin.json"))["version"])')" >> "$GITHUB_OUTPUT"
   mpc:
     runs-on: ubuntu-24.04
     steps:
@@ -20,30 +33,36 @@ jobs:
       - uses: actions/upload-artifact@v4
         with: { name: mpc, path: dist/*.zip }
   desktop-macos:
+    needs: version
     runs-on: macos-14
+    env:
+      V: ${{ needs.version.outputs.v }}
     steps:
       - uses: actions/checkout@v4
       - run: cmake -B build-desktop -G Xcode -DHELIX_BUILD_DESKTOP=ON -DHELIX_BUILD_TESTS=OFF -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" && cmake --build build-desktop --config Release
       - name: Zip VST3 + AU + Standalone (unsigned)
         run: |
           cd build-desktop/helix-desktop/HelixDesktop_artefacts/Release
-          ditto -c -k --keepParent VST3/HELIX.vst3 "$GITHUB_WORKSPACE/helix-${GITHUB_REF_NAME#v}-macos-vst3.zip"
-          ditto -c -k --keepParent AU/HELIX.component "$GITHUB_WORKSPACE/helix-${GITHUB_REF_NAME#v}-macos-au.zip"
-          ditto -c -k --keepParent Standalone/HELIX.app "$GITHUB_WORKSPACE/helix-${GITHUB_REF_NAME#v}-macos-standalone.zip"
+          ditto -c -k --keepParent VST3/HELIX.vst3 "$GITHUB_WORKSPACE/helix-$V-macos-vst3.zip"
+          ditto -c -k --keepParent AU/HELIX.component "$GITHUB_WORKSPACE/helix-$V-macos-au.zip"
+          ditto -c -k --keepParent Standalone/HELIX.app "$GITHUB_WORKSPACE/helix-$V-macos-standalone.zip"
       - uses: actions/upload-artifact@v4
         with: { name: macos, path: "*.zip" }
   release:
-    needs: [mpc, desktop-macos]
+    needs: [version, mpc, desktop-macos]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/download-artifact@v4
         with: { path: out, merge-multiple: true }
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ needs.version.outputs.v }}
+          name: HELIX ${{ needs.version.outputs.v }}
+          target_commitish: ${{ github.sha }}
           files: out/*.zip
           prerelease: true
           body: |
-            HELIX ${{ github.ref_name }}: untested on hardware.
+            HELIX ${{ needs.version.outputs.v }}: untested on hardware.
 
             **MPC** (`helix-*-mpc.zip`): MPC OS 3.10.1+. Unzip, copy the folder into `VST2 Plugins` on a drive, then
             Preferences > Enhancements (Beta) > Enable Enhancements + External Plugin Support. See INSTALL.txt.
