@@ -62,13 +62,15 @@ jobs:
           name: HELIX ${{ needs.version.outputs.v }}
           target_commitish: ${{ github.sha }}
           files: out/*.zip
-          prerelease: true
+          prerelease: false
+          make_latest: true
           body: |
             HELIX ${{ needs.version.outputs.v }}: untested on hardware.
 
             **MPC** (`helix-*-mpc.zip`): MPC OS 3.10.1+. Unzip, copy the folder into `VST2 Plugins` on a drive, then
             Preferences > Enhancements (Beta) > Enable Enhancements + External Plugin Support. See INSTALL.txt.
 
-            **macOS** (VST3 / AU / Standalone): not code-signed or notarised. Copy HELIX.vst3 to
-            ~/Library/Audio/Plug-Ins/VST3 and HELIX.component to ~/Library/Audio/Plug-Ins/Components, then run
-            `xattr -dr com.apple.quarantine <file>` on each so macOS lets Ableton load them.
+            **macOS** (VST3 / AU / Standalone), when the `helix-*-macos-*.zip` files are attached: not code-signed or
+            notarised. Copy HELIX.vst3 to ~/Library/Audio/Plug-Ins/VST3 and HELIX.component to
+            ~/Library/Audio/Plug-Ins/Components, then run `xattr -dr com.apple.quarantine <file>` on each so macOS
+            lets Ableton load them.
