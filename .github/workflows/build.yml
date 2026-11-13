@@ -36,10 +36,3 @@ jobs:
         run: MPC_PLUGIN_FOLDER=$PWD/helix-mpc external/mpc-plugin-builder-sdk/.sdk-tools/host_sim helix-mpc/build/native/helix.so test --seconds 3 --notes 36,43,48 --playing
       - uses: actions/upload-artifact@v4
         with: { name: helix-mpc, path: "helix-mpc/build/Twisted Genetics - VST - HELIX" }
-  desktop:
-    runs-on: macos-14
-    steps:
-      - uses: actions/checkout@v4
-      - run: cmake -B build-desktop -G Xcode -DHELIX_BUILD_DESKTOP=ON -DHELIX_BUILD_TESTS=OFF && cmake --build build-desktop --config Release
-      - uses: actions/upload-artifact@v4
-        with: { name: helix-desktop-macos, path: build-desktop/helix-desktop/HelixDesktop_artefacts/Release }
