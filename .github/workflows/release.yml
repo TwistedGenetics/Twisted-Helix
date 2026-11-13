@@ -1,0 +1,53 @@
+# Push a tag like v0.1.0 -> builds the MPC plugin zip and the macOS desktop plugins and publishes a GitHub Release.
+name: release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  mpc:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: true }
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build
+      - run: cmake -B build -G Ninja && cmake --build build --target helix-mpc-ui helix-mpc-native
+      - run: helix-mpc/build.sh
+      - name: SDK host simulator
+        run: MPC_PLUGIN_FOLDER=$PWD/helix-mpc external/mpc-plugin-builder-sdk/.sdk-tools/host_sim helix-mpc/build/native/helix.so test --seconds 3 --notes 36,43,48 --playing
+      - run: python3 external/mpc-plugin-builder-sdk/tools/package.py helix-mpc --out dist
+      - uses: actions/upload-artifact@v4
+        with: { name: mpc, path: dist/*.zip }
+  desktop-macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -B build-desktop -G Xcode -DHELIX_BUILD_DESKTOP=ON -DHELIX_BUILD_TESTS=OFF -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" && cmake --build build-desktop --config Release
+      - name: Zip VST3 + AU + Standalone (unsigned)
+        run: |
+          cd build-desktop/helix-desktop/HelixDesktop_artefacts/Release
+          ditto -c -k --keepParent VST3/HELIX.vst3 "$GITHUB_WORKSPACE/helix-${GITHUB_REF_NAME#v}-macos-vst3.zip"
+          ditto -c -k --keepParent AU/HELIX.component "$GITHUB_WORKSPACE/helix-${GITHUB_REF_NAME#v}-macos-au.zip"
+          ditto -c -k --keepParent Standalone/HELIX.app "$GITHUB_WORKSPACE/helix-${GITHUB_REF_NAME#v}-macos-standalone.zip"
+      - uses: actions/upload-artifact@v4
+        with: { name: macos, path: "*.zip" }
+  release:
+    needs: [mpc, desktop-macos]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: out, merge-multiple: true }
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: out/*.zip
+          prerelease: true
+          body: |
+            HELIX ${{ github.ref_name }}: untested on hardware.
+
+            **MPC** (`helix-*-mpc.zip`): MPC OS 3.10.1+. Unzip, copy the folder into `VST2 Plugins` on a drive, then
+            Preferences > Enhancements (Beta) > Enable Enhancements + External Plugin Support. See INSTALL.txt.
+
+            **macOS** (VST3 / AU / Standalone): not code-signed or notarised. Copy HELIX.vst3 to
+            ~/Library/Audio/Plug-Ins/VST3 and HELIX.component to ~/Library/Audio/Plug-Ins/Components, then run
+            `xattr -dr com.apple.quarantine <file>` on each so macOS lets Ableton load them.
