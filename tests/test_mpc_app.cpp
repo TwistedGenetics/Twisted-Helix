@@ -35,9 +35,9 @@ int main()
 {
     FakePlatform pf;
     pf.dir = (fs::temp_directory_path() / "helix_mpc_content").string();
-    fs::remove_all(pf.dir);
-    fs::create_directories(fs::path(pf.dir) / "Samples");
-    fs::create_directories(fs::path(pf.dir) / "Presets" / "Bass");
+    { std::error_code ec; fs::remove_all(pf.dir, ec); }
+    { std::error_code ec; fs::create_directories(fs::path(pf.dir) / "Samples", ec); }
+    { std::error_code ec; fs::create_directories(fs::path(pf.dir) / "Presets" / "Bass", ec); }
     {
         // A user preset and a sample
         Preset u = factoryPresets()[5]; u.name = "My Wobble";
@@ -119,6 +119,6 @@ int main()
     for (int i = 0; i < 12; ++i) app.tick();
     CHECK(pf.notified.count(MP_CPU) == 1, "CPU readout never reported");
 
-    fs::remove_all(pf.dir);
+    { std::error_code ec; fs::remove_all(pf.dir, ec); }
     TEST_MAIN_END();
 }

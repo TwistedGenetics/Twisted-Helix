@@ -53,6 +53,7 @@ public:
 private:
     void workerLoop();
     void scanContent();
+    void scanContentImpl();
     void applyPreset(const Preset& p);
 
     IPlatform& platform_;

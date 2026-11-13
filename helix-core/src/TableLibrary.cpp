@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <filesystem>
+#include <functional>
 
 namespace helix {
 
@@ -110,6 +111,7 @@ void TableLibrary::worker()
             jobs_.pop_front();
             busy_ = true;
         }
+        try {
         switch (j.kind)
         {
             case Job::Scan: doScan(); break;
@@ -168,6 +170,7 @@ void TableLibrary::worker()
                 break;
             }
         }
+        } catch (...) { std::lock_guard<std::mutex> lk(mutex_); lastError_ = "load failed"; }   // never take the host down
         {
             std::lock_guard<std::mutex> lk(mutex_);
             busy_ = false;
@@ -199,48 +202,51 @@ bool TableLibrary::doLoad(int slot, const TableEntry& e)
 
 void TableLibrary::doScan()
 {
+    try { doScanImpl(); } catch (...) { std::lock_guard<std::mutex> lk(mutex_); lastError_ = "scan failed"; }
+    scanning_ = false;
+}
+
+void TableLibrary::doScanImpl()
+{
     scanning_ = true;
     std::vector<std::string> roots;
     { std::lock_guard<std::mutex> lk(mutex_); roots = roots_; }
     std::vector<TableEntry> found;
+    // Walk each root: a folder holding WAVs and no sub-folders is one "folder of single cycles" entry;
+    // other WAVs are tables of their own.
+    std::function<void(const std::string&, const std::string&, int)> walk = [&](const std::string& root, const std::string& dir, int depth) {
+        std::error_code ec;
+        const std::vector<std::string> items = listDirectory(dir);
+        bool hasWav = false, hasDir = false;
+        for (const std::string& c : items)
+        {
+            if (fs::is_directory(c, ec)) hasDir = true;
+            else { std::string x = fs::path(c).extension().string(); std::transform(x.begin(), x.end(), x.begin(), ::tolower); hasWav |= x == ".wav"; }
+        }
+        const std::string rel = fs::path(dir).lexically_relative(root).generic_string();
+        if (dir != root && hasWav && !hasDir)
+        {
+            found.push_back({"folder:" + rel, fs::path(dir).filename().string() + " (cycles)", dir, -1, true});
+            return;   // its files are frames, not tables of their own
+        }
+        for (const std::string& c : items)
+        {
+            if (fs::is_directory(c, ec)) { if (depth < 4) walk(root, c, depth + 1); continue; }
+            std::string ext = fs::path(c).extension().string();
+            std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+            if (ext == ".wav") found.push_back({"file:" + fs::path(c).lexically_relative(root).generic_string(), fs::path(c).stem().string(), c, -1, false});
+        }
+    };
     for (const std::string& root : roots)
     {
         std::error_code ec;
-        if (!fs::is_directory(root, ec)) continue;
-        for (auto it = fs::recursive_directory_iterator(root, fs::directory_options::skip_permission_denied, ec);
-             it != fs::recursive_directory_iterator(); it.increment(ec))
-        {
-            if (ec) break;
-            if (it.depth() > 4) { it.disable_recursion_pending(); continue; }
-            const fs::path p = it->path();
-            const std::string rel = fs::relative(p, root, ec).generic_string();
-            if (it->is_directory(ec))
-            {
-                // A folder that holds WAVs and no sub-folders is offered as a "folder of single cycles".
-                bool hasWav = false, hasDir = false;
-                for (const auto& c : fs::directory_iterator(p, ec))
-                {
-                    if (c.is_directory(ec)) hasDir = true;
-                    else { std::string x = c.path().extension().string(); std::transform(x.begin(), x.end(), x.begin(), ::tolower); hasWav |= x == ".wav"; }
-                }
-                if (hasWav && !hasDir)
-                {
-                    found.push_back({"folder:" + rel, p.filename().string() + " (cycles)", p.string(), -1, true});
-                    it.disable_recursion_pending();   // its files are frames, not tables of their own
-                }
-                continue;
-            }
-            std::string ext = p.extension().string();
-            std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-            if (ext == ".wav") found.push_back({"file:" + rel, p.stem().string(), p.string(), -1, false});
-        }
+        if (fs::is_directory(root, ec)) walk(fs::path(root).lexically_normal().generic_string(), fs::path(root).lexically_normal().generic_string(), 0);
     }
     std::sort(found.begin(), found.end(), [](const TableEntry& a, const TableEntry& b) { return a.id < b.id; });
     std::vector<TableEntry> all = builtinEntries();
     all.insert(all.end(), found.begin(), found.end());
     if (all.size() > 512) all.resize(512);   // the table parameter's range
     { std::lock_guard<std::mutex> lk(mutex_); entries_ = std::move(all); }
-    scanning_ = false;
 }
 
 } // namespace helix

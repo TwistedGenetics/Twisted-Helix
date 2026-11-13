@@ -1,4 +1,5 @@
 #include "helix/Oscillator.h"
+#include "helix/Simd.h"
 #include <cmath>
 #include <memory>
 #include <mutex>
@@ -153,8 +154,9 @@ void WtOscillator::render(const Wavetable* wt, const OscBlock& b, const OscModIn
     const int os = b.oversample ? 2 : 1;
     const Warp w0 = b.warp[0], w1 = b.warp[1];
     const float baseInc = b.freqHz * invSr_;
-    const float maxRatio = ratio_[lanes_ - 1] > ratio_[0] ? ratio_[lanes_ - 1] : ratio_[0];
-    // Effective (oversampled) increment of the fastest lane decides the warp limits and the mip level.
+    float maxRatio = 0.0f;
+    for (int k = 0; k < lanes_; ++k) maxRatio = std::max(maxRatio, ratio_[k]);
+    // Effective increment of the fastest lane decides the warp limits and the (shared) mip levels.
     const float fastInc = baseInc * maxRatio;
     float a0max = std::max(b.warpAmt0[0], b.warpAmt1[0]), a1max = std::max(b.warpAmt0[1], b.warpAmt1[1]);
     const float lim0 = maxWarpAmount(w0, warpSpeed(w1, a1max), fastInc);
@@ -178,55 +180,140 @@ void WtOscillator::render(const Wavetable* wt, const OscBlock& b, const OscModIn
     const float* m0 = modFor(w0);
     const float* m1 = modFor(w1);
 
-    MipSel mips[kMaxUnison];
+    // One mip choice for every lane: lanes differ by at most +-50 cents, and the fastest lane's choice is
+    // alias-free for all of them. Band-limited to the OUTPUT Nyquist even when oversampling (the 2x path is for
+    // the partials the warps create). A crossfade that is nearly all one level reads one level only.
+    MipSel mip = selectMip(fastInc * speed, b.crossfade);
+    if (mip.mix < 0.02f) mip.hi = mip.lo;
+    else if (mip.mix > 0.98f) { mip.lo = mip.hi; mip.mix = 0.0f; }
+    const bool two = mip.hi != mip.lo;
+    const int nLo = wt->levelSize(mip.lo), nHi = wt->levelSize(mip.hi);
+    const float fnLo = (float)nLo, fnHi = (float)nHi;
+    const float mixHi = mip.mix;
+
     float inc[kMaxUnison];
-    for (int k = 0; k < lanes_; ++k)
-    {
-        inc[k] = baseInc * ratio_[k] / (float)os;
-        // Band-limit to the OUTPUT Nyquist even when oversampling: the 2x path is there for the partials the
-        // warps create, not to widen the table's own band (that would land in the decimator's transition band).
-        mips[k] = selectMip(baseInc * ratio_[k] * speed, b.crossfade);
-    }
+    for (int k = 0; k < lanes_; ++k) inc[k] = baseInc * ratio_[k] / (float)os;
 
     const float invN = 1.0f / (float)n;
     const float dPos = (b.pos1 - b.pos0) * invN, dLev = (b.level1 - b.level0) * invN;
     const float dA0 = (b.warpAmt1[0] - b.warpAmt0[0]) * invN, dA1 = (b.warpAmt1[1] - b.warpAmt0[1]) * invN;
     float pos = b.pos0, lev = b.level0, a0 = b.warpAmt0[0], a1 = b.warpAmt0[1];
 
+    // Fast path: no warps, no oversampling -> four lanes at a time (NEON / SSE), scalar gathers.
+    const bool simd = w0 == Warp::Off && w1 == Warp::Off && os == 1;
+    alignas(16) float phs[8] = {0}, incs[8] = {0}, gl[8] = {0}, gr[8] = {0}, gm[8] = {0};
+    const int groups = (lanes_ + 3) / 4;
+    if (simd)
+        for (int k = 0; k < lanes_; ++k) { phs[k] = phase_[k]; incs[k] = inc[k]; gl[k] = gainL_[k]; gr[k] = gainR_[k]; gm[k] = gainM_[k]; }
+
+    float4 GL[2], GR[2], GM[2], INC[2];
+    for (int g = 0; g < groups; ++g)
+    {
+        GL[g] = float4::load(gl + 4 * g); GR[g] = float4::load(gr + 4 * g);
+        GM[g] = float4::load(gm + 4 * g); INC[g] = float4::load(incs + 4 * g);
+    }
+    const bool moving = dPos != 0.0f;
+    int f0 = 0, f1 = 0; float t = 0.0f;
+    framePos(*wt, pos, f0, f1, t);
+
     for (int i = 0; i < n; ++i)
     {
-        int f0, f1; float t;
-        framePos(*wt, pos, f0, f1, t);
-        const float ms0 = m0 ? m0[i] : 0.0f, ms1 = m1 ? m1[i] : 0.0f;
-        const float aa0 = std::min(a0, lim0), aa1 = std::min(a1, lim1);
-        float subL[2] = {0, 0}, subR[2] = {0, 0}, sm = 0.0f;
-        for (int o = 0; o < os; ++o)
-        {
-            float sl = 0.0f, sr = 0.0f;
-            for (int k = 0; k < lanes_; ++k)
+        if (moving) framePos(*wt, pos, f0, f1, t);
+        const float* la = wt->frame(mip.lo, f0);
+        const float* lb = wt->frame(mip.lo, f1);
+        const float* ha = wt->frame(mip.hi, f0);
+        const float* hb = wt->frame(mip.hi, f1);
+        auto read = [&](float q) {
+            float x = q * fnLo; int j = (int)x; float fr = x - (float)j; j &= nLo - 1;
+            const float sa = la[j] + (la[j + 1] - la[j]) * fr, sb = lb[j] + (lb[j + 1] - lb[j]) * fr;
+            float s = sa + (sb - sa) * t;
+            if (two)
             {
-                const float p = phase_[k];
-                float q = p;
-                if (phase0) q = warpPhase(w0, q, aa0, ms0);
-                if (phase1) q = warpPhase(w1, q, aa1, ms1);
-                float s = readTable(*wt, mips[k], f0, f1, t, q);
-                if (out0) s = warpOutput(w0, s, p, aa0, ms0);
-                if (out1) s = warpOutput(w1, s, p, aa1, ms1);
-                sl += s * gainL_[k];
-                sr += s * gainR_[k];
-                sm += s * gainM_[k];
-                const float np = p + inc[k];
-                phase_[k] = np - (float)(int)np;
+                x = q * fnHi; j = (int)x; fr = x - (float)j; j &= nHi - 1;
+                const float ha0 = ha[j] + (ha[j + 1] - ha[j]) * fr, hb0 = hb[j] + (hb[j + 1] - hb[j]) * fr;
+                s += (ha0 + (hb0 - ha0) * t - s) * mixHi;
             }
-            subL[o] = sl; subR[o] = sr;
+            return s;
+        };
+
+        if (simd)
+        {
+            float4 accL, accR, accM;
+            const float4 T(t), N(fnLo), NH(fnHi), MIX(mixHi);
+            for (int g = 0; g < groups; ++g)
+            {
+                float4 ph = float4::load(phs + 4 * g);
+                alignas(16) int32_t j[4];
+                alignas(16) float va[4], vb[4], vc[4], vd[4];
+                float4 x = ph * N;
+                truncToInt(x, j);
+                const float4 fr = fracPos(x);
+                for (int k = 0; k < 4; ++k)
+                {
+                    const int jj = j[k] & (nLo - 1);
+                    va[k] = la[jj]; vb[k] = la[jj + 1]; vc[k] = lb[jj]; vd[k] = lb[jj + 1];
+                }
+                const float4 A = float4::load(va), B = float4::load(vb), C = float4::load(vc), D = float4::load(vd);
+                const float4 sa = float4::madd(A, B - A, fr), sb = float4::madd(C, D - C, fr);
+                float4 sv = float4::madd(sa, sb - sa, T);
+                if (two)
+                {
+                    float4 xh = ph * NH;
+                    truncToInt(xh, j);
+                    const float4 frh = fracPos(xh);
+                    for (int k = 0; k < 4; ++k)
+                    {
+                        const int jj = j[k] & (nHi - 1);
+                        va[k] = ha[jj]; vb[k] = ha[jj + 1]; vc[k] = hb[jj]; vd[k] = hb[jj + 1];
+                    }
+                    const float4 HA = float4::load(va), HB = float4::load(vb), HC = float4::load(vc), HD = float4::load(vd);
+                    const float4 ha0 = float4::madd(HA, HB - HA, frh), hb0 = float4::madd(HC, HD - HC, frh);
+                    const float4 hv = float4::madd(ha0, hb0 - ha0, T);
+                    sv = float4::madd(sv, hv - sv, MIX);
+                }
+                accL = float4::madd(accL, sv, GL[g]);
+                accR = float4::madd(accR, sv, GR[g]);
+                accM = float4::madd(accM, sv, GM[g]);
+                fracPos(ph + INC[g]).store(phs + 4 * g);
+            }
+            l[i] += accL.sum() * lev;
+            r[i] += accR.sum() * lev;
+            mono[i] = accM.sum() * lev;
         }
-        float outL = subL[0], outR = subR[0];
-        if (os == 2) { outL = decL_.process(subL[0], subL[1]); outR = decR_.process(subR[0], subR[1]); sm *= 0.5f; }
-        l[i] += outL * lev;
-        r[i] += outR * lev;
-        mono[i] = sm * lev;
+        else
+        {
+            const float ms0 = m0 ? m0[i] : 0.0f, ms1 = m1 ? m1[i] : 0.0f;
+            const float aa0 = std::min(a0, lim0), aa1 = std::min(a1, lim1);
+            float subL[2] = {0, 0}, subR[2] = {0, 0}, sm = 0.0f;
+            for (int o = 0; o < os; ++o)
+            {
+                float sl = 0.0f, sr = 0.0f;
+                for (int k = 0; k < lanes_; ++k)
+                {
+                    const float p = phase_[k];
+                    float q = p;
+                    if (phase0) q = warpPhase(w0, q, aa0, ms0);
+                    if (phase1) q = warpPhase(w1, q, aa1, ms1);
+                    float s = read(q);
+                    if (out0) s = warpOutput(w0, s, p, aa0, ms0);
+                    if (out1) s = warpOutput(w1, s, p, aa1, ms1);
+                    sl += s * gainL_[k];
+                    sr += s * gainR_[k];
+                    sm += s * gainM_[k];
+                    const float np = p + inc[k];
+                    phase_[k] = np - (float)(int)np;
+                }
+                subL[o] = sl; subR[o] = sr;
+            }
+            float outL = subL[0], outR = subR[0];
+            if (os == 2) { outL = decL_.process(subL[0], subL[1]); outR = decR_.process(subR[0], subR[1]); sm *= 0.5f; }
+            l[i] += outL * lev;
+            r[i] += outR * lev;
+            mono[i] = sm * lev;
+        }
         pos += dPos; lev += dLev; a0 += dA0; a1 += dA1;
     }
+    if (simd) for (int k = 0; k < lanes_; ++k) phase_[k] = phs[k];
 }
 
 // --------------------------------------------------------------------------------------------- sub

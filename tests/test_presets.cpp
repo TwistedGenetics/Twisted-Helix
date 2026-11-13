@@ -46,6 +46,7 @@ static Stereo renderPreset(const Preset& p, double seconds = 3.0, int block = 12
     const double sr = 44100.0;
     Engine e;
     e.prepare(sr, block);
+    e.setRealtime(false);   // the CPU guard must not depend on how fast this machine is
     TableLibrary lib(e);
     applyPreset(p, e, &lib);
     lib.waitIdle();

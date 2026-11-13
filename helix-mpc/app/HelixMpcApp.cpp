@@ -1,5 +1,6 @@
 #include "HelixMpcApp.h"
 #include "helix/WavetableGen.h"
+#include "helix/WavetableImport.h"
 #include <algorithm>
 #include <chrono>
 #include <cstdio>
@@ -73,13 +74,18 @@ void HelixMpcApp::prepare(double sampleRate, int maxBlock) { engine_.prepare(sam
 
 void HelixMpcApp::scanContent()
 {
+    try { scanContentImpl(); } catch (...) {}   // a broken drive must never take MPC down
+}
+
+void HelixMpcApp::scanContentImpl()
+{
     std::vector<Preset> list(factoryPresets().begin(), factoryPresets().end());
     std::vector<std::string> samples;
     std::error_code ec;
     const fs::path root(platform_.contentDir());
-    std::vector<fs::path> files;
-    for (auto it = fs::recursive_directory_iterator(root / "Presets", ec); !ec && it != fs::recursive_directory_iterator(); it.increment(ec))
-        if (it->is_regular_file(ec) && it->path().extension() == ".json") files.push_back(it->path());
+    std::vector<std::string> all, files;
+    listFilesRecursive((root / "Presets").string(), all);
+    for (const std::string& f : all) if (fs::path(f).extension() == ".json") files.push_back(f);
     std::sort(files.begin(), files.end());
     for (const auto& f : files)
     {
@@ -87,13 +93,13 @@ void HelixMpcApp::scanContent()
         std::ifstream in(f);
         std::stringstream ss; ss << in.rdbuf();
         Preset p;
-        if (Preset::fromString(ss.str(), p)) { if (p.name.empty()) p.name = f.stem().string(); list.push_back(p); }
+        if (Preset::fromString(ss.str(), p)) { if (p.name.empty()) p.name = fs::path(f).stem().string(); list.push_back(p); }
     }
-    for (const auto& de : fs::directory_iterator(root / "Samples", ec))
+    for (const std::string& f : listDirectory((root / "Samples").string()))
     {
-        std::string ext = de.path().extension().string();
+        std::string ext = fs::path(f).extension().string();
         std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-        if (de.is_regular_file(ec) && ext == ".wav") samples.push_back(de.path().string());
+        if (fs::is_regular_file(f, ec) && ext == ".wav") samples.push_back(f);
     }
     std::sort(samples.begin(), samples.end());
     std::lock_guard<std::mutex> lk(presetsMutex_);
@@ -285,7 +291,7 @@ void HelixMpcApp::workerLoop()
 {
     while (!quit_.load())
     {
-        tick();
+        try { tick(); } catch (...) {}
         std::this_thread::sleep_for(std::chrono::milliseconds(33));
     }
 }

@@ -173,3 +173,59 @@ void Filter::process(float& l, float& r)
 }
 
 } // namespace helix
+
+namespace helix {
+
+template <FilterType T>
+void Filter::runBlock(float* l, float* r, int n)
+{
+    const bool drive = drive_ > 1.0001f;
+    for (int i = 0; i < n; ++i)
+    {
+        float xl = l[i], xr = r[i];
+        if (drive) { xl = fastTanh(xl * drive_); xr = fastTanh(xr * drive_); }
+        float yl, yr, lp, bp, hp;
+        if constexpr (T == FilterType::LP12)
+        {
+            ch_[0].s1.tick(svf_, xl, lp, bp, hp); yl = lp;
+            ch_[1].s1.tick(svf_, xr, lp, bp, hp); yr = lp;
+        }
+        else if constexpr (T == FilterType::LP24)
+        {
+            ch_[0].s1.tick(svf_, xl, lp, bp, hp); ch_[0].s2.tick(svf2_, lp, yl, bp, hp);
+            ch_[1].s1.tick(svf_, xr, lp, bp, hp); ch_[1].s2.tick(svf2_, lp, yr, bp, hp);
+        }
+        else if constexpr (T == FilterType::BP12)
+        {
+            ch_[0].s1.tick(svf_, xl, lp, bp, hp); yl = bp * svf_.k;
+            ch_[1].s1.tick(svf_, xr, lp, bp, hp); yr = bp * svf_.k;
+        }
+        else if constexpr (T == FilterType::HP12)
+        {
+            ch_[0].s1.tick(svf_, xl, lp, bp, hp); yl = hp;
+            ch_[1].s1.tick(svf_, xr, lp, bp, hp); yr = hp;
+        }
+        else { yl = processChan(ch_[0], xl); yr = processChan(ch_[1], xr); }
+        if (fat_ > 0.0f)
+        {
+            yl = lerp(yl, fastTanh(yl * (1.0f + 3.0f * fat_)) * 1.1f, fat_);
+            yr = lerp(yr, fastTanh(yr * (1.0f + 3.0f * fat_)) * 1.1f, fat_);
+        }
+        if (drive) { yl *= makeup_ * 1.6f; yr *= makeup_ * 1.6f; }
+        l[i] = yl; r[i] = yr;
+    }
+}
+
+void Filter::processBlock(float* l, float* r, int n)
+{
+    switch (type_)
+    {
+        case FilterType::LP12: runBlock<FilterType::LP12>(l, r, n); break;
+        case FilterType::LP24: runBlock<FilterType::LP24>(l, r, n); break;
+        case FilterType::BP12: runBlock<FilterType::BP12>(l, r, n); break;
+        case FilterType::HP12: runBlock<FilterType::HP12>(l, r, n); break;
+        default: runBlock<FilterType::Count>(l, r, n); break;
+    }
+}
+
+} // namespace helix

@@ -21,6 +21,8 @@ public:
     // Call once per control block. cutoff Hz, res/drive/fat 0..1.
     void update(float cutoffHz, float res, float drive, float fat);
     void process(float& l, float& r);
+    // Same as process() for n samples in place, with the type dispatch outside the sample loop.
+    void processBlock(float* l, float* r, int n);
 
 private:
     struct Chan
@@ -32,6 +34,7 @@ private:
         float ap[6] = {0, 0, 0, 0, 0, 0}, phFb = 0;
     };
     float processChan(Chan& c, float x);
+    template <FilterType T> void runBlock(float* l, float* r, int n);
 
     FilterType type_ = FilterType::LP12;
     float sr_ = 44100.0f, invSr_ = 1.0f / 44100.0f;

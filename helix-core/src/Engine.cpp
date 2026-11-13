@@ -85,7 +85,7 @@ void Engine::snapshotParams(const Transport& tr, int n)
     for (int i = 0; i < kNumParams; ++i) ctx_.p[i] = params_.get(i);
     for (int s = 0; s < kNumTableSlots; ++s) ctx_.table[s] = active_[s].get();
     const int quality = (int)ctx_.p[P_QUALITY];
-    const int guard = ctx_.p[P_AUTO_SCALE] >= 0.5f ? guardLevel_.load(std::memory_order_relaxed) : 0;
+    const int guard = ctx_.p[P_AUTO_SCALE] >= 0.5f && realtime_.load(std::memory_order_relaxed) ? guardLevel_.load(std::memory_order_relaxed) : 0;
     ctx_.mipCrossfade = quality > 0 && guard < 2;
     ctx_.oversample = quality == 2 && guard < 1;
     static const int caps[] = {kMaxUnison, kMaxUnison, 5, 3, 2};
@@ -308,6 +308,7 @@ void Engine::updateGuard(double seconds, int n)
     // CPU guard with hysteresis: step up quickly when over budget, step down slowly when well under.
     const float budget = cpuBudget_.load(std::memory_order_relaxed);
     guardTimer_ += real;
+    if (!realtime_.load(std::memory_order_relaxed)) return;
     int level = guardLevel_.load(std::memory_order_relaxed);
     if (smoothed > budget && guardTimer_ > 0.25 && level < 4) { guardLevel_.store(level + 1); guardTimer_ = 0.0; }
     else if (smoothed < 0.6f * budget && guardTimer_ > 2.0 && level > 0) { guardLevel_.store(level - 1); guardTimer_ = 0.0; }

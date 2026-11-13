@@ -33,8 +33,8 @@ static void writeFile(const fs::path& p, const std::vector<uint8_t>& b) { std::o
 int main()
 {
     const fs::path dir = fs::temp_directory_path() / "helix_import_test";
-    fs::remove_all(dir);
-    fs::create_directories(dir / "Wavetables" / "MyCycles");
+    { std::error_code ec; fs::remove_all(dir, ec); }
+    { std::error_code ec; fs::create_directories(dir / "Wavetables" / "MyCycles", ec); }
 
     // 1. Serum table: 8 frames of 1024 samples announced by clm; frame k = sine with k+1 harmonics.
     {
@@ -178,6 +178,6 @@ int main()
         }
         std::printf("fuzz: 3000 inputs, %d parsed, %d tables, no crash\n", parsed, tables);
     }
-    fs::remove_all(dir);
+    { std::error_code ec; fs::remove_all(dir, ec); }
     TEST_MAIN_END();
 }

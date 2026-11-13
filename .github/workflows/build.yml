@@ -1,0 +1,45 @@
+name: build
+on: [push, pull_request]
+jobs:
+  core:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: true }
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build
+      - name: Build and test (release)
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build && ctest --test-dir build --output-on-failure
+      - name: Tests under ASan / UBSan
+        run: cmake -B build-asan -G Ninja -DCMAKE_BUILD_TYPE=Debug -DHELIX_SANITIZE=ON && cmake --build build-asan && ctest --test-dir build-asan --output-on-failure
+      - name: Scalar fallback
+        run: cmake -B build-scalar -G Ninja -DHELIX_FORCE_SCALAR=ON && cmake --build build-scalar && ctest --test-dir build-scalar --output-on-failure
+  arm:
+    runs-on: ubuntu-24.04
+    strategy: { matrix: { arch: [arm32, aarch64] } }
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build qemu-user libc6-armhf-cross libc6-arm64-cross && pip install ziglang
+      - run: cmake -B build-${{ matrix.arch }} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/zig-${{ matrix.arch }}.cmake && cmake --build build-${{ matrix.arch }}
+      - name: Tests under qemu (correctness only)
+        run: |
+          if [ ${{ matrix.arch }} = arm32 ]; then Q="qemu-arm -L /usr/arm-linux-gnueabihf"; else Q="qemu-aarch64 -L /usr/aarch64-linux-gnu"; fi
+          for t in build-${{ matrix.arch }}/tests/test_*; do echo "== $t"; $Q $t; done
+  mpc:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: { submodules: true }
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build
+      - run: cmake -B build -G Ninja && cmake --build build --target helix-mpc-ui helix-mpc-native
+      - run: helix-mpc/build.sh
+      - name: SDK host simulator
+        run: MPC_PLUGIN_FOLDER=$PWD/helix-mpc external/mpc-plugin-builder-sdk/.sdk-tools/host_sim helix-mpc/build/native/helix.so test --seconds 3 --notes 36,43,48 --playing
+      - uses: actions/upload-artifact@v4
+        with: { name: helix-mpc, path: "helix-mpc/build/Twisted Genetics - VST - HELIX" }
+  desktop:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -B build-desktop -G Xcode -DHELIX_BUILD_DESKTOP=ON -DHELIX_BUILD_TESTS=OFF && cmake --build build-desktop --config Release
+      - uses: actions/upload-artifact@v4
+        with: { name: helix-desktop-macos, path: build-desktop/helix-desktop/HelixDesktop_artefacts/Release }

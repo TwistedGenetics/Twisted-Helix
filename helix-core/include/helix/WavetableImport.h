@@ -36,6 +36,11 @@ WavetablePtr importCycleFolder(const std::string& dir, std::string* error = null
 WavetablePtr sampleToTable(const float* mono, size_t len, int sampleRate, const std::string& name,
                            const SampleToTableOptions& opt = {}, SampleToTableInfo* info = nullptr);
 
+// Entries of a directory (files and folders), never throws; empty on any error. For non-real-time scanners.
+std::vector<std::string> listDirectory(const std::string& dir);
+// All regular files below dir (up to maxDepth folder levels), sorted per folder. Never throws.
+void listFilesRecursive(const std::string& dir, std::vector<std::string>& out, int maxDepth = 6);
+
 // YIN pitch detection on x[0..len). Returns the period in samples (fractional), or 0 if aperiodic.
 float detectPeriod(const float* x, size_t len, int minPeriod, int maxPeriod, float threshold = 0.15f);
 

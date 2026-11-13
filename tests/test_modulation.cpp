@@ -182,6 +182,7 @@ int main()
     // 9. CPU guard: an impossible budget drives the guard to its last level.
     {
         plainPatch(e);
+        e.setRealtime(true);
         e.setCpuBudget(1e-6f);
         Run run(e);
         run.block(512, {on(40), on(47), on(52)});

@@ -82,6 +82,28 @@ struct alignas(16) float4
 #endif
 };
 
+// x - trunc(x) for x >= 0 (phase wrap), and trunc(x) as int32 lanes.
+inline float4 fracPos(float4 x)
+{
+#if defined(HELIX_SIMD_NEON)
+    return float4(vsubq_f32(x.v, vcvtq_f32_s32(vcvtq_s32_f32(x.v))));
+#elif defined(HELIX_SIMD_SSE)
+    return float4(_mm_sub_ps(x.v, _mm_cvtepi32_ps(_mm_cvttps_epi32(x.v))));
+#else
+    float4 r; for (int i = 0; i < 4; ++i) r.v[i] = x.v[i] - (float)(int)x.v[i]; return r;
+#endif
+}
+inline void truncToInt(float4 x, int32_t* out)
+{
+#if defined(HELIX_SIMD_NEON)
+    vst1q_s32(out, vcvtq_s32_f32(x.v));
+#elif defined(HELIX_SIMD_SSE)
+    _mm_storeu_si128((__m128i*)out, _mm_cvttps_epi32(x.v));
+#else
+    for (int i = 0; i < 4; ++i) out[i] = (int32_t)x.v[i];
+#endif
+}
+
 // Buffer helpers (n need not be a multiple of 4; pointers need not be aligned).
 inline void bufScale(float* x, float g, int n)
 {

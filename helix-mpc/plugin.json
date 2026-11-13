@@ -11,5 +11,5 @@
   "file32": "VST/helix-arm32.so",
   "file64": "VST/helix-arm64.so",
   "description": "Wavetable synth for jungle, drum & bass and dark bass: 2 wavetable oscillators with warps and unison, sub, noise, 2 filters, 4 envelopes, 4 LFOs, 2 performers, 16-slot matrix, FX.",
-  "license": "Proprietary (Twisted Genetics)"
+  "license": "All rights reserved (no licence chosen yet)"
 }

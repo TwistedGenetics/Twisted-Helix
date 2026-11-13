@@ -347,7 +347,7 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
             flt.setType((FilterType)(int)vp[P_F1_TYPE + o]);
             const float kt = vp[P_F1_KEYTRK + o] * (pitch_ - 60.0f) / 12.0f;
             flt.update(vp[P_F1_CUTOFF + o] * fastExp2(kt), vp[P_F1_RES + o], vp[P_F1_DRIVE + o], vp[P_F1_FAT + o]);
-            for (int i = 0; i < n; ++i) flt.process(bl[i], br[i]);
+            flt.processBlock(bl, br, n);
             bufScale(bl, vp[P_F1_LEVEL + o], n);
             bufScale(br, vp[P_F1_LEVEL + o], n);
         }

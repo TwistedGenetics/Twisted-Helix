@@ -49,6 +49,7 @@ inline void plainPatch(helix::Engine& e)
 {
     using namespace helix;
     e.params().resetToDefaults();
+    e.setRealtime(false);   // deterministic: no CPU guard
     e.params().set(P_A_RAND, 0.0f);
     e.params().set(P_F1_ON, 0.0f);
     e.params().set(P_E1_A, 0.5f);

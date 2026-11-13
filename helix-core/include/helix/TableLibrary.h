@@ -76,6 +76,7 @@ private:
     };
     void worker();
     void doScan();
+    void doScanImpl();
     bool doLoad(int slot, const TableEntry& e);
     void push(Job j);
 

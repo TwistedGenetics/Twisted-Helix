@@ -23,7 +23,9 @@
 #include "helix/WavIO.h"
 #include "helix/WavetableGen.h"
 #include "helix/Preset.h"
+#include "helix/ModSystem.h"
 #include "helix/TableLibrary.h"
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -36,6 +38,38 @@
 #include <vector>
 
 using namespace helix;
+
+// The HELIX CPU budget scenario (brief): 8 voices x 2 oscillators x 4 unison + 2 filters + 3 FX, with
+// modulation running. Held 8-note chords, re-struck every 2 s so voice starts are included.
+static void benchPatch(Engine& e)
+{
+    auto& p = e.params();
+    p.resetToDefaults();
+    p.set(P_A_ON, 1); p.set(P_A_POS, 0.66f); p.set(P_A_UNISON, 4); p.set(P_A_DETUNE, 0.25f);
+    p.set(P_B_ON, 1); p.set(P_B_POS, 0.4f); p.set(P_B_UNISON, 4); p.set(P_B_DETUNE, 0.2f); p.set(P_B_TO_F1, 1.0f); p.set(P_B_TO_F2, 1.0f);
+    p.set(P_A_TO_F2, 1.0f);
+    p.set(P_F1_ON, 1); p.set(P_F1_TYPE, 1); p.set(P_F1_CUTOFF, 1500); p.set(P_F1_RES, 0.3f);
+    p.set(P_F2_ON, 1); p.set(P_F2_TYPE, 2); p.set(P_F2_CUTOFF, 900); p.set(P_FILTER_BLEND, 0.5f);
+    p.set(P_E1_S, 1.0f);
+    // LFO 1 -> F1 cutoff, Env 2 -> A position: the modulation path is live
+    p.set(P_M1_SRC, 5); p.set(P_M1_DST, (float)[]{ for (int d = 0; d < numModDests(); ++d) if (modDestParam(d) == P_F1_CUTOFF) return d; return 0; }()); p.set(P_M1_AMT, 0.3f);
+    p.set(P_M2_SRC, 2); p.set(P_M2_DST, (float)[]{ for (int d = 0; d < numModDests(); ++d) if (modDestParam(d) == P_A_POS) return d; return 0; }()); p.set(P_M2_AMT, 0.5f);
+    // 3 FX: distortion, delay, reverb
+    p.set(P_DIST_ON, 1); p.set(P_DLY_ON, 1); p.set(P_REV_ON, 1);
+    p.set(P_VOICES, 8);
+}
+
+static std::vector<TimedMidi> benchNotes(double seconds)
+{
+    std::vector<TimedMidi> ev;
+    const int chord[8] = {36, 43, 48, 51, 55, 58, 60, 63};
+    for (double t = 0.0; t < seconds; t += 2.0)
+    {
+        for (int n : chord) ev.push_back({t, {0x90, (uint8_t)n, 100}});
+        for (int n : chord) ev.push_back({t + 1.95, {0x80, (uint8_t)n, 0}});
+    }
+    return ev;
+}
 
 static std::vector<TimedMidi> testRiff()
 {
@@ -141,6 +175,7 @@ int main(int argc, char** argv)
 
     Engine engine;
     engine.prepare(o.sr, o.block);
+    engine.setRealtime(o.bench);   // offline renders never depend on CPU speed; --bench measures the real thing
     TableLibrary library(engine);
     if (!o.tablesDir.empty()) { library.setRoots({o.tablesDir}); library.rescan(); library.waitIdle(); }
 
@@ -184,6 +219,12 @@ int main(int argc, char** argv)
         std::string err;
         if (!readMidiFile(o.midi, events, &err)) { std::fprintf(stderr, "MIDI: %s\n", err.c_str()); return 1; }
     }
+    else if (o.bench && !havePreset)
+    {
+        benchPatch(engine);
+        for (auto& st : o.sets) engine.params().set(paramIndexFromId(st.first), st.second);   // --set overrides
+        events = benchNotes(o.seconds > 0 ? o.seconds : 20.0);
+    }
     else events = testRiff();
     double len = o.seconds;
     if (len <= 0) len = (events.empty() ? 6.0 : events.back().seconds) + 2.0;
@@ -197,6 +238,8 @@ int main(int argc, char** argv)
     Transport tr; tr.valid = true; tr.playing = true; tr.bpm = 170.0;
 
     double busy = 0.0, worst = 0.0;
+    std::vector<double> loads;
+    loads.reserve(total / (size_t)o.block + 1);
     for (size_t pos = 0; pos < total; pos += (size_t)o.block)
     {
         const int n = (int)std::min((size_t)o.block, total - pos);
@@ -215,6 +258,7 @@ int main(int argc, char** argv)
         const double dt = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
         busy += dt;
         worst = std::max(worst, dt / ((double)n / o.sr));
+        loads.push_back(dt / ((double)n / o.sr));
         if (!o.bench) for (int i = 0; i < n; ++i) { out.push_back(l[(size_t)i]); out.push_back(r[(size_t)i]); }
         engine.collectGarbage();
     }
@@ -222,8 +266,14 @@ int main(int argc, char** argv)
     const double audioSecs = (double)total / o.sr;
     if (o.bench)
     {
-        std::printf("bench: %.1f s audio in %.3f s CPU -> %.2f%% of one core (worst block %.1f%%), simd=%s\n",
-                    audioSecs, busy, 100.0 * busy / audioSecs, 100.0 * worst, simdBackendName());
+        std::vector<double> sorted = loads;
+        std::sort(sorted.begin(), sorted.end());
+        const double p99 = sorted.empty() ? 0.0 : sorted[std::min(sorted.size() - 1, (size_t)(sorted.size() * 0.99))];
+        float voiceShare = 0.0f;
+        for (int v = 0; v < kMaxVoices; ++v) voiceShare += engine.voiceLoad(v);
+        std::printf("bench: %.1f s audio, block %d, sr %d, simd=%s\n", audioSecs, o.block, o.sr, simdBackendName());
+        std::printf("  mean %.2f%%  p99 %.2f%%  worst %.2f%% of one core  (voices %.2f%%, guard level %d)\n",
+                    100.0 * busy / audioSecs, 100.0 * p99, 100.0 * worst, 100.0 * voiceShare, engine.guardLevel());
         return 0;
     }
     if (!writeWavFile(o.out, out.data(), out.size() / 2, 2, o.sr, o.float32)) { std::fprintf(stderr, "cannot write %s\n", o.out.c_str()); return 1; }

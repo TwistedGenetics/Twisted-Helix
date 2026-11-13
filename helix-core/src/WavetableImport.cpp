@@ -1,8 +1,17 @@
+// Large-file support for 32-bit ARM (Gen1 MPCs): without it readdir() fails with EOVERFLOW on filesystems
+// that hand out 64-bit directory offsets. Must come before any system header.
+#if !defined(_WIN32) && !defined(_FILE_OFFSET_BITS)
+#define _FILE_OFFSET_BITS 64
+#endif
 #include "helix/WavetableImport.h"
 #include "helix/Math.h"
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <filesystem>
+#if !defined(_WIN32)
+#include <dirent.h>
+#endif
 
 namespace helix {
 
@@ -148,13 +157,52 @@ static bool isWav(const fs::path& p)
     return e == ".wav";
 }
 
+std::vector<std::string> listDirectory(const std::string& dir)
+{
+    std::vector<std::string> out;
+#if !defined(_WIN32)
+    // POSIX readdir with 64-bit offsets (see the top of this file): std::filesystem's iterator on 32-bit ARM
+    // depends on how the C++ library itself was built.
+    if (DIR* d = opendir(dir.c_str()))
+    {
+        while (dirent* e = readdir(d))
+        {
+            if (std::strcmp(e->d_name, ".") == 0 || std::strcmp(e->d_name, "..") == 0) continue;
+            out.push_back(dir + (dir.empty() || dir.back() == '/' ? "" : "/") + e->d_name);
+        }
+        closedir(d);
+    }
+#else
+    try
+    {
+        std::error_code ec;
+        fs::directory_iterator it(dir, ec), end;
+        for (; !ec && it != end; it.increment(ec)) out.push_back(it->path().string());
+    }
+    catch (...) { out.clear(); }   // a scanner must never take the host down
+#endif
+    std::sort(out.begin(), out.end());
+    return out;
+}
+
+void listFilesRecursive(const std::string& dir, std::vector<std::string>& out, int maxDepth)
+{
+    if (maxDepth < 0) return;
+    std::error_code ec;
+    for (const std::string& p : listDirectory(dir))
+    {
+        if (fs::is_directory(p, ec)) listFilesRecursive(p, out, maxDepth - 1);
+        else if (fs::is_regular_file(p, ec)) out.push_back(p);
+    }
+}
+
 WavetablePtr importCycleFolder(const std::string& dir, std::string* error)
 {
     std::error_code ec;
     std::vector<fs::path> files;
-    for (const auto& de : fs::directory_iterator(dir, ec))
-        if (de.is_regular_file(ec) && isWav(de.path())) files.push_back(de.path());
-    if (ec || files.empty()) { if (error) *error = "no WAV files in folder"; return nullptr; }
+    for (const std::string& f : listDirectory(dir))
+        if (fs::is_regular_file(f, ec) && isWav(f)) files.push_back(f);
+    if (files.empty()) { if (error) *error = "no WAV files in folder"; return nullptr; }
     std::sort(files.begin(), files.end(), [](const fs::path& a, const fs::path& b) { return a.filename().string() < b.filename().string(); });
     std::vector<float> frames;
     int count = 0;

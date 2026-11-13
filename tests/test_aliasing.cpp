@@ -49,6 +49,7 @@ int main()
     const int n = 16384;
     Engine e;
     e.prepare(sr, n);
+    e.setRealtime(false);
     e.setTable(kSlotA, makeBuiltinTable(BuiltinTable::BasicShapes));
     e.params().set(P_A_POS, 2.0f / 3.0f);   // pure saw frame
     e.params().set(P_A_RAND, 0.0f);

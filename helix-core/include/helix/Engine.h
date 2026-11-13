@@ -74,6 +74,9 @@ public:
     int guardLevel() const { return guardLevel_.load(std::memory_order_relaxed); }
     // The CPU guard's target, fraction of one core (default 0.35, the HELIX budget).
     void setCpuBudget(float fraction) { cpuBudget_.store(fraction, std::memory_order_relaxed); }
+    // Offline rendering (tests, helix-render, bounces): the CPU guard is off, so the output never depends on
+    // how fast the machine is. Real-time hosts leave this on (the default).
+    void setRealtime(bool rt) { realtime_.store(rt, std::memory_order_relaxed); if (!rt) guardLevel_.store(0); }
 
     // True while the heavy effect (OTT) is on, for the CPU meter.
     bool heavyFxActive() const { return heavyFx_.load(std::memory_order_relaxed); }
@@ -125,6 +128,7 @@ private:
     std::atomic<float> voiceLoad_[kMaxVoices];
     std::atomic<int> guardLevel_{0};
     std::atomic<float> cpuBudget_{0.35f};
+    std::atomic<bool> realtime_{true};
     double voiceTime_[kMaxVoices] = {};
     double voiceWindow_ = 0.0;
     double guardTimer_ = 0.0;
