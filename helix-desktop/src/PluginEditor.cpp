@@ -117,7 +117,10 @@ void ParamControl::resized()
 void ParamControl::refreshLive()
 {
     if (!knob_ || !paramDef(index_).modulatable) return;
-    const float v = proc_.engine().liveNormalised(index_);
+    // Live values are only meaningful while a voice sounds (and only published while audio runs): otherwise
+    // the ring sits on the knob's own value, i.e. it is hidden.
+    const float v = proc_.engine().activeVoices() > 0 ? proc_.engine().liveNormalised(index_)
+                                                       : proc_.parameter(index_)->getValue();
     if (std::abs(v - live_) > 1e-4f) { live_ = v; repaint(); }
 }
 
@@ -376,7 +379,9 @@ HelixEditor::HelixEditor(HelixProcessor& p) : AudioProcessorEditor(&p), proc_(p)
     setResizable(true, true);
     setResizeLimits(900, 560, 2400, 1600);
     setSize(1180, 760);
-    // HELIX_START_PAGE=<n> opens another page first (screenshots and UI checks).
+    // HELIX_START_PROGRAM=<n> loads factory preset n, HELIX_START_PAGE=<n> opens another page first
+    // (screenshots and UI checks).
+    if (const char* prog = std::getenv("HELIX_START_PROGRAM")) proc_.setCurrentProgram(std::atoi(prog));
     const char* start = std::getenv("HELIX_START_PAGE");
     showPage(start ? juce::jlimit(0, (int)pages.size() - 1, std::atoi(start)) : 0);
     startTimerHz(30);

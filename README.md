@@ -5,7 +5,7 @@ the spirit of Serum and Massive. It runs **natively on Akai standalone MPCs** th
 SDK (MPC OS 3.10.1+, 32-bit Gen1 incl. MPC One / One Retro, and 64-bit Gen2), and on the desktop as
 VST3 / AU / Standalone.
 
-Read **[docs/PLATFORM.md](docs/PLATFORM.md)** for what the MPC allows and **[docs/PERF.md](docs/PERF.md)** for CPU numbers.
+The **[user manual (PDF)](docs/HELIX-Manual.pdf)** explains how to install and play HELIX. Read **[docs/PLATFORM.md](docs/PLATFORM.md)** for what the MPC allows and **[docs/PERF.md](docs/PERF.md)** for CPU numbers.
 
 | Folder | What |
 |---|---|

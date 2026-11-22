@@ -94,6 +94,8 @@ void HelixProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBu
 {
     juce::ScopedNoDenormals noDenormals;
     const auto t0 = std::chrono::steady_clock::now();
+    // An offline bounce must not depend on how fast the computer is: the CPU guard only runs in real time.
+    engine_.setRealtime(!isNonRealtime());
     const int n = buffer.getNumSamples();
 
     midi_.clear();

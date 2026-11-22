@@ -54,6 +54,9 @@ jobs:
     if: ${{ always() && needs.version.result == 'success' && needs.mpc.result == 'success' }}
     runs-on: ubuntu-24.04
     steps:
+      - uses: actions/checkout@v4
+      - name: The manual (built by docs/manual/make_manual.py and committed)
+        run: mkdir -p out && cp docs/HELIX-Manual.pdf out/
       - uses: actions/download-artifact@v4
         with: { path: out, merge-multiple: true }
       - uses: softprops/action-gh-release@v2
@@ -61,11 +64,13 @@ jobs:
           tag_name: v${{ needs.version.outputs.v }}
           name: HELIX ${{ needs.version.outputs.v }}
           target_commitish: ${{ github.sha }}
-          files: out/*.zip
+          files: |
+            out/*.zip
+            out/*.pdf
           prerelease: false
           make_latest: true
           body: |
-            HELIX ${{ needs.version.outputs.v }}: untested on hardware.
+            HELIX ${{ needs.version.outputs.v }}: untested on hardware. The user manual is `HELIX-Manual.pdf`.
 
             **MPC** (`helix-*-mpc.zip`): MPC OS 3.10.1+. Unzip, copy the folder into `VST2 Plugins` on a drive, then
             Preferences > Enhancements (Beta) > Enable Enhancements + External Plugin Support. See INSTALL.txt.
