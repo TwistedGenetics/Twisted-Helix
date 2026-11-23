@@ -1,307 +1,1014 @@
 #include "PluginEditor.h"
-#include "helix/UiLayout.h"
+#include "helix/ModSystem.h"
 
 using namespace helix;
 
-// ------------------------------------------------------------------------------------------- look and feel
+namespace {
 
-HelixLookAndFeel::HelixLookAndFeel()
+int oscOff(int slot) { return slot == 0 ? 0 : P_B_ON - P_A_ON; }
+int filtOff(int f) { return f == 0 ? 0 : P_F2_ON - P_F1_ON; }
+
+// --------------------------------------------------------------------------------------------- oscillator panel
+
+class OscPanel : public PanelFrame
 {
-    setColour(juce::ResizableWindow::backgroundColourId, HelixColours::bg());
-    setColour(juce::Label::textColourId, HelixColours::ink());
-    setColour(juce::Slider::textBoxTextColourId, HelixColours::ink());
-    setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
-    setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentBlack);
-    setColour(juce::ComboBox::backgroundColourId, HelixColours::panel());
-    setColour(juce::ComboBox::textColourId, HelixColours::ink());
-    setColour(juce::ComboBox::outlineColourId, HelixColours::line());
-    setColour(juce::ComboBox::arrowColourId, HelixColours::ink());
-    setColour(juce::PopupMenu::backgroundColourId, HelixColours::panel());
-    setColour(juce::PopupMenu::textColourId, HelixColours::ink());
-    setColour(juce::PopupMenu::highlightedBackgroundColourId, HelixColours::accent());
-    setColour(juce::TextButton::buttonColourId, HelixColours::panel());
-    setColour(juce::TextButton::buttonOnColourId, HelixColours::ink());
-    setColour(juce::TextButton::textColourOffId, HelixColours::ink());
-    setColour(juce::TextButton::textColourOnId, HelixColours::bg());
-    setColour(juce::ToggleButton::textColourId, HelixColours::ink());
-    setColour(juce::ScrollBar::thumbColourId, HelixColours::line());
-}
-
-void HelixLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int w, int h, float pos, float start,
-                                        float end, juce::Slider& s)
-{
-    const auto bounds = juce::Rectangle<float>((float)x, (float)y, (float)w, (float)h).reduced(6.0f);
-    const float r = juce::jmin(bounds.getWidth(), bounds.getHeight()) * 0.5f;
-    const auto c = bounds.getCentre();
-    const float angle = start + pos * (end - start);
-
-    juce::Path track;
-    track.addCentredArc(c.x, c.y, r, r, 0.0f, start, end, true);
-    g.setColour(HelixColours::line());
-    g.strokePath(track, juce::PathStrokeType(4.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
-
-    const bool bipolar = s.getProperties().getWithDefault("bipolar", false);
-    const float from = bipolar ? (start + end) * 0.5f : start;
-    juce::Path value;
-    value.addCentredArc(c.x, c.y, r, r, 0.0f, juce::jmin(from, angle), juce::jmax(from, angle), true);
-    g.setColour(HelixColours::accent());
-    g.strokePath(value, juce::PathStrokeType(4.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
-
-    g.setColour(HelixColours::ink());
-    juce::Path needle;
-    needle.addRectangle(-1.5f, -r + 6.0f, 3.0f, r * 0.55f);
-    g.fillPath(needle, juce::AffineTransform::rotation(angle).translated(c.x, c.y));
-}
-
-void HelixLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& b, bool, bool)
-{
-    auto r = b.getLocalBounds().toFloat().reduced(4.0f);
-    const bool on = b.getToggleState();
-    g.setColour(on ? HelixColours::ink() : HelixColours::panel());
-    g.fillRoundedRectangle(r, 6.0f);
-    g.setColour(HelixColours::ink());
-    g.drawRoundedRectangle(r, 6.0f, 1.5f);
-    g.setColour(on ? HelixColours::bg() : HelixColours::ink());
-    g.setFont(juce::FontOptions(16.0f, juce::Font::bold));
-    g.drawText(on ? "ON" : "OFF", r, juce::Justification::centred);
-}
-
-// ------------------------------------------------------------------------------------------- param control
-
-ParamControl::ParamControl(HelixProcessor& proc, int index) : proc_(proc), index_(index)
-{
-    const ParamDef& d = paramDef(index);
-    auto* param = proc.parameter(index);
-    name_.setText(d.name, juce::dontSendNotification);
-    name_.setJustificationType(juce::Justification::centred);
-    name_.setFont(juce::FontOptions(14.0f, juce::Font::bold));
-    name_.setColour(juce::Label::textColourId, HelixColours::muted());
-    addAndMakeVisible(name_);
-
-    if (d.kind == ParamKind::Bool)
+public:
+    OscPanel(Page& pg, int slot) : PanelFrame(slot == 0 ? "Osc A" : "Osc B"), page_(pg), slot_(slot)
     {
-        toggle_ = std::make_unique<juce::ToggleButton>();
-        addAndMakeVisible(*toggle_);
-        toggleAtt_ = std::make_unique<juce::ButtonParameterAttachment>(*param, *toggle_);
+        const int o = oscOff(slot);
+        setPower(std::make_unique<ParamToggle>(pg.proc, P_A_ON + o));
+        view_ = pg.own(std::make_unique<WavetableView>(pg.proc, slot), this);
+        addAndMakeVisible(table_);
+        table_.setTooltip("Wavetable: the 8 built-in tables, then your Wavetables folder");
+        table_.onChange = [this] {
+            const int id = table_.getSelectedId();
+            if (id > 0) page_.proc.setParamFromUI(slot_ == 0 ? P_A_TABLE : P_B_TABLE, (float)(id - 1));
+        };
+        for (auto* b : {&prevT_, &nextT_, &more_}) addAndMakeVisible(b);
+        prevT_.onClick = [this] { step(-1); };
+        nextT_.onClick = [this] { step(1); };
+        more_.onClick = [this] { moreMenu(); };
+        more_.setTooltip("Load a WAV as a wavetable, or make one from a sample");
+        oct_ = pg.knob(P_A_OCT + o, this, "Octave");
+        semi_ = pg.knob(P_A_SEMI + o, this, "Semi");
+        fine_ = pg.knob(P_A_FINE + o, this, "Fine");
+        pos_ = pg.knob(P_A_POS + o, this, "WT Pos");
+        level_ = pg.knob(P_A_LEVEL + o, this, "Level");
+        pan_ = pg.knob(P_A_PAN + o, this, "Pan");
+        uni_ = pg.knob(P_A_UNISON + o, this, "Unison");
+        det_ = pg.knob(P_A_DETUNE + o, this, "Detune");
+        blend_ = pg.knob(P_A_BLEND + o, this, "Blend");
+        spread_ = pg.knob(P_A_SPREAD + o, this, "Spread");
+        phase_ = pg.knob(P_A_PHASE + o, this, "Phase");
+        rand_ = pg.knob(P_A_RAND + o, this, "Rnd Phase");
+        w1_ = pg.combo(P_A_W1_MODE + o, this, "Warp 1");
+        w1a_ = pg.knob(P_A_W1_AMT + o, this, "Amount");
+        w2_ = pg.combo(P_A_W2_MODE + o, this, "Warp 2");
+        w2a_ = pg.knob(P_A_W2_AMT + o, this, "Amount");
     }
-    else if (d.kind == ParamKind::Choice)
+
+    void resized() override
     {
-        menu_ = std::make_unique<juce::ComboBox>();
-        menu_->addItemList(param->getAllValueStrings(), 1);
-        addAndMakeVisible(*menu_);
-        menuAtt_ = std::make_unique<juce::ComboBoxParameterAttachment>(*param, *menu_);
+        PanelFrame::resized();
+        auto title = titleArea();
+        more_.setBounds(title.removeFromRight(24).reduced(0, 1));
+        nextT_.setBounds(title.removeFromRight(22).reduced(0, 1));
+        table_.setBounds(title.removeFromRight(150).reduced(2, 0));
+        prevT_.setBounds(title.removeFromRight(22).reduced(0, 1));
+        auto c = content();
+        view_->setBounds(c.removeFromTop(170));
+        c.removeFromTop(6);
+        const int rh = (c.getHeight() - 4) / 3;
+        layoutRow(c.removeFromTop(rh), {oct_, semi_, fine_, pos_, level_, pan_});
+        layoutRow(c.removeFromTop(rh), {uni_, det_, blend_, spread_, phase_, rand_});
+        auto r3 = c.removeFromTop(rh);
+        const int cw = r3.getWidth() / 6;
+        w1_->setBounds(r3.removeFromLeft(cw * 2 - 8).withTrimmedTop(8).withHeight(40).translated(0, 6));
+        w1a_->setBounds(r3.removeFromLeft(cw));
+        w2_->setBounds(r3.removeFromLeft(cw * 2 - 8).withTrimmedTop(8).withHeight(40).translated(0, 6));
+        w2a_->setBounds(r3.removeFromLeft(cw));
     }
-    else
+
+    void tick()
     {
-        knob_ = std::make_unique<juce::Slider>(juce::Slider::RotaryVerticalDrag, juce::Slider::TextBoxBelow);
-        knob_->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 90, 24);
-        knob_->setColour(juce::Slider::textBoxTextColourId, HelixColours::ink());
-        knob_->setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentBlack);
-        knob_->setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentBlack);
-        knob_->setColour(juce::Slider::textBoxHighlightColourId, HelixColours::accent().withAlpha(0.3f));
-        knob_->getProperties().set("bipolar", d.min < 0.0f && d.max > 0.0f);
-        addAndMakeVisible(*knob_);
-        knobAtt_ = std::make_unique<juce::SliderParameterAttachment>(*param, *knob_);
-    }
-}
-
-void ParamControl::resized()
-{
-    auto r = getLocalBounds();
-    name_.setBounds(r.removeFromTop(20));
-    if (knob_) knob_->setBounds(r);
-    if (menu_) menu_->setBounds(r.withSizeKeepingCentre(r.getWidth() - 6, 30));
-    if (toggle_) toggle_->setBounds(r.withSizeKeepingCentre(70, 34));
-}
-
-void ParamControl::refreshLive()
-{
-    if (!knob_ || !paramDef(index_).modulatable) return;
-    // Live values are only meaningful while a voice sounds (and only published while audio runs): otherwise
-    // the ring sits on the knob's own value, i.e. it is hidden.
-    const float v = proc_.engine().activeVoices() > 0 ? proc_.engine().liveNormalised(index_)
-                                                       : proc_.parameter(index_)->getValue();
-    if (std::abs(v - live_) > 1e-4f) { live_ = v; repaint(); }
-}
-
-void ParamControl::paintOverChildren(juce::Graphics& g)
-{
-    if (!knob_ || live_ < 0.0f) return;
-    const float base = proc_.parameter(index_)->getValue();
-    if (std::abs(live_ - base) < 1e-3f) return;
-    // Modulation ring: an outer arc from the knob value to the live (modulated) value.
-    auto kb = knob_->getBounds().toFloat();
-    kb.removeFromBottom(24.0f);
-    const auto c = kb.getCentre();
-    const float r = juce::jmin(kb.getWidth(), kb.getHeight()) * 0.5f - 1.0f;
-    const auto params = knob_->getRotaryParameters();
-    const float a0 = params.startAngleRadians + base * (params.endAngleRadians - params.startAngleRadians);
-    const float a1 = params.startAngleRadians + live_ * (params.endAngleRadians - params.startAngleRadians);
-    juce::Path ring;
-    ring.addCentredArc(c.x, c.y, r, r, 0.0f, juce::jmin(a0, a1), juce::jmax(a0, a1), true);
-    g.setColour(HelixColours::mod());
-    g.strokePath(ring, juce::PathStrokeType(3.0f));
-    g.fillEllipse(c.x + r * std::sin(a1) - 3.5f, c.y - r * std::cos(a1) - 3.5f, 7.0f, 7.0f);
-}
-
-// ------------------------------------------------------------------------------------------- wavetable view
-
-WavetableView::WavetableView(HelixProcessor& p, int slot) : proc_(p), slot_(slot)
-{
-    loadButton_.onClick = [this] { chooseFile(false); };
-    s2tButton_.onClick = [this] { chooseFile(true); };
-    for (int f : {8, 16, 32, 64, 128, 256}) frames_.addItem(juce::String(f) + " frames", f);
-    frames_.setSelectedId(64, juce::dontSendNotification);
-    addAndMakeVisible(loadButton_);
-    addAndMakeVisible(s2tButton_);
-    addAndMakeVisible(frames_);
-}
-
-void WavetableView::resized()
-{
-    auto r = getLocalBounds().reduced(10).removeFromTop(30);
-    loadButton_.setBounds(r.removeFromRight(130));
-    r.removeFromRight(6);
-    s2tButton_.setBounds(r.removeFromRight(150));
-    r.removeFromRight(6);
-    frames_.setBounds(r.removeFromRight(120));
-}
-
-void WavetableView::chooseFile(bool s2t)
-{
-    chooser_ = std::make_unique<juce::FileChooser>(s2t ? "Make a wavetable from a sample" : "Load a wavetable",
-                                                   HelixProcessor::userWavetableFolder(), "*.wav");
-    const int frames = s2t ? frames_.getSelectedId() : 0;
-    chooser_->launchAsync(juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
-                          [this, frames](const juce::FileChooser& fc) {
-                              const auto f = fc.getResult();
-                              if (f.existsAsFile()) proc_.library().requestLoadFile(slot_, f.getFullPathName().toStdString(), frames);
-                          });
-}
-
-void WavetableView::paint(juce::Graphics& g)
-{
-    auto r = getLocalBounds().toFloat();
-    g.setColour(HelixColours::panel());
-    g.fillRoundedRectangle(r, 8.0f);
-    g.setColour(HelixColours::line());
-    g.drawRoundedRectangle(r.reduced(0.5f), 8.0f, 1.0f);
-
-    auto table = proc_.engine().uiTable(slot_);
-    if (!table) return;
-    const int nf = table->numFrames();
-    const int shown = juce::jmin(nf, 40);
-    const float posParam = proc_.engine().liveNormalised(slot_ == 0 ? P_A_POS : P_B_POS);
-    const int current = juce::roundToInt(posParam * (float)(nf - 1));
-    auto area = r.reduced(16.0f, 14.0f);
-    const float depthX = area.getWidth() * 0.18f, depthY = area.getHeight() * 0.35f;
-    const float w = area.getWidth() - depthX, h = area.getHeight() - depthY;
-    const int points = 128;
-
-    auto drawFrame = [&](int f, float t, juce::Colour col, float thick) {
-        const float* s = table->fullFrame(f);
-        const float ox = area.getX() + depthX * t, oy = area.getY() + depthY * (1.0f - t);
-        juce::Path p;
-        for (int i = 0; i <= points; ++i)
+        view_->refresh();
+        auto& lib = page_.proc.library();
+        const int n = lib.count();
+        if (n != items_)
         {
-            const int idx = (i * kFrameSize / points) & (kFrameSize - 1);
-            const float x = ox + w * (float)i / points;
-            const float y = oy + h * 0.5f - s[idx] * h * 0.45f;
-            if (i == 0) p.startNewSubPath(x, y); else p.lineTo(x, y);
+            items_ = n;
+            table_.clear(juce::dontSendNotification);
+            for (int i = 0; i < n; ++i) table_.addItem(lib.nameAt(i), i + 1);
         }
-        g.setColour(col);
-        g.strokePath(p, juce::PathStrokeType(thick));
-    };
-    for (int k = shown - 1; k >= 0; --k)
-    {
-        const int f = shown > 1 ? k * (nf - 1) / (shown - 1) : 0;
-        drawFrame(f, shown > 1 ? (float)k / (shown - 1) : 0.0f, HelixColours::line(), 1.0f);
+        const int sel = lib.wrap(page_.proc.engine().params().getInt(slot_ == 0 ? P_A_TABLE : P_B_TABLE)) + 1;
+        if (table_.getSelectedId() != sel) table_.setSelectedId(sel, juce::dontSendNotification);
     }
-    drawFrame(current, nf > 1 ? (float)current / (nf - 1) : 0.0f, HelixColours::accent(), 2.5f);
-    g.setColour(HelixColours::ink());
-    g.setFont(juce::FontOptions(16.0f, juce::Font::bold));
-    g.drawText(juce::String(table->name()) + "   frame " + juce::String(current + 1) + " / " + juce::String(nf),
-               r.reduced(12.0f, 6.0f), juce::Justification::topLeft);
-}
 
-// ------------------------------------------------------------------------------------------- presets
+private:
+    void step(int d)
+    {
+        const int n = juce::jmax(1, page_.proc.library().count());
+        const int cur = page_.proc.library().wrap(page_.proc.engine().params().getInt(slot_ == 0 ? P_A_TABLE : P_B_TABLE));
+        page_.proc.setParamFromUI(slot_ == 0 ? P_A_TABLE : P_B_TABLE, (float)((cur + d + n) % n));
+    }
+    void moreMenu()
+    {
+        juce::PopupMenu m, s2t;
+        m.addItem(1, "Load WAV as wavetable...");
+        for (int f : {8, 16, 32, 64, 128, 256}) s2t.addItem(100 + f, juce::String(f) + " frames");
+        m.addSubMenu("Sample > Table...", s2t);
+        m.addSeparator();
+        m.addItem(2, "Open the Wavetables folder");
+        m.addItem(3, "Rescan the Wavetables folder");
+        juce::Component::SafePointer<OscPanel> self(this);
+        m.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&more_), [self](int r) {
+            if (!self || r == 0) return;
+            if (r == 2) { HelixProcessor::userWavetableFolder().startAsProcess(); return; }
+            if (r == 3) { self->page_.proc.library().rescan(); return; }
+            const int frames = r >= 100 ? r - 100 : 0;
+            self->chooser_ = std::make_unique<juce::FileChooser>(frames ? "Make a wavetable from a sample" : "Load a wavetable",
+                                                                 HelixProcessor::userWavetableFolder(), "*.wav");
+            self->chooser_->launchAsync(juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+                                        [self, frames](const juce::FileChooser& fc) {
+                                            if (!self) return;
+                                            const auto f = fc.getResult();
+                                            if (f.existsAsFile())
+                                                self->page_.proc.library().requestLoadFile(self->slot_, f.getFullPathName().toStdString(), frames);
+                                        });
+        });
+    }
 
-PresetBrowser::PresetBrowser(HelixProcessor& p) : proc_(p)
+    Page& page_;
+    int slot_;
+    WavetableView* view_;
+    juce::ComboBox table_;
+    juce::TextButton prevT_{"<"}, nextT_{">"}, more_{"..."};
+    std::unique_ptr<juce::FileChooser> chooser_;
+    int items_ = -1;
+    ParamKnob *oct_, *semi_, *fine_, *pos_, *level_, *pan_, *uni_, *det_, *blend_, *spread_, *phase_, *rand_, *w1a_, *w2a_;
+    ParamCombo *w1_, *w2_;
+};
+
+// --------------------------------------------------------------------------------------------- filter panel
+
+class FilterPanel : public PanelFrame
 {
-    list_.setRowHeight(30);
-    list_.setColour(juce::ListBox::backgroundColourId, HelixColours::panel());
-    list_.setColour(juce::ListBox::outlineColourId, HelixColours::line());
-    list_.setOutlineThickness(1);
-    addAndMakeVisible(list_);
-    for (auto* b : {&loadB_, &saveB_, &initB_, &mutateB_, &prevB_, &nextB_}) addAndMakeVisible(b);
-    current_.setFont(juce::FontOptions(24.0f, juce::Font::bold));
-    current_.setColour(juce::Label::textColourId, HelixColours::ink());
-    addAndMakeVisible(current_);
-    loadB_.onClick = [this] { load(list_.getSelectedRow()); };
-    saveB_.onClick = [this] { save(); };
-    initB_.onClick = [this] { helix::Preset init; proc_.loadPreset(init); refresh(); };
-    mutateB_.onClick = [this] {
-        helix::Preset m = proc_.currentPreset();
-        helix::mutatePreset(m, 0.1f, mutateSeed_++);
-        m.name = proc_.presetName().toStdString();
-        if (m.name.find(" (mutated)") == std::string::npos) m.name += " (mutated)";
-        proc_.loadPreset(m);
-        refresh();
+public:
+    FilterPanel(Page& pg, int f) : PanelFrame(f == 0 ? "Filter 1" : "Filter 2")
+    {
+        const int o = filtOff(f);
+        setPower(std::make_unique<ParamToggle>(pg.proc, P_F1_ON + o));
+        type_ = pg.combo(P_F1_TYPE + o, this);
+        view_ = pg.own(std::make_unique<FilterResponseView>(pg.proc, f), this);
+        cut_ = pg.knob(P_F1_CUTOFF + o, this, "Cutoff", ParamKnob::Size::Large);
+        res_ = pg.knob(P_F1_RES + o, this, "Reso");
+        drive_ = pg.knob(P_F1_DRIVE + o, this, "Drive");
+        key_ = pg.knob(P_F1_KEYTRK + o, this, "Key Trk");
+        fat_ = pg.knob(P_F1_FAT + o, this, "Fat");
+        level_ = pg.knob(P_F1_LEVEL + o, this, "Level");
+    }
+    void resized() override
+    {
+        PanelFrame::resized();
+        type_->setBounds(titleArea().removeFromRight(130));
+        auto c = content();
+        view_->setBounds(c.removeFromLeft(168));
+        c.removeFromLeft(6);
+        auto top = c.removeFromTop(c.getHeight() / 2);
+        layoutRow(top, {cut_, res_, drive_});
+        layoutRow(c, {key_, fat_, level_});
+    }
+    void tick() { view_->refresh(); }
+private:
+    ParamCombo* type_;
+    FilterResponseView* view_;
+    ParamKnob *cut_, *res_, *drive_, *key_, *fat_, *level_;
+};
+
+// --------------------------------------------------------------------------------------------- sub / noise / routing
+
+class SubPanel : public PanelFrame
+{
+public:
+    explicit SubPanel(Page& pg) : PanelFrame("Sub")
+    {
+        setPower(std::make_unique<ParamToggle>(pg.proc, P_SUB_ON));
+        shape_ = pg.combo(P_SUB_SHAPE, this, "Shape");
+        oct_ = pg.combo(P_SUB_OCT, this, "Octave");
+        direct_ = pg.toggle(P_SUB_DIRECT, this, "Direct");
+        direct_->button().setTooltip("Direct out: the sub skips both filters (clean low end)");
+        level_ = pg.knob(P_SUB_LEVEL, this, "Level");
+        pan_ = pg.knob(P_SUB_PAN, this, "Pan");
+    }
+    void resized() override
+    {
+        PanelFrame::resized();
+        auto c = content();
+        shape_->setBounds(c.removeFromLeft(100).withSizeKeepingCentre(96, 40));
+        c.removeFromLeft(4);
+        oct_->setBounds(c.removeFromLeft(84).withSizeKeepingCentre(80, 40));
+        c.removeFromLeft(8);
+        direct_->setBounds(c.removeFromLeft(74).withSizeKeepingCentre(72, 22));
+        layoutRow(c, {level_, pan_});
+    }
+private:
+    ParamCombo *shape_, *oct_;
+    ParamToggle* direct_;
+    ParamKnob *level_, *pan_;
+};
+
+class NoisePanel : public PanelFrame
+{
+public:
+    explicit NoisePanel(Page& pg) : PanelFrame("Noise")
+    {
+        setPower(std::make_unique<ParamToggle>(pg.proc, P_NOISE_ON));
+        type_ = pg.combo(P_NOISE_TYPE, this, "Texture");
+        track_ = pg.toggle(P_NOISE_PITCH, this, "Track");
+        loop_ = pg.toggle(P_NOISE_LOOP, this, "Loop");
+        level_ = pg.knob(P_NOISE_LEVEL, this, "Level");
+        pan_ = pg.knob(P_NOISE_PAN, this, "Pan");
+    }
+    void resized() override
+    {
+        PanelFrame::resized();
+        auto c = content();
+        type_->setBounds(c.removeFromLeft(118).withSizeKeepingCentre(114, 40));
+        c.removeFromLeft(8);
+        auto sw = c.removeFromLeft(70);
+        track_->setBounds(sw.removeFromTop(sw.getHeight() / 2).withSizeKeepingCentre(68, 22));
+        loop_->setBounds(sw.withSizeKeepingCentre(68, 22));
+        layoutRow(c, {level_, pan_});
+    }
+private:
+    ParamCombo* type_;
+    ParamToggle *track_, *loop_;
+    ParamKnob *level_, *pan_;
+};
+
+class RoutingPanel : public PanelFrame
+{
+public:
+    explicit RoutingPanel(Page& pg) : PanelFrame("Routing")
+    {
+        const char* names[] = {"A", "B", "Sub", "Nse"};
+        const int f1[] = {P_A_TO_F1, P_B_TO_F1, P_SUB_TO_F1, P_NOISE_TO_F1};
+        const int f2[] = {P_A_TO_F2, P_B_TO_F2, P_SUB_TO_F2, P_NOISE_TO_F2};
+        for (int i = 0; i < 4; ++i)
+        {
+            sends_.push_back(pg.knob(f1[i], this, juce::String(names[i]) + ">1", ParamKnob::Size::Small));
+            sends_.push_back(pg.knob(f2[i], this, juce::String(names[i]) + ">2", ParamKnob::Size::Small));
+        }
+        blend_ = pg.knob(P_FILTER_BLEND, this, "Par / Ser");
+        blend_->setTooltip("0% = parallel (F1 + F2), 100% = serial (F1 into F2)");
+    }
+    void resized() override
+    {
+        PanelFrame::resized();
+        auto c = content();
+        blend_->setBounds(c.removeFromRight(86));
+        c.removeFromRight(6);
+        const int w = c.getWidth() / 8;
+        for (int i = 0; i < 8; ++i) sends_[(size_t)i]->setBounds(c.getX() + i * w, c.getY(), w, c.getHeight());
+    }
+private:
+    std::vector<ParamKnob*> sends_;
+    ParamKnob* blend_;
+};
+
+// --------------------------------------------------------------------------------------------- modulation
+
+class ModPanel : public PanelFrame
+{
+public:
+    explicit ModPanel(Page& pg) : PanelFrame(""), page_(pg)
+    {
+        const char* main[] = {"ENV 1", "ENV 2", "ENV 3", "ENV 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "PERF 1", "PERF 2"};
+        for (int i = 0; i < 10; ++i)
+        {
+            auto* chip = pg.own(std::make_unique<ModChip>(SRC_ENV1 + i, main[i]), this);
+            chip->onClick = [this, i] { select(i); };
+            chips_.push_back(chip);
+        }
+        const std::pair<int, const char*> extra[] = {{SRC_VELOCITY, "VEL"}, {SRC_PRESSURE, "PRS"}, {SRC_CHAN_AT, "AT"},
+                                                      {SRC_MODWHEEL, "MW"}, {SRC_NOTE, "NOTE"}, {SRC_RANDOM, "RND"}};
+        for (auto& e : extra)
+        {
+            auto* chip = pg.own(std::make_unique<ModChip>(e.first, e.second), this);
+            extras_.push_back(chip);
+        }
+        // one page of controls per source
+        for (int e = 0; e < 4; ++e)
+        {
+            auto* holder = pg.own(std::make_unique<juce::Component>(), this);
+            const int b = P_E1_A + e * (P_E2_A - P_E1_A);
+            Pg p;
+            p.holder = holder;
+            p.view = pg.own(std::make_unique<EnvelopeView>(pg.proc, e), holder);
+            for (int k = 0; k < 7; ++k)
+                p.row[k < 4 ? 0 : 1].push_back(pg.knob(b + k, holder, juce::StringArray{"Attack", "Decay", "Sustain", "Release", "A Curve", "D Curve", "R Curve"}[k]));
+            pages_.push_back(p);
+        }
+        for (int l = 0; l < 4; ++l)
+        {
+            auto* holder = pg.own(std::make_unique<juce::Component>(), this);
+            const int b = P_L1_SHAPE + l * (P_L2_SHAPE - P_L1_SHAPE);
+            Pg p;
+            p.holder = holder;
+            p.view = pg.own(std::make_unique<LfoView>(pg.proc, l), holder);
+            p.combos = {pg.combo(b, holder, "Shape"), pg.combo(b + 1, holder, "Mode")};
+            p.syncToggle = pg.toggle(b + 2, holder, "Sync");
+            p.rate = pg.knob(b + 3, holder, "Rate");
+            p.div = pg.combo(b + 4, holder, "Division");
+            p.syncParam = b + 2;
+            p.row[1] = {pg.knob(b + 5, holder, "Rise"), pg.knob(b + 6, holder, "Smooth"), pg.knob(b + 7, holder, "Phase"), pg.knob(b + 8, holder, "Steps")};
+            pages_.push_back(p);
+        }
+        for (int q = 0; q < 2; ++q)
+        {
+            auto* holder = pg.own(std::make_unique<juce::Component>(), this);
+            const int b = q == 0 ? P_P1_DIV : P_P2_DIV;
+            Pg p;
+            p.holder = holder;
+            p.view = pg.own(std::make_unique<PerformerView>(pg.proc, q), holder);
+            p.combos = {pg.combo(b, holder, "Step"), pg.combo(b + 2, holder, "Mode")};
+            p.row[1] = {pg.knob(b + 1, holder, "Length")};
+            pages_.push_back(p);
+        }
+        select(0);
+    }
+
+    void select(int i)
+    {
+        current_ = i;
+        for (int k = 0; k < (int)pages_.size(); ++k) pages_[(size_t)k].holder->setVisible(k == i);
+        for (int k = 0; k < (int)chips_.size(); ++k) chips_[(size_t)k]->setSelected(k == i);
+        resized();
+    }
+
+    void resized() override
+    {
+        auto c = getLocalBounds().reduced(8, 6);
+        auto top = c.removeFromTop(24);
+        for (auto* ch : chips_) { ch->setBounds(top.removeFromLeft(51)); top.removeFromLeft(2); }
+        top.removeFromLeft(6);
+        for (auto* ch : extras_) { ch->setBounds(top.removeFromLeft(36)); top.removeFromLeft(2); }
+        c.removeFromTop(6);
+        for (auto& p : pages_)
+        {
+            p.holder->setBounds(c);
+            auto r = p.holder->getLocalBounds();
+            p.view->setBounds(r.removeFromLeft(340));
+            r.removeFromLeft(8);
+            auto r1 = r.removeFromTop(r.getHeight() / 2);
+            if (!p.combos.empty())
+            {
+                auto cr = r1;
+                for (auto* cb : p.combos) { cb->setBounds(cr.removeFromLeft(104).withSizeKeepingCentre(100, 40)); cr.removeFromLeft(4); }
+                if (p.syncToggle) { p.syncToggle->setBounds(cr.removeFromLeft(62).withSizeKeepingCentre(60, 22)); cr.removeFromLeft(4); }
+                if (p.rate) p.rate->setBounds(cr.removeFromLeft(80));
+                if (p.div) p.div->setBounds(p.rate ? p.rate->getBounds().withSizeKeepingCentre(78, 40) : cr.removeFromLeft(80));
+            }
+            else layoutRow(r1, {p.row[0].size() > 0 ? p.row[0][0] : nullptr, p.row[0].size() > 1 ? p.row[0][1] : nullptr,
+                                p.row[0].size() > 2 ? p.row[0][2] : nullptr, p.row[0].size() > 3 ? p.row[0][3] : nullptr});
+            const int n = (int)p.row[1].size();
+            if (n)
+            {
+                const int w = r.getWidth() / 4;
+                for (int k = 0; k < n; ++k) p.row[1][(size_t)k]->setBounds(r.getX() + k * w, r.getY(), w, r.getHeight());
+            }
+        }
+    }
+
+    void tick()
+    {
+        auto& p = pages_[(size_t)current_];
+        if (auto* e = dynamic_cast<EnvelopeView*>(p.view)) e->refresh();
+        if (auto* l = dynamic_cast<LfoView*>(p.view)) l->refresh();
+        if (auto* q = dynamic_cast<PerformerView*>(p.view)) q->refresh();
+        if (p.syncParam >= 0)
+        {
+            const bool sync = page_.proc.engine().params().getBool(p.syncParam);
+            p.rate->setVisible(!sync);
+            p.div->setVisible(sync);
+        }
+    }
+
+private:
+    struct Pg
+    {
+        juce::Component* holder = nullptr;
+        juce::Component* view = nullptr;
+        std::vector<ParamKnob*> row[2];
+        std::vector<ParamCombo*> combos;
+        ParamToggle* syncToggle = nullptr;
+        ParamKnob* rate = nullptr;
+        ParamCombo* div = nullptr;
+        int syncParam = -1;
     };
-    prevB_.onClick = [this] { const int r = juce::jmax(0, list_.getSelectedRow() - 1); list_.selectRow(r); load(r); };
-    nextB_.onClick = [this] { const int r = juce::jmin((int)items_.size() - 1, list_.getSelectedRow() + 1); list_.selectRow(r); load(r); };
-    refresh();
+    Page& page_;
+    std::vector<ModChip*> chips_, extras_;
+    std::vector<Pg> pages_;
+    int current_ = 0;
+};
+
+class MacroPanel : public PanelFrame
+{
+public:
+    explicit MacroPanel(Page& pg) : PanelFrame("Macros")
+    {
+        for (int m = 0; m < kNumMacros; ++m)
+        {
+            chips_.push_back(pg.own(std::make_unique<ModChip>(SRC_MACRO1 + m, "M" + juce::String(m + 1)), this));
+            knobs_.push_back(pg.knob(P_MACRO1 + m, this, "Macro " + juce::String(m + 1)));
+        }
+    }
+    void resized() override
+    {
+        PanelFrame::resized();
+        auto c = content();
+        const int w = c.getWidth() / 4, h = c.getHeight() / 2;
+        for (int m = 0; m < kNumMacros; ++m)
+        {
+            auto cell = juce::Rectangle<int>(c.getX() + (m % 4) * w, c.getY() + (m / 4) * h, w, h).reduced(3, 1);
+            chips_[(size_t)m]->setBounds(cell.removeFromTop(18).withSizeKeepingCentre(46, 18));
+            knobs_[(size_t)m]->setBounds(cell);
+        }
+    }
+private:
+    std::vector<ModChip*> chips_;
+    std::vector<ParamKnob*> knobs_;
+};
+
+// --------------------------------------------------------------------------------------------- OSC tab
+
+class OscTab : public Page
+{
+public:
+    explicit OscTab(HelixProcessor& p) : Page(p)
+    {
+        oscA_ = own(std::make_unique<OscPanel>(*this, 0));
+        oscB_ = own(std::make_unique<OscPanel>(*this, 1));
+        f1_ = own(std::make_unique<FilterPanel>(*this, 0));
+        f2_ = own(std::make_unique<FilterPanel>(*this, 1));
+        sub_ = own(std::make_unique<SubPanel>(*this));
+        noise_ = own(std::make_unique<NoisePanel>(*this));
+        route_ = own(std::make_unique<RoutingPanel>(*this));
+        mod_ = own(std::make_unique<ModPanel>(*this));
+        macros_ = own(std::make_unique<MacroPanel>(*this));
+    }
+    void resized() override
+    {
+        oscA_->setBounds(0, 0, 384, 400);
+        oscB_->setBounds(392, 0, 384, 400);
+        f1_->setBounds(784, 0, 400, 198);
+        f2_->setBounds(784, 202, 400, 198);
+        sub_->setBounds(0, 406, 384, 96);
+        noise_->setBounds(392, 406, 384, 96);
+        route_->setBounds(784, 406, 400, 96);
+        mod_->setBounds(0, 508, 776, 200);
+        macros_->setBounds(784, 508, 400, 200);
+    }
+    void tick() override
+    {
+        Page::tick();
+        oscA_->tick(); oscB_->tick(); f1_->tick(); f2_->tick(); mod_->tick();
+    }
+private:
+    OscPanel *oscA_, *oscB_;
+    FilterPanel *f1_, *f2_;
+    SubPanel* sub_;
+    NoisePanel* noise_;
+    RoutingPanel* route_;
+    ModPanel* mod_;
+    MacroPanel* macros_;
+};
+
+// --------------------------------------------------------------------------------------------- FX tab
+
+struct FxDef { const char* name; int on; std::vector<int> combos; std::vector<int> knobs; int syncToggle = -1; };
+
+const std::vector<FxDef>& fxDefs()
+{
+    static const std::vector<FxDef> d = {
+        {"Distortion", P_DIST_ON, {P_DIST_TYPE}, {P_DIST_DRIVE, P_DIST_TONE, P_DIST_BITS, P_DIST_RATE, P_DIST_MIX}},
+        {"Chorus", P_CHO_ON, {P_CHO_MODE}, {P_CHO_RATE, P_CHO_DEPTH, P_CHO_MIX}},
+        {"Phaser", P_PH_ON, {}, {P_PH_RATE, P_PH_DEPTH, P_PH_FREQ, P_PH_FEEDBACK, P_PH_MIX}},
+        {"Delay", P_DLY_ON, {P_DLY_MODE, P_DLY_DIV}, {P_DLY_TIME, P_DLY_FEEDBACK, P_DLY_TONE, P_DLY_MIX}, P_DLY_SYNC},
+        {"Reverb", P_REV_ON, {P_REV_TYPE}, {P_REV_SIZE, P_REV_DECAY, P_REV_DAMP, P_REV_PREDELAY, P_REV_MIX}},
+        {"OTT", P_OTT_ON, {}, {P_OTT_DEPTH, P_OTT_TIME, P_OTT_UP, P_OTT_DOWN, P_OTT_GAIN}},
+        {"EQ", P_EQ_ON, {}, {P_EQ_LOW_FREQ, P_EQ_LOW_GAIN, P_EQ_MID_FREQ, P_EQ_MID_GAIN, P_EQ_MID_Q, P_EQ_HIGH_FREQ, P_EQ_HIGH_GAIN}},
+    };
+    return d;
 }
 
-void PresetBrowser::refresh()
+class FxTab : public Page
 {
-    items_.clear();
-    const auto& f = helix::factoryPresets();
-    for (int i = 0; i < (int)f.size(); ++i) items_.push_back({f[(size_t)i].category, f[(size_t)i].name, {}, i});
-    for (const auto& file : HelixProcessor::userPresetFolder().findChildFiles(juce::File::findFiles, true, "*.json"))
-        items_.push_back({"User / " + file.getParentDirectory().getFileName(), file.getFileNameWithoutExtension(), file, -1});
-    list_.updateContent();
-    current_.setText(proc_.presetName(), juce::dontSendNotification);
+public:
+    explicit FxTab(HelixProcessor& p) : Page(p)
+    {
+        rack_ = own(std::make_unique<PanelFrame>("FX rack (top to bottom)"));
+        for (int s = 0; s < kNumFxSlots; ++s)
+        {
+            Row r;
+            r.power = std::make_unique<juce::ToggleButton>();
+            r.name = std::make_unique<juce::TextButton>();
+            r.up = std::make_unique<juce::TextButton>("^");
+            r.down = std::make_unique<juce::TextButton>("v");
+            r.name->setClickingTogglesState(false);
+            r.name->onClick = [this, s] { select(typeAt(s)); };
+            r.up->onClick = [this, s] { swap(s, s - 1); };
+            r.down->onClick = [this, s] { swap(s, s + 1); };
+            r.power->onClick = [this, s] {
+                const auto& d = fxDefs()[(size_t)typeAt(s)];
+                proc.setParamFromUI(d.on, rows_[(size_t)s].power->getToggleState() ? 1.0f : 0.0f);
+            };
+            for (juce::Component* c : {(juce::Component*)r.power.get(), (juce::Component*)r.name.get(), (juce::Component*)r.up.get(), (juce::Component*)r.down.get()})
+                rack_->addAndMakeVisible(c);
+            rows_.push_back(std::move(r));
+        }
+        for (int t = 0; t < (int)fxDefs().size(); ++t)
+        {
+            const auto& d = fxDefs()[(size_t)t];
+            auto* panel = own(std::make_unique<PanelFrame>(d.name));
+            panel->setPower(std::make_unique<ParamToggle>(proc, d.on));
+            Detail det;
+            det.panel = panel;
+            for (int c : d.combos) det.combos.push_back(combo(c, panel, paramDef(c).name));
+            if (d.syncToggle >= 0) det.sync = toggle(d.syncToggle, panel, "Sync");
+            for (int k : d.knobs) det.knobs.push_back(knob(k, panel, {}, ParamKnob::Size::Large));
+            details_.push_back(det);
+        }
+        info_ = own(std::make_unique<juce::Label>());
+        info_->setJustificationType(juce::Justification::topLeft);
+        info_->setFont(ui::font(13.0f));
+        select(0);
+    }
+
+    void resized() override
+    {
+        rack_->setBounds(0, 0, 300, 708);
+        auto c = rack_->content().withTrimmedTop(6);
+        for (auto& r : rows_)
+        {
+            auto row = c.removeFromTop(52).reduced(0, 4);
+            r.power->setBounds(row.removeFromLeft(22));
+            r.down->setBounds(row.removeFromRight(30));
+            row.removeFromRight(3);
+            r.up->setBounds(row.removeFromRight(30));
+            row.removeFromRight(6);
+            r.name->setBounds(row);
+        }
+        for (auto& d : details_)
+        {
+            d.panel->setBounds(308, 0, 876, 300);
+            auto r = d.panel->content().reduced(4);
+            auto left = r.removeFromLeft(180);
+            for (auto* cb : d.combos) { cb->setBounds(left.removeFromTop(48).withHeight(44)); left.removeFromTop(6); }
+            if (d.sync) d.sync->setBounds(left.removeFromTop(26));
+            const int n = (int)d.knobs.size();
+            const int w = juce::jmin(120, r.getWidth() / juce::jmax(1, n));
+            for (int k = 0; k < n; ++k) d.knobs[(size_t)k]->setBounds(r.getX() + k * w, r.getY() + 20, w, 130);
+        }
+        info_->setBounds(316, 310, 860, 380);
+    }
+
+    void tick() override
+    {
+        Page::tick();
+        for (int s = 0; s < kNumFxSlots; ++s)
+        {
+            const int t = typeAt(s);
+            const auto& d = fxDefs()[(size_t)t];
+            auto& r = rows_[(size_t)s];
+            const juce::String label = juce::String(s + 1) + "   " + d.name;
+            if (r.name->getButtonText() != label) r.name->setButtonText(label);
+            r.name->setToggleState(t == selected_, juce::dontSendNotification);
+            r.power->setToggleState(proc.engine().params().getBool(d.on), juce::dontSendNotification);
+            r.power->setVisible(true);
+        }
+    }
+
+private:
+    // The effect in rack slot s: the slot params name effects; repeats are skipped, missing ones appended
+    // (the same rule the engine uses).
+    std::vector<int> order() const
+    {
+        std::vector<int> o;
+        bool used[7] = {};
+        for (int s = 0; s < kNumFxSlots; ++s)
+        {
+            const int t = juce::jlimit(0, 6, proc.engine().params().getInt(P_FX_ORDER1 + s));
+            if (!used[t]) { used[t] = true; o.push_back(t); }
+        }
+        for (int t = 0; t < 7; ++t) if (!used[t]) o.push_back(t);
+        return o;
+    }
+    int typeAt(int s) const { return order()[(size_t)s]; }
+    void swap(int a, int b)
+    {
+        if (b < 0 || b >= kNumFxSlots) return;
+        auto o = order();
+        std::swap(o[(size_t)a], o[(size_t)b]);
+        for (int s = 0; s < kNumFxSlots; ++s) proc.setParamFromUI(P_FX_ORDER1 + s, (float)o[(size_t)s]);
+    }
+    void select(int t)
+    {
+        selected_ = t;
+        for (int k = 0; k < (int)details_.size(); ++k) details_[(size_t)k].panel->setVisible(k == t);
+        static const char* help[] = {
+            "Tube: warm and asymmetric.  Hard Clip: square-edged.  Fold: wavefolder for growls.  Crush: bit depth and sample rate "
+            "(12 bit / 26 kHz = SP-1200, lower for S950 grit).  Asym: half-wave crunch.  Tone is a low-pass after the distortion.",
+            "Chorus: two voices.  Ensemble: three shimmering voices per side, the classic string-machine sound.",
+            "Six-stage stereo phaser. Negative feedback gives a hollower sweep.",
+            "Stereo or Ping-Pong. With Sync on, the time is a note value from the host tempo. Tone darkens each repeat. "
+            "The dry sound always stays; Mix adds the echoes.",
+            "Plate: bright and dense.  Hall: bigger and longer.",
+            "Three-band upward and downward compressor (split at 120 Hz and 2.5 kHz): the modern bass sound. "
+            "The most CPU-hungry effect.",
+            "Low shelf, bell and high shelf, +-18 dB."};
+        info_->setText(juce::String("Signal flows down the rack. Use ^ v to reorder, the lamp to switch an effect on.\n\n") + help[t],
+                       juce::dontSendNotification);
+        info_->setColour(juce::Label::textColourId, theme().muted);
+    }
+
+    struct Row { std::unique_ptr<juce::ToggleButton> power; std::unique_ptr<juce::TextButton> name, up, down; };
+    struct Detail { PanelFrame* panel; std::vector<ParamCombo*> combos; std::vector<ParamKnob*> knobs; ParamToggle* sync = nullptr; };
+    PanelFrame* rack_;
+    std::vector<Row> rows_;
+    std::vector<Detail> details_;
+    juce::Label* info_;
+    int selected_ = 0;
+};
+
+// --------------------------------------------------------------------------------------------- MATRIX tab
+
+class MatrixTab : public Page
+{
+public:
+    explicit MatrixTab(HelixProcessor& p) : Page(p)
+    {
+        frame_ = own(std::make_unique<PanelFrame>("Modulation matrix  (or drag a source onto any knob)"));
+        for (int m = 0; m < kNumModSlots; ++m)
+        {
+            const int b = P_M1_SRC + m * (P_M2_SRC - P_M1_SRC);
+            Row r;
+            r.src = combo(b, frame_);
+            r.dst = combo(b + 1, frame_);
+            r.aux = combo(b + 3, frame_);
+            r.curve = knob(b + 4, frame_, "Curve", ParamKnob::Size::Small);
+            r.amount = std::make_unique<juce::Slider>(juce::Slider::LinearHorizontal, juce::Slider::TextBoxRight);
+            r.amount->setTextBoxStyle(juce::Slider::TextBoxRight, false, 52, 20);
+            r.amount->getProperties().set("bipolar", true);
+            frame_->addAndMakeVisible(*r.amount);
+            r.att = std::make_unique<juce::SliderParameterAttachment>(*p.parameter(b + 2), *r.amount);
+            r.clear = std::make_unique<juce::TextButton>("x");
+            r.clear->setTooltip("Clear this slot");
+            r.clear->onClick = [this, m] { proc.clearModSlot(m); };
+            frame_->addAndMakeVisible(*r.clear);
+            rows_.push_back(std::move(r));
+        }
+    }
+    void resized() override
+    {
+        frame_->setBounds(0, 0, 1184, 708);
+        auto c = frame_->content().withTrimmedTop(18);
+        heads_ = c.removeFromTop(0);
+        for (auto& r : rows_)
+        {
+            auto row = c.removeFromTop(41).reduced(0, 4);
+            row.removeFromLeft(34);
+            r.src->setBounds(row.removeFromLeft(190).withSizeKeepingCentre(186, 26));
+            row.removeFromLeft(10);
+            r.dst->setBounds(row.removeFromLeft(240).withSizeKeepingCentre(236, 26));
+            row.removeFromLeft(10);
+            r.amount->setBounds(row.removeFromLeft(330));
+            row.removeFromLeft(10);
+            r.aux->setBounds(row.removeFromLeft(190).withSizeKeepingCentre(186, 26));
+            row.removeFromLeft(10);
+            r.curve->setBounds(row.removeFromLeft(80).withTrimmedTop(-4).withTrimmedBottom(-4));
+            r.clear->setBounds(row.removeFromRight(30).withSizeKeepingCentre(28, 24));
+        }
+    }
+    void paint(juce::Graphics& g) override
+    {
+        Page::paint(g);
+    }
+    void paintOverChildren(juce::Graphics& g) override
+    {
+        const Theme& t = theme();
+        auto c = frame_->getBounds().reduced(8, 6).withTrimmedTop(24);
+        g.setColour(t.muted);
+        g.setFont(ui::font(11.0f, true));
+        const int y = c.getY();
+        g.drawText("#", c.getX(), y, 30, 16, juce::Justification::centredLeft);
+        g.drawText("SOURCE", c.getX() + 34, y, 190, 16, juce::Justification::centredLeft);
+        g.drawText("DESTINATION", c.getX() + 234, y, 240, 16, juce::Justification::centredLeft);
+        g.drawText("AMOUNT", c.getX() + 484, y, 330, 16, juce::Justification::centredLeft);
+        g.drawText("AUX (scales the amount)", c.getX() + 824, y, 190, 16, juce::Justification::centredLeft);
+        g.setFont(ui::font(12.0f, true));
+        for (int m = 0; m < kNumModSlots; ++m)
+        {
+            const bool used = proc.engine().params().getInt(P_M1_SRC + m * (P_M2_SRC - P_M1_SRC)) != 0;
+            g.setColour(used ? t.mod : t.muted);
+            g.drawText(juce::String(m + 1), c.getX(), y + 18 + m * 41 + 4, 30, 33, juce::Justification::centredLeft);
+        }
+    }
+    void tick() override { Page::tick(); repaint(); }
+private:
+    struct Row { ParamCombo *src, *dst, *aux; ParamKnob* curve; std::unique_ptr<juce::Slider> amount; std::unique_ptr<juce::SliderParameterAttachment> att; std::unique_ptr<juce::TextButton> clear; };
+    PanelFrame* frame_;
+    std::vector<Row> rows_;
+    juce::Rectangle<int> heads_;
+};
+
+// --------------------------------------------------------------------------------------------- GLOBAL tab
+
+class GlobalTab : public Page, public juce::ListBoxModel
+{
+public:
+    GlobalTab(HelixProcessor& p, HelixEditor& ed) : Page(p), editor_(ed)
+    {
+        voice_ = own(std::make_unique<PanelFrame>("Voices"));
+        poly_ = combo(P_POLY_MODE, voice_, "Poly mode");
+        glideMode_ = combo(P_GLIDE_MODE, voice_, "Glide mode");
+        steal_ = combo(P_STEAL, voice_, "Steal");
+        vk_ = {knob(P_VOICES, voice_, "Voices", ParamKnob::Size::Large), knob(P_GLIDE, voice_, "Glide", ParamKnob::Size::Large),
+               knob(P_BEND_RANGE, voice_, "Bend Range", ParamKnob::Size::Large), knob(P_VEL_SENS, voice_, "Vel Sens", ParamKnob::Size::Large)};
+        engine_ = own(std::make_unique<PanelFrame>("Engine"));
+        quality_ = combo(P_QUALITY, engine_, "Quality");
+        guard_ = toggle(P_AUTO_SCALE, engine_, "CPU Guard");
+        themeBox_ = own(std::make_unique<juce::ComboBox>(), engine_);
+        for (int i = 0; i < numThemes(); ++i) themeBox_->addItem(themeAt(i).name, i + 1);
+        themeBox_->setSelectedId(themeIndex() + 1, juce::dontSendNotification);
+        themeBox_->onChange = [this] { const int i = themeBox_->getSelectedId() - 1; juce::MessageManager::callAsync([e = &editor_, i] { e->applyTheme(i); }); };
+        presets_ = own(std::make_unique<PanelFrame>("Presets"));
+        list_ = own(std::make_unique<juce::ListBox>("presets", this), presets_);
+        list_->setRowHeight(28);
+        for (auto* b : {&load_, &rescan_}) presets_->addAndMakeVisible(b);
+        load_.onClick = [this] { proc.loadPresetEntry(list_->getSelectedRow()); };
+        rescan_.onClick = [this] { proc.refreshPresetList(); list_->updateContent(); repaint(); };
+    }
+    void resized() override
+    {
+        voice_->setBounds(0, 0, 580, 240);
+        auto c = voice_->content();
+        auto row = c.removeFromTop(52);
+        layoutRow(row.withHeight(44), {poly_, glideMode_, steal_}, 12);
+        c.removeFromTop(8);
+        layoutRow(c, {vk_[0], vk_[1], vk_[2], vk_[3]});
+        engine_->setBounds(0, 248, 580, 460);
+        auto e = engine_->content();
+        auto r1 = e.removeFromTop(52);
+        quality_->setBounds(r1.removeFromLeft(180).withHeight(44));
+        r1.removeFromLeft(16);
+        guard_->setBounds(r1.removeFromLeft(140).withTrimmedTop(14).withHeight(24));
+        r1.removeFromLeft(16);
+        themeBox_->setBounds(r1.removeFromLeft(160).withTrimmedTop(14).withHeight(26));
+        cpuArea_ = e.withTrimmedTop(16);
+        presets_->setBounds(588, 0, 596, 708);
+        auto pr = presets_->content();
+        auto bar = pr.removeFromBottom(34);
+        load_.setBounds(bar.removeFromLeft(120).reduced(0, 3));
+        bar.removeFromLeft(6);
+        rescan_.setBounds(bar.removeFromLeft(140).reduced(0, 3));
+        pr.removeFromBottom(6);
+        list_->setBounds(pr);
+    }
+    void paintOverChildren(juce::Graphics& g) override
+    {
+        const Theme& t = theme();
+        auto a = cpuArea_.translated(engine_->getX(), engine_->getY());
+        g.setColour(t.muted);
+        g.setFont(ui::font(11.0f, true));
+        g.drawText("THEME", engine_->getX() + 8 + 180 + 16 + 140 + 16, engine_->getY() + 30, 160, 14, juce::Justification::centredLeft);
+        g.drawText("CPU PER VOICE (share of one core)", a.removeFromTop(16), juce::Justification::centredLeft);
+        a.removeFromTop(6);
+        for (int v = 0; v < kMaxVoices; ++v)
+        {
+            auto row = a.removeFromTop(26).reduced(0, 4);
+            g.setColour(t.muted);
+            g.setFont(ui::font(11.0f));
+            g.drawText("Voice " + juce::String(v + 1), row.removeFromLeft(60), juce::Justification::centredLeft);
+            const float load = proc.engine().voiceLoad(v);
+            g.setColour(t.track);
+            g.fillRoundedRectangle(row.toFloat(), 3.0f);
+            g.setColour(t.accent);
+            g.fillRoundedRectangle(row.toFloat().withWidth(juce::jmin(1.0f, load * 10.0f) * (float)row.getWidth()), 3.0f);
+            g.setColour(t.text);
+            g.drawText(juce::String(load * 100.0f, 2) + "%", row.reduced(6, 0), juce::Justification::centredRight);
+        }
+        g.setColour(t.muted);
+        g.drawText("Bars are scaled so a full bar = 10% of a core.", a.removeFromTop(18), juce::Justification::centredLeft);
+    }
+    void tick() override
+    {
+        Page::tick();
+        if (shownRows_ != (int)proc.presetList().size()) { shownRows_ = (int)proc.presetList().size(); list_->updateContent(); }
+        repaint(cpuArea_.translated(engine_->getX(), engine_->getY()));
+    }
+private:
+    int getNumRows() override { return (int)proc.presetList().size(); }
+    void paintListBoxItem(int row, juce::Graphics& g, int w, int h, bool selected) override
+    {
+        const Theme& t = theme();
+        const auto& l = proc.presetList();
+        if (row < 0 || row >= (int)l.size()) return;
+        const bool current = row == proc.currentPresetEntry();
+        if (selected) g.fillAll(t.accent.withAlpha(0.25f));
+        g.setColour(t.muted);
+        g.setFont(ui::font(12.0f));
+        g.drawText(l[(size_t)row].category, 10, 0, 110, h, juce::Justification::centredLeft);
+        g.setColour(current ? t.accent : t.text);
+        g.setFont(ui::font(14.0f, true));
+        g.drawText(l[(size_t)row].name, 120, 0, w - 130, h, juce::Justification::centredLeft);
+    }
+    void listBoxItemDoubleClicked(int row, const juce::MouseEvent&) override { proc.loadPresetEntry(row); }
+
+    HelixEditor& editor_;
+    PanelFrame *voice_, *engine_, *presets_;
+    ParamCombo *poly_, *glideMode_, *steal_, *quality_;
+    ParamToggle* guard_;
+    std::vector<ParamKnob*> vk_;
+    juce::ComboBox* themeBox_;
+    juce::ListBox* list_;
+    juce::TextButton load_{"Load"}, rescan_{"Refresh list"};
+    juce::Rectangle<int> cpuArea_;
+    int shownRows_ = -1;
+};
+
+} // namespace
+
+// --------------------------------------------------------------------------------------------- editor
+
+HelixEditor::HelixEditor(HelixProcessor& p) : AudioProcessorEditor(&p), proc_(p)
+{
+    const double savedScale = juce::jlimit(0.7, 2.0, proc_.settings().getDoubleValue("scale", 1.0));
+    setThemeIndex(proc_.settings().getIntValue("theme", 0));
+    lnf_.applyTheme();
+    setLookAndFeel(&lnf_);
+    addAndMakeVisible(content_);
+    content_.setSize(kW, kH);
+
+    buildHeader();
+    tabs_.push_back(std::make_unique<OscTab>(proc_));
+    tabs_.push_back(std::make_unique<FxTab>(proc_));
+    tabs_.push_back(std::make_unique<MatrixTab>(proc_));
+    tabs_.push_back(std::make_unique<GlobalTab>(proc_, *this));
+    const char* names[] = {"OSC", "FX", "MATRIX", "GLOBAL"};
+    for (int i = 0; i < 4; ++i)
+    {
+        auto* b = tabButtons_.add(new juce::TextButton(names[i]));
+        b->onClick = [this, i] { showTab(i); };
+        content_.addAndMakeVisible(b);
+        content_.addChildComponent(*tabs_[(size_t)i]);
+        tabs_[(size_t)i]->setBounds(8, 84, kW - 16, kH - 92);
+    }
+    setResizable(true, true);
+    if (auto* c = getConstrainer()) c->setFixedAspectRatio((double)kW / kH);
+    setResizeLimits(840, 560, 2400, 1600);
+    setSize(juce::roundToInt(kW * savedScale), juce::roundToInt(kH * savedScale));
+    constructed_ = true;   // from now on, window size changes are the user's: remember them
+    // HELIX_START_PROGRAM=<n> loads factory preset n, HELIX_START_PAGE=<n> opens another tab first
+    // (screenshots and UI checks).
+    if (const char* prog = std::getenv("HELIX_START_PROGRAM")) proc_.setCurrentProgram(std::atoi(prog));
+    const char* start = std::getenv("HELIX_START_PAGE");
+    showTab(start ? juce::jlimit(0, 3, std::atoi(start)) : 0);
+    startTimerHz(30);
+}
+
+HelixEditor::~HelixEditor()
+{
+    stopTimer();
+    tabs_.clear();
+    master_.reset();
+    setLookAndFeel(nullptr);
+}
+
+void HelixEditor::buildHeader()
+{
+    for (auto* b : {&prev_, &next_, &presetBox_, &save_, &mutate_, &init_}) content_.addAndMakeVisible(b);
+    prev_.onClick = [this] { stepPreset(-1); };
+    next_.onClick = [this] { stepPreset(1); };
+    presetBox_.onClick = [this] { showPresetMenu(); };
+    save_.onClick = [this] { savePreset(); };
+    init_.onClick = [this] { helix::Preset init; proc_.loadPreset(init); };
+    mutate_.setTooltip("Nudge every continuous knob by up to 10%");
+    mutate_.onClick = [this] {
+        helix::Preset m = proc_.currentPreset();
+        helix::mutatePreset(m, 0.1f, mutateSeed_++ * 7919u + (uint32_t)juce::Time::currentTimeMillis());
+        m.name = proc_.presetName().toStdString();
+        if (m.name.find(" *") == std::string::npos) m.name += " *";
+        proc_.loadPreset(m);
+    };
+    master_ = std::make_unique<ParamKnob>(proc_, P_MASTER, "Master", ParamKnob::Size::Small);
+    content_.addAndMakeVisible(*master_);
+    cpu_.setJustificationType(juce::Justification::centredRight);
+    cpu_.setFont(ui::font(12.0f, true));
+    content_.addAndMakeVisible(cpu_);
+}
+
+void HelixEditor::showTab(int index)
+{
+    tab_ = index;
+    for (int i = 0; i < (int)tabs_.size(); ++i)
+    {
+        tabs_[(size_t)i]->setVisible(i == index);
+        tabButtons_[i]->setToggleState(i == index, juce::dontSendNotification);
+    }
+}
+
+void HelixEditor::applyTheme(int index)
+{
+    setThemeIndex(index);
+    proc_.settings().setValue("theme", index);
+    lnf_.applyTheme();
+    sendLookAndFeelChange();
     repaint();
 }
 
-void PresetBrowser::paintListBoxItem(int row, juce::Graphics& g, int w, int h, bool selected)
+void HelixEditor::paint(juce::Graphics& g)
 {
-    if (row < 0 || row >= (int)items_.size()) return;
-    if (selected) g.fillAll(HelixColours::ink());
-    g.setColour(selected ? HelixColours::bg() : HelixColours::muted());
-    g.setFont(juce::FontOptions(15.0f));
-    g.drawText(items_[(size_t)row].category, 10, 0, 140, h, juce::Justification::centredLeft);
-    g.setColour(selected ? HelixColours::bg() : HelixColours::ink());
-    g.setFont(juce::FontOptions(18.0f, juce::Font::bold));
-    g.drawText(items_[(size_t)row].name, 160, 0, w - 170, h, juce::Justification::centredLeft);
-}
-
-void PresetBrowser::load(int row)
-{
-    if (row < 0 || row >= (int)items_.size()) return;
-    const Item& it = items_[(size_t)row];
-    if (it.factory >= 0) proc_.setCurrentProgram(it.factory);
-    else
+    g.fillAll(theme().bg);
+    // the header is drawn in the content's (unscaled) coordinates
+    const float s = (float)getWidth() / (float)kW;
+    g.addTransform(juce::AffineTransform::scale(s));
+    const Theme& t = theme();
+    g.setColour(t.panel);
+    g.fillRect(0, 0, kW, 46);
+    g.setColour(t.edge);
+    g.drawHorizontalLine(46, 0.0f, (float)kW);
+    // logo: a small double helix and the name
+    juce::Path helix1, helix2;
+    for (int i = 0; i <= 40; ++i)
     {
-        helix::Preset p; std::string err;
-        if (helix::Preset::fromString(it.file.loadFileAsString().toStdString(), p, &err)) { if (p.name.empty()) p.name = it.name.toStdString(); proc_.loadPreset(p); }
-        else juce::AlertWindow::showMessageBoxAsync(juce::MessageBoxIconType::WarningIcon, "HELIX", "Could not load the preset: " + juce::String(err));
+        const float x = 16.0f + (float)i * 0.75f, ph = (float)i / 40.0f * juce::MathConstants<float>::twoPi * 1.5f;
+        const float y1 = 23.0f + std::sin(ph) * 8.0f, y2 = 23.0f - std::sin(ph) * 8.0f;
+        if (i == 0) { helix1.startNewSubPath(x, y1); helix2.startNewSubPath(x, y2); }
+        else { helix1.lineTo(x, y1); helix2.lineTo(x, y2); }
     }
-    current_.setText(proc_.presetName(), juce::dontSendNotification);
+    g.setColour(t.accent);
+    g.strokePath(helix1, juce::PathStrokeType(2.2f));
+    g.setColour(t.mod);
+    g.strokePath(helix2, juce::PathStrokeType(2.2f));
+    g.setColour(t.text);
+    g.setFont(ui::font(22.0f, true));
+    g.drawText("HELIX", 54, 8, 100, 30, juce::Justification::centredLeft);
 }
 
-void PresetBrowser::save()
+void HelixEditor::resized()
+{
+    const float s = (float)getWidth() / (float)kW;
+    content_.setTransform(juce::AffineTransform::scale(s));
+    content_.setBounds(0, 0, kW, kH);
+    if (constructed_) proc_.settings().setValue("scale", (double)s);
+    prev_.setBounds(330, 9, 28, 28);
+    presetBox_.setBounds(362, 9, 300, 28);
+    next_.setBounds(666, 9, 28, 28);
+    save_.setBounds(708, 9, 64, 28);
+    mutate_.setBounds(776, 9, 76, 28);
+    init_.setBounds(856, 9, 52, 28);
+    cpu_.setBounds(1040, 9, 150, 28);
+    master_->setBounds(970, 2, 60, 44);
+    int x = 8;
+    for (auto* b : tabButtons_) { b->setBounds(x, 54, 92, 24); x += 96; }
+}
+
+void HelixEditor::timerCallback()
+{
+    if (tab_ >= 0 && tab_ < (int)tabs_.size()) tabs_[(size_t)tab_]->tick();
+    master_->refresh();
+    const juce::String name = proc_.presetName();
+    if (presetBox_.getButtonText() != name) presetBox_.setButtonText(name);
+    juce::String cpu = "CPU " + juce::String(juce::roundToInt(proc_.engine().cpuLoad() * 100.0f)) + "%";
+    if (proc_.engine().heavyFxActive()) cpu += "  OTT";
+    if (proc_.engine().guardLevel() > 0) cpu += "  ECO" + juce::String(proc_.engine().guardLevel());
+    if (cpu_.getText() != cpu) cpu_.setText(cpu, juce::dontSendNotification);
+    cpu_.setColour(juce::Label::textColourId, proc_.engine().guardLevel() > 0 ? theme().accent : theme().muted);
+}
+
+void HelixEditor::showPresetMenu()
+{
+    proc_.refreshPresetList();
+    const auto& l = proc_.presetList();
+    juce::PopupMenu m;
+    std::map<juce::String, juce::PopupMenu> cats;
+    std::vector<juce::String> order;
+    for (int i = 0; i < (int)l.size(); ++i)
+    {
+        const auto& e = l[(size_t)i];
+        const juce::String cat = e.factory >= 0 ? e.category : "User / " + e.category;
+        if (!cats.count(cat)) order.push_back(cat);
+        cats[cat].addItem(i + 1, e.name, true, i == proc_.currentPresetEntry());
+    }
+    for (auto& c : order) m.addSubMenu(c, cats[c]);
+    m.addSeparator();
+    m.addItem(10000, "Open the presets folder");
+    m.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&presetBox_), [this](int r) {
+        if (r == 10000) HelixProcessor::userPresetFolder().startAsProcess();
+        else if (r > 0) proc_.loadPresetEntry(r - 1);
+    });
+}
+
+void HelixEditor::stepPreset(int d)
+{
+    const int n = (int)proc_.presetList().size();
+    if (n == 0) return;
+    const int cur = proc_.currentPresetEntry();
+    proc_.loadPresetEntry(cur < 0 ? 0 : (cur + d + n) % n);
+}
+
+void HelixEditor::savePreset()
 {
     saveDialog_ = std::make_unique<juce::AlertWindow>("Save preset", "Name and category", juce::MessageBoxIconType::NoIcon);
-    saveDialog_->addTextEditor("name", proc_.presetName(), "Name");
+    saveDialog_->addTextEditor("name", proc_.presetName().upToFirstOccurrenceOf(" *", false, false), "Name");
     saveDialog_->addComboBox("category", {"Bass", "Lead", "Pad", "Atmos", "Stab", "FX", "Misc"}, "Category");
     saveDialog_->addButton("Save", 1);
     saveDialog_->addButton("Cancel", 0);
     saveDialog_->enterModalState(true, juce::ModalCallbackFunction::create([this](int result) {
         if (result == 1 && saveDialog_)
         {
-            auto name = saveDialog_->getTextEditorContents("name").trim();
+            const auto name = saveDialog_->getTextEditorContents("name").trim();
             auto* cat = saveDialog_->getComboBoxComponent("category");
             const auto category = cat ? cat->getText() : juce::String("Misc");
             if (name.isNotEmpty())
@@ -312,173 +1019,12 @@ void PresetBrowser::save()
                 const auto dir = HelixProcessor::userPresetFolder().getChildFile(category);
                 dir.createDirectory();
                 dir.getChildFile(juce::File::createLegalFileName(name) + ".json").replaceWithText(p.toString());
-                refresh();
+                proc_.refreshPresetList();
+                helix::Preset reload;
+                helix::Preset::fromString(p.toString(), reload);
+                proc_.loadPreset(reload);
             }
         }
         saveDialog_.reset();
     }), false);
-}
-
-void PresetBrowser::paint(juce::Graphics& g)
-{
-    g.setColour(HelixColours::muted());
-    g.setFont(juce::FontOptions(15.0f));
-    g.drawText("PRESET", 0, 0, 200, 20, juce::Justification::left);
-}
-
-void PresetBrowser::resized()
-{
-    auto r = getLocalBounds();
-    auto head = r.removeFromTop(56);
-    head.removeFromTop(20);
-    current_.setBounds(head.removeFromLeft(head.getWidth() / 2));
-    for (auto* b : {&mutateB_, &initB_, &saveB_, &loadB_, &nextB_, &prevB_}) { b->setBounds(head.removeFromRight(b == &prevB_ || b == &nextB_ ? 44 : 110).reduced(3)); }
-    r.removeFromTop(6);
-    list_.setBounds(r);
-}
-
-// ------------------------------------------------------------------------------------------- editor
-
-namespace {
-class SectionBox : public juce::Component
-{
-public:
-    explicit SectionBox(juce::String title) : title_(std::move(title)) {}
-    void paint(juce::Graphics& g) override
-    {
-        auto r = getLocalBounds().toFloat().reduced(4.0f);
-        g.setColour(HelixColours::panel());
-        g.fillRoundedRectangle(r, 8.0f);
-        g.setColour(HelixColours::line());
-        g.drawRoundedRectangle(r, 8.0f, 1.0f);
-        g.setColour(HelixColours::ink());
-        g.setFont(juce::FontOptions(16.0f, juce::Font::bold));
-        g.drawText(title_.toUpperCase(), r.reduced(10.0f, 4.0f).removeFromTop(20.0f), juce::Justification::left);
-    }
-private:
-    juce::String title_;
-};
-}
-
-HelixEditor::HelixEditor(HelixProcessor& p) : AudioProcessorEditor(&p), proc_(p)
-{
-    setLookAndFeel(&lnf_);
-    const auto& pages = uiPages();
-    for (int i = 0; i < (int)pages.size(); ++i)
-    {
-        auto* b = tabs_.add(new juce::TextButton(pages[(size_t)i].name));
-        b->setClickingTogglesState(false);
-        b->onClick = [this, i] { showPage(i); };
-        addAndMakeVisible(b);
-    }
-    cpu_.setJustificationType(juce::Justification::centredRight);
-    cpu_.setFont(juce::FontOptions(16.0f, juce::Font::bold));
-    addAndMakeVisible(cpu_);
-    viewport_.setScrollBarsShown(true, false);
-    addAndMakeVisible(viewport_);
-    setResizable(true, true);
-    setResizeLimits(900, 560, 2400, 1600);
-    setSize(1180, 760);
-    // HELIX_START_PROGRAM=<n> loads factory preset n, HELIX_START_PAGE=<n> opens another page first
-    // (screenshots and UI checks).
-    if (const char* prog = std::getenv("HELIX_START_PROGRAM")) proc_.setCurrentProgram(std::atoi(prog));
-    const char* start = std::getenv("HELIX_START_PAGE");
-    showPage(start ? juce::jlimit(0, (int)pages.size() - 1, std::atoi(start)) : 0);
-    startTimerHz(30);
-}
-
-HelixEditor::~HelixEditor()
-{
-    stopTimer();
-    viewport_.setViewedComponent(nullptr, false);
-    controls_.clear();
-    owned_.clear();
-    wtView_.reset();
-    browser_.reset();
-    page_.reset();
-    setLookAndFeel(nullptr);
-}
-
-void HelixEditor::showPage(int index)
-{
-    pageIndex_ = index;
-    for (int i = 0; i < tabs_.size(); ++i) tabs_[i]->setToggleState(i == index, juce::dontSendNotification);
-    viewport_.setViewedComponent(nullptr, false);
-    controls_.clear();
-    owned_.clear();     // children first, then their parent page
-    wtView_.reset();
-    browser_.reset();
-    page_ = std::make_unique<juce::Component>();
-
-    const auto& pg = uiPages()[(size_t)index];
-    const int width = juce::jmax(860, viewport_.getWidth() - 12);
-    const int cols = width >= 1100 ? 3 : 2;
-    const int boxW = width / cols, boxH = 150;
-    int y = 0;
-    if (pg.name == "OSC A" || pg.name == "OSC B")
-    {
-        wtView_ = std::make_unique<WavetableView>(proc_, pg.name == "OSC A" ? 0 : 1);
-        wtView_->setBounds(4, 4, width - 8, 220);
-        page_->addAndMakeVisible(*wtView_);
-        y = 232;
-    }
-    if (pg.name == "BROWSER")
-    {
-        browser_ = std::make_unique<PresetBrowser>(proc_);
-        browser_->setBounds(4, 4, width - 8, 360);
-        page_->addAndMakeVisible(*browser_);
-        y = 372;
-    }
-    for (size_t s = 0; s < pg.sections.size(); ++s)
-    {
-        const auto& sec = pg.sections[s];
-        auto* box = new SectionBox(sec.title);
-        owned_.emplace_back(box);
-        const int col = (int)(s % (size_t)cols), row = (int)(s / (size_t)cols);
-        box->setBounds(col * boxW, y + row * boxH, boxW, boxH);
-        page_->addAndMakeVisible(box);
-        const int cw = (boxW - 24) / 4;
-        for (size_t k = 0; k < sec.params.size(); ++k)
-        {
-            if (sec.params[k] < 0) continue;
-            auto* c = new ParamControl(proc_, sec.params[k]);
-            owned_.emplace(owned_.begin(), c);   // destroyed before its box
-            c->setBounds(12 + (int)k * cw, 26, cw, boxH - 34);
-            box->addAndMakeVisible(c);
-            controls_.push_back(c);
-        }
-    }
-    const int rows = ((int)pg.sections.size() + cols - 1) / cols;
-    page_->setSize(width, y + rows * boxH + 8);
-    viewport_.setViewedComponent(page_.get(), false);
-}
-
-void HelixEditor::paint(juce::Graphics& g)
-{
-    g.fillAll(HelixColours::bg());
-    g.setColour(HelixColours::ink());
-    g.setFont(juce::FontOptions(28.0f, juce::Font::bold));
-    g.drawText("HELIX", 16, 8, 140, 36, juce::Justification::left);
-}
-
-void HelixEditor::resized()
-{
-    auto r = getLocalBounds();
-    auto top = r.removeFromTop(52);
-    top.removeFromLeft(140);
-    cpu_.setBounds(top.removeFromRight(190).reduced(8));
-    const int tw = top.getWidth() / juce::jmax(1, tabs_.size());
-    for (auto* t : tabs_) t->setBounds(top.removeFromLeft(tw).reduced(2, 8));
-    viewport_.setBounds(r.reduced(8));
-    if (page_) showPage(pageIndex_);
-}
-
-void HelixEditor::timerCallback()
-{
-    for (auto* c : controls_) c->refreshLive();
-    if (wtView_) wtView_->repaint();
-    juce::String cpu = "CPU " + juce::String(juce::roundToInt(proc_.engine().cpuLoad() * 100.0f)) + "%";
-    if (proc_.engine().heavyFxActive()) cpu += " OTT";
-    if (proc_.engine().guardLevel() > 0) cpu += " ECO" + juce::String(proc_.engine().guardLevel());
-    cpu_.setText(cpu, juce::dontSendNotification);
 }

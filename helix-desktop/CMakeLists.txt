@@ -36,7 +36,10 @@ juce_add_plugin(HelixDesktop
 
 target_sources(HelixDesktop PRIVATE
   src/PluginProcessor.cpp
-  src/PluginEditor.cpp)
+  src/PluginEditor.cpp
+  src/Theme.cpp
+  src/Widgets.cpp
+  src/Displays.cpp)
 
 target_compile_definitions(HelixDesktop PUBLIC
   JUCE_WEB_BROWSER=0

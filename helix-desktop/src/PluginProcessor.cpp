@@ -65,6 +65,14 @@ HelixProcessor::HelixProcessor()
         };
     library_.setRoots({userWavetableFolder().getFullPathName().toStdString()});
     library_.rescan();
+    juce::PropertiesFile::Options opts;
+    opts.applicationName = "HELIX-ui";   // not "HELIX": the standalone wrapper keeps its own HELIX.settings
+    opts.folderName = "HELIX";
+    opts.filenameSuffix = ".settings";
+    opts.osxLibrarySubFolder = "Application Support";
+    opts.millisecondsBeforeSaving = 500;   // save soon after a change, not only on a clean exit
+    settings_ = std::make_unique<juce::PropertiesFile>(opts);
+    refreshPresetList();
     startTimerHz(10);
 }
 
@@ -178,7 +186,14 @@ helix::Preset HelixProcessor::currentPreset() const
 
 void HelixProcessor::loadPreset(const helix::Preset& p)
 {
+    float before[helix::kNumParams];
+    for (int i = 0; i < helix::kNumParams; ++i) before[i] = engine_.params().get(i);
     helix::applyPreset(p, engine_, &library_);
+    // The values were written straight into the engine: tell JUCE's listeners (the editor's controls and the
+    // host) about every parameter that changed, or they keep showing the old preset.
+    for (int i = 0; i < helix::kNumParams; ++i)
+        if (engine_.params().get(i) != before[i])
+            params_[(size_t)i]->sendValueChangedMessageToListeners(params_[(size_t)i]->getValue());
     presetName_ = p.name;
     for (int slot = 0; slot < helix::kNumTableSlots; ++slot)
         lastTableIndex_[slot] = engine_.params().getInt(slot == 0 ? helix::P_A_TABLE : helix::P_B_TABLE);   // loaded by id already
@@ -190,7 +205,101 @@ void HelixProcessor::setCurrentProgram(int index)
     const auto& f = helix::factoryPresets();
     if (index < 0 || index >= (int)f.size()) return;
     currentProgram_ = index;
+    currentEntry_ = index;
     loadPreset(f[(size_t)index]);
+}
+
+// ---------------------------------------------------------------------------------------------- editor helpers
+
+void HelixProcessor::setParamFromUI(int index, float plain)
+{
+    if (index < 0 || index >= helix::kNumParams) return;
+    auto* p = params_[(size_t)index];
+    p->beginChangeGesture();
+    p->setValueNotifyingHost(helix::paramDef(index).toNormalised(plain));
+    p->endChangeGesture();
+}
+
+int HelixProcessor::destIndexFor(int param)
+{
+    if (param < 0) return -param;   // special destination given as -DST_*
+    for (int d = 0; d < helix::numModDests(); ++d) if (helix::modDestParam(d) == param) return d;
+    return 0;
+}
+
+std::vector<int> HelixProcessor::modSlotsFor(int param) const
+{
+    std::vector<int> out;
+    const int dest = destIndexFor(param);
+    if (dest <= 0) return out;
+    const int stride = helix::P_M2_SRC - helix::P_M1_SRC;
+    for (int m = 0; m < helix::kNumModSlots; ++m)
+    {
+        const int b = helix::P_M1_SRC + m * stride;
+        if (engine_.params().getInt(b + 1) == dest && engine_.params().getInt(b) != helix::SRC_NONE) out.push_back(m);
+    }
+    return out;
+}
+
+int HelixProcessor::assignMod(int src, int param, float amount)
+{
+    const int dest = destIndexFor(param);
+    if (dest <= 0 || src <= helix::SRC_NONE || src >= helix::kNumModSources) return -1;
+    const int stride = helix::P_M2_SRC - helix::P_M1_SRC;
+    int slot = -1;
+    for (int m = 0; m < helix::kNumModSlots && slot < 0; ++m)
+    {
+        const int b = helix::P_M1_SRC + m * stride;
+        if (engine_.params().getInt(b) == src && engine_.params().getInt(b + 1) == dest) return m;   // already there
+    }
+    for (int m = 0; m < helix::kNumModSlots && slot < 0; ++m)
+    {
+        const int b = helix::P_M1_SRC + m * stride;
+        if (engine_.params().getInt(b) == helix::SRC_NONE || engine_.params().getInt(b + 1) == 0) slot = m;
+    }
+    if (slot < 0) return -1;
+    const int b = helix::P_M1_SRC + slot * stride;
+    setParamFromUI(b, (float)src);
+    setParamFromUI(b + 1, (float)dest);
+    setParamFromUI(b + 2, amount);
+    setParamFromUI(b + 3, 0.0f);
+    setParamFromUI(b + 4, 0.0f);
+    return slot;
+}
+
+void HelixProcessor::clearModSlot(int slot)
+{
+    if (slot < 0 || slot >= helix::kNumModSlots) return;
+    const int b = helix::P_M1_SRC + slot * (helix::P_M2_SRC - helix::P_M1_SRC);
+    setParamFromUI(b, 0.0f);
+    setParamFromUI(b + 1, 0.0f);
+    setParamFromUI(b + 2, 0.0f);
+    setParamFromUI(b + 3, 0.0f);
+    setParamFromUI(b + 4, 0.0f);
+}
+
+void HelixProcessor::refreshPresetList()
+{
+    presets_.clear();
+    const auto& f = helix::factoryPresets();
+    for (int i = 0; i < (int)f.size(); ++i) presets_.push_back({f[(size_t)i].category, f[(size_t)i].name, {}, i});
+    auto files = userPresetFolder().findChildFiles(juce::File::findFiles, true, "*.json");
+    files.sort();
+    for (const auto& file : files)
+        presets_.push_back({file.getParentDirectory().getFileName(), file.getFileNameWithoutExtension(), file, -1});
+}
+
+bool HelixProcessor::loadPresetEntry(int index)
+{
+    if (index < 0 || index >= (int)presets_.size()) return false;
+    const auto& e = presets_[(size_t)index];
+    if (e.factory >= 0) { setCurrentProgram(e.factory); currentEntry_ = index; return true; }
+    helix::Preset p;
+    if (!helix::Preset::fromString(e.file.loadFileAsString().toStdString(), p)) return false;
+    if (p.name.empty()) p.name = e.name.toStdString();
+    loadPreset(p);
+    currentEntry_ = index;
+    return true;
 }
 
 const juce::String HelixProcessor::getProgramName(int index)

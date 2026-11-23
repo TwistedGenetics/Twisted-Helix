@@ -455,7 +455,7 @@ def chapter_install():
               "plug-ins in Ableton.", "Tip")
     s += [P("On the computer, HELIX keeps your files in your Documents folder:"),
           *bullets(["<b>Documents/HELIX/Wavetables</b>: your wavetables (scanned when HELIX opens).",
-                    "<b>Documents/HELIX/Presets/&lt;Category&gt;</b>: presets you save from the BROWSER page."])]
+                    "<b>Documents/HELIX/Presets/&lt;Category&gt;</b>: presets you save with <b>Save</b> at the top of the window."])]
     return s
 
 
@@ -464,13 +464,13 @@ def chapter_quickstart():
     s += steps(["Load HELIX on a track. You hear the <b>Init</b> sound: a single sine-to-square wavetable through an open "
                 "filter.",
                 "Pick a factory preset. On the MPC use the MPC's own preset menu (the 24 factory presets) or the <b>Preset</b> "
-                "control and <b>Load</b> on the BROWSE page. On the desktop, double-click a preset on the BROWSER page.",
+                "control and <b>Load</b> on the BROWSE page. On the computer, click the preset name at the top of the window (or "
+                "use the &lt; and &gt; buttons next to it).",
                 "Play a few low notes with <b>Classic Reese</b> and turn <b>Macro 1</b> (filter) and <b>Macro 2</b> (detune). "
-                "Many presets put their most useful moves on the first macros, and the preset list in chapter 13 tells you "
+                "Many presets put their most useful moves on the first macros, and the preset list in chapter 14 tells you "
                 "what they do.",
-                "Press <b>Mutate 10%</b> a few times to hear variations of the sound, and save one you like.",
-                "Open the OSC A page and turn <b>A WT Pos</b> (wavetable position) to sweep through the table, then try a "
-                "<b>Warp</b> mode."])
+                "Press <b>Mutate</b> (<b>Mutate 10%</b> on the MPC) a few times to hear variations of the sound, and save one you like.",
+                "Turn <b>WT Pos</b> (wavetable position) on oscillator A to sweep through the table, then try a <b>Warp</b> mode."])
     s += H2("How HELIX makes a sound")
     s += [signal_flow(), P("Signal flow: every sound source has a send to each filter; the two filters meet in the Ser/Par blend; "
                            "the amp envelope shapes the result; then the effects.", "caption")]
@@ -482,10 +482,60 @@ def chapter_quickstart():
     return s
 
 
+def chapter_desktop():
+    s = H1("4  The desktop window", need=120)
+    s += shot("window.jpg", "The OSC tab with Neuro Reese. Top: oscillators A and B with their 3D wavetables, the two filters. "
+                            "Middle: sub, noise and routing. Bottom: the modulation sources and the macros.")
+    s += [P("On the computer, HELIX lives in one window. Everything that shapes the sound is on the <b>OSC</b> tab; the other "
+            "tabs hold the effects, the full modulation matrix and the global settings."),
+          table([["Part", "What's there"],
+                 ["Top bar", "The preset name (click it for the preset menu, by category), &lt; and &gt; to step through "
+                  "presets, <b>Save</b>, <b>Mutate</b>, <b>Init</b>, the <b>Master</b> level and the CPU readout (it adds "
+                  "<b>OTT</b> while the OTT effect runs and <b>ECO1-4</b> when the CPU guard has lowered the quality)."],
+                 ["OSC", "Oscillators A and B, Filter 1 and 2 with their response curves, sub, noise, routing (the sends "
+                  "and the Par / Ser blend), the modulation sources (envelopes, LFOs, performers) and the macros."],
+                 ["FX", "The effects rack: the order from top to bottom (^ and v move an effect), a lamp to switch each one "
+                  "on, and the selected effect's controls."],
+                 ["MATRIX", "All 16 modulation slots."],
+                 ["GLOBAL", "Voices (poly mode, glide, stealing, bend range, velocity), Quality, CPU Guard, the colour "
+                  "theme, the CPU used by each voice, and the preset list."]], [26, 144])]
+    s += H2("Knobs")
+    s += [*bullets(["Drag up / down (or left / right) to turn a knob. Hold the mouse over it to read its value; the name "
+                    "under the knob changes to the value.",
+                    "Double-click a knob to return it to its starting value.",
+                    "Right-click a knob for its menu: <b>Reset to default</b>, and for each modulation aimed at it: change the "
+                    "amount or <b>Remove</b> it.",
+                    "Every control can be automated in your DAW, and every knob with a modulation destination can be "
+                    "modulated."])]
+    s += H2("Modulation by drag and drop")
+    s += [P("Along the top of the modulation area are the <b>source chips</b>: ENV 1-4, LFO 1-4, PERF 1-2, and VEL (velocity), "
+            "PRS (pressure), AT (channel aftertouch), MW (mod wheel), NOTE and RND (random). The macros have chips too "
+            "(M1-M8). Click an ENV, LFO or PERF chip to see and edit that source below."),
+          *steps(["Drag a chip (grab it anywhere) onto a knob. The knob lights up in the modulation colour while you are over "
+                  "a knob that can be modulated.",
+                  "Let go. HELIX puts the route in the first free matrix slot with an amount of 25%.",
+                  "An outer ring on the knob shows how far the modulation can move it; while a note plays, a dot shows "
+                  "where it is right now.",
+                  "Right-click the knob to change the amount or remove the route, or fine-tune it on the MATRIX tab."])]
+    s += H2("The wavetable display")
+    s += [P("Each oscillator shows its wavetable in <b>3D</b>: every frame of the table stacked in perspective, from the first "
+            "frame at the front to the last at the back. The lit frame is where <b>WT Pos</b> is (including modulation, "
+            "while a note plays), and it is drawn through the oscillator's warps, so you see what Bend, PWM, Sync and the "
+            "other shape warps do. Click <b>3D</b> in the corner to switch to a large <b>2D</b> view of the current "
+            "frame. The &lt; &gt; buttons and the menu in the title bar choose the table; <b>…</b> loads WAVs and makes tables "
+            "from samples.")]
+    s += H2("Themes and size")
+    s += [P("HELIX has two colour themes: <b>Copper</b> (dark, the default) and <b>Paper</b> (light, dark text, like the "
+            "MPC screen). Choose one on the GLOBAL tab. Drag the bottom-right corner of the window to make it bigger or "
+            "smaller; HELIX remembers the theme and the size.")]
+    s += shot("paper.jpg", "The Paper theme (90s Pad).", 150)
+    return s
+
+
 def chapter_osc():
-    s = H1("4  The oscillators", need=135)
-    s += shot("oscA.jpg", "The OSC A page on the desktop, with the Neuro Reese preset: the wavetable view at the top shows every "
-                          "frame of the table, with the current frame in red.")
+    s = H1("5  The oscillators", need=160)
+    s += shot("oscA.jpg", "Oscillator A on the computer (Hoover 91): the 3D view shows every frame of the table; the lit frame is "
+                          "where WT Pos is, drawn through the warp (here PWM).", 120)
     s += [P("HELIX has two identical wavetable oscillators, A and B. A wavetable is a stack of single-cycle waveforms called "
             "<b>frames</b>. <b>WT Pos</b> (wavetable position) chooses where in the stack you are; HELIX blends smoothly "
             "between neighbouring frames, so sweeping the position (by hand or with modulation) morphs the sound.")]
@@ -524,7 +574,7 @@ def chapter_osc():
     s += [table(warps, [30, 92, 48])]
     s += note("HELIX keeps warps band-limited where it can, and automatically limits a warp's amount on very high notes so "
               "it doesn't fold over into harsh aliasing. Bend, Asym, PWM and Mirror can still add a little aliasing on very "
-              "high notes; switch <b>Quality</b> to <b>High</b> (BROWSER page) for leads, which runs the oscillators at "
+              "high notes; switch <b>Quality</b> to <b>High</b> (GLOBAL tab; BROWSE page on the MPC) for leads, which runs the oscillators at "
               "double rate.", "Clean warps")
     s += H2("Unison")
     s += [table([["Control", "What it does"],
@@ -539,7 +589,7 @@ def chapter_osc():
 
 
 def chapter_tables():
-    s = H1("5  Wavetables")
+    s = H1("6  Wavetables")
     s += H2("Built-in tables")
     s += [table([["Table", "Frames", "What's in it"],
                  ["Basic Shapes", "64", "Sine → triangle → saw → square (0%, 33%, 67%, 100%)"],
@@ -578,16 +628,17 @@ def chapter_tables():
                   "the oscillator with <b>To Osc</b>.",
                   "Press <b>Make Table</b>."]),
           H3("On the computer"),
-          P("On the OSC A or OSC B page, choose the number of frames and press <b>Sample &gt; Table…</b>, then pick a WAV. "
-            "<b>Load WAV…</b> loads a WAV as a wavetable instead."),
+          P("Click <b>…</b> in an oscillator's title bar and choose <b>Sample &gt; Table</b> with the number of frames "
+            "(8-256), then pick a WAV. <b>Load WAV as wavetable</b> loads a WAV as a table instead. The same menu opens your "
+            "Wavetables folder and rescans it."),
           P("Tables made with Sample → Table are remembered in your project and presets as long as the original file is "
             "still in the same place.")]
     return s
 
 
 def chapter_subnoise():
-    s = H1("6  Sub and noise", need=135)
-    s += shot("subnoise.jpg", "The SUB/NOISE page.", 150)
+    s = H1("7  Sub and noise", need=135)
+    s += shot("subnoise.jpg", "Sub, noise and routing on the OSC tab (Dark Atmos).")
     s += H2("Sub oscillator")
     s += [table([["Control", "What it does"],
                  ["Sub", "On / off."],
@@ -610,8 +661,9 @@ def chapter_subnoise():
 
 
 def chapter_filters():
-    s = H1("7  Filters and routing", need=135)
-    s += shot("filters.jpg", "The FILTERS page (Neuro Reese: a ladder filter feeding a formant filter).")
+    s = H1("8  Filters and routing", need=135)
+    s += shot("filters.jpg", "The two filters (Neuro Reese: a ladder filter feeding a formant filter). The curves are measured from "
+                             "the filters themselves.", 105)
     s += [P("HELIX has two stereo filters. Each has the same controls:"),
           table([["Control", "What it does"],
                  ["Filter 1 / Filter 2", "On / off. A filter that is off passes its input straight through."],
@@ -646,7 +698,7 @@ def chapter_filters():
 
 
 def chapter_env():
-    s = H1("8  Envelopes")
+    s = H1("9  Envelopes")
     s += [envelope_diagram(), P("An ADSR envelope.", "caption")]
     s += [P("HELIX has four ADSR envelopes. <b>Envelope 1 always controls the volume</b> of each note; envelopes 2-4 are free "
             "for anything in the modulation matrix (filter sweeps, pitch drops, wavetable movement)."),
@@ -658,15 +710,15 @@ def chapter_env():
                  ["A / D / R Curve", "-100% … +100%", "Shape of each stage. For Decay and Release: negative = fast drop then "
                   "a long tail (snappy, percussive); positive = almost straight lines. For Attack: positive = straight rise, "
                   "negative = slow start then a quick swell."]], [30, 32, 108])]
-    s += shot("env.jpg", "The ENV page.", 150)
-    s += [P("<b>Vel Sens</b> on the BROWSER page sets how much the velocity of each note changes its volume (0% = every "
+    s += shot("env.jpg", "Envelope 2 of the Donk preset: a fast pitch drop. The curve is drawn by the engine's own envelope.")
+    s += [P("<b>Vel Sens</b> (GLOBAL tab; BROWSE page on the MPC) sets how much the velocity of each note changes its volume (0% = every "
             "note at full volume).")]
     return s
 
 
 def chapter_lfo():
-    s = H1("9  LFOs and performers", need=135)
-    s += shot("lfo.jpg", "The LFO/PERF page (Rolling Reese).")
+    s = H1("10  LFOs and performers", need=135)
+    s += shot("lfo.jpg", "LFO 1 of Moving Reese: a triangle over one bar.")
     s += H2("LFOs")
     s += [P("Four LFOs, each with these controls:"),
           table([["Control", "What it does"],
@@ -685,6 +737,7 @@ def chapter_lfo():
           P("The breakpoint shapes and step values come with presets. On the computer they are saved with your presets and "
             "projects; on the MPC they are loaded with presets (there is no editor for them on the MPC screen).")]
     s += H2("Performers")
+    s += shot("perf.jpg", "Performer 1 of Rolling Reese: 1/16 steps with Exp (pluck) shapes rolling the filter.")
     s += [P("A performer is a step sequencer for modulation, like Massive's: up to 16 steps, each with its own value "
             "(-100% … +100%) and its own shape, always in time with the music. Use them for rolling basses, gated pads and "
             "rhythmic wobbles."),
@@ -700,9 +753,10 @@ def chapter_lfo():
 
 
 def chapter_matrix():
-    s = H1("10  The modulation matrix", need=135)
-    s += shot("matrix.jpg", "The MATRIX page (Moving Reese): macros, LFOs and the mod wheel moving the filter and the detune.")
-    s += [P("The matrix connects modulation <b>sources</b> to <b>destinations</b>. There are 16 slots; each has:"),
+    s = H1("11  The modulation matrix", need=135)
+    s += shot("matrix.jpg", "The MATRIX tab (Moving Reese): macros, LFOs and the mod wheel moving the filter and the detune.")
+    s += [P("The matrix connects modulation <b>sources</b> to <b>destinations</b>. On the computer the quickest way is to "
+            "<b>drag a source onto a knob</b>: see chapter 4. The MATRIX tab shows all 16 slots; each has:"),
           table([["Control", "What it does"],
                  ["Source", "What moves the destination (list below)."],
                  ["Dest", "What gets moved: almost any knob, plus pitch, amp and pan."],
@@ -744,7 +798,7 @@ def chapter_matrix():
 
 
 def chapter_macros_voices():
-    s = H1("11  Macros and voices")
+    s = H1("12  Macros and voices")
     s += H2("Macros")
     s += [P("The eight macros are plain knobs whose job is to drive the matrix. Factory presets map their most useful moves "
             "to the first macros (for example in Classic Reese, Macro 1 opens the filter and Macro 2 widens the detune). On "
@@ -770,8 +824,8 @@ def chapter_macros_voices():
 
 
 def chapter_fx():
-    s = H1("12  Effects", need=135)
-    s += shot("fx.jpg", "The FX page (90s Pad: ensemble chorus and hall reverb).")
+    s = H1("13  Effects", need=135)
+    s += shot("fx.jpg", "The FX tab (90s Pad): the rack on the left, the selected effect on the right.")
     s += [P("The effects work on the sum of all notes, after the amp envelope. The seven <b>FX Slot</b> controls set the "
             "order: choose an effect for each slot from the first. If an effect appears twice, the second time is skipped, "
             "and effects you leave out are added at the end, so every effect is always available. An effect only runs when "
@@ -798,8 +852,8 @@ def chapter_fx():
 
 
 def chapter_presets():
-    s = H1("13  Presets", need=135)
-    s += shot("browser.jpg", "The BROWSER page on the desktop: factory and your own presets, Save, Init and Mutate.")
+    s = H1("14  Presets", need=135)
+    s += shot("browser.jpg", "The GLOBAL tab on the computer: voices, engine quality, theme, CPU per voice and the preset list.")
     s += H2("Factory presets")
     rows = [["Category", "Preset", "Description"]]
     for j in PRESETS:
@@ -807,16 +861,17 @@ def chapter_presets():
     s += [table(rows, [20, 34, 116])]
     s += H2("Saving and loading")
     s += [table([["", "On the computer", "On the MPC"],
-                 ["Load", "Double-click a preset on the BROWSER page, or use < and >.",
+                 ["Load", "Click the preset name at the top of the window, use &lt; and &gt;, or double-click a preset on "
+                  "the GLOBAL tab.",
                   "The MPC's preset menu (factory presets), or <b>Preset</b> + <b>Load</b> on BROWSE 1 (factory and "
                   "Content/Presets)."],
-                 ["Save", "<b>Save…</b> on the BROWSER page: name and category; saved in Documents/HELIX/Presets.",
+                 ["Save", "<b>Save</b> at the top of the window: name and category; saved in Documents/HELIX/Presets.",
                   "Save the plugin preset or the project with the MPC's own save functions. To use a sound on the computer, "
                   "save it there and copy the file to Content/Presets."],
-                 ["Init", "<b>Init</b> resets everything to the starting sound.", "Start from a factory preset, or remove "
+                 ["Init", "<b>Init</b> (top of the window) resets everything to the starting sound.", "Start from a factory preset, or remove "
                   "HELIX from the track and add it again."]], [18, 76, 76])]
     s += H2("Mutate")
-    s += [P("<b>Mutate 10%</b> nudges every continuous knob (cutoffs, levels, times, modulation amounts and so on) by a random "
+    s += [P("<b>Mutate</b> (computer) and <b>Mutate 10%</b> (MPC) nudge every continuous knob (cutoffs, levels, times, modulation amounts and so on) by a random "
             "amount up to 10% of its range. It leaves the structure alone: filter types, warp modes, routing choices, "
             "tables, the number of voices and the master level stay as they are. Press it a few times and keep the "
             "variations you like.")]
@@ -828,7 +883,7 @@ def chapter_presets():
 
 
 def chapter_mpc():
-    s = H1("14  HELIX on the MPC")
+    s = H1("15  HELIX on the MPC")
     s += [P("On the MPC, HELIX's screen is drawn by the MPC itself, from a layout that comes with the plugin. The pages are "
             "on the function keys along the bottom of the screen (the MPC shows a few at a time; use the arrow tab to see "
             "the rest). Every page is made of up to four blocks of four controls; touching a control selects its block for "
@@ -864,8 +919,9 @@ def chapter_mpc():
 
 
 def chapter_cpu():
-    s = H1("15  Sound quality and CPU")
-    s += [P("The <b>Quality</b> control on the BROWSER page trades sound against processing power:"),
+    s = H1("16  Sound quality and CPU")
+    s += [P("The <b>Quality</b> control (GLOBAL tab on the computer, BROWSE page on the MPC) trades sound against "
+            "processing power:"),
           table([["Quality", "What changes", "Use it for"],
                  ["Eco", "At most 3 unison voices; the smoothing between the oscillators' anti-aliasing levels is off.",
                   "Busy MPC projects, many HELIX instances"],
@@ -899,7 +955,7 @@ def chapter_cpu():
 
 
 def chapter_troubleshooting():
-    s = H1("16  Troubleshooting")
+    s = H1("17  Troubleshooting")
     s += [table([["Problem", "What to check"],
                  ["HELIX does not appear on the MPC", "MPC OS 3.10.1 or later? Both Enhancements switches on? Is the folder "
                   "named <b>Twisted Genetics - VST - HELIX</b> directly inside <b>VST2 Plugins</b> at the top level of the "
@@ -979,7 +1035,7 @@ def build():
     story = []
     story += cover_page()
     story += contents()
-    for ch in (chapter_welcome, chapter_install, chapter_quickstart, chapter_osc, chapter_tables, chapter_subnoise,
+    for ch in (chapter_welcome, chapter_install, chapter_quickstart, chapter_desktop, chapter_osc, chapter_tables, chapter_subnoise,
                chapter_filters, chapter_env, chapter_lfo, chapter_matrix, chapter_macros_voices, chapter_fx,
                chapter_presets, chapter_mpc, chapter_cpu, chapter_troubleshooting, appendix_params):
         story += ch()

@@ -1,111 +1,87 @@
+// The HELIX desktop editor: one window with tabs, in the style of the big modern wavetable synths.
+//   OSC     two oscillators with 3D wavetable views, two filters with response curves, sub, noise, routing,
+//           the modulation sources (envelopes, LFOs, performers) and the macros
+//   FX      the effects rack (order, on/off) and the selected effect
+//   MATRIX  the 16 modulation slots
+//   GLOBAL  voices, engine quality, theme, presets
+// Drag any modulation source chip (ENV 2, LFO 1, M1, VEL...) onto a knob to modulate it; right-click a knob to
+// change or remove its modulation.
 #pragma once
-#include <juce_audio_utils/juce_audio_utils.h>
+#include "Displays.h"
 #include "PluginProcessor.h"
+#include "Theme.h"
+#include "Widgets.h"
+#include <map>
 #include <memory>
 #include <vector>
 
-// Light theme: dark text on a light background, high contrast, large values.
-struct HelixColours
-{
-    static juce::Colour bg()      { return juce::Colour(0xfff3f1ec); }
-    static juce::Colour panel()   { return juce::Colour(0xffffffff); }
-    static juce::Colour ink()     { return juce::Colour(0xff15171a); }
-    static juce::Colour muted()   { return juce::Colour(0xff5d6168); }
-    static juce::Colour line()    { return juce::Colour(0xffc9c5bc); }
-    static juce::Colour accent()  { return juce::Colour(0xffd6402b); }   // knob value
-    static juce::Colour mod()     { return juce::Colour(0xff1f6fd1); }   // modulation ring
-};
+class HelixEditor;
 
-class HelixLookAndFeel : public juce::LookAndFeel_V4
+// Owns the components it creates and the knobs that need refreshing.
+class Page : public juce::Component
 {
 public:
-    HelixLookAndFeel();
-    void drawRotarySlider(juce::Graphics&, int x, int y, int w, int h, float pos, float start, float end, juce::Slider&) override;
-    void drawToggleButton(juce::Graphics&, juce::ToggleButton&, bool highlighted, bool down) override;
+    explicit Page(HelixProcessor& p) : proc(p) {}
+    // Children were created (and stored) before the panels that hold them: destroy in that order.
+    ~Page() override { for (auto& c : owned) c.reset(); }
+    HelixProcessor& proc;
+    std::vector<std::unique_ptr<juce::Component>> owned;
+    std::vector<ParamKnob*> knobs;
+    template <typename T> T* own(std::unique_ptr<T> c, juce::Component* parent = nullptr)
+    {
+        T* raw = c.get();
+        (parent ? parent : this)->addAndMakeVisible(*raw);
+        if constexpr (std::is_base_of_v<ParamKnob, T>) knobs.push_back(raw);
+        owned.push_back(std::move(c));
+        return raw;
+    }
+    ParamKnob* knob(int param, juce::Component* parent, juce::String label = {}, ParamKnob::Size s = ParamKnob::Size::Normal)
+    {
+        return own(std::make_unique<ParamKnob>(proc, param, label, s), parent);
+    }
+    ParamCombo* combo(int param, juce::Component* parent, juce::String caption = {})
+    {
+        return own(std::make_unique<ParamCombo>(proc, param, caption), parent);
+    }
+    ParamToggle* toggle(int param, juce::Component* parent, juce::String text)
+    {
+        return own(std::make_unique<ParamToggle>(proc, param, text), parent);
+    }
+    virtual void tick() { for (auto* k : knobs) k->refresh(); }
 };
 
-// One parameter: a knob, a menu or a switch, with its name and value text. Draws a modulation ring when the
-// engine reports a live value different from the knob's own.
-class ParamControl : public juce::Component
+class HelixEditor : public juce::AudioProcessorEditor, public juce::DragAndDropContainer, private juce::Timer
 {
 public:
-    ParamControl(HelixProcessor& proc, int paramIndex);
-    void resized() override;
-    void paintOverChildren(juce::Graphics&) override;
-    void refreshLive();
-private:
-    HelixProcessor& proc_;
-    int index_;
-    juce::Label name_;
-    std::unique_ptr<juce::Slider> knob_;
-    std::unique_ptr<juce::ComboBox> menu_;
-    std::unique_ptr<juce::ToggleButton> toggle_;
-    std::unique_ptr<juce::SliderParameterAttachment> knobAtt_;
-    std::unique_ptr<juce::ComboBoxParameterAttachment> menuAtt_;
-    std::unique_ptr<juce::ButtonParameterAttachment> toggleAtt_;
-    float live_ = -1.0f;
-};
-
-// Stacked 3D-ish view of the wavetable with the current frame highlighted (the moving position line).
-class WavetableView : public juce::Component
-{
-public:
-    WavetableView(HelixProcessor& p, int slot);
-    void paint(juce::Graphics&) override;
-    void resized() override;
-private:
-    void chooseFile(bool sampleToTable);
-    HelixProcessor& proc_;
-    int slot_;
-    juce::TextButton loadButton_{"Load WAV..."}, s2tButton_{"Sample > Table..."};
-    juce::ComboBox frames_;
-    std::unique_ptr<juce::FileChooser> chooser_;
-};
-
-// Preset browser: factory presets and the user's Documents/HELIX/Presets/<Category>/*.json.
-class PresetBrowser : public juce::Component, private juce::ListBoxModel
-{
-public:
-    explicit PresetBrowser(HelixProcessor& p);
-    void resized() override;
-    void paint(juce::Graphics&) override;
-    void refresh();
-private:
-    int getNumRows() override { return (int)items_.size(); }
-    void paintListBoxItem(int row, juce::Graphics&, int w, int h, bool selected) override;
-    void listBoxItemDoubleClicked(int row, const juce::MouseEvent&) override { load(row); }
-    void load(int row);
-    void save();
-    struct Item { juce::String category, name; juce::File file; int factory = -1; };
-    HelixProcessor& proc_;
-    std::vector<Item> items_;
-    juce::ListBox list_{"presets", this};
-    juce::TextButton loadB_{"Load"}, saveB_{"Save..."}, initB_{"Init"}, mutateB_{"Mutate 10%"}, prevB_{"<"}, nextB_{">"};
-    juce::Label current_;
-    std::unique_ptr<juce::AlertWindow> saveDialog_;
-    uint32_t mutateSeed_ = 1;
-};
-
-class HelixEditor : public juce::AudioProcessorEditor, private juce::Timer
-{
-public:
+    static constexpr int kW = 1200, kH = 800;
     explicit HelixEditor(HelixProcessor&);
     ~HelixEditor() override;
     void paint(juce::Graphics&) override;
     void resized() override;
+    void showTab(int index);
+    void applyTheme(int index);
+    HelixProcessor& processor() { return proc_; }
+
 private:
     void timerCallback() override;
-    void showPage(int index);
+    void buildHeader();
+    void showPresetMenu();
+    void stepPreset(int delta);
+    void savePreset();
 
     HelixProcessor& proc_;
     HelixLookAndFeel lnf_;
-    juce::OwnedArray<juce::TextButton> tabs_;
-    juce::Viewport viewport_;
-    std::unique_ptr<juce::Component> page_;
-    std::vector<ParamControl*> controls_;
-    std::vector<std::unique_ptr<juce::Component>> owned_;
-    std::unique_ptr<WavetableView> wtView_;
-    std::unique_ptr<PresetBrowser> browser_;
+    juce::TooltipWindow tooltips_{this, 600};
+    juce::Component content_;                 // the 1200 x 800 layout, scaled to the window
+    std::vector<std::unique_ptr<Page>> tabs_;
+    juce::OwnedArray<juce::TextButton> tabButtons_;
+    int tab_ = 0;
+    bool constructed_ = false;
+
+    // header
+    juce::TextButton prev_{"<"}, next_{">"}, presetBox_, save_{"Save"}, mutate_{"Mutate"}, init_{"Init"};
+    std::unique_ptr<ParamKnob> master_;
     juce::Label cpu_;
-    int pageIndex_ = 0;
+    std::unique_ptr<juce::AlertWindow> saveDialog_;
+    uint32_t mutateSeed_ = 1;
 };

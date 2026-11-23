@@ -1,11 +1,11 @@
 # Builds the MPC plugin zip and the macOS desktop plugins and publishes a GitHub Release named after the version in
 # helix-mpc/plugin.json (tag v<version>, created by the workflow). Runs when that version (or this file) changes on
-# main, when a v* tag is pushed, or by hand (Actions > release > Run workflow).
+# main (or the manual changes), when a v* tag is pushed, or by hand (Actions > release > Run workflow).
 name: release
 on:
   push:
     branches: [main]
-    paths: ['helix-mpc/plugin.json', '.github/workflows/release.yml']
+    paths: ['helix-mpc/plugin.json', '.github/workflows/release.yml', 'docs/HELIX-Manual.pdf']
     tags: ['v*']
   workflow_dispatch:
 permissions:

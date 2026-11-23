@@ -75,6 +75,27 @@ public:
     HelixParameter* parameter(int index) { return params_[(size_t)index]; }
     float cpuLoad() const { return cpuLoad_.load(); }
 
+    // ---- editor helpers (message thread)
+    // Set a parameter from the UI as one undoable host gesture.
+    void setParamFromUI(int index, float plain);
+    // Modulation by drag and drop: route source `src` (helix::ModSource) to parameter `param` (or a special
+    // destination, given as -DST_*). Reuses the slot that already does it, else the first free slot.
+    // Returns the slot used, or -1 when all 16 slots are busy.
+    int assignMod(int src, int param, float amount = 0.25f);
+    // Matrix slots (0..15) whose destination is `param`.
+    std::vector<int> modSlotsFor(int param) const;
+    void clearModSlot(int slot);
+    static int destIndexFor(int param);   // mod destination index of a parameter, 0 if not modulatable
+
+    struct PresetEntry { juce::String category, name; juce::File file; int factory = -1; };
+    // Factory presets, then the user's (Documents/HELIX/Presets/<Category>/*.json). Re-read by refreshPresetList().
+    const std::vector<PresetEntry>& presetList() const { return presets_; }
+    void refreshPresetList();
+    bool loadPresetEntry(int index);
+    int currentPresetEntry() const { return currentEntry_; }
+
+    // Per-user settings that are not part of a sound (theme, display options).
+    juce::PropertiesFile& settings() { return *settings_; }
 private:
     void timerCallback() override;
 
@@ -83,6 +104,9 @@ private:
     int lastTableIndex_[helix::kNumTableSlots] = {-1, -1};
     int currentProgram_ = 0;
     juce::String presetName_ = "Init";
+    std::vector<PresetEntry> presets_;
+    int currentEntry_ = -1;
+    std::unique_ptr<juce::PropertiesFile> settings_;
     std::vector<HelixParameter*> params_;
     std::vector<helix::MidiMsg> midi_;
     std::vector<float> scratch_ = std::vector<float>(8192, 0.0f);

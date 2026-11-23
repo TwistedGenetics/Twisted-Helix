@@ -2,7 +2,7 @@
 
 | File | What |
 |---|---|
-| [HELIX-Manual.pdf](HELIX-Manual.pdf) | The user manual (30 pages): installing, every page and control, presets, the MPC, CPU, troubleshooting, parameter reference. |
+| [HELIX-Manual.pdf](HELIX-Manual.pdf) | The user manual (32 pages): installing, every page and control, presets, the MPC, CPU, troubleshooting, parameter reference. |
 | [helix-0.1.0-mpc.zip](helix-0.1.0-mpc.zip) | HELIX for Akai standalone MPCs (MPC OS 3.10.1+). One folder for Gen1 32-bit (One / One+ / One Retro / Live II / X / Key / Force) and Gen2 64-bit units. |
 
 **Untested on hardware.** It passes the MPC Plugin SDK's validator and host simulator. Save your projects often:
