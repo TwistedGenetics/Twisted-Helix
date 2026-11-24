@@ -2228,6 +2228,793 @@
      }
     },
     {
+     "key": "hx tag Mod Osc",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_mod_osc.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx pick MO Ring Mod",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 0",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_off_on.png",
+          "offImage": "seg_91_off_off.png",
+          "buttonId": 0,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "6 6 91 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 1",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_osc_a_on.png",
+          "offImage": "seg_91_osc_a_off.png",
+          "buttonId": 1,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "94 6 91 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 2",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_osc_b_on.png",
+          "offImage": "seg_91_osc_b_off.png",
+          "buttonId": 2,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "182 6 91 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 3",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_a_plus_b_on.png",
+          "offImage": "seg_91_a_plus_b_off.png",
+          "buttonId": 3,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "270 6 91 56"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx pick MO Phase",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 0",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_off_on.png",
+          "offImage": "seg_91_off_off.png",
+          "buttonId": 0,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "6 6 91 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 1",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_osc_a_on.png",
+          "offImage": "seg_91_osc_a_off.png",
+          "buttonId": 1,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "94 6 91 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 2",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_osc_b_on.png",
+          "offImage": "seg_91_osc_b_off.png",
+          "buttonId": 2,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "182 6 91 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 3",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_a_plus_b_on.png",
+          "offImage": "seg_91_a_plus_b_off.png",
+          "buttonId": 3,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "270 6 91 56"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx pick MO Position",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 0",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_off_on.png",
+          "offImage": "seg_91_off_off.png",
+          "buttonId": 0,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "6 6 91 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 1",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_osc_a_on.png",
+          "offImage": "seg_91_osc_a_off.png",
+          "buttonId": 1,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "94 6 91 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 2",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_osc_b_on.png",
+          "offImage": "seg_91_osc_b_off.png",
+          "buttonId": 2,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "182 6 91 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 3",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_91_a_plus_b_on.png",
+          "offImage": "seg_91_a_plus_b_off.png",
+          "buttonId": 3,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "270 6 91 56"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx pick MO Filter FM",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 0",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_106_off_on.png",
+          "offImage": "seg_106_off_off.png",
+          "buttonId": 0,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "6 6 106 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 1",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_106_f1_on.png",
+          "offImage": "seg_106_f1_off.png",
+          "buttonId": 1,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "109 6 106 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 2",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_106_f2_on.png",
+          "offImage": "seg_106_f2_off.png",
+          "buttonId": 2,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "212 6 106 56"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "choice 3",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "seg_106_f1_plus_f2_on.png",
+          "offImage": "seg_106_f1_plus_f2_off.png",
+          "buttonId": 3,
+          "numButtonsInGroup": 4,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "315 6 106 56"
+        }
+       }
+      ]
+     }
+    },
+    {
      "key": "hx tag Filter 1",
      "value": {
       "version": 2,
@@ -18053,7 +18840,7 @@
    },
    {
     "key": "Parameter 218",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 220",
@@ -18065,7 +18852,7 @@
    },
    {
     "key": "Parameter 223",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 225",
@@ -18077,7 +18864,7 @@
    },
    {
     "key": "Parameter 228",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 230",
@@ -18089,7 +18876,7 @@
    },
    {
     "key": "Parameter 233",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 235",
@@ -18101,7 +18888,7 @@
    },
    {
     "key": "Parameter 238",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 240",
@@ -18113,7 +18900,7 @@
    },
    {
     "key": "Parameter 243",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 245",
@@ -18125,7 +18912,7 @@
    },
    {
     "key": "Parameter 248",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 250",
@@ -18137,7 +18924,7 @@
    },
    {
     "key": "Parameter 253",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 255",
@@ -18149,7 +18936,7 @@
    },
    {
     "key": "Parameter 258",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 260",
@@ -18161,7 +18948,7 @@
    },
    {
     "key": "Parameter 263",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 265",
@@ -18173,7 +18960,7 @@
    },
    {
     "key": "Parameter 268",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 270",
@@ -18185,7 +18972,7 @@
    },
    {
     "key": "Parameter 273",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 275",
@@ -18197,7 +18984,7 @@
    },
    {
     "key": "Parameter 278",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 280",
@@ -18209,7 +18996,7 @@
    },
    {
     "key": "Parameter 283",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 285",
@@ -18221,7 +19008,7 @@
    },
    {
     "key": "Parameter 288",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 290",
@@ -18233,7 +19020,7 @@
    },
    {
     "key": "Parameter 293",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt"]
    },
    {
     "key": "Parameter 295",
@@ -18342,6 +19129,26 @@
    {
     "key": "Parameter 364",
     "value": ["Model", "6 dB", "12 dB", "18 dB", "24 dB"]
+   },
+   {
+    "key": "Parameter 365",
+    "value": ["Off", "On"]
+   },
+   {
+    "key": "Parameter 367",
+    "value": ["Off", "Osc A", "Osc B", "A + B"]
+   },
+   {
+    "key": "Parameter 369",
+    "value": ["Off", "Osc A", "Osc B", "A + B"]
+   },
+   {
+    "key": "Parameter 371",
+    "value": ["Off", "Osc A", "Osc B", "A + B"]
+   },
+   {
+    "key": "Parameter 373",
+    "value": ["Off", "F1", "F2", "F1 + F2"]
    },
    {
     "key": "Parameter 449",
@@ -22766,6 +23573,831 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "659 484 408 121"
+       }
+      }
+     ]
+    },
+    "qlinkBoundsData": ["10 10 1260 146", "10 164 1260 146", "10 318 1260 146", "10 472 1260 146"]
+   },
+   {
+    "version": 1,
+    "tabName": "MOD OSC",
+    "fnKeyIndex": 0,
+    "fnKeySubIndex": 4,
+    "componentDefinition": {
+     "version": 2,
+     "actions": [],
+     "backgroundData": {
+      "version": 1,
+      "focussed": {
+       "version": 1,
+       "colour": "ffb2b6bc",
+       "image": ""
+      },
+      "unfocussed": {
+       "version": 1,
+       "colour": "ffb2b6bc",
+       "image": ""
+      }
+     },
+     "ignoreMousePresses": false,
+     "disableCoarseDataWheel": false,
+     "componentsData": [
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "background",
+        "type": "Image",
+        "data": {
+         "version": 2,
+         "imageType": "Regular",
+         "colour": "0",
+         "image": "bg_0_4.png"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "0 0 1280 628"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "tag Mod Osc",
+        "type": "hx tag Mod Osc",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 365"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 13 150 140"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Pitch]/Parameter 366"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 46 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "MO Pitch",
+        "type": "hx knob88_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 366"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 20 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Ring]/Parameter 367"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "486 53 74 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Mod]/Parameter 367"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "486 83 74 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "MO Ring Mod",
+        "type": "hx pick MO Ring Mod",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 367"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "560 49 367 68"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Amount]/Parameter 368"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1069 46 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "MO RM Amt",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 368"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "969 20 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[PHASE]/Parameter 369"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 220 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Target]/Parameter 369"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 222 74 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "MO Phase",
+        "type": "hx pick MO Phase",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 369"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "262 203 367 68"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Amount]/Parameter 370"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "771 200 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "MO Phase Amt",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 370"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "671 174 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[POSITION]/Parameter 371"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 374 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Target]/Parameter 371"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 376 74 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "MO Position",
+        "type": "hx pick MO Position",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 371"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "262 357 367 68"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Amount]/Parameter 372"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "771 354 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "MO Pos Amt",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 372"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "671 328 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[FILTER FM]/Parameter 373"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 528 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Target]/Parameter 373"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 530 74 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "MO Filter FM",
+        "type": "hx pick MO Filter FM",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 373"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "262 511 427 68"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Amount]/Parameter 374"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "831 508 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "MO FM Amt",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 374"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "731 482 250 126"
        }
       }
      ]

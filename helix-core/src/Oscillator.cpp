@@ -212,13 +212,18 @@ void WtOscillator::render(const Wavetable* wt, const OscBlock& b, const OscModIn
         GL[g] = float4::load(gl + 4 * g); GR[g] = float4::load(gr + 4 * g);
         GM[g] = float4::load(gm + 4 * g); INC[g] = float4::load(incs + 4 * g);
     }
-    const bool moving = dPos != 0.0f;
+    const float* pmIn = mod.pm && mod.pmAmt > 0.0f ? mod.pm : nullptr;
+    const float* posIn = mod.posMod && mod.posAmt > 0.0f ? mod.posMod : nullptr;
+    const float posK = 0.5f * mod.posAmt;
+    const bool moving = dPos != 0.0f || posIn;
     int f0 = 0, f1 = 0; float t = 0.0f;
     framePos(*wt, pos, f0, f1, t);
 
     for (int i = 0; i < n; ++i)
     {
-        if (moving) framePos(*wt, pos, f0, f1, t);
+        if (moving) framePos(*wt, posIn ? pos + posK * posIn[i] : pos, f0, f1, t);
+        // phase-mod offset: amt * (m + 1) keeps it >= 0, so the plain fractional part wraps it
+        const float pmOff = pmIn ? mod.pmAmt * (pmIn[i] + 1.0f) : 0.0f;
         const float* la = wt->frame(mip.lo, f0);
         const float* lb = wt->frame(mip.lo, f1);
         const float* ha = wt->frame(mip.hi, f0);
@@ -243,9 +248,10 @@ void WtOscillator::render(const Wavetable* wt, const OscBlock& b, const OscModIn
             for (int g = 0; g < groups; ++g)
             {
                 float4 ph = float4::load(phs + 4 * g);
+                const float4 rp = pmIn ? fracPos(ph + float4(pmOff)) : ph;
                 alignas(16) int32_t j[4];
                 alignas(16) float va[4], vb[4], vc[4], vd[4];
-                float4 x = ph * N;
+                float4 x = rp * N;
                 truncToInt(x, j);
                 const float4 fr = fracPos(x);
                 for (int k = 0; k < 4; ++k)
@@ -258,7 +264,7 @@ void WtOscillator::render(const Wavetable* wt, const OscBlock& b, const OscModIn
                 float4 sv = float4::madd(sa, sb - sa, T);
                 if (two)
                 {
-                    float4 xh = ph * NH;
+                    float4 xh = rp * NH;
                     truncToInt(xh, j);
                     const float4 frh = fracPos(xh);
                     for (int k = 0; k < 4; ++k)
@@ -291,7 +297,7 @@ void WtOscillator::render(const Wavetable* wt, const OscBlock& b, const OscModIn
                 for (int k = 0; k < lanes_; ++k)
                 {
                     const float p = phase_[k];
-                    float q = p;
+                    float q = pmIn ? wrap01(p + pmOff) : p;
                     if (phase0) q = warpPhase(w0, q, aa0, ms0);
                     if (phase1) q = warpPhase(w1, q, aa1, ms1);
                     float s = read(q);

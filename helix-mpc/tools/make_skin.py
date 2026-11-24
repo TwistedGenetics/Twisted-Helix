@@ -588,6 +588,17 @@ def pages():
         S("SHAPES", [PICK("Sub Shape", "Sub\nShape", cols=2, where="left"),
                      PICK("Noise Type", "Noise\nType", cols=3, where="left")])])
 
+    # Modulation oscillator (Massive-style): a sine at note pitch + Pitch, routed to the oscillators and filters
+    OSCT = ["Off", "Osc A", "Osc B", "A + B"]
+    page(0, 4, "MOD OSC", [
+        S("MOD", [K("MO Pitch", "Pitch", bi=True),
+                      PICK("MO Ring Mod", "Ring\nMod", cols=4, labels=OSCT, where="left", cap_w=80), K("MO RM Amt", "Amount")],
+          toggle="Mod Osc"),
+        S("PHASE", [PICK("MO Phase", "Target", cols=4, labels=OSCT, where="left", cap_w=80), K("MO Phase Amt", "Amount")]),
+        S("POSITION", [PICK("MO Position", "Target", cols=4, labels=OSCT, where="left", cap_w=80), K("MO Pos Amt", "Amount")]),
+        S("FILTER FM", [PICK("MO Filter FM", "Target", cols=4, labels=["Off", "F1", "F2", "F1 + F2"], where="left", cap_w=80),
+                        K("MO FM Amt", "Amount")])])
+
     # ---- FILTER
     def filt(n):
         return [S("FILTER %d" % n, [SCR("F%d Type" % n, "filter", 260), K("F%d Cutoff" % n, "Cutoff"), K("F%d Reso" % n, "Reso"),

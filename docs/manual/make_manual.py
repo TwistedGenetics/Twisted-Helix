@@ -415,6 +415,7 @@ def chapter_welcome():
     s += [table([["Section", "In short"],
                  ["Oscillators", "2 wavetable oscillators (up to 256 frames each), 14 warp modes in two slots each, up to 7 unison voices"],
                  ["Sub and noise", "A clean sub oscillator that can bypass the filters, and 6 noise / vinyl / tape textures"],
+                 ["Mod oscillator", "A Massive-style sine that ring-modulates, phase-modulates or sweeps the wavetables, and frequency-modulates the filters"],
                  ["Filters", "2 stereo filters: 13 HELIX types plus the 17 Mega Synth models, drive, key tracking and 'fat', serial ↔ parallel routing"],
                  ["Modulation", "4 envelopes, 4 LFOs, 2 step performers, 8 macros, a 16-slot matrix"],
                  ["Voices", "8 voices, poly / mono / legato, glide, click-free voice stealing"],
@@ -650,7 +651,7 @@ def chapter_tables():
 
 
 def chapter_subnoise():
-    s = H1("7  Sub and noise", need=135)
+    s = H1("7  Sub, noise and the mod oscillator", need=135)
     s += shot("subnoise.jpg", "Sub, noise and routing on the OSC tab (Dark Atmos).")
     s += H2("Sub oscillator")
     s += [table([["Control", "What it does"],
@@ -670,6 +671,25 @@ def chapter_subnoise():
                  ["Noise Loop", "On: the texture loops for as long as the note lasts, starting at a random point each time. "
                   "Off: it plays once from the start (useful for clicks and transients)."],
                  ["Noise &gt; F1 / &gt; F2", "Sends to the filters."]], [36, 134])]
+    s += H2("Modulation oscillator")
+    s += [P("The mod oscillator works like Massive's. It is a sine wave you never hear directly. It plays at the "
+            "note's pitch plus <b>Pitch</b> and follows glide and pitch bend. It changes the other sounds in four "
+            "ways, each with its own target and amount. On the MPC it is the <b>MOD OSC</b> page (OSC key). On the "
+            "computer, press <b>MOD OSC</b> at the right of the modulation panel's source buttons."),
+          table([["Control", "What it does"],
+                 ["Mod Osc", "On / off. Off (the default) changes nothing, so older presets sound the same."],
+                 ["Pitch", "Semitones above or below the note (-48 to +48). Whole numbers give harmonic tones; 7, 12 "
+                  "and 19 are classic. Small offsets give slow beating and movement."],
+                 ["Ring Mod + Amount", "Multiplies Osc A, Osc B or both by the sine. Amount blends from the dry oscillator "
+                  "(0%) to full ring modulation (100%): bells, metal, talking basses."],
+                 ["Phase + Amount", "Phase modulation (FM-style) of the chosen oscillators' wavetable reading. Up to one "
+                  "cycle each way at 100%: from a little bite to harsh FM."],
+                 ["Position + Amount", "Sweeps the wavetable position up and down at audio rate, around the oscillator's "
+                  "own Position (up to half the table each way): buzzy, vocal, growling tones."],
+                 ["Filter FM + Amount", "Moves Filter 1, Filter 2 or both up and down at audio rate (up to 4 octaves each "
+                  "way at 100%). With resonance it gives screaming, gritty neuro tones."]], [36, 134]),
+          P("Every Amount and Pitch can also be modulated from the matrix, e.g. an envelope on Phase Amt for an FM "
+            "attack. Filter FM costs extra CPU while it is on, because the filter is recalculated every 4 samples.")]
     return s
 
 

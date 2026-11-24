@@ -389,3 +389,15 @@ HP(P_F1_SLOPE        , "f1_slope", "F1 Slope", ParamKind::Choice, 0.0f, 4.0f, 0.
 HP(P_F2_MODEL        , "f2_model", "F2 Model", ParamKind::Choice, 0.0f, 17.0f, 0.0f, "", &choices::filterModel, false)
 HP(P_F2_KIND         , "f2_kind", "F2 Filter Type", ParamKind::Choice, 0.0f, 5.0f, 0.0f, "", &choices::filterKind, false)
 HP(P_F2_SLOPE        , "f2_slope", "F2 Slope", ParamKind::Choice, 0.0f, 4.0f, 0.0f, "", &choices::filterSlope, false)
+// 0.3.2: Modulation oscillator (Massive-style): a sine at the note's pitch + Pitch, which can ring-modulate,
+// phase-modulate or sweep the wavetable position of Osc A / B, and frequency-modulate the filters.
+HP(P_MO_ON           , "mo_on", "Mod Osc", ParamKind::Bool, 0.0f, 1.0f, 0.0f, "", nullptr, false)
+HP(P_MO_PITCH        , "mo_pitch", "MO Pitch", ParamKind::Linear, -48.0f, 48.0f, 0.0f, "st", nullptr, true)
+HP(P_MO_RM_TGT       , "mo_rm_tgt", "MO Ring Mod", ParamKind::Choice, 0.0f, 3.0f, 0.0f, "", &choices::moOscTarget, false)
+HP(P_MO_RM_AMT       , "mo_rm_amt", "MO RM Amt", ParamKind::Linear, 0.0f, 1.0f, 0.5f, "", nullptr, true)
+HP(P_MO_PM_TGT       , "mo_pm_tgt", "MO Phase", ParamKind::Choice, 0.0f, 3.0f, 0.0f, "", &choices::moOscTarget, false)
+HP(P_MO_PM_AMT       , "mo_pm_amt", "MO Phase Amt", ParamKind::Linear, 0.0f, 1.0f, 0.3f, "", nullptr, true)
+HP(P_MO_POS_TGT      , "mo_pos_tgt", "MO Position", ParamKind::Choice, 0.0f, 3.0f, 0.0f, "", &choices::moOscTarget, false)
+HP(P_MO_POS_AMT      , "mo_pos_amt", "MO Pos Amt", ParamKind::Linear, 0.0f, 1.0f, 0.3f, "", nullptr, true)
+HP(P_MO_FM_TGT       , "mo_fm_tgt", "MO Filter FM", ParamKind::Choice, 0.0f, 3.0f, 0.0f, "", &choices::moFilterTarget, false)
+HP(P_MO_FM_AMT       , "mo_fm_amt", "MO FM Amt", ParamKind::Linear, 0.0f, 1.0f, 0.3f, "", nullptr, true)

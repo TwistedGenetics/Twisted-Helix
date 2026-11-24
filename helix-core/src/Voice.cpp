@@ -193,6 +193,15 @@ void Voice::computeModulation(const EngineContext& ctx, int n)
 
 // ------------------------------------------------------------------------------------------- render
 
+// sin(2 pi p) for p in 0..1 (parabola plus one refinement: ~0.1% error, cheap on the MPC's ARM)
+static inline float sine01(float p)
+{
+    const float x = kTwoPi * p - 3.14159265f;   // -pi..pi; sin(2 pi p) = -sin(x)
+    float y = 1.27323954f * x - 0.40528473f * x * std::fabs(x);
+    y = 0.225f * (y * std::fabs(y) - y) + y;
+    return -y;
+}
+
 void Voice::renderOsc(const EngineContext& ctx, int s, const float* other, int n)
 {
     const float* p = vp_;
@@ -228,10 +237,49 @@ void Voice::renderOsc(const EngineContext& ctx, int s, const float* other, int n
     mod.other = other;
     mod.sub = sub_buf_;
     mod.noise = noise_buf_;
+    const int bit = s == 0 ? 1 : 2;   // target choices: 1 = Osc A, 2 = Osc B, 3 = both
+    if (moOn_)
+    {
+        if ((int)p[P_MO_PM_TGT] & bit) { mod.pm = mo_buf_; mod.pmAmt = p[P_MO_PM_AMT]; }
+        if ((int)p[P_MO_POS_TGT] & bit) { mod.posMod = mo_buf_; mod.posAmt = p[P_MO_POS_AMT]; }
+    }
     osc_[s].render(ctx.table[s], b, mod, oscL_[s], oscR_[s], oscM_[s], n);
+    if (moOn_ && ((int)p[P_MO_RM_TGT] & bit))
+    {
+        // Ring mod: crossfade from the dry oscillator to oscillator x mod osc
+        const float a = clamp(p[P_MO_RM_AMT], 0.0f, 1.0f);
+        for (int i = 0; i < n; ++i)
+        {
+            const float g = 1.0f - a + a * mo_buf_[i];
+            oscL_[s][i] *= g; oscR_[s][i] *= g; oscM_[s][i] *= g;
+        }
+    }
 
     lastPos_[s] = b.pos1; lastLevel_[s] = b.level1;
     lastWarp_[s][0] = b.warpAmt1[0]; lastWarp_[s][1] = b.warpAmt1[1];
+}
+
+void Voice::renderFilter(int f, float* bl, float* br, float cutoffHz, int n)
+{
+    const float* vp = vp_;
+    const int o = f * (P_F2_ON - P_F1_ON);
+    const int mo = f * (P_F2_MODEL - P_F1_MODEL);
+    const int model = (int)vp[P_F1_MODEL + mo];
+    if (model <= 0)
+    {
+        Filter& flt = filt_[f];
+        flt.setType((FilterType)(int)vp[P_F1_TYPE + o]);
+        flt.update(cutoffHz, vp[P_F1_RES + o], vp[P_F1_DRIVE + o], vp[P_F1_FAT + o]);
+        flt.processBlock(bl, br, n);
+    }
+    else
+    {
+        // Fat = the Mega Synth's analogue Warmth
+        mega::MegaFilter& mf = mfilt_[f];
+        mf.configure(model - 1, (int)vp[P_F1_KIND + mo], (int)vp[P_F1_SLOPE + mo] - 1);
+        mf.update(cutoffHz, vp[P_F1_RES + o], vp[P_F1_DRIVE + o], vp[P_F1_FAT + o], sr_);
+        mf.processBlock(bl, br, n);
+    }
 }
 
 void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
@@ -275,6 +323,22 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
         noise_.render((int)vp[P_NOISE_TYPE], ratio, vp[P_NOISE_LOOP] >= 0.5f, vp[P_NOISE_LEVEL], noise_buf_, n);
     }
     else bufClear(noise_buf_, n);
+
+    // Modulation oscillator: a sine at the note's pitch + MO Pitch (follows glide and bend)
+    moOn_ = vp[P_MO_ON] >= 0.5f;
+    if (moOn_)
+    {
+        if (fresh_) moPhase_ = 0.0f;
+        const float inc = clamp(noteToHz(clamp(pitch_ + bend + vp[P_MO_PITCH], -24.0f, 150.0f)) / sr_, 0.0f, 0.49f);
+        float ph = moPhase_;
+        for (int i = 0; i < n; ++i)
+        {
+            mo_buf_[i] = sine01(ph);
+            ph += inc;
+            if (ph >= 1.0f) ph -= 1.0f;
+        }
+        moPhase_ = ph;
+    }
 
     const bool aNeedsB = warpUsesOther(vp[P_A_W1_MODE]) || warpUsesOther(vp[P_A_W2_MODE]);
     const bool bNeedsA = warpUsesOther(vp[P_B_W1_MODE]) || warpUsesOther(vp[P_B_W2_MODE]);
@@ -346,22 +410,18 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
         if (vp[P_F1_ON + o] >= 0.5f)
         {
             const float kt = vp[P_F1_KEYTRK + o] * (pitch_ - 60.0f) / 12.0f;
-            const int mo = f * (P_F2_MODEL - P_F1_MODEL);
-            const int model = (int)vp[P_F1_MODEL + mo];
-            if (model <= 0)
-            {
-                Filter& flt = filt_[f];
-                flt.setType((FilterType)(int)vp[P_F1_TYPE + o]);
-                flt.update(vp[P_F1_CUTOFF + o] * fastExp2(kt), vp[P_F1_RES + o], vp[P_F1_DRIVE + o], vp[P_F1_FAT + o]);
-                flt.processBlock(bl, br, n);
-            }
+            const float cut = vp[P_F1_CUTOFF + o] * fastExp2(kt);
+            const bool fm = moOn_ && ((int)vp[P_MO_FM_TGT] & (f == 0 ? 1 : 2)) && vp[P_MO_FM_AMT] > 0.0f;
+            if (!fm) renderFilter(f, bl, br, cut, n);
             else
             {
-                // Fat = the Mega Synth's analogue Warmth
-                mega::MegaFilter& mf = mfilt_[f];
-                mf.configure(model - 1, (int)vp[P_F1_KIND + mo], (int)vp[P_F1_SLOPE + mo] - 1);
-                mf.update(vp[P_F1_CUTOFF + o] * fastExp2(kt), vp[P_F1_RES + o], vp[P_F1_DRIVE + o], vp[P_F1_FAT + o], sr_);
-                mf.processBlock(bl, br, n);
+                // Filter FM: the cutoff follows the mod osc (up to +-4 octaves), updated every 4 samples
+                const float oct = 4.0f * vp[P_MO_FM_AMT];
+                for (int i = 0; i < n; i += 4)
+                {
+                    const int m = std::min(4, n - i);
+                    renderFilter(f, bl + i, br + i, clamp(cut * fastExp2(oct * mo_buf_[i]), 20.0f, 20000.0f), m);
+                }
             }
             bufScale(bl, vp[P_F1_LEVEL + o], n);
             bufScale(br, vp[P_F1_LEVEL + o], n);

@@ -14,6 +14,8 @@ const std::vector<std::string> filterModel = {"HELIX", "Standard LP", "Sallen-Ke
                                               "Oberheim", "SEM", "TB-303", "Fat Cat", "Odyssey", "CS-15", "SH-2"};
 const std::vector<std::string> filterKind = {"Low Pass", "High Pass", "Band Pass", "Notch", "Peak", "All Pass"};
 const std::vector<std::string> filterSlope = {"Model", "6 dB", "12 dB", "18 dB", "24 dB"};
+const std::vector<std::string> moOscTarget = {"Off", "Osc A", "Osc B", "A + B"};
+const std::vector<std::string> moFilterTarget = {"Off", "F1", "F2", "F1 + F2"};
 const std::vector<std::string> warpMode = {"Off", "Bend +", "Bend -", "Asym", "PWM", "Mirror", "Sync", "Formant",
                                            "FM Other", "FM Sub", "FM Noise", "AM", "RM", "Quantize", "Bit Red"};
 const std::vector<std::string> subShape = {"Sine", "Triangle", "Square", "Saw"};

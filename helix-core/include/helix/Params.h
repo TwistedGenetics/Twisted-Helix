@@ -65,6 +65,8 @@ extern const std::vector<std::string> filterType;
 extern const std::vector<std::string> filterModel;
 extern const std::vector<std::string> filterKind;
 extern const std::vector<std::string> filterSlope;
+extern const std::vector<std::string> moOscTarget;
+extern const std::vector<std::string> moFilterTarget;
 extern const std::vector<std::string> warpMode;
 extern const std::vector<std::string> subShape;
 extern const std::vector<std::string> subOctave;

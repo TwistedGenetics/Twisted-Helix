@@ -328,6 +328,24 @@ public:
             p.row[1] = {pg.knob(b + 1, holder, "Length")};
             pages_.push_back(p);
         }
+        // Modulation oscillator (Massive-style): page 10, chosen with its own button
+        {
+            auto* holder = pg.own(std::make_unique<juce::Component>(), this);
+            Pg p;
+            p.holder = holder;
+            p.view = pg.own(std::make_unique<juce::Component>(), holder);
+            moOn_ = pg.toggle(P_MO_ON, p.view, "Mod Osc");
+            moOn_->button().setTooltip("Modulation oscillator: a sine at the note's pitch + Pitch");
+            moPitch_ = pg.knob(P_MO_PITCH, p.view, "Pitch", ParamKnob::Size::Large);
+            p.combos = {pg.combo(P_MO_RM_TGT, holder, "Ring Mod"), pg.combo(P_MO_PM_TGT, holder, "Phase"),
+                        pg.combo(P_MO_POS_TGT, holder, "Position"), pg.combo(P_MO_FM_TGT, holder, "Filter FM")};
+            p.row[1] = {pg.knob(P_MO_RM_AMT, holder, "RM Amt"), pg.knob(P_MO_PM_AMT, holder, "Phase Amt"),
+                        pg.knob(P_MO_POS_AMT, holder, "Pos Amt"), pg.knob(P_MO_FM_AMT, holder, "FM Amt")};
+            pages_.push_back(p);
+            moBtn_ = pg.own(std::make_unique<juce::TextButton>("MOD OSC"), this);
+            moBtn_->setClickingTogglesState(false);
+            moBtn_->onClick = [this] { select(kMoPage); };
+        }
         select(0);
     }
 
@@ -336,6 +354,7 @@ public:
         current_ = i;
         for (int k = 0; k < (int)pages_.size(); ++k) pages_[(size_t)k].holder->setVisible(k == i);
         for (int k = 0; k < (int)chips_.size(); ++k) chips_[(size_t)k]->setSelected(k == i);
+        if (moBtn_) moBtn_->setToggleState(i == kMoPage, juce::dontSendNotification);
         resized();
     }
 
@@ -343,14 +362,34 @@ public:
     {
         auto c = getLocalBounds().reduced(8, 6);
         auto top = c.removeFromTop(24);
-        for (auto* ch : chips_) { ch->setBounds(top.removeFromLeft(51)); top.removeFromLeft(2); }
-        top.removeFromLeft(6);
-        for (auto* ch : extras_) { ch->setBounds(top.removeFromLeft(36)); top.removeFromLeft(2); }
+        if (moBtn_) { moBtn_->setBounds(top.removeFromRight(68)); top.removeFromRight(4); }
+        for (auto* ch : chips_) { ch->setBounds(top.removeFromLeft(46)); top.removeFromLeft(2); }
+        top.removeFromLeft(4);
+        for (auto* ch : extras_) { ch->setBounds(top.removeFromLeft(32)); top.removeFromLeft(2); }
         c.removeFromTop(6);
-        for (auto& p : pages_)
+        for (int pi = 0; pi < (int)pages_.size(); ++pi)
         {
+            auto& p = pages_[(size_t)pi];
             p.holder->setBounds(c);
             auto r = p.holder->getLocalBounds();
+            if (pi == kMoPage)
+            {
+                // left: on / off and Pitch; right: one column per route (target menu over its amount)
+                auto left = r.removeFromLeft(180);
+                p.view->setBounds(left);
+                auto lv = p.view->getLocalBounds();
+                moOn_->setBounds(lv.removeFromTop(30).withSizeKeepingCentre(110, 24));
+                moPitch_->setBounds(lv);
+                r.removeFromLeft(8);
+                const int w = r.getWidth() / 4;
+                for (int k = 0; k < 4; ++k)
+                {
+                    auto col = juce::Rectangle<int>(r.getX() + k * w, r.getY(), w, r.getHeight()).reduced(3, 0);
+                    p.combos[(size_t)k]->setBounds(col.removeFromTop(44));
+                    p.row[1][(size_t)k]->setBounds(col);
+                }
+                continue;
+            }
             p.view->setBounds(r.removeFromLeft(340));
             r.removeFromLeft(8);
             auto r1 = r.removeFromTop(r.getHeight() / 2);
@@ -399,10 +438,14 @@ private:
         ParamCombo* div = nullptr;
         int syncParam = -1;
     };
+    static constexpr int kMoPage = 10;
     Page& page_;
     std::vector<ModChip*> chips_, extras_;
     std::vector<Pg> pages_;
     int current_ = 0;
+    juce::TextButton* moBtn_ = nullptr;
+    ParamToggle* moOn_ = nullptr;
+    ParamKnob* moPitch_ = nullptr;
 };
 
 class MacroPanel : public PanelFrame

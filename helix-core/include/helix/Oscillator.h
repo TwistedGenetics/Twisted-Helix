@@ -39,6 +39,12 @@ struct OscModInputs
     const float* other = nullptr;   // the other oscillator's mono output
     const float* sub = nullptr;
     const float* noise = nullptr;
+    // Modulation oscillator (-1..1 per sample): phase modulation (pmAmt 0..1 = up to +-1 cycle) and
+    // wavetable position modulation (posAmt 0..1 = up to +-half the table).
+    const float* pm = nullptr;
+    float pmAmt = 0.0f;
+    const float* posMod = nullptr;
+    float posAmt = 0.0f;
 };
 
 class WtOscillator
