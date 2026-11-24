@@ -27,3 +27,7 @@ out="$here/build/Twisted Genetics - VST - HELIX"
 if [ -f "$out/Plugin Skins/TUI.json" ]; then
   "$py" "$sdk/tools/validate.py" "$here" || true
 fi
+# Every control on every page: wired, reachable, lists complete, nothing drawn over a control (fails the build).
+if [ -f "$here/build/params.json" ]; then
+  "$py" "$here/tools/audit_skin.py" --params "$here/build/params.json"
+fi

@@ -515,6 +515,8 @@ def ENV(a, d, s, r, w=196):
     return {"type": "env", "params": (a, d, s, r), "w": w}
 def VAL(param, name, w=230):
     return {"type": "readout", "param": param, "name": name, "w": w}
+def CUSTOM(param, comp, w=278, h=107):
+    return {"type": "custom", "param": param, "comp": comp, "w": w, "h": h}
 def S(title, cells, toggle=None):
     return {"title": title, "cells": cells, "toggle": toggle}
 
@@ -640,6 +642,11 @@ def pages():
                          S("PLAY", [SEG("Glide Mode", "Glide", ["Always", "Legato"]), SEG("Steal", "Steal", ["Oldest", "Quietest"]),
                                     K("Bend Range", "Bend Range"), K("Vel Sens", "Vel Sens")]),
                          S("ENGINE", [SEG("Quality", "Quality", ["Eco", "Normal", "High"]), TG("CPU Guard", "CPU Guard")])])
+    # One-off hardware test: four ways of opening the list for the same harmless parameter (Pad Bank), so a single
+    # look on the MPC shows which list overlay the firmware draws. Remove once settled.
+    page(8, 3, "TEST", [S("TEST A", [CUSTOM("Pad Bank", "test cell A")]), S("TEST B", [CUSTOM("Pad Bank", "test cell B")]),
+                        S("TEST C", [CUSTOM("Pad Bank", "test cell C")]),
+                        S("TEST D\nTEST E", [CH("Pad Bank", "D: HELIX list box", 250), K("Pad Bank", "E: knob")])])
     return P
 
 FN_NAMES = ["OSC", "FILTER", "ENV", "LFO", "FX", "MOD", "PERF", "MACRO", "BROWSE"]
@@ -659,6 +666,7 @@ def cell_size(c):
     if t == "picture": return c["w"], 122
     if t == "env": return c["w"], 122
     if t in ("choice", "toggle", "readout"): return c["w"], 100
+    if t == "custom": return c["w"], c["h"]
     if t == "seg":
         ws = c["widths"] or [max(76, int(text_w(l, 24) + 2 * SEG_PAD)) for l in c["labels"]]
         c["seg_w"] = ws
@@ -747,6 +755,27 @@ class Builder:
             self.images[fname] = image
         return fname
 
+    def test_defs(self, defs):
+        """Components for the TEST page: the SDK generator's list cell (GenericLegacy Slider + focus + menu on
+        double-tap), each opening a differently built list overlay:
+          A  the SDK generator's overlay   (solid light background, overlay takes no hardware focus)
+          B  the SDK reference's overlay   (transparent background, overlay takes hardware focus)
+          C  dark background, overlay takes hardware focus"""
+        variants = {"A": ("fff3f1ec", "No"), "B": ("0", "Yes"), "C": ("ff1e1d1e", "Yes")}
+        for v, (colour, foc) in variants.items():
+            ov = component([entry("overlay", "MenuOverlay", menu_overlay(), bounds((0, 0, 1280, 800), focus=foc))],
+                           colour=colour, ignore=True)
+            defs.append(o(("key", "test overlay " + v), ("value", ov)))
+            fe = entry("focus", "Focus", o(("version", 1), ("backgroundColour", "19ffffff"), ("outlineColour", "ffd6402b"),
+                                           ("backgroundInset", 4.0), ("outlineThickness", 1.0)),
+                       bounds((0, 0, 278, 107), when="WhenFocussed"))
+            sl = entry("slider", "Slider", o(("version", 1), ("handleName", "Data")), bounds((15, 15, 248, 77)))
+            acts = [act("Mouse Down", "Q-Link", "Data"), act("Double Click", "Show Overlay", "Data", "test overlay " + v),
+                    act("Enter Pressed", "Show Overlay", "Data", "test overlay " + v)]
+            defs.append(o(("key", "test cell " + v), ("value", o(("version", 2), ("actions", acts),
+                                                                ("backgroundData", bg("00000000")), ("ignoreMousePresses", False),
+                                                                ("disableCoarseDataWheel", False), ("componentsData", [fe, sl])))))
+
     @staticmethod
     def knob_comp(size, cw, bi, menu):
         return "hx knob%d%s%s%s" % (size, "" if cw in (250, 215) else "_w%d" % cw, "_bi" if bi else "", "_menu" if menu else "")
@@ -776,14 +805,20 @@ class Builder:
         # the component reads its own parameter (a cell with only a focus ring opened a blank menu on hardware).
         # List boxes and type screens open their list on a single touch; the Q-Link banks on the same touch.
         menu = OVERLAYS["menu"]
-        tap_menu = [act("Mouse Down", "Q-Link", "Data"), act("Mouse Down", "Show Overlay", "Data", menu),
-                    act("Enter Pressed", "Show Overlay", "Data", menu)]
+        # Same structure as the SDK generator's list control (sliderWithFocusMenu): a Slider child bound to Data, the
+        # focus ring, Q-Link on touch, the list on double-tap / Enter. The Slider here is a ColourBar with every colour
+        # transparent, so the box artwork shows; dragging sideways steps through the choices even without the list.
+        drag = entry("drag", "Slider", o(("version", 2), ("sliderType", "ColourBar"), ("direction", "Horizontal"),
+                                         ("backgroundColour", "00000000"), ("outlineColour", "00000000"),
+                                         ("valueColour", "00000000"), ("isBipolar", False), ("handleName", "Data")),
+                     bounds((0, 0, 1, 1), prop=True))
         box_val = entry("value", "Label", label("Value", 28, "Bold"), bounds((0.06, 0, 0.78, 1), prop=True))
         scr_val = entry("value", "Label", label("Value", 26, "Bold", just="horizontallyCentred verticallyCentred"),
                         bounds((0.03, 0.66, 0.94, 0.28), prop=True))
-        defs.append(o(("key", "hx menu box"), ("value", component([box_val, focus_entry()], tap_menu))))
-        defs.append(o(("key", "hx menu screen"), ("value", component([scr_val, focus_entry()], tap_menu))))
-        defs.append(o(("key", "hx knob screen"), ("value", component([scr_val, focus_entry()], actions_for(OVERLAYS["knob"])))))
+        defs.append(o(("key", "hx menu box"), ("value", component([drag, box_val, focus_entry()], actions_for(menu)))))
+        defs.append(o(("key", "hx menu screen"), ("value", component([drag, scr_val, focus_entry()], actions_for(menu)))))
+        defs.append(o(("key", "hx knob screen"), ("value", component([drag, scr_val, focus_entry()], actions_for(OVERLAYS["knob"])))))
+        self.test_defs(defs)
         # on/off tags are one component per tag (see tag()); not Buttons, and no labels on top of them
         # knob cells
         for size, cw in ((KNOB, 250), (KNOB, 380), (KNOB_S, 215)):
@@ -982,33 +1017,46 @@ class Builder:
             by = y + h - box_h
             out.append(self.name_label(c["name"], c["param"], x, y, w))
             key = "hx seg %s" % c["param"]
-            # Not Buttons: segment Buttons were unreliable on hardware. A film strip shows the group with the current
-            # choice lit. Two choices: the touch flips it (Toggle Switch, like the on/off switches). Three: the touch opens
-            # the list (no touch action can set one of three values directly); the Q-Link and data wheel step through.
             total = sum(sw + 6 for sw in c["seg_w"]) - 3 * (n - 1)
-            frames = []
-            for cur in range(n):
-                im = Image.new("RGB", (total, box_h), SCREEN)
-                bx = 0
-                for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
-                    bw = sw + 6
-                    im.paste(labelled_box(bw, box_h, ORANGE if i == cur else SCREEN, lab, 24), (bx, 0))
-                    bx += bw - 3
-                frames.append(im)
-            strip = self.save("seg_%s.png" % slug(c["param"]), film(frames))
             if n == 2:
+                # Two choices: film strip with the current one lit, flipped by Toggle Switch on touch (as the on/off
+                # switches, which work on hardware).
+                frames = []
+                for cur in range(n):
+                    im = Image.new("RGB", (total, box_h), SCREEN)
+                    bx = 0
+                    for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
+                        bw = sw + 6
+                        im.paste(labelled_box(bw, box_h, ORANGE if i == cur else SCREEN, lab, 24), (bx, 0))
+                        bx += bw - 3
+                    frames.append(im)
+                strip = self.save("seg_%s.png" % slug(c["param"]), film(frames))
+                kids = [entry("state", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", strip),
+                                                  ("numFrames", n), ("handleName", "Data")), bounds((0, 0, total, box_h))),
+                        focus_entry()]
                 acts = [act("Mouse Down", "Toggle Switch", "Data"), act("Mouse Down", "Q-Link", "Data")]
             else:
-                acts = [act("Mouse Down", "Q-Link", "Data"), act("Mouse Down", "Show Overlay", "Data", OVERLAYS["menu"]),
-                        act("Enter Pressed", "Show Overlay", "Data", OVERLAYS["menu"])]
+                # Three or more: the SDK's radio group (one Button per choice, buttonId = its step, tap acts at once).
+                # Each caption is drawn into its button's images; nothing is placed on top of the buttons.
+                kids, bx = [], 0
+                for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
+                    bw = sw + 6
+                    on = self.save("seg_%d_%s_on.png" % (bw, slug(lab)), labelled_box(bw, box_h, ORANGE, lab, 24))
+                    off = self.save("seg_%d_%s_off.png" % (bw, slug(lab)), labelled_box(bw, box_h, SCREEN, lab, 24))
+                    kids.append(entry("seg %d" % i, "Button",
+                                      o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i), ("numButtonsInGroup", n),
+                                        ("handleName", "Data"), ("gestureBehaviour", "Instant")), bounds((bx, 0, bw, box_h))))
+                    bx += bw - 3
+                kids.append(focus_entry())
+                acts = [act("Mouse Down", "Q-Link", "Data"), act("Enter Pressed", "Show Overlay", "Data", OVERLAYS["menu"])]
             if key not in self.comp_keys:
                 self.comp_keys.add(key)
-                self.defs.append(o(("key", key), ("value", component([
-                    entry("state", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", strip),
-                                              ("numFrames", n), ("handleName", "Data")), bounds((0, 0, total, box_h))),
-                    focus_entry()], acts))))
+                self.defs.append(o(("key", key), ("value", component(kids, acts))))
             out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
                              bounds((x, by, total, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
+        elif t == "custom":
+            out.append(entry(c["param"], c["comp"], o(("version", 1), ("handleName", "Data")),
+                             bounds((x, y, w, h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
         return out
 
     def qmap(self, page):
@@ -1122,8 +1170,19 @@ def preview(builder, outdir):
                     by = cy + hh - 60
                     txt(cx, cy, w, 32, c["name"], 24, 600, (46, 46, 46))
                     cur = step(c["param"], len(c["labels"]))
-                    st_img = Image.open(os.path.join(builder.out, "seg_%s.png" % slug(c["param"])))
-                    tab.paste(st_img.crop((0, cur * 60, st_img.size[0], (cur + 1) * 60)), (cx, by))
+                    if len(c["labels"]) == 2:
+                        st_img = Image.open(os.path.join(builder.out, "seg_%s.png" % slug(c["param"])))
+                        tab.paste(st_img.crop((0, cur * 60, st_img.size[0], (cur + 1) * 60)), (cx, by))
+                    else:
+                        bx = cx
+                        for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
+                            bw = sw + 6
+                            tab.paste(Image.open(os.path.join(builder.out, "seg_%d_%s_%s.png" % (bw, slug(lab), "on" if i == cur else "off"))), (bx, by))
+                            bx += bw - 3
+                elif t == "custom":
+                    d.rectangle((cx, cy, cx + w - 1, cy + hh - 1), fill=(60, 60, 62))
+                    txt(cx + 15, cy + 10, w - 30, 34, "PAD BANK", 22, 600, (230, 230, 230))
+                    txt(cx + 15, cy + 50, w - 30, 40, shown(c["param"]) + "   (MPC's own slider)", 22, 600, (230, 230, 230))
         canvas.paste(tab, (0, 110))
         dc = ImageDraw.Draw(canvas)
         f = pil_font(22, 600)

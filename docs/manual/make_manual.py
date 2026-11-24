@@ -912,15 +912,16 @@ def chapter_mpc():
                     "on; hatched grey with 'Off' means off, and the section costs no CPU.",
                     "<b>Screens</b> show the oscillator's wavetable position, the warp mode, the unison stack, the sub shape, "
                     "the noise type, the filter response, the LFO shape and the effect types. They change as soon as you change "
-                    "the parameter. Touch a screen to open its list and pick from it (the Q-Link moves under your hand at the same "
-                    "time). The wavetable and unison screens open the large knob editor on a double-tap instead.",
+                    "the parameter. Drag sideways on a screen to step through its choices, or double-tap it for the full list. "
+                    "Touching it also moves its Q-Link under your hand. The wavetable and unison screens open the large knob "
+                    "editor on a double-tap instead.",
                     "<b>Knobs</b>: drag up and down, use the data wheel, or the Q-Link. Double-tap for the large editor. Knobs "
                     "that go both ways from the middle (fine tune, pan, mod amounts) light up from the centre.",
-                    "<b>Boxes with an arrow</b> are lists (matrix sources and destinations, FX order, step shapes): touch one to "
-                    "open the full list. The data wheel and the Q-Link also step through it.",
-                    "<b>Button rows</b> such as -1 Oct / -2 Oct flip with each touch when there are two choices. With three "
-                    "(Retrig / Free / 1-shot, Poly / Mono / Legato, Quality), a touch opens the list; the Q-Link and data wheel "
-                    "also step through them.",
+                    "<b>Boxes with an arrow</b> are lists (matrix sources and destinations, FX order, step shapes): drag sideways "
+                    "on one to step through it, or double-tap it for the full list. The data wheel and the Q-Link also step "
+                    "through it.",
+                    "<b>Button rows</b>: with two choices (-1 Oct / -2 Oct) each touch flips it; with three (Retrig / Free / "
+                    "1-shot, Poly / Mono / Legato, Quality) touch the one you want.",
                     "<b>Envelopes</b> (ENV page) use the MPC's own envelope display: drag its points or use the four knobs "
                     "beside it.",
                     "When an LFO or the delay is tempo-synced, the free <b>Rate</b> / <b>Time</b> knob is hidden and its place "
