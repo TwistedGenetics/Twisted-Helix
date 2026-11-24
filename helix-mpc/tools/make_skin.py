@@ -114,6 +114,8 @@ def label(kind, h, style="Bold", colour=TEXT, just="left verticallyCentred", tex
 FOCUS = o(("version", 1), ("backgroundColour", "1aff8a2a"), ("outlineColour", argb(ACCENT)),
           ("backgroundInset", 0.0), ("outlineThickness", 4.0))
 
+FM = 6   # margin round a button group / screen so its focus frame, drawn underneath, shows round the edge
+
 def focus_entry():
     return entry("focus", "Focus", FOCUS, bounds((0, 0, 1, 1), when="WhenFocussed", prop=True))
 
@@ -768,6 +770,18 @@ def check_no_labels_over_touch(path):
                 seen.append((e["componentData"]["name"], (x, y, w, h)))
     if bad:
         raise SystemExit("make_skin: labels on top of touch areas:\n  " + "\n  ".join(bad))
+    # The focus frame must be drawn underneath everything else in a component: drawn on top, it takes the touches
+    # once the component is selected (0.2.6: a second choice in the same group could not be pressed).
+    # (Cells whose children are only pictures, flipped by the cell's own Toggle Switch action, are not affected.)
+    late = []
+    for d in t["pageData"]["componentDefinitions"]["localComponentDefinitions"]:
+        kids = d["value"]["componentsData"]
+        types = [k["componentData"]["type"] for k in kids]
+        pressable = {"Button", "Knob", "Slider", "Envelope"} & set(types)
+        if pressable and "Focus" in types and types.index("Focus") > min(types.index(x) for x in pressable):
+            late.append(d["key"])
+    if late:
+        raise SystemExit("make_skin: focus frame not first (it would block touches) in: " + ", ".join(late))
     # A cell that opens an overlay must itself contain a child reading its "Data" handle (a Label or Knob); a cell with
     # only a focus ring opened an empty menu on hardware (0.2.3).
     empty = []
@@ -842,9 +856,9 @@ class Builder:
             kid = o(("version", 2), ("knobType", "FilmStrip"), ("filmStrip", fname), ("numFrames", n), ("invert", False),
                     ("handleName", "Data"))
             val = entry("value", "Label", label("Value", 26, "Bold", just="horizontallyCentred verticallyCentred"),
-                        bounds((6, h - 40, w - 12, 34)))
+                        bounds((FM + 6, FM + h - 40, w - 12, 34)))
             self.defs.append(o(("key", key), ("value", component(
-                [entry("knob", "Knob", kid, bounds((0, 0, w, h))), val, focus_entry()], actions_for(OVERLAYS["knob"])))))
+                [focus_entry(), entry("knob", "Knob", kid, bounds((FM, FM, w, h))), val], actions_for(OVERLAYS["knob"])))))
         return key
 
     @staticmethod
@@ -999,7 +1013,8 @@ class Builder:
             else:
                 comp = self.screen_def(fname, n, w, h)
             out.append(entry(c["param"], comp, o(("version", 1), ("handleName", "Data")),
-                             bounds((x, y, w, h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
+                             bounds((x - FM, y - FM, w + 2 * FM, h + 2 * FM), focus="Yes", invalid="Hide"),
+                             remap=[("Data", self.h(c["param"]))]))
         elif t == "picture":
             fname, n = self.screen_strip(c["kind"], [], w, h)
             out.append(entry("picture", "Image", o(("version", 2), ("imageType", "Regular"), ("colour", "0"), ("image", fname)),
@@ -1080,22 +1095,23 @@ class Builder:
             else:
                 # Three or more: the SDK's radio group (one Button per choice, buttonId = its step, tap acts at once).
                 # Each caption is drawn into its button's images; nothing is placed on top of the buttons.
-                kids, bx = [], 0
+                kids, bx = [focus_entry()], FM      # focus frame underneath (see pickers)
                 for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
                     bw = sw + 6
                     on = self.save("seg_%d_%s_on.png" % (bw, slug(lab)), labelled_box(bw, box_h, ORANGE, lab, 24))
                     off = self.save("seg_%d_%s_off.png" % (bw, slug(lab)), labelled_box(bw, box_h, SCREEN, lab, 24))
                     kids.append(entry("seg %d" % i, "Button",
                                       o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i), ("numButtonsInGroup", n),
-                                        ("handleName", "Data"), ("gestureBehaviour", "Instant")), bounds((bx, 0, bw, box_h))))
+                                        ("handleName", "Data"), ("gestureBehaviour", "Instant")), bounds((bx, FM, bw, box_h))))
                     bx += bw - 3
-                kids.append(focus_entry())
                 acts = [act("Mouse Down", "Q-Link", "Data")]
             if key not in self.comp_keys:
                 self.comp_keys.add(key)
                 self.defs.append(o(("key", key), ("value", component(kids, acts))))
+            m = FM if n > 2 else 0
             out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
-                             bounds((x, by, total, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
+                             bounds((x - m, by - m, total + 2 * m, box_h + 2 * m), focus="Yes", invalid="Hide"),
+                             remap=[("Data", self.h(c["param"]))]))
         elif t == "pick":
             p = self.discrete(c["param"])
             labels = c["pick_labels"]
@@ -1109,10 +1125,12 @@ class Builder:
             key = "hx pick " + c["param"]
             if key not in self.comp_keys:
                 self.comp_keys.add(key)
-                kids = []
+                # The focus frame goes FIRST, i.e. underneath the buttons. Drawn on top (0.2.6) it caught every touch once
+                # the group was selected, so a second choice in the same group could not be pressed.
+                kids = [focus_entry()]
                 for i, lab in enumerate(labels):
                     r_, c_ = divmod(i, c["cols_n"])
-                    bx, by = c_ * (c["bw_n"] - 3), r_ * (PICK_H - 3)
+                    bx, by = FM + c_ * (c["bw_n"] - 3), FM + r_ * (PICK_H - 3)
                     if c["icons"]:
                         on = self.save("pick_%d_%s_on.png" % (c["bw_n"], slug(lab)), icon_box(c["bw_n"], PICK_H, ORANGE, lab))
                         off = self.save("pick_%d_%s_off.png" % (c["bw_n"], slug(lab)), icon_box(c["bw_n"], PICK_H, SCREEN, lab))
@@ -1123,10 +1141,10 @@ class Builder:
                                       o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i),
                                         ("numButtonsInGroup", len(labels)), ("handleName", "Data"), ("gestureBehaviour", "Instant")),
                                       bounds((bx, by, c["bw_n"], PICK_H))))
-                kids.append(focus_entry())
                 self.defs.append(o(("key", key), ("value", component(kids, [act("Mouse Down", "Q-Link", "Data")]))))
             out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
-                             bounds((gx, gy, gw, gh), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
+                             bounds((gx - FM, gy - FM, gw + 2 * FM, gh + 2 * FM), focus="Yes", invalid="Hide"),
+                             remap=[("Data", self.h(c["param"]))]))
         return out
 
     def qmap(self, page):
