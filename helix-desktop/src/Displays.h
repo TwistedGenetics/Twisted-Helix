@@ -35,7 +35,7 @@ private:
     void compute();
     HelixProcessor& proc_;
     int filter_;
-    float key_[6] = {-1, -1, -1, -1, -1, -1};
+    float key_[9] = {-1, -1, -1, -1, -1, -1, -1, -1, -1};
     std::vector<float> db_;   // response at log-spaced frequencies 20 Hz..20 kHz
 };
 

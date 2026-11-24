@@ -381,3 +381,11 @@ HP(P_EQ_MID_GAIN     , "eq_mid_gain", "Mid Gain", ParamKind::Linear, -18.0f, 18.
 HP(P_EQ_MID_Q        , "eq_mid_q", "Mid Q", ParamKind::Log, 0.2f, 10.0f, 0.7f, "", nullptr, false)
 HP(P_EQ_HIGH_FREQ    , "eq_high_freq", "High Freq", ParamKind::Log, 1000.0f, 20000.0f, 8000.0f, "Hz", nullptr, false)
 HP(P_EQ_HIGH_GAIN    , "eq_high_gain", "High Gain", ParamKind::Linear, -18.0f, 18.0f, 0.0f, "dB", nullptr, false)
+// 0.3.1: Mega Synth filter models. Model 0 = HELIX (the original filter, chosen by F1/F2 Type);
+// any other model uses Filter Type + Slope below.
+HP(P_F1_MODEL        , "f1_model", "F1 Model", ParamKind::Choice, 0.0f, 17.0f, 0.0f, "", &choices::filterModel, false)
+HP(P_F1_KIND         , "f1_kind", "F1 Filter Type", ParamKind::Choice, 0.0f, 5.0f, 0.0f, "", &choices::filterKind, false)
+HP(P_F1_SLOPE        , "f1_slope", "F1 Slope", ParamKind::Choice, 0.0f, 4.0f, 0.0f, "", &choices::filterSlope, false)
+HP(P_F2_MODEL        , "f2_model", "F2 Model", ParamKind::Choice, 0.0f, 17.0f, 0.0f, "", &choices::filterModel, false)
+HP(P_F2_KIND         , "f2_kind", "F2 Filter Type", ParamKind::Choice, 0.0f, 5.0f, 0.0f, "", &choices::filterKind, false)
+HP(P_F2_SLOPE        , "f2_slope", "F2 Slope", ParamKind::Choice, 0.0f, 4.0f, 0.0f, "", &choices::filterSlope, false)

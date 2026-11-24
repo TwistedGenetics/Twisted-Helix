@@ -4,6 +4,7 @@
 #include "helix/Config.h"
 #include "helix/Envelope.h"
 #include "helix/Filter.h"
+#include "helix/MegaFilter.h"
 #include "helix/ModSystem.h"
 #include "helix/Oscillator.h"
 #include "helix/Params.h"
@@ -77,6 +78,7 @@ private:
     SubOscillator sub_;
     NoiseSource noise_;
     Filter filt_[2];
+    mega::MegaFilter mfilt_[2];   // F1/F2 Model > 0: the Mega Synth models
 
     // Stealing
     bool stealing_ = false;

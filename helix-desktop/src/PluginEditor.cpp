@@ -139,6 +139,13 @@ public:
         const int o = filtOff(f);
         setPower(std::make_unique<ParamToggle>(pg.proc, P_F1_ON + o));
         type_ = pg.combo(P_F1_TYPE + o, this);
+        const int mo = f * (P_F2_MODEL - P_F1_MODEL);
+        model_ = pg.combo(P_F1_MODEL + mo, this);
+        kind_ = pg.combo(P_F1_KIND + mo, this);
+        slope_ = pg.combo(P_F1_SLOPE + mo, this);
+        model_->box().setTooltip("Model: HELIX = the original filter (type in the title bar); the others are the Mega Synth models");
+        kind_->box().setTooltip("Filter type for the Mega Synth models");
+        slope_->box().setTooltip("Slope for the Mega Synth models (Model = the model's own slope)");
         view_ = pg.own(std::make_unique<FilterResponseView>(pg.proc, f), this);
         cut_ = pg.knob(P_F1_CUTOFF + o, this, "Cutoff", ParamKnob::Size::Large);
         res_ = pg.knob(P_F1_RES + o, this, "Reso");
@@ -154,13 +161,19 @@ public:
         auto c = content();
         view_->setBounds(c.removeFromLeft(168));
         c.removeFromLeft(6);
+        auto models = c.removeFromTop(26);
+        const int w3 = models.getWidth() / 3;
+        model_->setBounds(models.removeFromLeft(w3 + 20).reduced(2, 0));
+        kind_->setBounds(models.removeFromLeft(w3 - 4).reduced(2, 0));
+        slope_->setBounds(models.reduced(2, 0));
+        c.removeFromTop(2);
         auto top = c.removeFromTop(c.getHeight() / 2);
         layoutRow(top, {cut_, res_, drive_});
         layoutRow(c, {key_, fat_, level_});
     }
     void tick() { view_->refresh(); }
 private:
-    ParamCombo* type_;
+    ParamCombo *type_, *model_, *kind_, *slope_;
     FilterResponseView* view_;
     ParamKnob *cut_, *res_, *drive_, *key_, *fat_, *level_;
 };

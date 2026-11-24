@@ -9,6 +9,11 @@ namespace helix {
 namespace choices {
 const std::vector<std::string> filterType = {"LP 12", "LP 24", "BP 12", "BP 24", "HP 12", "HP 24", "Notch 12",
                                              "Notch 24", "Ladder 24", "Comb +", "Comb -", "Formant", "Phaser"};
+const std::vector<std::string> filterModel = {"HELIX", "Standard LP", "Sallen-Key", "Ladder", "Steiner-Parker",
+                                              "State Var", "OTA", "Polivoks", "Sw Cap", "Acid", "MS-20",
+                                              "Oberheim", "SEM", "TB-303", "Fat Cat", "Odyssey", "CS-15", "SH-2"};
+const std::vector<std::string> filterKind = {"Low Pass", "High Pass", "Band Pass", "Notch", "Peak", "All Pass"};
+const std::vector<std::string> filterSlope = {"Model", "6 dB", "12 dB", "18 dB", "24 dB"};
 const std::vector<std::string> warpMode = {"Off", "Bend +", "Bend -", "Asym", "PWM", "Mirror", "Sync", "Formant",
                                            "FM Other", "FM Sub", "FM Noise", "AM", "RM", "Quantize", "Bit Red"};
 const std::vector<std::string> subShape = {"Sine", "Triangle", "Square", "Saw"};

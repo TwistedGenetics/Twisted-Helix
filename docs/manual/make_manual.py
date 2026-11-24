@@ -238,8 +238,8 @@ def signal_flow():
     # filters
     fx, fw = 152, 80
     f1y, f2y = 170, 92
-    box(fx, f1y, fw, 32, "Filter 1", "13 types")
-    box(fx, f2y, fw, 32, "Filter 2", "13 types")
+    box(fx, f1y, fw, 32, "Filter 1", "18 models")
+    box(fx, f2y, fw, 32, "Filter 2", "18 models")
     for y in ys:
         arrow([(sw, y + sh / 2), (fx, f1y + 16)], MUTED)
         arrow([(sw, y + sh / 2), (fx, f2y + 16)], MUTED)
@@ -415,7 +415,7 @@ def chapter_welcome():
     s += [table([["Section", "In short"],
                  ["Oscillators", "2 wavetable oscillators (up to 256 frames each), 14 warp modes in two slots each, up to 7 unison voices"],
                  ["Sub and noise", "A clean sub oscillator that can bypass the filters, and 6 noise / vinyl / tape textures"],
-                 ["Filters", "2 stereo filters with 13 types, drive, key tracking and 'fat', serial ↔ parallel routing"],
+                 ["Filters", "2 stereo filters: 13 HELIX types plus the 17 Mega Synth models, drive, key tracking and 'fat', serial ↔ parallel routing"],
                  ["Modulation", "4 envelopes, 4 LFOs, 2 step performers, 8 macros, a 16-slot matrix"],
                  ["Voices", "8 voices, poly / mono / legato, glide, click-free voice stealing"],
                  ["Effects", "Distortion, chorus / ensemble, phaser, delay, reverb, OTT, EQ, in any order"],
@@ -699,6 +699,37 @@ def chapter_filters():
                  ["Formant", "Three vowel resonances. The cutoff morphs the vowel from A (low) through E, I, O to U (high). "
                   "Modulate it for talking and growl basses."],
                  ["Phaser", "Six all-pass stages with a notch at the cutoff; Reso sets the feedback."]], [36, 134])]
+    s += H2("Filter models (from Mega Synth)")
+    s += [P("Each filter has a <b>Model</b>. <b>HELIX</b> (the default) is the filter described above, chosen with "
+            "<b>Type</b>. The other 17 models are the filters from Mega Synth. With one of those, <b>Type</b> is not used; "
+            "the model is set with <b>Filter Type</b> (Low Pass, High Pass, Band Pass, Notch, Peak, All Pass) and "
+            "<b>Slope</b> (6, 12, 18 or 24 dB, or <b>Model</b>: the model's own slope). Presets made before 0.3.1 use "
+            "HELIX and sound exactly as before. On the MPC these are on the <b>MODEL</b> page (FILTER key); on the computer "
+            "they are the three menus above each filter's knobs."),
+          P("A model on Low Pass at its own slope is the original circuit model (its own stages, ladder and "
+            "saturation). Any other type or slope runs a clean multimode filter that takes on the model's character: its "
+            "drive stage, how strong the resonance is and how gritty it gets. On the MPC the Mega models use about three "
+            "times the CPU of the HELIX filter."),
+          table([["Model", "Character"],
+                 ["Standard LP", "One clean 12 dB stage."],
+                 ["Sallen-Key", "Two soft 12 dB stages: smooth, rounded 24 dB."],
+                 ["Ladder", "Four-pole ladder: thick, self-oscillates at high Reso."],
+                 ["Steiner-Parker", "High pass, band pass and low pass together: nasal and buzzy."],
+                 ["State Var", "Band pass into low pass: bright, vocal resonance."],
+                 ["OTA", "A saturating input stage into two low-pass stages: punchy."],
+                 ["Polivoks", "Russian classic: hard, screaming resonance with a saturator after the filter."],
+                 ["Sw Cap", "Switched-capacitor style with a notch between low-pass stages: hollow, digital edge."],
+                 ["Acid", "Heavily driven two-stage low pass with limiting: squelch."],
+                 ["MS-20", "High pass into a sharp low pass: aggressive, whistling resonance."],
+                 ["Oberheim", "Wide, open low pass with a gentle low cut."],
+                 ["SEM", "Soft 12 dB with a band-pass edge: smooth and musical."],
+                 ["TB-303", "The 303 ladder: resonance fades at low cutoff, so the filter closes right down."],
+                 ["Fat Cat", "Minimoog-style ladder with spread stages: fat low end."],
+                 ["Odyssey", "ARP Odyssey style: high pass into a resonant low pass."],
+                 ["CS-15", "Yamaha CS-15 style three-stage: thin, buzzy."],
+                 ["SH-2", "Roland SH-2 style two-stage 24 dB: warm and solid."]], [36, 134]),
+          P("With a Mega model, <b>Fat</b> becomes the Mega Synth's analogue <b>Warmth</b>: a softer, slightly "
+            "asymmetric drive.")]
     s += H2("Routing: sends and Ser/Par")
     s += [P("Every source (Osc A, Osc B, Sub, Noise) has a <b>&gt; F1</b> and a <b>&gt; F2</b> send. The <b>Ser/Par</b> "
             "control then decides how the filters meet:"),

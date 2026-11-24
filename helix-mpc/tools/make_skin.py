@@ -595,6 +595,14 @@ def pages():
                 S("F%d MORE" % n, [K("F%d Key Trk" % n, "Key Track"), K("F%d Fat" % n, "Fat"), K("F%d Level" % n, "Level")]
                   + ([K("Ser/Par", "Ser / Par")] if n == 2 else []))]
     page(1, 0, "FILTER", filt(1) + filt(2))
+    # Mega Synth models: Model HELIX = the original filter (F Type above); any other model uses Type + Slope
+    def model(n):
+        f = "F%d " % n
+        return [S("F%d MODEL" % n, [K(f + "Model", "Model", w=320),
+                                    PICK(f + "Slope", "Slope", cols=5, labels=["Model", "6", "12", "18", "24"], where="left")]),
+                S("F%d TYPE" % n, [PICK(f + "Filter Type", "Type", cols=6, labels=["LP", "HP", "BP", "Notch", "Peak", "AP"],
+                                        where="left")])]
+    page(1, 1, "MODEL", model(1) + model(2))
 
     # ---- ENV
     def env(n):

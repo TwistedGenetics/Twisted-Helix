@@ -34,6 +34,7 @@ void Voice::startNow(const NoteStart& s)
     beatsSinceStart_ = 0.0;
     fresh_ = true;
     for (auto& f : filt_) f.reset();
+    for (auto& f : mfilt_) f.reset();
     std::memset(prevM_, 0, sizeof prevM_);
     amp_.hardReset();
     amp_.gate(true);
@@ -85,6 +86,7 @@ void Voice::kill()
     amp_.hardReset();
     for (auto& e : env_) e.hardReset();
     for (auto& f : filt_) f.reset();
+    for (auto& f : mfilt_) f.reset();
 }
 
 static inline bool warpUsesOther(float mode)
@@ -343,11 +345,24 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
         if (f == 1 && blend > 0.0f) { bufMixIn(bl, busL_[0], blend, n); bufMixIn(br, busR_[0], blend, n); }
         if (vp[P_F1_ON + o] >= 0.5f)
         {
-            Filter& flt = filt_[f];
-            flt.setType((FilterType)(int)vp[P_F1_TYPE + o]);
             const float kt = vp[P_F1_KEYTRK + o] * (pitch_ - 60.0f) / 12.0f;
-            flt.update(vp[P_F1_CUTOFF + o] * fastExp2(kt), vp[P_F1_RES + o], vp[P_F1_DRIVE + o], vp[P_F1_FAT + o]);
-            flt.processBlock(bl, br, n);
+            const int mo = f * (P_F2_MODEL - P_F1_MODEL);
+            const int model = (int)vp[P_F1_MODEL + mo];
+            if (model <= 0)
+            {
+                Filter& flt = filt_[f];
+                flt.setType((FilterType)(int)vp[P_F1_TYPE + o]);
+                flt.update(vp[P_F1_CUTOFF + o] * fastExp2(kt), vp[P_F1_RES + o], vp[P_F1_DRIVE + o], vp[P_F1_FAT + o]);
+                flt.processBlock(bl, br, n);
+            }
+            else
+            {
+                // Fat = the Mega Synth's analogue Warmth
+                mega::MegaFilter& mf = mfilt_[f];
+                mf.configure(model - 1, (int)vp[P_F1_KIND + mo], (int)vp[P_F1_SLOPE + mo] - 1);
+                mf.update(vp[P_F1_CUTOFF + o] * fastExp2(kt), vp[P_F1_RES + o], vp[P_F1_DRIVE + o], vp[P_F1_FAT + o], sr_);
+                mf.processBlock(bl, br, n);
+            }
             bufScale(bl, vp[P_F1_LEVEL + o], n);
             bufScale(br, vp[P_F1_LEVEL + o], n);
         }

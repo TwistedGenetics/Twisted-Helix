@@ -1,4 +1,5 @@
 #include "Displays.h"
+#include "helix/MegaFilter.h"
 #include "helix/Envelope.h"
 #include "helix/FFT.h"
 #include "helix/ModSystem.h"
@@ -242,9 +243,11 @@ void FilterResponseView::refresh()
     const auto& p = proc_.engine().params();
     const int cutP = P_F1_CUTOFF + o;
     const float cut = proc_.engine().activeVoices() > 0 ? paramDef(cutP).toPlain(proc_.engine().liveNormalised(cutP)) : p.get(cutP);
-    const float key[6] = {p.get(P_F1_ON + o), p.get(P_F1_TYPE + o), cut, p.get(P_F1_RES + o), p.get(P_F1_DRIVE + o), p.get(P_F1_FAT + o)};
-    if (std::equal(key, key + 6, key_)) return;
-    std::copy(key, key + 6, key_);
+    const int mo = filter_ == 0 ? 0 : P_F2_MODEL - P_F1_MODEL;
+    const float key[9] = {p.get(P_F1_ON + o), p.get(P_F1_TYPE + o), cut, p.get(P_F1_RES + o), p.get(P_F1_DRIVE + o), p.get(P_F1_FAT + o),
+                          p.get(P_F1_MODEL + mo), p.get(P_F1_KIND + mo), p.get(P_F1_SLOPE + mo)};
+    if (std::equal(key, key + 9, key_)) return;
+    std::copy(key, key + 9, key_);
     compute();
     repaint();
 }
@@ -253,17 +256,33 @@ void FilterResponseView::compute()
 {
     const int N = 4096;
     const float sr = 44100.0f;
-    Filter f;
-    f.prepare(sr);
-    f.setType((FilterType)(int)key_[1]);
-    f.update(key_[2], key_[3], key_[4], key_[5]);
     std::vector<std::complex<double>> x((size_t)N);
     const float imp = 0.05f;   // small, so drive and fat stay near their linear region
-    for (int i = 0; i < N; ++i)
+    const int model = (int)key_[6];
+    if (model > 0)
     {
-        float l = i == 0 ? imp : 0.0f, r = l;
-        f.process(l, r);
-        x[(size_t)i] = std::complex<double>(l / imp, 0.0);
+        mega::MegaFilter f;
+        f.configure(model - 1, (int)key_[7], (int)key_[8] - 1);
+        f.update(key_[2], key_[3], key_[4], key_[5], sr);
+        for (int i = 0; i < N; ++i)
+        {
+            float l = i == 0 ? imp : 0.0f, r = l;
+            f.processBlock(&l, &r, 1);
+            x[(size_t)i] = std::complex<double>(l / imp, 0.0);
+        }
+    }
+    else
+    {
+        Filter f;
+        f.prepare(sr);
+        f.setType((FilterType)(int)key_[1]);
+        f.update(key_[2], key_[3], key_[4], key_[5]);
+        for (int i = 0; i < N; ++i)
+        {
+            float l = i == 0 ? imp : 0.0f, r = l;
+            f.process(l, r);
+            x[(size_t)i] = std::complex<double>(l / imp, 0.0);
+        }
     }
     fft(x, false);
     db_.assign(220, 0.0f);
