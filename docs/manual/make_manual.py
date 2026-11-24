@@ -3,7 +3,8 @@
 
 The reference sections (parameters, choice lists, modulation destinations, MPC pages, factory presets) are read
 from the source tree, so the manual always matches the code:
-  helix-core/include/helix/ParamList.inc, helix-core/src/Params.cpp, helix-mpc/ui.json, Presets/*/*.json
+  helix-core/include/helix/ParamList.inc, helix-core/src/Params.cpp, helix-mpc/tools/make_skin.py (MPC pages),
+  Presets/*/*.json
 Screenshots live in docs/manual/img/ (taken from the desktop plugin; see the HELIX_START_PAGE / _PROGRAM hooks).
 
     python3 docs/manual/make_manual.py            # needs reportlab
@@ -144,7 +145,18 @@ PARAMS = load_params()
 CHOICES = load_choices()
 BYENUM = {p["enum"]: p for p in PARAMS}
 MOD_DEST = ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan"] + [p["name"] for p in PARAMS if p["mod"]]
-UI = json.load(open(os.path.join(ROOT, "helix-mpc", "ui.json")))
+
+
+def load_mpc_pages():
+    """The MPC page list, straight from the skin generator (helix-mpc/tools/make_skin.py)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("make_skin", os.path.join(ROOT, "helix-mpc", "tools", "make_skin.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.pages(), mod.FN_NAMES
+
+
+MPC_PAGES, MPC_KEYS = load_mpc_pages()
 PRESETS = []
 for f in sorted(glob.glob(os.path.join(ROOT, "Presets", "*", "*.json"))):
     j = json.load(open(f))
@@ -437,7 +449,7 @@ def chapter_install():
                  ["Content/Wavetables", "Serum-style wavetables, single-cycle WAVs, or folders of single cycles", "After the "
                   "8 built-in tables when you turn A Table / B Table"],
                  ["Content/Samples", "Any WAVs you want to turn into wavetables (breaks, vocals, one-shots)",
-                  "The Sample control on the BROWSE page (Sample → Table)"],
+                  "The Sample control on the SAMPLE page under BROWSE (Sample → Table)"],
                  ["Content/Presets", "HELIX presets (.json), in sub-folders by category", "After the 24 factory presets "
                   "in the Preset list"]], [36, 70, 64])]
     s += [Spacer(1, 4), P("To update HELIX later, copy the new folder over the old one, then remove HELIX from the track and "
@@ -574,7 +586,7 @@ def chapter_osc():
     s += [table(warps, [30, 92, 48])]
     s += note("HELIX keeps warps band-limited where it can, and automatically limits a warp's amount on very high notes so "
               "it doesn't fold over into harsh aliasing. Bend, Asym, PWM and Mirror can still add a little aliasing on very "
-              "high notes; switch <b>Quality</b> to <b>High</b> (GLOBAL tab; BROWSE page on the MPC) for leads, which runs the oscillators at "
+              "high notes; switch <b>Quality</b> to <b>High</b> (GLOBAL tab; VOICE page under BROWSE on the MPC) for leads, which runs the oscillators at "
               "double rate.", "Clean warps")
     s += H2("Unison")
     s += [table([["Control", "What it does"],
@@ -624,7 +636,7 @@ def chapter_tables():
             "into plain slices instead."),
           H3("On the MPC"),
           *steps(["Copy WAVs into <b>Content/Samples</b>.",
-                  "On the BROWSE page, choose the file with <b>Sample</b>, the number of frames with <b>Frames</b> (8-256) and "
+                  "On the SAMPLE page (under BROWSE), choose the file with <b>Sample</b>, the number of frames with <b>Frames</b> (8-256) and "
                   "the oscillator with <b>To Osc</b>.",
                   "Press <b>Make Table</b>."]),
           H3("On the computer"),
@@ -711,7 +723,7 @@ def chapter_env():
                   "a long tail (snappy, percussive); positive = almost straight lines. For Attack: positive = straight rise, "
                   "negative = slow start then a quick swell."]], [30, 32, 108])]
     s += shot("env.jpg", "Envelope 2 of the Donk preset: a fast pitch drop. The curve is drawn by the engine's own envelope.")
-    s += [P("<b>Vel Sens</b> (GLOBAL tab; BROWSE page on the MPC) sets how much the velocity of each note changes its volume (0% = every "
+    s += [P("<b>Vel Sens</b> (GLOBAL tab; VOICE page under BROWSE on the MPC) sets how much the velocity of each note changes its volume (0% = every "
             "note at full volume).")]
     return s
 
@@ -802,7 +814,7 @@ def chapter_macros_voices():
     s += H2("Macros")
     s += [P("The eight macros are plain knobs whose job is to drive the matrix. Factory presets map their most useful moves "
             "to the first macros (for example in Classic Reese, Macro 1 opens the filter and Macro 2 widens the detune). On "
-            "the MPC, put the macros on the Q-Links (the MACROS page holds all eight) and record their movements into your "
+            "the MPC, put the macros on the Q-Links (the MACRO key's page holds all eight, and the OSC page has Macro 1-4) and record their movements into your "
             "sequences.")]
     s += H2("Voices and playing")
     s += [table([["Control", "What it does"],
@@ -863,7 +875,7 @@ def chapter_presets():
     s += [table([["", "On the computer", "On the MPC"],
                  ["Load", "Click the preset name at the top of the window, use &lt; and &gt;, or double-click a preset on "
                   "the GLOBAL tab.",
-                  "The MPC's preset menu (factory presets), or <b>Preset</b> + <b>Load</b> on BROWSE 1 (factory and "
+                  "The MPC's preset menu (factory presets), or <b>Preset</b> + <b>Load</b> on the BROWSE page (factory and "
                   "Content/Presets)."],
                  ["Save", "<b>Save</b> at the top of the window: name and category; saved in Documents/HELIX/Presets.",
                   "Save the plugin preset or the project with the MPC's own save functions. To use a sound on the computer, "
@@ -884,43 +896,85 @@ def chapter_presets():
 
 def chapter_mpc():
     s = H1("15  HELIX on the MPC")
-    s += [P("On the MPC, HELIX's screen is drawn by the MPC itself, from a layout that comes with the plugin. The pages are "
-            "on the function keys along the bottom of the screen (the MPC shows a few at a time; use the arrow tab to see "
-            "the rest). Every page is made of up to four blocks of four controls; touching a control selects its block for "
-            "the Q-Links, and the MPC draws a frame around it."),
-          P("The screen uses a light background with large dark text: names are at least 24 px and values at least 32 px.")]
+    s += [P("On the MPC, HELIX's screen is drawn by the MPC itself, from the skin that comes with the plugin (the "
+            "<b>Concrete Rack</b> design, new in version 0.2). The sections are on the function keys along the bottom of the "
+            "screen: OSC, FILTER, ENV, LFO, FX, MOD, PERF, MACRO and BROWSE. Press a key again to go to its next page (for "
+            "example OSC → WARP → OSC MIX → SUB/NSE). The MPC shows a few keys at a time; use the arrow key to see the rest."),
+          P("Every page is made of up to four <b>strips</b>. A strip is one row of four controls and matches one row of "
+            "Q-Links: the top strip is the top row of knobs (Q-Links 13-16) and the bottom strip the bottom row (Q-Links "
+            "1-4), so the knob next to a control edits it. Touching a control makes its row of knobs live and the MPC draws "
+            "a frame around the strip.")]
+    s += shot("mpc_osc.png", "The OSC page on the MPC: Osc A and B with their wavetable position screens, sub and noise, "
+              "and Macro 1-4. The MPC draws the bar at the top and the function keys itself.")
+    s += H2("Reading the screen")
+    s += [*bullets(["<b>Orange tags</b> on the left name each strip. Where the section can be switched off (Osc A and B, Sub, "
+                    "Noise, Filter 1 and 2, every effect), the tag is its <b>on/off button</b>: tap it. Orange with 'On' means "
+                    "on; hatched grey with 'Off' means off, and the section costs no CPU.",
+                    "<b>Screens</b> show the oscillator's wavetable position, the warp mode, the unison stack, the sub shape, "
+                    "the noise type, the filter response, the LFO shape and the effect types. They change as soon as you change "
+                    "the parameter. Tap a screen to put its Q-Link under your hand, double-tap it (or press Enter) to pick from "
+                    "the list.",
+                    "<b>Knobs</b>: drag up and down, use the data wheel, or the Q-Link. Double-tap for the large editor. Knobs "
+                    "that go both ways from the middle (fine tune, pan, mod amounts) light up from the centre.",
+                    "<b>Boxes with an arrow</b> are lists (matrix sources and destinations, FX order, step shapes): double-tap "
+                    "for the full list.",
+                    "<b>Envelopes</b> (ENV page) use the MPC's own envelope display: drag its points or use the four knobs "
+                    "beside it.",
+                    "When an LFO or the delay is tempo-synced, the free <b>Rate</b> / <b>Time</b> knob is hidden and its place "
+                    "says so; with sync off, the <b>Sync Div</b> knob is hidden instead. Tempo sync is on the LFO+ and FX+ pages.",
+                    "Names are 24 px and values 32 px, dark on a light background, and values are kept short "
+                    "(<b>500 ms</b>, <b>1.20 s</b>, <b>12.0 kHz</b>, <b>80%</b>)."])]
+    s += shot("mpc_fx.png", "The FX page: Distortion is on, the other effects are off (hatched tags).")
     s += H2("Page map")
-    rows = [["Page", "Controls"]]
-    for p in UI["pages"]:
-        ctr = [c.get("param") for c in p["controls"] if c.get("param")]
-        rows.append(["<b>%s</b>" % p["name"], ", ".join(ctr)])
-    s += [table(rows, [22, 148])]
+    rows = [["Key", "Page", "Strips (top to bottom) and their controls"]]
+    for p in MPC_PAGES:
+        strips = []
+        for st in p["strips"]:
+            names = []
+            for c in st["cells"]:
+                if c["type"] == "env":
+                    names.append("envelope display")
+                elif c["type"] == "picture":
+                    continue
+                elif c["type"] == "screen":
+                    names.append(c["param"] + " (screen)")
+                else:
+                    names.append(c.get("name") or c["param"])
+            title = st["title"].replace("\n", " ")
+            on = " [tag = %s on/off]" % st["toggle"] if st["toggle"] else ""
+            strips.append("<b>%s</b>%s: %s" % (title, on, ", ".join(names)))
+        rows.append([MPC_KEYS[p["fn"]] if p["sub"] == 0 else "", "<b>%s</b>" % p["name"], "<br/>".join(strips)])
+    s += [table(rows, [16, 20, 134]), Spacer(1, 6)]
+    s += [P("In the MPC's Program Q-Link mode (knobs assigned to the program rather than the screen), the 16 Q-Links are "
+            "Macro 1-8, F1 Cutoff, F1 Reso, F1 Drive, A WT Pos, B WT Pos, Delay Mix, Reverb Mix and Master.", "small")]
     s += H2("Pad Browse: audition presets from the pads")
     s += [P("A plugin cannot see the MPC's Shift button, so instead of 'hold Shift to audition', HELIX has <b>Pad Browse</b> "
-            "on the BROWSE 1 page:"),
+            "on the BROWSE page:"),
           *steps(["Turn <b>Pad Browse</b> on.",
                   "Choose a <b>Pad Bank</b> (1-16, 17-32 and so on).",
                   "Hit pads 1-16 (MIDI notes 36-51): each pad loads the matching preset and plays it, so you hear the new "
                   "sound straight away.",
                   "Turn Pad Browse off to play HELIX normally again."])]
     s += H2("The CPU readout")
-    s += [P("The <b>CPU</b> control on BROWSE 1 shows how much of one processor core HELIX itself is using, updated a few times "
-            "a second. If it shows <b>ECO1</b> to <b>ECO4</b>, the CPU guard has lowered the quality to keep up (see the next "
-            "chapter). Compare it with the MPC's own CPU meter, which shows the whole project.")]
+    s += [P("<b>CPU Load</b> on the BROWSE page shows how much of one processor core HELIX itself is using, updated a few "
+            "times a second. If it shows <b>ECO1</b> to <b>ECO4</b>, the CPU guard has lowered the quality to keep up (see the "
+            "next chapter). Compare it with the MPC's own CPU meter, which shows the whole project.")]
     s += H2("What is different from the computer")
-    s += [*bullets(["No live wavetable picture and no modulation rings: the MPC draws plugin screens from a fixed layout and "
-                    "plugins cannot draw on it.",
+    s += [*bullets(["The screens are pictures made in advance, not live drawings: the wavetable screen shows a general stack "
+                    "of frames that follows <b>Position</b>, not the waveforms of the table you loaded. No modulation rings.",
                     "No editor for the LFO breakpoint and step shapes; they come with presets.",
                     "Your own files must be inside the plugin's Content folder: a plugin cannot reach the MPC's sample pool or "
                     "other folders.",
                     "Pad pressure works only if the MPC passes it to plugins as poly aftertouch; this has not been confirmed "
                     "yet."])]
+    s += note("Version 0.1.0's MPC screen file had a fault that can stop the MPC from showing any HELIX pages. If you "
+              "installed 0.1.0, replace the whole <b>Twisted Genetics - VST - HELIX</b> folder with this version.", "Updating from 0.1.0")
     return s
 
 
 def chapter_cpu():
     s = H1("16  Sound quality and CPU")
-    s += [P("The <b>Quality</b> control (GLOBAL tab on the computer, BROWSE page on the MPC) trades sound against "
+    s += [P("The <b>Quality</b> control (GLOBAL tab on the computer, VOICE page under BROWSE on the MPC) trades sound against "
             "processing power:"),
           table([["Quality", "What changes", "Use it for"],
                  ["Eco", "At most 3 unison voices; the smoothing between the oscillators' anti-aliasing levels is off.",
