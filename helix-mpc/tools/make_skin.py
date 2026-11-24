@@ -661,6 +661,7 @@ class Builder:
         self.out = out
         self.images = {}
         self.replacements = {}
+        self.comp_keys = set()
 
     def p(self, name):
         if name not in self.by_name:
@@ -710,6 +711,18 @@ class Builder:
         # tap targets: just a focus ring plus actions; the visuals sit at tab level underneath
         for kind, ov in OVERLAYS.items():
             defs.append(o(("key", "hx tap " + kind), ("value", component([focus_entry()], actions_for(ov)))))
+        # on/off tag: the Button itself takes no hardware focus (as in the SDK's own generator); the cell around it does
+        h_tag = STRIP_H - 2 * BORDER
+        offimg = Image.new("RGB", (TAG_W, h_tag), OFF)
+        d = ImageDraw.Draw(offimg)
+        for i in range(-h_tag, TAG_W, 14):
+            d.line([(i, h_tag), (i + h_tag, 0)], fill=(186, 186, 180), width=4)
+        off = self.save("tag_off.png", offimg)
+        on = self.save("tag_on_flat.png", Image.new("RGB", (TAG_W, h_tag), ORANGE))
+        defs.append(o(("key", "hx tag"), ("value", component([
+            entry("button", "Button", o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", 1), ("numButtonsInGroup", 1),
+                                        ("handleName", "Data"), ("gestureBehaviour", "Instant")), bounds((0, 0, TAG_W, h_tag))),
+            focus_entry()]))))
         # knob cells
         for size, cw in ((KNOB, 250), (KNOB, 380), (KNOB_S, 215)):
             for bi in (False, True):
@@ -769,29 +782,21 @@ class Builder:
         h = STRIP_H - 2 * BORDER
         out = []
         lines = st["title"].split("\n")
+        cells = [c for c in st["cells"] if c.get("param")]
+        anchor = st["toggle"] or (cells[0]["param"] if cells else st["cells"][0]["params"][0])
         if st["toggle"]:
             self.discrete(st["toggle"])
-            offimg = Image.new("RGB", (TAG_W, h), OFF)
-            d = ImageDraw.Draw(offimg)
-            for i in range(-h, TAG_W, 14):
-                d.line([(i, h), (i + h, 0)], fill=(186, 186, 180), width=4)
-            off = self.save("tag_off.png", offimg)
-            # Button images are drawn at native size: no border on the tag button (the strip border frames it)
-            on = self.save("tag_on_flat.png", Image.new("RGB", (TAG_W, h), ORANGE))
-            out.append(entry("tag", "Button", o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", 1),
-                                                ("numButtonsInGroup", 1), ("handleName", "Data"), ("gestureBehaviour", "Instant")),
-                             bounds((x, y, TAG_W, h), focus="Yes"), remap=[("Data", self.h(st["toggle"]))]))
+            out.append(entry("tag " + st["toggle"], "hx tag", o(("version", 1), ("handleName", "Data")),
+                             bounds((x, y, TAG_W, h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(st["toggle"]))]))
             ty = y + h / 2 - 17 * len(lines) - 14
-            for i, line in enumerate(lines):
-                out.append(entry("tag text", "Label", label("Text", 28, "Bold", just="horizontallyCentred verticallyCentred",
-                                                             text=line, handle="Invalid"), bounds((x, ty + i * 34, TAG_W, 34))))
-            out.append(entry("tag state", "Label", label("Value", 24, "SemiBold", MUTED, "horizontallyCentred verticallyCentred"),
-                             bounds((x, ty + len(lines) * 34 + 6, TAG_W, 30)), remap=[("Data", self.h(st["toggle"]))]))
         else:
             ty = y + h / 2 - 17 * len(lines)
-            for i, line in enumerate(lines):
-                out.append(entry("tag text", "Label", label("Text", 28, "Bold", just="horizontallyCentred verticallyCentred",
-                                                             text=line, handle="Invalid"), bounds((x, ty + i * 34, TAG_W, 34))))
+        for i, line in enumerate(lines):
+            out.append(self.caption(line, anchor, (x, ty + i * 34, TAG_W, 34), 28, "Bold", TEXT,
+                                    "horizontallyCentred verticallyCentred"))
+        if st["toggle"]:
+            out.append(entry("tag state", "Label", label("Value", 24, "SemiBold", MUTED, "horizontallyCentred verticallyCentred"),
+                             bounds((x, ty + len(lines) * 34 + 6, TAG_W, 30)), remap=[("Data", self.h(st["toggle"]))]))
         return out
 
     def vis(self, c):
@@ -801,9 +806,19 @@ class Builder:
         self.discrete(pname)
         return ["IndexedEnabling/%d/%d/%s" % (i, n, self.h(pname))]
 
-    def name_label(self, text, x, y, w, inval=None):
-        return entry("name", "Label", label("Text", 24, "SemiBold", MUTED, text=text, handle="Invalid"),
-                     bounds((x, y, w, 32), inval=inval))
+    def named(self, text, param):
+        """A handle that shows `text` as the name of a real parameter. Captions are Name labels bound to a parameter
+        (like the SDK's generator does), not Text labels on an unbound handle; if the MPC ignores WithName, the label
+        still shows the parameter's own name."""
+        clean = text.replace("[", "(").replace("]", ")").replace("/", "-")
+        return "WithName[%s]/%s" % (clean, self.h(param))
+
+    def caption(self, text, param, rect, size=24, style="SemiBold", colour=MUTED, just="left verticallyCentred", inval=None):
+        return entry("caption", "Label", label("Name", size, style, colour, just, handle=self.named(text, param)),
+                     bounds(rect, inval=inval))
+
+    def name_label(self, text, param, x, y, w, inval=None):
+        return self.caption(text, param, (x, y, w, 32), inval=inval)
 
     def cell(self, c):
         t = c["type"]
@@ -817,7 +832,7 @@ class Builder:
             size = KNOB if t == "knob" else KNOB_S
             comp = self.knob_comp(size, w, c["bi"], menu)
             inval = self.vis(c)
-            out.append(self.name_label(c["name"], x + size + 12, y + 26, w - size - 12, inval))
+            out.append(self.name_label(c["name"], c["param"], x + size + 12, y + 26, w - size - 12, inval))
             out.append(entry(c["param"], comp, o(("version", 1), ("handleName", "Data")),
                              bounds((x, y, w, h), focus="Yes", invalid="Hide", inval=inval), remap=[("Data", self.h(c["param"]))]))
             if inval:
@@ -825,10 +840,8 @@ class Builder:
                 pname, i, n = c["vis"]
                 msg = "Tempo sync on" if i == 0 else "Sync off"
                 other = ["IndexedEnabling/%d/%d/%s" % (1 - i, n, self.h(pname))]
-                out.append(entry("hint", "Label", label("Text", 24, "SemiBold", MUTED, text=c["name"], handle="Invalid"),
-                                 bounds((x, y + 26, w, 32), inval=other)))
-                out.append(entry("hint", "Label", label("Text", 24, "Regular", MUTED, text=msg, handle="Invalid"),
-                                 bounds((x, y + 62, w, 32), inval=other)))
+                out.append(self.caption(c["name"], c["param"], (x, y + 26, w, 32), inval=other))
+                out.append(self.caption(msg, c["param"], (x, y + 62, w, 32), style="Regular", inval=other))
         elif t == "screen":
             p = self.p(c["param"])
             ovl = c["overlay"]
@@ -866,7 +879,7 @@ class Builder:
         elif t in ("choice", "toggle", "readout"):
             box_h = 60
             by = y + h - box_h
-            out.append(self.name_label(c["name"], x, y, w))
+            out.append(self.name_label(c["name"], c["param"], x, y, w))
             if t == "choice":
                 self.discrete(c["param"])
                 bx = self.save("box_%d.png" % w, box_image(w, box_h, SCREEN, chevron=True).convert("RGB"))
@@ -880,8 +893,15 @@ class Builder:
                 self.discrete(c["param"])
                 on = self.save("btn_on_%d.png" % w, box_image(w, box_h, ORANGE).convert("RGB"))
                 off = self.save("btn_off_%d.png" % w, box_image(w, box_h, OFF).convert("RGB"))
-                out.append(entry(c["param"], "Button", o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", 1),
-                                                         ("numButtonsInGroup", 1), ("handleName", "Data"), ("gestureBehaviour", "Instant")),
+                key = "hx toggle %d" % w
+                if key not in self.comp_keys:
+                    self.comp_keys.add(key)
+                    self.defs.append(o(("key", key), ("value", component([
+                        entry("button", "Button", o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", 1),
+                                                    ("numButtonsInGroup", 1), ("handleName", "Data"), ("gestureBehaviour", "Instant")),
+                              bounds((0, 0, w, box_h))),
+                        focus_entry()], [act("Mouse Down", "Q-Link", "Data")]))))
+                out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
                                  bounds((x, by, w, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
                 out.append(entry("value", "Label", label("Value", 28, "Bold", just="horizontallyCentred verticallyCentred"),
                                  bounds((x, by, w, box_h)), remap=[("Data", self.h(c["param"]))]))
@@ -898,19 +918,26 @@ class Builder:
                 raise SystemExit("%s has %d choices, segment lists %d" % (c["param"], n, len(c["labels"])))
             box_h = 60
             by = y + h - box_h
-            out.append(self.name_label(c["name"], x, y, w))
-            bx = x
+            out.append(self.name_label(c["name"], c["param"], x, y, w))
+            key = "hx seg %s" % c["param"]
+            btns, caps, bx = [], [], 0
             for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
                 bw = sw + 6
                 on = self.save("seg_on_%d.png" % bw, box_image(bw, box_h, ORANGE).convert("RGB"))
                 off = self.save("seg_off_%d.png" % bw, box_image(bw, box_h, SCREEN).convert("RGB"))
-                out.append(entry("%s %d" % (c["param"], i), "Button",
-                                 o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i), ("numButtonsInGroup", n),
-                                   ("handleName", "Data"), ("gestureBehaviour", "Instant")),
-                                 bounds((bx, by, bw, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
-                out.append(entry("seg text", "Label", label("Text", 24, "Bold", just="horizontallyCentred verticallyCentred",
-                                                             text=lab, handle="Invalid"), bounds((bx, by, bw, box_h))))
+                btns.append(entry("seg %d" % i, "Button",
+                                  o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i), ("numButtonsInGroup", n),
+                                    ("handleName", "Data"), ("gestureBehaviour", "Instant")), bounds((bx, 0, bw, box_h))))
+                caps.append(self.caption(lab, c["param"], (x + bx, by, bw, box_h), 24, "Bold", TEXT,
+                                         "horizontallyCentred verticallyCentred"))
                 bx += bw - 3
+            total = bx + 3
+            if key not in self.comp_keys:
+                self.comp_keys.add(key)
+                self.defs.append(o(("key", key), ("value", component(btns + [focus_entry()], [act("Mouse Down", "Q-Link", "Data")]))))
+            out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
+                             bounds((x, by, total, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
+            out += caps
         return out
 
     def qmap(self, page):
