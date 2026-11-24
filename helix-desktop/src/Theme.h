@@ -9,7 +9,7 @@ struct Theme
     juce::Colour bg, panel, panel2, edge, text, muted, accent, accent2, mod, waveBack, track, display, displayGrid;
 };
 
-// 0 = Copper (dark, default), 1 = Paper (light).
+// 0 = Copper (dark), 1 = Paper (light), 2 = Massive (default).
 const Theme& theme();
 int themeIndex();
 void setThemeIndex(int index);

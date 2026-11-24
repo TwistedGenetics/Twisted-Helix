@@ -537,8 +537,9 @@ def chapter_desktop():
             "frame. The &lt; &gt; buttons and the menu in the title bar choose the table; <b>…</b> loads WAVs and makes tables "
             "from samples.")]
     s += H2("Themes and size")
-    s += [P("HELIX has two colour themes: <b>Copper</b> (dark, the default) and <b>Paper</b> (light, dark text, like the "
-            "MPC screen). Choose one on the GLOBAL tab. Drag the bottom-right corner of the window to make it bigger or "
+    s += [P("HELIX has three colour themes: <b>Massive</b> (navy panels in light grey frames, white knob caps, the default "
+            "from version 0.3, matching the MPC screen), <b>Copper</b> (dark charcoal) and <b>Paper</b> (light, dark text). "
+            "Choose one on the GLOBAL tab. Drag the bottom-right corner of the window to make it bigger or "
             "smaller; HELIX remembers the theme and the size.")]
     s += shot("paper.jpg", "The Paper theme (90s Pad).", 150)
     return s
@@ -897,7 +898,7 @@ def chapter_presets():
 def chapter_mpc():
     s = H1("15  HELIX on the MPC")
     s += [P("On the MPC, HELIX's screen is drawn by the MPC itself, from the skin that comes with the plugin (the "
-            "<b>Concrete Rack</b> design, new in version 0.2). The sections are on the function keys along the bottom of the "
+            "<b>Massive</b> colour scheme from version 0.3: navy panels in light grey frames). The sections are on the function keys along the bottom of the "
             "screen: OSC, FILTER, ENV, LFO, FX, MOD, PERF, MACRO and BROWSE. Press a key again to go to its next page (for "
             "example OSC → WARP → OSC MIX → SUB/NSE). The MPC shows a few keys at a time; use the arrow key to see the rest."),
           P("Every page is made of up to four <b>strips</b>. A strip is one row of four controls and matches one row of "
@@ -907,9 +908,9 @@ def chapter_mpc():
     s += shot("mpc_osc.png", "The OSC page on the MPC: Osc A and B with their wavetable position screens, sub and noise, "
               "and Macro 1-4. The MPC draws the bar at the top and the function keys itself.")
     s += H2("Reading the screen")
-    s += [*bullets(["<b>Orange tags</b> on the left name each strip. Where the section can be switched off (Osc A and B, Sub, "
-                    "Noise, Filter 1 and 2, every effect), the tag is its <b>on/off button</b>: tap it. Orange with 'On' means "
-                    "on; hatched grey with 'Off' means off, and the section costs no CPU.",
+    s += [*bullets(["<b>Grey tags</b> on the left name each strip. Where the section can be switched off (Osc A and B, Sub, "
+                    "Noise, Filter 1 and 2, every effect), the tag is its <b>on/off button</b>: tap it. A cyan light and 'On' "
+                    "mean on; a dark light, a darker tag and 'Off' mean off, and the section costs no CPU.",
                     "<b>Screens</b> show the oscillator's wavetable position, the warp mode, the unison stack, the sub shape, "
                     "the noise type, the filter response, the LFO shape and the effect types, and change as soon as you change "
                     "the parameter. Each screen is also the control that sets it: drag up or down on it, or turn its Q-Link. "
@@ -926,9 +927,9 @@ def chapter_mpc():
                     "beside it.",
                     "When an LFO or the delay is tempo-synced, the free <b>Rate</b> / <b>Time</b> knob is hidden and its place "
                     "says so; with sync off, the <b>Sync Div</b> knob is hidden instead. Tempo sync is on the LFO+ and FX+ pages.",
-                    "Names are 24 px and values 32 px, dark on a light background, and values are kept short "
+                    "Names are 24 px and values 32 px, white on the navy panels, and values are kept short "
                     "(<b>500 ms</b>, <b>1.20 s</b>, <b>12.0 kHz</b>, <b>80%</b>)."])]
-    s += shot("mpc_fx.png", "The FX page: Distortion is on, the other effects are off (hatched tags).")
+    s += shot("mpc_fx.png", "The FX page: Distortion is on (cyan light), the other effects are off (darker tags).")
     s += H2("Page map")
     rows = [["Key", "Page", "Strips (top to bottom) and their controls"]]
     for p in MPC_PAGES:

@@ -13,9 +13,16 @@ static const Theme kThemes[] = {
      juce::Colour(0xff15171a), juce::Colour(0xff5d6168), juce::Colour(0xffd6402b), juce::Colour(0xffb5651d),
      juce::Colour(0xff1f6fd1), juce::Colour(0xff9db4c6), juce::Colour(0xffdcd8cf), juce::Colour(0xfffbfaf7),
      juce::Colour(0xffeceae4)},
+    // Massive: navy panels framed in light grey, white text, blue accents, black displays (slate between panels so
+    // any text drawn there stays readable)
+    {"Massive", true,
+     juce::Colour(0xff3b4050), juce::Colour(0xff222538), juce::Colour(0xff2a2e45), juce::Colour(0xffc9cdd3),
+     juce::Colour(0xffffffff), juce::Colour(0xffc6ccda), juce::Colour(0xff46acec), juce::Colour(0xfff2c230),
+     juce::Colour(0xff6ce070), juce::Colour(0xff1c3a55), juce::Colour(0xff424763), juce::Colour(0xff0c0e1a),
+     juce::Colour(0xff262b42)},
 };
 
-static int g_theme = 0;
+static int g_theme = 2;
 const Theme& theme() { return kThemes[g_theme]; }
 int themeIndex() { return g_theme; }
 void setThemeIndex(int i) { g_theme = juce::jlimit(0, numThemes() - 1, i); }
@@ -66,7 +73,8 @@ void HelixLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int w, 
     const float thick = juce::jmax(2.5f, r * 0.13f);
 
     // body
-    g.setColour(t.dark ? juce::Colour(0xff0d0f12) : t.panel2);
+    const bool massive = t.name == "Massive";              // Massive: white knob caps with a dark pointer
+    g.setColour(massive ? juce::Colour(0xffeceef2) : t.dark ? juce::Colour(0xff0d0f12) : t.panel2);
     g.fillEllipse(c.x - r * 0.68f, c.y - r * 0.68f, r * 1.36f, r * 1.36f);
     g.setColour(t.edge);
     g.drawEllipse(c.x - r * 0.68f, c.y - r * 0.68f, r * 1.36f, r * 1.36f, 1.0f);
@@ -105,7 +113,7 @@ void HelixLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int w, 
     // pointer
     juce::Path p;
     p.addRoundedRectangle(-1.4f, -r * 0.62f, 2.8f, r * 0.36f, 1.4f);
-    g.setColour(t.text);
+    g.setColour(massive ? juce::Colour(0xff181b2a) : t.text);
     g.fillPath(p, juce::AffineTransform::rotation(ang).translated(c.x, c.y));
 }
 

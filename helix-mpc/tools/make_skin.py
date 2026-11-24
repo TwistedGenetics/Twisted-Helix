@@ -21,18 +21,29 @@ from PIL import Image, ImageDraw, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__))
 MPC = os.path.dirname(HERE)
 
-# ---------------------------------------------------------------- palette (Concrete Rack)
-GROUND = (203, 203, 198)
-STRIP = (233, 233, 229)
-INK = (22, 22, 22)
-TEXT = "ff111111"
-MUTED = "ff2e2e2e"
-ORANGE = (255, 138, 42)       # tags, lit buttons
-ACCENT = (242, 97, 0)         # knob arcs, focus
-TRACK = (194, 194, 187)
-SCREEN = (246, 246, 242)
-GRID = (210, 210, 203)
-OFF = (196, 196, 190)
+# ---------------------------------------------------------------- palette (Massive): navy panels in light grey frames
+GROUND = (178, 182, 188)      # between the panels
+STRIP = (34, 37, 56)          # panel body (navy)
+FRAME = (206, 209, 214)       # panel frame and the section tag (light grey)
+INK = (24, 27, 42)            # dark text / lines on light parts
+LINE = (236, 239, 246)        # light text / traces on dark parts
+TEXT = "ffffffff"             # values on the panels
+MUTED = "ffc6ccda"            # names on the panels
+TAG_TEXT = "ff181b2a"         # captions on the light tags
+ORANGE = (232, 236, 244)      # lit button / switch (light, like Massive's selected boxes)
+LED_ON = (96, 214, 244)       # section on: cyan LED
+LED_OFF = (58, 62, 82)
+ACCENT = (70, 172, 236)       # knob arcs, focus frame (blue)
+TRACK = (66, 71, 98)
+KNOB_BODY = (236, 238, 242)   # white knob caps
+SCREEN = (12, 14, 26)         # display boxes (near black)
+GRID = (38, 43, 66)
+OFF = (150, 154, 162)         # section tag when the section is off
+BTN_OFF = (24, 27, 44)        # unlit button (dark)
+BTN_EDGE = (150, 156, 176)
+
+def is_light(rgb):
+    return sum(rgb[:3]) > 380
 
 def argb(rgb, a=255):
     return "%02x%02x%02x%02x" % (a, rgb[0], rgb[1], rgb[2])
@@ -111,7 +122,7 @@ def label(kind, h, style="Bold", colour=TEXT, just="left verticallyCentred", tex
         pairs.append(("text", text))
     return o(*pairs)
 
-FOCUS = o(("version", 1), ("backgroundColour", "1aff8a2a"), ("outlineColour", argb(ACCENT)),
+FOCUS = o(("version", 1), ("backgroundColour", "2446ace6"), ("outlineColour", argb(ACCENT)),
           ("backgroundInset", 0.0), ("outlineThickness", 4.0))
 
 FM = 6   # margin round a button group / screen so its focus frame, drawn underneath, shows round the edge
@@ -192,11 +203,11 @@ def knob_frame(size, frac, bipolar):
     if a1 - a0 > 0.5:
         thick_line(d, arc_pts(c, c, r, a0, a1), st, ACCENT + (255,))
     ir = r - st - 4 * s
-    d.ellipse((c - ir, c - ir, c + ir, c + ir), fill=INK + (255,))
+    d.ellipse((c - ir, c - ir, c + ir, c + ir), fill=KNOB_BODY + (255,))
     t = math.radians(ang - 90)
     p0 = (c + ir * 0.22 * math.cos(t), c + ir * 0.22 * math.sin(t))
     p1 = (c + ir * 0.82 * math.cos(t), c + ir * 0.82 * math.sin(t))
-    thick_line(d, [p0, p1], 4.5 * s, (255, 255, 255, 255))
+    thick_line(d, [p0, p1], 4.5 * s, INK + (255,))
     return finish(im, size, size)
 
 def film(frames):
@@ -222,7 +233,7 @@ def screen_frame(w, h, paths, label_space=True, frame=True):
     X = lambda u: l + (rgt - l) * u
     Y = lambda v: (top + bot) / 2 - (bot - top) / 2 * 0.84 * v
     for pts, width, alpha in paths:
-        col = INK + (int(255 * alpha),)
+        col = LINE + (int(255 * alpha),)
         seg = []
         for p in pts + [None]:
             if p is None:
@@ -232,7 +243,7 @@ def screen_frame(w, h, paths, label_space=True, frame=True):
             else:
                 seg.append(p)
     if frame:
-        d.rectangle((0, 0, w * s - 1, h * s - 1), outline=INK + (255,), width=3 * s)
+        d.rectangle((0, 0, w * s - 1, h * s - 1), outline=BTN_EDGE + (255,), width=3 * s)
     return finish(im, w, h)
 
 def sample(f, n=160, u0=0.0, u1=1.0):
@@ -448,10 +459,10 @@ def screen_film(kind, choices, w, h):
 def box_image(w, h, fill, chevron=False):
     im, d = aa_canvas(w, h, fill + (255,))
     s = SS
-    d.rectangle((0, 0, w * s - 1, h * s - 1), outline=INK + (255,), width=3 * s)
+    d.rectangle((0, 0, w * s - 1, h * s - 1), outline=(INK if is_light(fill) else BTN_EDGE) + (255,), width=3 * s)
     if chevron:
         cx, cy = (w - 22) * s, h * s / 2
-        d.polygon([(cx - 8 * s, cy - 4 * s), (cx + 8 * s, cy - 4 * s), (cx, cy + 6 * s)], fill=INK + (255,))
+        d.polygon([(cx - 8 * s, cy - 4 * s), (cx + 8 * s, cy - 4 * s), (cx, cy + 6 * s)], fill=(INK if is_light(fill) else LINE) + (255,))
     return finish(im, w, h)
 
 def slug(t):
@@ -468,30 +479,29 @@ def draw_text(im, text, cx, cy, size, weight=700, colour=INK):
     d.text((cx, cy), text, font=pil_font(size, weight), fill=colour, anchor="mm")
 
 def tag_frame(lines, state, on):
+    """Section tag in Massive's style: light grey (darker when off), dark title, a round LED (cyan = on)."""
     h = STRIP_H - 2 * BORDER
-    if on:
-        im = Image.new("RGB", (TAG_W, h), ORANGE)
-    else:
-        im = Image.new("RGB", (TAG_W, h), OFF)
-        d = ImageDraw.Draw(im)
-        for i in range(-h, TAG_W, 14):
-            d.line([(i, h), (i + h, 0)], fill=(186, 186, 180), width=4)
+    im = Image.new("RGB", (TAG_W, h), FRAME if on else OFF)
+    d = ImageDraw.Draw(im)
     ty = h / 2 - 17 * len(lines) - 14
     for i, line in enumerate(lines):
-        draw_text(im, line, TAG_W / 2, ty + i * 34 + 17, 28, 700, INK)
-    draw_text(im, state, TAG_W / 2, ty + len(lines) * 34 + 6 + 15, 24, 600, (46, 46, 46))
+        draw_text(im, line, TAG_W / 2 + 10, ty + i * 34 + 17, 28, 700, INK)
+    r = 9
+    cx, cy = 16, ty + 17
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=LED_ON if on else LED_OFF, outline=INK, width=2)
+    draw_text(im, state, TAG_W / 2, ty + len(lines) * 34 + 6 + 15, 24, 600, INK)
     return im
 
 def labelled_box(w, h, fill, text, size=28):
     im = box_image(w, h, fill).convert("RGB")
-    draw_text(im, text, w / 2, h / 2, size, 700, INK)
+    draw_text(im, text, w / 2, h / 2, size, 700, INK if is_light(fill) else LINE)
     return im
 
 def icon_box(w, h, fill, name):
     """A picker button showing a step shape as a small curve (performer step shapes)."""
     im, d = aa_canvas(w, h, fill + (255,))
     s = SS
-    d.rectangle((0, 0, w * s - 1, h * s - 1), outline=INK + (255,), width=3 * s)
+    d.rectangle((0, 0, w * s - 1, h * s - 1), outline=(INK if is_light(fill) else BTN_EDGE) + (255,), width=3 * s)
     l, r_, t, b = 14 * s, (w - 14) * s, 14 * s, (h - 14) * s
     X = lambda u: l + (r_ - l) * u
     Y = lambda v: b - (b - t) * v
@@ -499,7 +509,7 @@ def icon_box(w, h, fill, name):
          "Smooth": lambda u: 0.5 - 0.5 * math.cos(math.pi * u), "Triangle": lambda u: 1 - abs(2 * u - 1),
          "Exp": lambda u: u ** 3}.get(name, lambda u: 0.5)
     pts = [(X(i / 40), Y(f(i / 40))) for i in range(41)]
-    d.line(pts, fill=INK + (255,), width=int(4 * s), joint="curve")
+    d.line(pts, fill=(INK if is_light(fill) else LINE) + (255,), width=int(4 * s), joint="curve")
     return finish(im, w, h).convert("RGB")
 
 def background(page):
@@ -507,14 +517,14 @@ def background(page):
     d = ImageDraw.Draw(im)
     for r, st in enumerate(page["strips"]):
         y = strip_y(r)
-        d.rectangle((PAD, y, 1280 - PAD - 1, y + STRIP_H - 1), fill=STRIP, outline=INK, width=BORDER)
+        d.rectangle((PAD, y, 1280 - PAD - 1, y + STRIP_H - 1), fill=STRIP, outline=FRAME, width=BORDER)
         tx0 = PAD + BORDER
-        d.rectangle((tx0, y + BORDER, tx0 + TAG_W - 1, y + STRIP_H - BORDER - 1), fill=ORANGE)
-        d.rectangle((tx0 + TAG_W, y + BORDER, tx0 + TAG_W + BORDER - 1, y + STRIP_H - BORDER - 1), fill=INK)
+        d.rectangle((tx0, y + BORDER, tx0 + TAG_W - 1, y + STRIP_H - BORDER - 1), fill=FRAME)
+        d.rectangle((tx0 + TAG_W, y + BORDER, tx0 + TAG_W + BORDER - 1, y + STRIP_H - BORDER - 1), fill=GROUND)
         for c in st["cells"]:
             if c["type"] == "env":
                 x, yy, w, h = c["rect"]
-                d.rectangle((x, yy, x + w - 1, yy + h - 1), fill=SCREEN, outline=INK, width=3)
+                d.rectangle((x, yy, x + w - 1, yy + h - 1), fill=SCREEN, outline=BTN_EDGE, width=3)
     return im
 
 # ---------------------------------------------------------------- page description
@@ -954,7 +964,7 @@ class Builder:
         else:
             ty = y + h / 2 - 17 * len(lines)
             for i, line in enumerate(lines):
-                out.append(self.caption(line, anchor, (x, ty + i * 34, TAG_W, 34), 28, "Bold", TEXT,
+                out.append(self.caption(line, anchor, (x, ty + i * 34, TAG_W, 34), 28, "Bold", TAG_TEXT,
                                         "horizontallyCentred verticallyCentred"))
         return out
 
@@ -1023,13 +1033,13 @@ class Builder:
         elif t == "env":
             a, d, s, r = c["params"]
             ed = o(("version", 1), ("envelopeType", "ADSR"), ("envelopeStyle", "WithoutHeader"), ("envelopeName", ""),
-                   ("backgroundColour", argb(SCREEN)), ("scaleColour", argb(GRID)), ("lineColour", argb(INK)),
-                   ("fillColour", argb(ORANGE, 0x55)), ("highlightColour", argb(ACCENT)), ("lineWidth", 3),
+                   ("backgroundColour", argb(SCREEN)), ("scaleColour", argb(GRID)), ("lineColour", argb(LINE)),
+                   ("fillColour", argb(ACCENT, 0x55)), ("highlightColour", argb(ACCENT)), ("lineWidth", 3),
                    ("handleWidth", 15), ("handleHeight", 10), ("handleShape", "Circle"), ("handleLineWidth", 2),
-                   ("handleLineColour", argb(INK)), ("handleFillColour", argb(ORANGE)), ("handleTextColour", TEXT),
-                   ("handleLineWidthOnPressed", 2), ("handleLineColourOnPressed", argb(INK)),
+                   ("handleLineColour", argb(LINE)), ("handleFillColour", argb(ACCENT)), ("handleTextColour", TEXT),
+                   ("handleLineWidthOnPressed", 2), ("handleLineColourOnPressed", argb(LINE)),
                    ("handleFillColourOnPressed", argb(ACCENT)), ("handleTextColourOnPressed", TEXT),
-                   ("handleArrowLineColourOnPressed", argb(INK)), ("handleArrowFillColourOnPressed", argb(ACCENT)),
+                   ("handleArrowLineColourOnPressed", argb(LINE)), ("handleArrowFillColourOnPressed", argb(ACCENT)),
                    ("attackHandle", self.h(a)), ("decayHandle", self.h(d)), ("sustainHandle", self.h(s)),
                    ("releaseHandle", self.h(r)), ("attackShapeHandle", "Invalid"), ("decayShapeHandle", "Invalid"),
                    ("releaseShapeHandle", "Invalid"), ("forceHideShapeHandles", True), ("forceCurveShape", 0.5),
@@ -1048,7 +1058,7 @@ class Builder:
                                  bounds((x, by, w, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
             elif t == "toggle":
                 ch = self.discrete(c["param"])["choices"]
-                strip = self.save("toggle_%s.png" % slug(c["param"]), film([labelled_box(w, box_h, OFF, ch[0]),
+                strip = self.save("toggle_%s.png" % slug(c["param"]), film([labelled_box(w, box_h, BTN_OFF, ch[0]),
                                                                             labelled_box(w, box_h, ORANGE, ch[-1])]))
                 key = "hx toggle " + c["param"]
                 if key not in self.comp_keys:
@@ -1085,7 +1095,7 @@ class Builder:
                     bx = 0
                     for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
                         bw = sw + 6
-                        im.paste(labelled_box(bw, box_h, ORANGE if i == cur else SCREEN, lab, 24), (bx, 0))
+                        im.paste(labelled_box(bw, box_h, ORANGE if i == cur else BTN_OFF, lab, 24), (bx, 0))
                         bx += bw - 3
                     frames.append(im)
                 strip = self.save("seg_%s.png" % slug(c["param"]), film(frames))
@@ -1100,7 +1110,7 @@ class Builder:
                 for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
                     bw = sw + 6
                     on = self.save("seg_%d_%s_on.png" % (bw, slug(lab)), labelled_box(bw, box_h, ORANGE, lab, 24))
-                    off = self.save("seg_%d_%s_off.png" % (bw, slug(lab)), labelled_box(bw, box_h, SCREEN, lab, 24))
+                    off = self.save("seg_%d_%s_off.png" % (bw, slug(lab)), labelled_box(bw, box_h, BTN_OFF, lab, 24))
                     kids.append(entry("seg %d" % i, "Button",
                                       o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i), ("numButtonsInGroup", n),
                                         ("handleName", "Data"), ("gestureBehaviour", "Instant")), bounds((bx, FM, bw, box_h))))
@@ -1134,10 +1144,10 @@ class Builder:
                     bx, by = FM + c_ * (c["bw_n"] - 3), FM + r_ * (PICK_H - 3)
                     if c["icons"]:
                         on = self.save("pick_%d_%s_on.png" % (c["bw_n"], slug(lab)), icon_box(c["bw_n"], PICK_H, ORANGE, lab))
-                        off = self.save("pick_%d_%s_off.png" % (c["bw_n"], slug(lab)), icon_box(c["bw_n"], PICK_H, SCREEN, lab))
+                        off = self.save("pick_%d_%s_off.png" % (c["bw_n"], slug(lab)), icon_box(c["bw_n"], PICK_H, BTN_OFF, lab))
                     else:
                         on = self.save("seg_%d_%s_on.png" % (c["bw_n"], slug(lab)), labelled_box(c["bw_n"], PICK_H, ORANGE, lab, 24))
-                        off = self.save("seg_%d_%s_off.png" % (c["bw_n"], slug(lab)), labelled_box(c["bw_n"], PICK_H, SCREEN, lab, 24))
+                        off = self.save("seg_%d_%s_off.png" % (c["bw_n"], slug(lab)), labelled_box(c["bw_n"], PICK_H, BTN_OFF, lab, 24))
                     kids.append(entry("choice %d" % i, "Button",
                                       o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i),
                                         ("numButtonsInGroup", len(labels)), ("handleName", "Data"), ("gestureBehaviour", "Instant")),
@@ -1187,7 +1197,7 @@ def preview(builder, outdir):
         tab = background(page).copy()
         d = ImageDraw.Draw(tab)
         F = lambda s, wgt=700: pil_font(s, wgt)
-        def txt(x, y, w, h, s, size, wgt=700, col=(17, 17, 17), center=False):
+        def txt(x, y, w, h, s, size, wgt=700, col=(255, 255, 255), center=False):
             f = F(size, wgt)
             tw = f.getlength(s)
             tx = x + (w - tw) / 2 if center else x
@@ -1204,7 +1214,7 @@ def preview(builder, outdir):
             else:
                 ty = y + h / 2 - 17 * len(lines)
                 for i, line in enumerate(lines):
-                    txt(x, ty + i * 34, TAG_W, 34, line, 28, center=True)
+                    txt(x, ty + i * 34, TAG_W, 34, line, 28, col=INK, center=True)
             for c in st["cells"]:
                 cx, cy, w, hh = c["rect"]
                 t = c["type"]
@@ -1215,14 +1225,14 @@ def preview(builder, outdir):
                 if t in ("knob", "knobS"):
                     size = KNOB if t == "knob" else KNOB_S
                     if hidden:
-                        txt(cx, cy + 26, w, 32, c["name"], 24, 600, (46, 46, 46))
-                        txt(cx, cy + 62, w, 32, "Tempo sync on" if c["vis"][1] == 0 else "Sync off", 24, 400, (46, 46, 46))
+                        txt(cx, cy + 26, w, 32, c["name"], 24, 600, (198, 204, 218))
+                        txt(cx, cy + 62, w, 32, "Tempo sync on" if c["vis"][1] == 0 else "Sync off", 24, 400, (198, 204, 218))
                         continue
                     strip = Image.open(os.path.join(builder.out, builder.knob_strip(size, c["bi"])))
                     fi = int(round(val(c["param"]) * (FRAMES - 1)))
                     fr = strip.crop((0, fi * size, size, (fi + 1) * size))
                     tab.paste(fr, (cx, cy + (126 - size) // 2), fr)
-                    txt(cx + size + 12, cy + 26, w, 32, c["name"], 24, 600, (46, 46, 46))
+                    txt(cx + size + 12, cy + 26, w, 32, c["name"], 24, 600, (198, 204, 218))
                     txt(cx + size + 12, cy + 60, w, 44, shown(c["param"]), 32)
                 elif t == "screen":
                     fname = "scr_%s_%d.png" % (c["kind"], w)
@@ -1238,13 +1248,13 @@ def preview(builder, outdir):
                     ex, ey, ew, eh = cx + 3, cy + 3, w - 6, hh - 6
                     pts = [(0, 0), (a * 0.25, 1), (a * 0.25 + dd * 0.25, s), (0.75, s), (0.75 + rr * 0.25, 0)]
                     P_ = [(ex + 10 + (ew - 20) * u, ey + eh - 10 - (eh - 20) * v) for u, v in pts]
-                    d.polygon(P_ + [(P_[-1][0], ey + eh - 10), (P_[0][0], ey + eh - 10)], fill=(255, 200, 150))
-                    d.line(P_, fill=INK, width=3)
+                    d.polygon(P_ + [(P_[-1][0], ey + eh - 10), (P_[0][0], ey + eh - 10)], fill=(40, 90, 130))
+                    d.line(P_, fill=LINE, width=3)
                     for px, py in P_[1:]:
-                        d.ellipse((px - 7, py - 7, px + 7, py + 7), fill=ORANGE, outline=INK, width=2)
+                        d.ellipse((px - 7, py - 7, px + 7, py + 7), fill=ACCENT, outline=LINE, width=2)
                 elif t in ("choice", "toggle", "readout"):
                     by = cy + hh - 60
-                    txt(cx, cy, w, 32, c["name"], 24, 600, (46, 46, 46))
+                    txt(cx, cy, w, 32, c["name"], 24, 600, (198, 204, 218))
                     if t == "choice":
                         tab.paste(Image.open(os.path.join(builder.out, "box_%d.png" % w)), (cx, by))
                         txt(cx + 14, by, w - 50, 60, shown(c["param"]), 28)
@@ -1257,7 +1267,7 @@ def preview(builder, outdir):
                         txt(cx, by, w, 60, shown(c["param"]), 32, center=True)
                 elif t == "seg":
                     by = cy + hh - 60
-                    txt(cx, cy, w, 32, c["name"], 24, 600, (46, 46, 46))
+                    txt(cx, cy, w, 32, c["name"], 24, 600, (198, 204, 218))
                     cur = step(c["param"], len(c["labels"]))
                     if len(c["labels"]) == 2:
                         st_img = Image.open(os.path.join(builder.out, "seg_%s.png" % slug(c["param"])))
@@ -1274,11 +1284,11 @@ def preview(builder, outdir):
                     gx, gy, gw, gh = c["grid"]
                     gy -= 110 * 0
                     if c["caption"] and c["where"] == "top":
-                        txt(cx, cy, w, 32, c["caption"].replace("\n", " "), 24, 600, (46, 46, 46))
+                        txt(cx, cy, w, 32, c["caption"].replace("\n", " "), 24, 600, (198, 204, 218))
                     elif c["caption"]:
                         lines = c["caption"].split("\n")
                         for i, line in enumerate(lines):
-                            txt(cx, gy + gh / 2 - 15 * len(lines) + i * 30, c["cap_w"] - 6, 30, line, 24, 600, (46, 46, 46))
+                            txt(cx, gy + gh / 2 - 15 * len(lines) + i * 30, c["cap_w"] - 6, 30, line, 24, 600, (198, 204, 218))
                     for i, lab in enumerate(labels):
                         r_, c_ = divmod(i, c["cols_n"])
                         bx, by = gx + c_ * (c["bw_n"] - 3), gy + r_ * (PICK_H - 3)

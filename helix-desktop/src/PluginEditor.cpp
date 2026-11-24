@@ -824,7 +824,7 @@ private:
 HelixEditor::HelixEditor(HelixProcessor& p) : AudioProcessorEditor(&p), proc_(p)
 {
     const double savedScale = juce::jlimit(0.7, 2.0, proc_.settings().getDoubleValue("scale", 1.0));
-    setThemeIndex(proc_.settings().getIntValue("theme", 0));
+    setThemeIndex(proc_.settings().getIntValue("theme", 2));   // Massive unless the user chose another
     lnf_.applyTheme();
     setLookAndFeel(&lnf_);
     addAndMakeVisible(content_);
