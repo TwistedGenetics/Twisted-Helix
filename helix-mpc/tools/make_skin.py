@@ -585,7 +585,6 @@ def pages():
                 S("F%d MORE" % n, [K("F%d Key Trk" % n, "Key Track"), K("F%d Fat" % n, "Fat"), K("F%d Level" % n, "Level")]
                   + ([K("Ser/Par", "Ser / Par")] if n == 2 else []))]
     page(1, 0, "FILTER", filt(1) + filt(2))
-    page(1, 1, "F TYPE", [S("FILTER %d\nTYPE" % n, [PICK("F%d Type" % n, cols=7, where=None)]) for n in (1, 2)])
 
     # ---- ENV
     def env(n):
@@ -605,7 +604,6 @@ def pages():
     page(3, 0, "LFO", [lfo(n) for n in range(1, 5)])
     page(3, 1, "LFO+", [S("LFO %d" % n, [TG("L%d Sync" % n, "Tempo Sync", 170), K("L%d Rise" % n, "Rise"), K("L%d Smooth" % n, "Smooth"),
                                          K("L%d Phase" % n, "Phase")]) for n in range(1, 5)])
-    page(3, 2, "SHAPES", [S("LFO %d\nSHAPE" % n, [PICK("L%d Shape" % n, cols=5, where=None)]) for n in range(1, 5)])
 
     # ---- FX
     page(4, 0, "FX", [
@@ -626,13 +624,10 @@ def pages():
         S("PHASER", [K("Phaser Rate", "Rate"), K("Phaser Depth", "Depth"), K("Phaser Freq", "Freq"), K("Phaser Fdbk", "Feedback")],
           toggle="Phaser"),
         S("PHASER\nMIX", [K("Phaser Mix", "Mix")])])
-    page(4, 3, "EQ/TYPES", [
+    page(4, 3, "EQ", [
         S("EQ", [K("Low Freq", "Low Freq"), K("Low Gain", "Low Gain", bi=True), K("High Freq", "High Freq"),
                  K("High Gain", "High Gain", bi=True)], toggle="EQ"),
-        S("EQ MID", [K("Mid Freq", "Mid Freq"), K("Mid Gain", "Mid Gain", bi=True), K("Mid Q", "Mid Q")]),
-        S("DIST\nTYPE", [PICK("Dist Type", where=None)]),
-        S("FX\nMODES", [SEG("Delay Mode", "Delay", ["Stereo", "Ping-Pong"]), SEG("Reverb Type", "Reverb", ["Plate", "Hall"]),
-                        SEG("Chorus Mode", "Chorus", ["Chorus", "Ensemble"])])])
+        S("EQ MID", [K("Mid Freq", "Mid Freq"), K("Mid Gain", "Mid Gain", bi=True), K("Mid Q", "Mid Q")])])
     FXS = ["Dist", "Chorus", "Phaser", "Delay", "Reverb", "OTT", "EQ"]
     page(4, 4, "FX ORDER", [S("FX ORDER\n%s" % ("%d-%d" % (i, i + 1) if i < 7 else "7"),
                               [PICK("FX Slot %d" % j, "Slot\n%d" % j, cols=4, labels=FXS, where="left", cap_w=70)
