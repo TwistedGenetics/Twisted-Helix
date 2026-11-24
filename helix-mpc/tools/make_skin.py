@@ -455,7 +455,11 @@ def box_image(w, h, fill, chevron=False):
     return finish(im, w, h)
 
 def slug(t):
-    return "".join(ch if ch.isalnum() else "_" for ch in t).strip("_").lower() or "x"
+    """File-name form of a label. Symbols are spelled out: dropping them made "Bend +" and "Bend -" (and "Comb +" /
+    "Comb -") share one image file, so both buttons showed "Bend +" (0.2.7)."""
+    for a, b in (("+", "plus"), ("-", "minus"), ("/", "of"), ("&", "and"), ("%", "pct"), (">", "to"), ("<", "from")):
+        t = t.replace(a, " %s " % b)
+    return "_".join("".join(ch if ch.isalnum() else " " for ch in t).split()).lower() or "x"
 
 def draw_text(im, text, cx, cy, size, weight=700, colour=INK):
     """Text drawn into the picture itself. Labels placed over a touch area take the touch on the MPC, so anything
@@ -561,14 +565,12 @@ def pages():
         return S(x + " UNISON", [SCR(x + " Unison", "unison", overlay="knob"), K(x + " Detune", "Detune"),
                                  K(x + " Blend", "Blend"), K(x + " Spread", "Spread")])
     page(0, 1, "WARP", [warp("A"), uni("A"), warp("B"), uni("B")])
-    page(0, 2, "WARP TYPE", [S("%s WARP %d" % (x, n), [PICK("%s Warp %d" % (x, n), cols=8, where=None)])
-                             for x in "AB" for n in (1, 2)])
     def mix(x):
         return [S("OSC " + x, [K(x + " Level", "Level"), K(x + " Semi", "Semi", bi=True), K(x + " Pan", "Pan", bi=True),
                                K(x + " Phase", "Phase")], toggle="Osc " + x),
                 S(x + " ROUTE", [K(x + " Rnd Phase", "Rnd Phase"), K(x + " > F1", "To Filter 1"), K(x + " > F2", "To Filter 2")])]
-    page(0, 3, "OSC MIX", mix("A") + mix("B"))
-    page(0, 4, "SUB/NSE", [
+    page(0, 2, "OSC MIX", mix("A") + mix("B"))
+    page(0, 3, "SUB/NSE", [
         S("SUB", [SEG("Sub Octave", "Octave", ["-1 Oct", "-2 Oct"]), K("Sub Pan", "Pan", bi=True), TG("Sub Direct", "Direct Out")],
           toggle="Sub"),
         S("NOISE", [K("Noise Pan", "Pan", bi=True), TG("Noise Track", "Pitch Track"), TG("Noise Loop", "Loop")], toggle="Noise"),
@@ -825,6 +827,10 @@ class Builder:
         return p
 
     def save(self, fname, image):
+        if fname in self.images and not fname.endswith("#n"):
+            old = self.images[fname]
+            if old.size != image.size or old.tobytes() != image.convert(old.mode).tobytes():
+                raise SystemExit("make_skin: two different images named %s" % fname)
         if fname not in self.images:
             image.save(os.path.join(self.out, fname), optimize=True)
             self.images[fname] = image

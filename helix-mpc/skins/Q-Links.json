@@ -58,29 +58,6 @@
     "SubTab": 3,
     "Bank Direction": "RowTopDown",
     "Q-Links": {
-     "Q-Link 1": 42,
-     "Q-Link 2": -1,
-     "Q-Link 3": -1,
-     "Q-Link 4": -1,
-     "Q-Link 5": 40,
-     "Q-Link 6": -1,
-     "Q-Link 7": -1,
-     "Q-Link 8": -1,
-     "Q-Link 9": 22,
-     "Q-Link 10": -1,
-     "Q-Link 11": -1,
-     "Q-Link 12": -1,
-     "Q-Link 13": 20,
-     "Q-Link 14": -1,
-     "Q-Link 15": -1,
-     "Q-Link 16": -1
-    }
-   },
-   {
-    "Tab": 1,
-    "SubTab": 4,
-    "Bank Direction": "RowTopDown",
-    "Q-Links": {
      "Q-Link 1": 39,
      "Q-Link 2": 48,
      "Q-Link 3": 49,
@@ -101,7 +78,7 @@
    },
    {
     "Tab": 1,
-    "SubTab": 5,
+    "SubTab": 4,
     "Bank Direction": "RowTopDown",
     "Q-Links": {
      "Q-Link 1": 51,

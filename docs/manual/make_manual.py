@@ -912,9 +912,10 @@ def chapter_mpc():
                     "on; hatched grey with 'Off' means off, and the section costs no CPU.",
                     "<b>Screens</b> show the oscillator's wavetable position, the warp mode, the unison stack, the sub shape, "
                     "the noise type, the filter response, the LFO shape and the effect types, and change as soon as you change "
-                    "the parameter. Each screen is also a control: drag up or down on it, or turn its Q-Link.",
+                    "the parameter. Each screen is also a control: drag up or down on it, or turn its Q-Link. The warp mode is "
+                    "set this way, on the WARP page.",
                     "<b>Rows of buttons</b> choose directly: touch the one you want. Every list with up to 15 choices is a "
-                    "row or block of buttons. The longer ones have their own page: <b>WARP TYPE</b> (OSC), <b>F TYPE</b> "
+                    "row or block of buttons. The longer ones have their own page: <b>F TYPE</b> "
                     "(FILTER), <b>SHAPES</b> (LFO), <b>EQ/TYPES</b> and <b>FX ORDER</b> (FX), and the performer step "
                     "shapes (PERF, drawn as small curves). Rows with two choices (-1 Oct / -2 Oct) flip with each touch.",
                     "<b>Knobs</b>: drag up and down, use the data wheel, or the Q-Link. Double-tap for the large editor. Knobs "
