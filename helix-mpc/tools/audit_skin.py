@@ -11,6 +11,7 @@ Checks (exit code 1 if any fails):
   - every overlay a control opens exists, and every cell that opens one has a child reading its parameter
   - every control on a page is on one of that page's Q-Links
   - no Label is drawn on top of a control
+  - no MenuOverlay (list pop-up) anywhere, at most 8 pages per function key and 32 in all
 """
 import argparse, collections, json, os, re, sys
 
@@ -106,6 +107,16 @@ for tab in pd["tabs"]:
             fails.append("%s: %s opens an overlay but nothing in the cell reads it" % (name, p["name"]))
         if pi not in qparams and not e["componentData"]["name"].startswith("tag"):
             fails.append("%s: %s is not on this page's Q-Links" % (name, p["name"]))
+
+# The MPC firmware can open MenuOverlay with empty entries: no list pop-ups anywhere.
+if "MenuOverlay" in json.dumps(defs):
+    fails.append("a MenuOverlay is defined (the firmware can show it empty); use pickers or knobs")
+if len(pd["tabs"]) > 32:
+    fails.append("%d pages (the MPC allows 32)" % len(pd["tabs"]))
+subs = collections.Counter(t["fnKeyIndex"] for t in pd["tabs"])
+for k, n in subs.items():
+    if n > 8:
+        fails.append("function key %d has %d pages (the MPC allows 8)" % (k, n))
 
 old = json.load(open(a.ui))
 missing = []

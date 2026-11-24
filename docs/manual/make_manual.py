@@ -911,17 +911,17 @@ def chapter_mpc():
                     "Noise, Filter 1 and 2, every effect), the tag is its <b>on/off button</b>: tap it. Orange with 'On' means "
                     "on; hatched grey with 'Off' means off, and the section costs no CPU.",
                     "<b>Screens</b> show the oscillator's wavetable position, the warp mode, the unison stack, the sub shape, "
-                    "the noise type, the filter response, the LFO shape and the effect types. They change as soon as you change "
-                    "the parameter. Drag sideways on a screen to step through its choices, or double-tap it for the full list. "
-                    "Touching it also moves its Q-Link under your hand. The wavetable and unison screens open the large knob "
-                    "editor on a double-tap instead.",
+                    "the noise type, the filter response, the LFO shape and the effect types, and change as soon as you change "
+                    "the parameter. Each screen is also a control: drag up or down on it, or turn its Q-Link.",
+                    "<b>Rows of buttons</b> choose directly: touch the one you want. Every list with up to 15 choices is a "
+                    "row or block of buttons. The longer ones have their own page: <b>WARP TYPE</b> (OSC), <b>F TYPE</b> "
+                    "(FILTER), <b>SHAPES</b> (LFO), <b>EQ/TYPES</b> and <b>FX ORDER</b> (FX), and the performer step "
+                    "shapes (PERF, drawn as small curves). Rows with two choices (-1 Oct / -2 Oct) flip with each touch.",
                     "<b>Knobs</b>: drag up and down, use the data wheel, or the Q-Link. Double-tap for the large editor. Knobs "
-                    "that go both ways from the middle (fine tune, pan, mod amounts) light up from the centre.",
-                    "<b>Boxes with an arrow</b> are lists (matrix sources and destinations, FX order, step shapes): drag sideways "
-                    "on one to step through it, or double-tap it for the full list. The data wheel and the Q-Link also step "
-                    "through it.",
-                    "<b>Button rows</b>: with two choices (-1 Oct / -2 Oct) each touch flips it; with three (Retrig / Free / "
-                    "1-shot, Poly / Mono / Legato, Quality) touch the one you want.",
+                    "that go both ways from the middle (fine tune, pan, mod amounts) light up from the centre. The long lists "
+                    "are knobs too: mod-matrix sources and destinations, sync divisions and step rates step through their "
+                    "choices as you turn, with the name shown in large type.",
+                    "HELIX does not use the MPC's pop-up lists: on current firmware they can open with no entries.",
                     "<b>Envelopes</b> (ENV page) use the MPC's own envelope display: drag its points or use the four knobs "
                     "beside it.",
                     "When an LFO or the delay is tempo-synced, the free <b>Rate</b> / <b>Time</b> knob is hidden and its place "

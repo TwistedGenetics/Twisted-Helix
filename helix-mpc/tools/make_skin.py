@@ -134,7 +134,7 @@ def actions_for(overlay):
     return [act("Mouse Down", "Q-Link", "Data"), act("Double Click", "Show Overlay", "Data", overlay),
             act("Enter Pressed", "Show Overlay", "Data", overlay)]
 
-OVERLAYS = {"knob": "hx knob overlay", "bi": "hx knob overlay bi", "menu": "hx menu overlay"}
+OVERLAYS = {"knob": "hx knob overlay", "bi": "hx knob overlay bi"}
 
 # ---------------------------------------------------------------- artwork
 FONT_FILE = None
@@ -481,6 +481,21 @@ def labelled_box(w, h, fill, text, size=28):
     draw_text(im, text, w / 2, h / 2, size, 700, INK)
     return im
 
+def icon_box(w, h, fill, name):
+    """A picker button showing a step shape as a small curve (performer step shapes)."""
+    im, d = aa_canvas(w, h, fill + (255,))
+    s = SS
+    d.rectangle((0, 0, w * s - 1, h * s - 1), outline=INK + (255,), width=3 * s)
+    l, r_, t, b = 14 * s, (w - 14) * s, 14 * s, (h - 14) * s
+    X = lambda u: l + (r_ - l) * u
+    Y = lambda v: b - (b - t) * v
+    f = {"Hold": lambda u: 0.75, "Ramp Up": lambda u: u, "Ramp Down": lambda u: 1 - u,
+         "Smooth": lambda u: 0.5 - 0.5 * math.cos(math.pi * u), "Triangle": lambda u: 1 - abs(2 * u - 1),
+         "Exp": lambda u: u ** 3}.get(name, lambda u: 0.5)
+    pts = [(X(i / 40), Y(f(i / 40))) for i in range(41)]
+    d.line(pts, fill=INK + (255,), width=int(4 * s), joint="curve")
+    return finish(im, w, h).convert("RGB")
+
 def background(page):
     im = Image.new("RGB", (1280, 628), GROUND)
     d = ImageDraw.Draw(im)
@@ -515,8 +530,11 @@ def ENV(a, d, s, r, w=196):
     return {"type": "env", "params": (a, d, s, r), "w": w}
 def VAL(param, name, w=230):
     return {"type": "readout", "param": param, "name": name, "w": w}
-def CUSTOM(param, comp, w=278, h=107):
-    return {"type": "custom", "param": param, "comp": comp, "w": w, "h": h}
+def PICK(param, caption=None, cols=None, labels=None, icons=False, where="top", bw=None, cap_w=None):
+    """Tap-to-choose buttons for a choice parameter (the SDK's radio group: one Button per choice, gestureBehaviour
+    Instant). Replaces list pop-ups, which the MPC firmware can open empty. caption: None, or shown "top"/"left"."""
+    return {"type": "pick", "param": param, "caption": caption, "cols": cols, "labels": labels, "icons": icons,
+            "where": where, "bw": bw, "cap_w": cap_w or PICK_CAP_W}
 def S(title, cells, toggle=None):
     return {"title": title, "cells": cells, "toggle": toggle}
 
@@ -524,6 +542,7 @@ def pages():
     P = []
     def page(key, sub, name, strips):
         P.append({"fn": key, "sub": sub, "name": name, "strips": strips})
+    SHAPES6 = ["Hold", "Ramp Up", "Ramp Down", "Smooth", "Triangle", "Exp"]
 
     # ---- OSC
     def osc(x):
@@ -540,16 +559,20 @@ def pages():
         return S(x + " UNISON", [SCR(x + " Unison", "unison", overlay="knob"), K(x + " Detune", "Detune"),
                                  K(x + " Blend", "Blend"), K(x + " Spread", "Spread")])
     page(0, 1, "WARP", [warp("A"), uni("A"), warp("B"), uni("B")])
+    page(0, 2, "WARP TYPE", [S("%s WARP %d" % (x, n), [PICK("%s Warp %d" % (x, n), cols=8, where=None)])
+                             for x in "AB" for n in (1, 2)])
     def mix(x):
         return [S("OSC " + x, [K(x + " Level", "Level"), K(x + " Semi", "Semi", bi=True), K(x + " Pan", "Pan", bi=True),
                                K(x + " Phase", "Phase")], toggle="Osc " + x),
                 S(x + " ROUTE", [K(x + " Rnd Phase", "Rnd Phase"), K(x + " > F1", "To Filter 1"), K(x + " > F2", "To Filter 2")])]
-    page(0, 2, "OSC MIX", mix("A") + mix("B"))
-    page(0, 3, "SUB/NSE", [
+    page(0, 3, "OSC MIX", mix("A") + mix("B"))
+    page(0, 4, "SUB/NSE", [
         S("SUB", [SEG("Sub Octave", "Octave", ["-1 Oct", "-2 Oct"]), K("Sub Pan", "Pan", bi=True), TG("Sub Direct", "Direct Out")],
           toggle="Sub"),
         S("NOISE", [K("Noise Pan", "Pan", bi=True), TG("Noise Track", "Pitch Track"), TG("Noise Loop", "Loop")], toggle="Noise"),
-        S("SENDS", [K("Sub > F1", "Sub > F1"), K("Sub > F2", "Sub > F2"), K("Noise > F1", "Noise > F1"), K("Noise > F2", "Noise > F2")])])
+        S("SENDS", [K("Sub > F1", "Sub > F1"), K("Sub > F2", "Sub > F2"), K("Noise > F1", "Noise > F1"), K("Noise > F2", "Noise > F2")]),
+        S("SHAPES", [PICK("Sub Shape", "Sub\nShape", cols=2, where="left"),
+                     PICK("Noise Type", "Noise\nType", cols=3, where="left")])])
 
     # ---- FILTER
     def filt(n):
@@ -558,6 +581,7 @@ def pages():
                 S("F%d MORE" % n, [K("F%d Key Trk" % n, "Key Track"), K("F%d Fat" % n, "Fat"), K("F%d Level" % n, "Level")]
                   + ([K("Ser/Par", "Ser / Par")] if n == 2 else []))]
     page(1, 0, "FILTER", filt(1) + filt(2))
+    page(1, 1, "F TYPE", [S("FILTER %d\nTYPE" % n, [PICK("F%d Type" % n, cols=7, where=None)]) for n in (1, 2)])
 
     # ---- ENV
     def env(n):
@@ -572,16 +596,17 @@ def pages():
     def lfo(n):
         l = "L%d " % n
         return S("LFO %d" % n, [SCR(l + "Shape", "lfo", 230), K(l + "Rate", "Rate", vis=(l + "Sync", 0, 2)),
-                                K(l + "Div", "Sync Div", menu=True, vis=(l + "Sync", 1, 2)),
+                                K(l + "Div", "Sync Div", vis=(l + "Sync", 1, 2)),
                                 SEG(l + "Mode", "Mode", ["Retrig", "Free", "1-shot"])])
     page(3, 0, "LFO", [lfo(n) for n in range(1, 5)])
     page(3, 1, "LFO+", [S("LFO %d" % n, [TG("L%d Sync" % n, "Tempo Sync", 170), K("L%d Rise" % n, "Rise"), K("L%d Smooth" % n, "Smooth"),
                                          K("L%d Phase" % n, "Phase")]) for n in range(1, 5)])
+    page(3, 2, "SHAPES", [S("LFO %d\nSHAPE" % n, [PICK("L%d Shape" % n, cols=5, where=None)]) for n in range(1, 5)])
 
     # ---- FX
     page(4, 0, "FX", [
         S("DIST", [SCR("Dist Type", "dist", 230), K("Dist Drive", "Drive"), K("Dist Tone", "Tone"), K("Dist Mix", "Mix")], toggle="Distortion"),
-        S("DELAY", [SCR("Delay Mode", "delay", 230), K("Delay Div", "Sync Div", menu=True, vis=("Delay Sync", 1, 2)),
+        S("DELAY", [SCR("Delay Mode", "delay", 230), K("Delay Div", "Sync Div", vis=("Delay Sync", 1, 2)),
                     K("Delay Fdbk", "Feedback"), K("Delay Mix", "Mix")], toggle="Delay"),
         S("REVERB", [SCR("Reverb Type", "reverb", 230), K("Rev Size", "Size"), K("Rev Decay", "Decay"), K("Reverb Mix", "Mix")],
           toggle="Reverb"),
@@ -597,35 +622,45 @@ def pages():
         S("PHASER", [K("Phaser Rate", "Rate"), K("Phaser Depth", "Depth"), K("Phaser Freq", "Freq"), K("Phaser Fdbk", "Feedback")],
           toggle="Phaser"),
         S("PHASER\nMIX", [K("Phaser Mix", "Mix")])])
-    page(4, 3, "EQ", [
+    page(4, 3, "EQ/TYPES", [
         S("EQ", [K("Low Freq", "Low Freq"), K("Low Gain", "Low Gain", bi=True), K("High Freq", "High Freq"),
                  K("High Gain", "High Gain", bi=True)], toggle="EQ"),
-        S("EQ MID", [K("Mid Freq", "Mid Freq"), K("Mid Gain", "Mid Gain", bi=True), K("Mid Q", "Mid Q")])])
-    page(4, 4, "FX ORDER", [S("ORDER\n1-4", [CH("FX Slot %d" % i, "Slot %d" % i, 240) for i in range(1, 5)]),
-                            S("ORDER\n5-7", [CH("FX Slot %d" % i, "Slot %d" % i, 240) for i in range(5, 8)])])
+        S("EQ MID", [K("Mid Freq", "Mid Freq"), K("Mid Gain", "Mid Gain", bi=True), K("Mid Q", "Mid Q")]),
+        S("DIST\nTYPE", [PICK("Dist Type", where=None)]),
+        S("FX\nMODES", [SEG("Delay Mode", "Delay", ["Stereo", "Ping-Pong"]), SEG("Reverb Type", "Reverb", ["Plate", "Hall"]),
+                        SEG("Chorus Mode", "Chorus", ["Chorus", "Ensemble"])])])
+    FXS = ["Dist", "Chorus", "Phaser", "Delay", "Reverb", "OTT", "EQ"]
+    page(4, 4, "FX ORDER", [S("FX ORDER\n%s" % ("%d-%d" % (i, i + 1) if i < 7 else "7"),
+                              [PICK("FX Slot %d" % j, "Slot\n%d" % j, cols=4, labels=FXS, where="left", cap_w=70)
+                               for j in range(i, min(i + 2, 8))]) for i in (1, 3, 5, 7)])
 
-    # ---- MOD MATRIX
+    # ---- MOD MATRIX (long lists: knobs, which step through the choices and show the name)
     for b in range(4):
         page(5, b, "M%d-%d" % (b * 4 + 1, b * 4 + 4),
-             [S("SLOT %d" % m, [CH("M%d Source" % m, "Source", 250), CH("M%d Dest" % m, "Destination", 250),
-                                K("M%d Amount" % m, "Amount", bi=True), CH("M%d Aux" % m, "Aux", 240)])
+             [S("SLOT %d" % m, [K("M%d Source" % m, "Source", w=300), K("M%d Dest" % m, "Destination", w=420),
+                                K("M%d Amount" % m, "Amount", bi=True)])
               for m in range(b * 4 + 1, b * 4 + 5)])
-    page(5, 4, "M CURVE", [S("CURVES\n%d-%d" % (r * 4 + 1, r * 4 + 4), [K("M%d Curve" % m, "Curve %d" % m, bi=True)
+    page(5, 4, "M AUX", [S("AUX\n%d-%d" % (r * 4 + 1, r * 4 + 4), [K("M%d Aux" % m, "Aux %d" % m, w=262)
+                                                                for m in range(r * 4 + 1, r * 4 + 5)]) for r in range(4)])
+    page(5, 5, "M CURVE", [S("CURVES\n%d-%d" % (r * 4 + 1, r * 4 + 4), [K("M%d Curve" % m, "Curve %d" % m, bi=True)
                                                                     for m in range(r * 4 + 1, r * 4 + 5)]) for r in range(4)])
 
     # ---- PERFORMERS
     page(6, 0, "PERF", [S("LFO\nSTEPS", [K("L%d Steps" % n, "LFO %d" % n) for n in range(1, 5)]),
-                        S("PERF 1", [K("P1 Step", "Step Rate", menu=True), K("P1 Length", "Length"),
+                        S("PERF 1", [K("P1 Step", "Step Rate"), K("P1 Length", "Length"),
                                      SEG("P1 Mode", "Mode", ["Retrig", "Free", "1-shot"])]),
-                        S("PERF 2", [K("P2 Step", "Step Rate", menu=True), K("P2 Length", "Length"),
+                        S("PERF 2", [K("P2 Step", "Step Rate"), K("P2 Length", "Length"),
                                      SEG("P2 Mode", "Mode", ["Retrig", "Free", "1-shot"])])])
+    sub = 1
     for p_ in (1, 2):
-        page(6, 1 + (p_ - 1) * 2, "P%d STEP" % p_, [S("P%d\n%d-%d" % (p_, r * 4 + 1, r * 4 + 4),
-                                                       [K("P%d Step %d" % (p_, i), "Step %d" % i, bi=True)
-                                                        for i in range(r * 4 + 1, r * 4 + 5)]) for r in range(4)])
-        page(6, 2 + (p_ - 1) * 2, "P%d SHAPE" % p_, [S("P%d\n%d-%d" % (p_, r * 4 + 1, r * 4 + 4),
-                                                        [CH("P%d Shape %d" % (p_, i), "Step %d" % i, 240)
-                                                         for i in range(r * 4 + 1, r * 4 + 5)]) for r in range(4)])
+        page(6, sub, "P%d STEP" % p_, [S("P%d\n%d-%d" % (p_, r * 4 + 1, r * 4 + 4),
+                                         [K("P%d Step %d" % (p_, i), "Step %d" % i, bi=True)
+                                          for i in range(r * 4 + 1, r * 4 + 5)]) for r in range(4)])
+        page(6, sub + 1, "P%d SHAPE" % p_,
+             [S("P%d SHAPE\n%d-%d" % (p_, 4 * r + 1, 4 * r + 4),
+                [PICK("P%d Shape %d" % (p_, i), "Step\n%d" % i, cols=3, icons=True, where="left", cap_w=64)
+                 for i in range(4 * r + 1, 4 * r + 5)]) for r in range(4)])
+        sub += 2
 
     # ---- MACROS
     page(7, 0, "MACROS", [S("MACROS\n1-4", [K("Macro %d" % i, "Macro %d" % i) for i in range(1, 5)]),
@@ -634,25 +669,23 @@ def pages():
     # ---- BROWSE / GLOBAL
     page(8, 0, "BROWSE", [S("PRESET", [K("Preset", "Preset", w=380), TG("Load", "Load", 150), TG("Mutate 10%", "Mutate 10%", 170),
                                        VAL("CPU", "CPU Load", 170)]),
-                          S("PADS", [TG("Pad Browse", "Pad Browse", 190), CH("Pad Bank", "Pad Bank", 240)])])
-    page(8, 1, "SAMPLE", [S("SAMPLE\n> TABLE", [K("Sample", "Sample", w=380), CH("Frames", "Frames", 170),
-                                                SEG("To Osc", "To Osc", ["Osc A", "Osc B"]), TG("Make Table", "Make Table", 170)])])
+                          S("PADS", [TG("Pad Browse", "Pad Browse", 190), PICK("Pad Bank", "Pad\nBank", cols=4, where="left")])])
+    page(8, 1, "SAMPLE", [S("SAMPLE\n> TABLE", [K("Sample", "Sample", w=380), TG("Make Table", "Make Table", 170)]),
+                          S("TABLE\nSETUP", [PICK("Frames", "Frames"), SEG("To Osc", "To Osc", ["Osc A", "Osc B"])])])
     page(8, 2, "VOICE", [S("VOICE", [K("Master", "Master"), SEG("Poly Mode", "Mode", ["Poly", "Mono", "Legato"]),
                                      K("Voices", "Voices"), K("Glide", "Glide")]),
                          S("PLAY", [SEG("Glide Mode", "Glide", ["Always", "Legato"]), SEG("Steal", "Steal", ["Oldest", "Quietest"]),
                                     K("Bend Range", "Bend Range"), K("Vel Sens", "Vel Sens")]),
                          S("ENGINE", [SEG("Quality", "Quality", ["Eco", "Normal", "High"]), TG("CPU Guard", "CPU Guard")])])
-    # One-off hardware test: four ways of opening the list for the same harmless parameter (Pad Bank), so a single
-    # look on the MPC shows which list overlay the firmware draws. Remove once settled.
-    page(8, 3, "TEST", [S("TEST A", [CUSTOM("Pad Bank", "test cell A")]), S("TEST B", [CUSTOM("Pad Bank", "test cell B")]),
-                        S("TEST C", [CUSTOM("Pad Bank", "test cell C")]),
-                        S("TEST D\nTEST E", [CH("Pad Bank", "D: HELIX list box", 250), K("Pad Bank", "E: knob")])])
     return P
 
 FN_NAMES = ["OSC", "FILTER", "ENV", "LFO", "FX", "MOD", "PERF", "MACRO", "BROWSE"]
 
 # ---------------------------------------------------------------- layout
 SEG_PAD = 16
+PICK_H = 56
+PICK_CAP_W = 100
+CHOICES = {}     # parameter name -> choice names, filled by Builder for the layout
 
 def text_w(s, size, weight=600):
     f = pil_font(size, weight)
@@ -666,7 +699,22 @@ def cell_size(c):
     if t == "picture": return c["w"], 122
     if t == "env": return c["w"], 122
     if t in ("choice", "toggle", "readout"): return c["w"], 100
-    if t == "custom": return c["w"], c["h"]
+    if t == "pick":
+        labels = c["labels"] or CHOICES[c["param"]]
+        n = len(labels)
+        cols = c["cols"] or n
+        rows = -(-n // cols)
+        if c["icons"]:
+            bw = 66
+        else:
+            bw = c["bw"] or max(76, int(max(text_w(l, 24, 700) for l in labels) + 28))
+        gw, gh = cols * bw - (cols - 1) * 3, rows * PICK_H - (rows - 1) * 3
+        c.update(pick_labels=labels, cols_n=cols, bw_n=bw)
+        if c["caption"] and c["where"] == "top":
+            return max(gw, int(text_w(c["caption"], 24)) + 4), 38 + gh
+        if c["caption"]:
+            return c["cap_w"] + gw, gh
+        return gw, gh
     if t == "seg":
         ws = c["widths"] or [max(76, int(text_w(l, 24) + 2 * SEG_PAD)) for l in c["labels"]]
         c["seg_w"] = ws
@@ -686,6 +734,16 @@ def layout(page):
         y0 = strip_y(r)
         for c, (w, h) in zip(st["cells"], sizes):
             c["rect"] = (int(round(x)), int(y0 + (STRIP_H - h) // 2), w, h)
+            if c["type"] == "pick":
+                rx, ry = c["rect"][0], c["rect"][1]
+                gw = c["cols_n"] * c["bw_n"] - (c["cols_n"] - 1) * 3
+                gh = h - (38 if (c["caption"] and c["where"] == "top") else 0)
+                if c["caption"] and c["where"] == "top":
+                    c["grid"] = (rx, ry + 38, gw, gh)
+                elif c["caption"]:
+                    c["grid"] = (rx + c["cap_w"], ry, gw, gh)
+                else:
+                    c["grid"] = (rx, ry, gw, gh)
             x += w + gap
 
 # ---------------------------------------------------------------- self-check
@@ -734,6 +792,9 @@ class Builder:
         self.images = {}
         self.replacements = {}
         self.comp_keys = set()
+        for p in params:
+            if p["kind"] in ("choice", "bool"):
+                CHOICES.setdefault(p["name"], p["choices"])
 
     def p(self, name):
         if name not in self.by_name:
@@ -755,26 +816,36 @@ class Builder:
             self.images[fname] = image
         return fname
 
-    def test_defs(self, defs):
-        """Components for the TEST page: the SDK generator's list cell (GenericLegacy Slider + focus + menu on
-        double-tap), each opening a differently built list overlay:
-          A  the SDK generator's overlay   (solid light background, overlay takes no hardware focus)
-          B  the SDK reference's overlay   (transparent background, overlay takes hardware focus)
-          C  dark background, overlay takes hardware focus"""
-        variants = {"A": ("fff3f1ec", "No"), "B": ("0", "Yes"), "C": ("ff1e1d1e", "Yes")}
-        for v, (colour, foc) in variants.items():
-            ov = component([entry("overlay", "MenuOverlay", menu_overlay(), bounds((0, 0, 1280, 800), focus=foc))],
-                           colour=colour, ignore=True)
-            defs.append(o(("key", "test overlay " + v), ("value", ov)))
-            fe = entry("focus", "Focus", o(("version", 1), ("backgroundColour", "19ffffff"), ("outlineColour", "ffd6402b"),
-                                           ("backgroundInset", 4.0), ("outlineThickness", 1.0)),
-                       bounds((0, 0, 278, 107), when="WhenFocussed"))
-            sl = entry("slider", "Slider", o(("version", 1), ("handleName", "Data")), bounds((15, 15, 248, 77)))
-            acts = [act("Mouse Down", "Q-Link", "Data"), act("Double Click", "Show Overlay", "Data", "test overlay " + v),
-                    act("Enter Pressed", "Show Overlay", "Data", "test overlay " + v)]
-            defs.append(o(("key", "test cell " + v), ("value", o(("version", 2), ("actions", acts),
-                                                                ("backgroundData", bg("00000000")), ("ignoreMousePresses", False),
-                                                                ("disableCoarseDataWheel", False), ("componentsData", [fe, sl])))))
+    def knob_def(self, size, cw, bi):
+        key = self.knob_comp(size, cw, bi, False)
+        if key not in self.comp_keys:
+            self.comp_keys.add(key)
+            tx = size + 12
+            kid = o(("version", 2), ("knobType", "FilmStrip"), ("filmStrip", self.knob_strip(size, bi)),
+                    ("numFrames", FRAMES), ("invert", False), ("handleName", "Data"))
+            kids = [focus_entry(),
+                    entry("knob", "Knob", kid, bounds((0, (126 - size) // 2, size, size))),
+                    entry("value", "Label", label("Value", 32, "Bold"), bounds((tx, 60, cw - tx, 44)))]
+            self.defs.append(o(("key", key), ("value", component(kids, actions_for(OVERLAYS["bi" if bi else "knob"])))))
+        return key
+
+    def screen_def(self, fname, n, w, h):
+        """A waveform screen that is also the control: a Knob widget whose film strip is the screen artwork (drag to change
+        the shape / type, like any knob), with the value written in its bottom band. fname None = an invisible knob
+        over a picture drawn underneath (the wavetable screen follows Position but edits Table)."""
+        key = "hx screen " + (fname or "blank %dx%d" % (w, h))
+        if key not in self.comp_keys:
+            self.comp_keys.add(key)
+            if fname is None:
+                fname = self.save("blank_%dx%d.png" % (w, h), Image.new("RGBA", (w, h), (0, 0, 0, 0)))
+                n = 1
+            kid = o(("version", 2), ("knobType", "FilmStrip"), ("filmStrip", fname), ("numFrames", n), ("invert", False),
+                    ("handleName", "Data"))
+            val = entry("value", "Label", label("Value", 26, "Bold", just="horizontallyCentred verticallyCentred"),
+                        bounds((6, h - 40, w - 12, 34)))
+            self.defs.append(o(("key", key), ("value", component(
+                [entry("knob", "Knob", kid, bounds((0, 0, w, h))), val, focus_entry()], actions_for(OVERLAYS["knob"])))))
+        return key
 
     @staticmethod
     def knob_comp(size, cw, bi, menu):
@@ -800,39 +871,9 @@ class Builder:
         defs = []
         for key, bip in (("hx knob overlay", False), ("hx knob overlay bi", True)):
             defs.append(o(("key", key), ("value", overlay_component("KnobOverlay", knob_overlay(bip)))))
-        defs.append(o(("key", "hx menu overlay"), ("value", overlay_component("MenuOverlay", menu_overlay()))))
-        # Tap cells over a picture (list boxes, waveform screens). Each one contains the Label that shows its value, so
-        # the component reads its own parameter (a cell with only a focus ring opened a blank menu on hardware).
-        # List boxes and type screens open their list on a single touch; the Q-Link banks on the same touch.
-        menu = OVERLAYS["menu"]
-        # Same structure as the SDK generator's list control (sliderWithFocusMenu): a Slider child bound to Data, the
-        # focus ring, Q-Link on touch, the list on double-tap / Enter. The Slider here is a ColourBar with every colour
-        # transparent, so the box artwork shows; dragging sideways steps through the choices even without the list.
-        drag = entry("drag", "Slider", o(("version", 2), ("sliderType", "ColourBar"), ("direction", "Horizontal"),
-                                         ("backgroundColour", "00000000"), ("outlineColour", "00000000"),
-                                         ("valueColour", "00000000"), ("isBipolar", False), ("handleName", "Data")),
-                     bounds((0, 0, 1, 1), prop=True))
-        box_val = entry("value", "Label", label("Value", 28, "Bold"), bounds((0.06, 0, 0.78, 1), prop=True))
-        scr_val = entry("value", "Label", label("Value", 26, "Bold", just="horizontallyCentred verticallyCentred"),
-                        bounds((0.03, 0.66, 0.94, 0.28), prop=True))
-        defs.append(o(("key", "hx menu box"), ("value", component([drag, box_val, focus_entry()], actions_for(menu)))))
-        defs.append(o(("key", "hx menu screen"), ("value", component([drag, scr_val, focus_entry()], actions_for(menu)))))
-        defs.append(o(("key", "hx knob screen"), ("value", component([drag, scr_val, focus_entry()], actions_for(OVERLAYS["knob"])))))
-        self.test_defs(defs)
-        # on/off tags are one component per tag (see tag()); not Buttons, and no labels on top of them
-        # knob cells
-        for size, cw in ((KNOB, 250), (KNOB, 380), (KNOB_S, 215)):
-            for bi in (False, True):
-                for menu in (False, True):
-                    ov = OVERLAYS["menu"] if menu else OVERLAYS["bi" if bi else "knob"]
-                    tx = size + 12
-                    kid = o(("version", 2), ("knobType", "FilmStrip"), ("filmStrip", self.knob_strip(size, bi)),
-                            ("numFrames", FRAMES), ("invert", False), ("handleName", "Data"))
-                    kids = [focus_entry(),
-                            entry("knob", "Knob", kid, bounds((0, (126 - size) // 2, size, size))),
-                            entry("value", "Label", label("Value", 32, "Bold"), bounds((tx, 60, cw - tx, 44)))]
-                    defs.append(o(("key", self.knob_comp(size, cw, bi, menu)),
-                                  ("value", component(kids, actions_for(ov)))))
+        # No MenuOverlay anywhere: the MPC firmware can open it with empty entries (reported by the Open MPC developers
+        # on 3.10.1.12, and seen on hardware with HELIX 0.2.3-0.2.5). Choices are buttons (pickers) or knobs instead.
+        # Knob cells, screens and pickers are defined on demand (see knob_def, screen cells, picker cells).
         self.defs = defs
 
         tabs, qmaps = [], []
@@ -929,11 +970,10 @@ class Builder:
         out = []
         if t in ("knob", "knobS"):
             p = self.p(c["param"])
-            menu = c["menu"] and p["kind"] in ("choice", "bool")
-            if menu:
-                self.discrete(c["param"])
+            if p["kind"] in ("choice", "bool"):
+                self.discrete(c["param"])       # long lists (mod source / dest, divisions) are knobs that step through
             size = KNOB if t == "knob" else KNOB_S
-            comp = self.knob_comp(size, w, c["bi"], menu)
+            comp = self.knob_def(size, w, c["bi"])
             inval = self.vis(c)
             out.append(self.name_label(c["name"], c["param"], x + size + 12, y + 26, w - size - 12, inval))
             out.append(entry(c["param"], comp, o(("version", 1), ("handleName", "Data")),
@@ -947,16 +987,18 @@ class Builder:
                 out.append(self.caption(msg, c["param"], (x, y + 62, w, 32), style="Regular", inval=other))
         elif t == "screen":
             p = self.p(c["param"])
-            ovl = c["overlay"]
-            if ovl == "menu":
+            if p["kind"] in ("choice", "bool"):
                 self.discrete(c["param"])
-            frames_from = c["pos"] or c["param"]
-            choices = p["choices"]
-            fname, n = self.screen_strip(c["kind"], choices, w, h)
-            out.append(entry("screen", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", fname),
-                                                  ("numFrames", n), ("handleName", "Data")),
-                             bounds((x, y, w, h), invalid="Hide"), remap=[("Data", self.h(frames_from))]))
-            out.append(entry(c["param"], "hx menu screen" if ovl == "menu" else "hx knob screen", o(("version", 1), ("handleName", "Data")),
+            fname, n = self.screen_strip(c["kind"], p["choices"], w, h)
+            if c["pos"]:
+                # the picture follows Position; the control on top (an invisible knob) edits the Table
+                out.append(entry("screen", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", fname),
+                                                      ("numFrames", n), ("handleName", "Data")),
+                                 bounds((x, y, w, h), invalid="Hide"), remap=[("Data", self.h(c["pos"]))]))
+                comp = self.screen_def(None, 1, w, h)
+            else:
+                comp = self.screen_def(fname, n, w, h)
+            out.append(entry(c["param"], comp, o(("version", 1), ("handleName", "Data")),
                              bounds((x, y, w, h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
         elif t == "picture":
             fname, n = self.screen_strip(c["kind"], [], w, h)
@@ -1048,15 +1090,43 @@ class Builder:
                                         ("handleName", "Data"), ("gestureBehaviour", "Instant")), bounds((bx, 0, bw, box_h))))
                     bx += bw - 3
                 kids.append(focus_entry())
-                acts = [act("Mouse Down", "Q-Link", "Data"), act("Enter Pressed", "Show Overlay", "Data", OVERLAYS["menu"])]
+                acts = [act("Mouse Down", "Q-Link", "Data")]
             if key not in self.comp_keys:
                 self.comp_keys.add(key)
                 self.defs.append(o(("key", key), ("value", component(kids, acts))))
             out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
                              bounds((x, by, total, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
-        elif t == "custom":
-            out.append(entry(c["param"], c["comp"], o(("version", 1), ("handleName", "Data")),
-                             bounds((x, y, w, h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
+        elif t == "pick":
+            p = self.discrete(c["param"])
+            labels = c["pick_labels"]
+            gx, gy, gw, gh = c["grid"]
+            if c["caption"] and c["where"] == "top":
+                out.append(self.name_label(c["caption"].replace("\n", " "), c["param"], x, y, w))
+            elif c["caption"]:
+                lines = c["caption"].split("\n")
+                for i, line in enumerate(lines):
+                    out.append(self.caption(line, c["param"], (x, gy + gh / 2 - 15 * len(lines) + i * 30, c["cap_w"] - 6, 30)))
+            key = "hx pick " + c["param"]
+            if key not in self.comp_keys:
+                self.comp_keys.add(key)
+                kids = []
+                for i, lab in enumerate(labels):
+                    r_, c_ = divmod(i, c["cols_n"])
+                    bx, by = c_ * (c["bw_n"] - 3), r_ * (PICK_H - 3)
+                    if c["icons"]:
+                        on = self.save("pick_%d_%s_on.png" % (c["bw_n"], slug(lab)), icon_box(c["bw_n"], PICK_H, ORANGE, lab))
+                        off = self.save("pick_%d_%s_off.png" % (c["bw_n"], slug(lab)), icon_box(c["bw_n"], PICK_H, SCREEN, lab))
+                    else:
+                        on = self.save("seg_%d_%s_on.png" % (c["bw_n"], slug(lab)), labelled_box(c["bw_n"], PICK_H, ORANGE, lab, 24))
+                        off = self.save("seg_%d_%s_off.png" % (c["bw_n"], slug(lab)), labelled_box(c["bw_n"], PICK_H, SCREEN, lab, 24))
+                    kids.append(entry("choice %d" % i, "Button",
+                                      o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i),
+                                        ("numButtonsInGroup", len(labels)), ("handleName", "Data"), ("gestureBehaviour", "Instant")),
+                                      bounds((bx, by, c["bw_n"], PICK_H))))
+                kids.append(focus_entry())
+                self.defs.append(o(("key", key), ("value", component(kids, [act("Mouse Down", "Q-Link", "Data")]))))
+            out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
+                             bounds((gx, gy, gw, gh), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
         return out
 
     def qmap(self, page):
@@ -1179,10 +1249,22 @@ def preview(builder, outdir):
                             bw = sw + 6
                             tab.paste(Image.open(os.path.join(builder.out, "seg_%d_%s_%s.png" % (bw, slug(lab), "on" if i == cur else "off"))), (bx, by))
                             bx += bw - 3
-                elif t == "custom":
-                    d.rectangle((cx, cy, cx + w - 1, cy + hh - 1), fill=(60, 60, 62))
-                    txt(cx + 15, cy + 10, w - 30, 34, "PAD BANK", 22, 600, (230, 230, 230))
-                    txt(cx + 15, cy + 50, w - 30, 40, shown(c["param"]) + "   (MPC's own slider)", 22, 600, (230, 230, 230))
+                elif t == "pick":
+                    labels = c["pick_labels"]
+                    cur = step(c["param"], len(labels))
+                    gx, gy, gw, gh = c["grid"]
+                    gy -= 110 * 0
+                    if c["caption"] and c["where"] == "top":
+                        txt(cx, cy, w, 32, c["caption"].replace("\n", " "), 24, 600, (46, 46, 46))
+                    elif c["caption"]:
+                        lines = c["caption"].split("\n")
+                        for i, line in enumerate(lines):
+                            txt(cx, gy + gh / 2 - 15 * len(lines) + i * 30, c["cap_w"] - 6, 30, line, 24, 600, (46, 46, 46))
+                    for i, lab in enumerate(labels):
+                        r_, c_ = divmod(i, c["cols_n"])
+                        bx, by = gx + c_ * (c["bw_n"] - 3), gy + r_ * (PICK_H - 3)
+                        fn = ("pick_%d_%s_%s.png" if c["icons"] else "seg_%d_%s_%s.png") % (c["bw_n"], slug(lab), "on" if i == cur else "off")
+                        tab.paste(Image.open(os.path.join(builder.out, fn)), (bx, by))
         canvas.paste(tab, (0, 110))
         dc = ImageDraw.Draw(canvas)
         f = pil_font(22, 600)
