@@ -19,9 +19,11 @@ if [ -x "$root/build/helix-mpc/helix-mpc-ui" ]; then "$root/build/helix-mpc/heli
 export CPATH="$root/helix-core/include:$here/include${CPATH:+:$CPATH}"
 "$py" "$sdk/tools/build.py" "$here" "$@"
 
-# 3. Bigger text in the skin (values >= 32 px, other text >= 24 px), then validate again
+# 3. The touch UI is the hand-written "Concrete Rack" skin in helix-mpc/skins/ (made by tools/make_skin.py),
+#    which build.py copies verbatim. Do not run tools/skin_fonts.py on it: that script re-saves TUI.json with
+#    json.dump, which drops the duplicate "version" keys the overlay widgets need, and the MPC then rejects the
+#    whole file. Validate the assembled folder.
 out="$here/build/Twisted Genetics - VST - HELIX"
 if [ -f "$out/Plugin Skins/TUI.json" ]; then
-  "$py" "$here/tools/skin_fonts.py" "$out/Plugin Skins/TUI.json"
   "$py" "$sdk/tools/validate.py" "$here" || true
 fi

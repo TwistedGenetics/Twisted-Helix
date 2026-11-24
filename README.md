@@ -12,7 +12,7 @@ The **[user manual (PDF)](docs/HELIX-Manual.pdf)** explains how to install and p
 | `helix-core/` | Pure C++17 DSP library: no JUCE, no OS calls on the audio path, no allocation or locks on the audio thread, NEON / SSE / scalar paths, denormals flushed, sample-rate agnostic |
 | `helix-render/` | Offline CLI: preset + MIDI file → WAV, factory preset export, `--bench` |
 | `helix-desktop/` | JUCE 8 wrapper: VST3 / AU / Standalone; one-window editor (OSC / FX / MATRIX / GLOBAL tabs) with 3D wavetable views, filter curves, drag-and-drop modulation, Copper (dark) and Paper (light) themes |
-| `helix-mpc/` | MPC target (MPC Plugin SDK) behind the `IPlatform` layer, generated touchscreen skin, see [helix-mpc/README.md](helix-mpc/README.md) |
+| `helix-mpc/` | MPC target (MPC Plugin SDK) behind the `IPlatform` layer, "Concrete Rack" touchscreen skin (hand-written, `helix-mpc/skins/`), see [helix-mpc/README.md](helix-mpc/README.md) |
 | `Presets/` | the 24 factory presets as JSON (`Presets/<Category>/<Name>.json`, written by `helix-render --write-factory`) |
 | `tests/` | aliasing, oscillators / warps, filters, modulation + voice handling, FX, import + fuzz, presets (null + golden), MPC app |
 | `external/mpc-plugin-builder-sdk` | the official MPC Plugin SDK (git submodule, pinned) |

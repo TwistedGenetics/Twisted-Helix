@@ -3,6 +3,7 @@
 #include "helix/WavetableImport.h"
 #include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
@@ -149,8 +150,27 @@ bool HelixMpcApp::formatValue(int index, float plain, std::string& out) const
             return true;
         }
         case MP_LOAD: case MP_MUTATE: case MP_S2T_GO: out = plain >= 0.5f ? "..." : "Press"; return true;
-        default: return false;
+        default: break;
     }
+    // Continuous core parameters: the compact text the desktop plugin shows ("500 ms", "1.20 s", "12.0 kHz",
+    // "80%") instead of the SDK default ("500.0 ms", "12000.0 Hz", "0.80"), so values fit the skin's large type.
+    if (index < 0 || index >= kNumParams) return false;
+    const ParamDef& d = mpcParamDef(index);
+    if (d.kind == ParamKind::Bool || d.kind == ParamKind::Choice || d.kind == ParamKind::Int) return false;
+    const float v = d.clampPlain(plain);
+    const std::string unit = d.unit ? d.unit : "";
+    if (unit == "Hz" && std::fabs(v) >= 1000.0f)
+        std::snprintf(buf, sizeof buf, std::fabs(v) >= 10000.0f ? "%.1f kHz" : "%.2f kHz", (double)v / 1000.0);
+    else if (unit == "ms" && std::fabs(v) >= 1000.0f)
+        std::snprintf(buf, sizeof buf, "%.2f s", (double)v / 1000.0);
+    else
+    {
+        out = d.format(v);
+        if (!unit.empty() && out.back() != '%') out += " " + unit;
+        return true;
+    }
+    out = buf;
+    return true;
 }
 
 void HelixMpcApp::applyPreset(const Preset& p)

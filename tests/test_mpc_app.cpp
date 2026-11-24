@@ -75,6 +75,15 @@ int main()
     std::string text;
     CHECK(app.formatValue(MP_PRESET, 15.0f, text) && text == "90s Pad", "preset value text '%s'", text.c_str());
 
+    // Compact value text for the skin's large type (units kept, no "12000.0 Hz").
+    const struct { int index; float plain; const char* want; } compact[] = {
+        {P_F1_CUTOFF, 12000.0f, "12.0 kHz"}, {P_F1_CUTOFF, 1200.0f, "1.20 kHz"}, {P_F1_CUTOFF, 440.0f, "440 Hz"},
+        {P_E1_D, 500.0f, "500 ms"}, {P_E1_D, 1200.0f, "1.20 s"}, {P_A_BLEND, 0.8f, "80%"}, {P_A_FINE, -9.0f, "-9.00 ct"}};
+    for (const auto& c : compact)
+        CHECK(app.formatValue(c.index, c.plain, text) && text == c.want, "param %d value text '%s', want '%s'", c.index,
+              text.c_str(), c.want);
+    CHECK(!app.formatValue(P_F1_TYPE, 1.0f, text), "choice parameters keep the SDK's own text");
+
     // Mutate trigger changes continuous parameters only.
     const float cutoffBefore = app.engine().params().get(P_F1_CUTOFF);
     const float typeBefore = app.engine().params().get(P_F1_TYPE);
