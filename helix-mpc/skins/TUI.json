@@ -411,7 +411,15 @@
      "key": "hx tag",
      "value": {
       "version": 2,
-      "actions": [],
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
       "backgroundData": {
        "version": 1,
        "focussed": {
@@ -432,16 +440,15 @@
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "button",
-         "type": "Button",
+         "name": "state",
+         "type": "Image",
          "data": {
           "version": 2,
-          "onImage": "tag_on_flat.png",
-          "offImage": "tag_off.png",
-          "buttonId": 1,
-          "numButtonsInGroup": 1,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_onoff.png",
+          "numFrames": 2,
+          "handleName": "Data"
          }
         },
         "handle remapping": {
@@ -2185,7 +2192,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 2,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2214,7 +2221,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 2,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2268,6 +2275,13 @@
        {
         "version": 1,
         "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
         "handler": "Q-Link",
         "handleName": "Data",
         "additionalData": ""
@@ -2293,16 +2307,15 @@
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "button",
-         "type": "Button",
+         "name": "state",
+         "type": "Image",
          "data": {
           "version": 2,
-          "onImage": "btn_on_190.png",
-          "offImage": "btn_off_190.png",
-          "buttonId": 1,
-          "numButtonsInGroup": 1,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_onoff_190.png",
+          "numFrames": 2,
+          "handleName": "Data"
          }
         },
         "handle remapping": {
@@ -2390,7 +2403,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2419,7 +2432,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2448,7 +2461,7 @@
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2536,7 +2549,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2565,7 +2578,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2594,7 +2607,7 @@
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2682,7 +2695,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2711,7 +2724,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2740,7 +2753,7 @@
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2828,7 +2841,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2857,7 +2870,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2886,7 +2899,7 @@
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -2940,6 +2953,13 @@
        {
         "version": 1,
         "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
         "handler": "Q-Link",
         "handleName": "Data",
         "additionalData": ""
@@ -2965,16 +2985,15 @@
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "button",
-         "type": "Button",
+         "name": "state",
+         "type": "Image",
          "data": {
           "version": 2,
-          "onImage": "btn_on_170.png",
-          "offImage": "btn_off_170.png",
-          "buttonId": 1,
-          "numButtonsInGroup": 1,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_onoff_170.png",
+          "numFrames": 2,
+          "handleName": "Data"
          }
         },
         "handle remapping": {
@@ -3062,7 +3081,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3091,7 +3110,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3120,7 +3139,7 @@
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3208,7 +3227,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3237,7 +3256,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3266,7 +3285,7 @@
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3320,6 +3339,13 @@
        {
         "version": 1,
         "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
         "handler": "Q-Link",
         "handleName": "Data",
         "additionalData": ""
@@ -3345,16 +3371,15 @@
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "button",
-         "type": "Button",
+         "name": "state",
+         "type": "Image",
          "data": {
           "version": 2,
-          "onImage": "btn_on_150.png",
-          "offImage": "btn_off_150.png",
-          "buttonId": 1,
-          "numButtonsInGroup": 1,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_onoff_150.png",
+          "numFrames": 2,
+          "handleName": "Data"
          }
         },
         "handle remapping": {
@@ -3442,7 +3467,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 2,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3471,7 +3496,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 2,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3559,7 +3584,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3588,7 +3613,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3617,7 +3642,7 @@
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3705,7 +3730,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 2,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3734,7 +3759,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 2,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3822,7 +3847,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 2,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3851,7 +3876,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 2,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3939,7 +3964,7 @@
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3968,7 +3993,7 @@
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {
@@ -3997,7 +4022,7 @@
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "gestureBehaviour": "Hold"
          }
         },
         "handle remapping": {

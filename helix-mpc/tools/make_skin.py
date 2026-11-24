@@ -711,18 +711,19 @@ class Builder:
         # tap targets: just a focus ring plus actions; the visuals sit at tab level underneath
         for kind, ov in OVERLAYS.items():
             defs.append(o(("key", "hx tap " + kind), ("value", component([focus_entry()], actions_for(ov)))))
-        # on/off tag: the Button itself takes no hardware focus (as in the SDK's own generator); the cell around it does
+        # on/off tag. Not a Button: on hardware the Button widget's tap recognition missed presses (a touch that moves
+        # a little is not a tap). Instead a 2-frame film strip (off, on) shows the state and the cell flips the parameter
+        # with the "Toggle Switch" action on Mouse Down, i.e. the moment the finger lands.
         h_tag = STRIP_H - 2 * BORDER
         offimg = Image.new("RGB", (TAG_W, h_tag), OFF)
         d = ImageDraw.Draw(offimg)
         for i in range(-h_tag, TAG_W, 14):
             d.line([(i, h_tag), (i + h_tag, 0)], fill=(186, 186, 180), width=4)
-        off = self.save("tag_off.png", offimg)
-        on = self.save("tag_on_flat.png", Image.new("RGB", (TAG_W, h_tag), ORANGE))
+        tag = self.save("tag_onoff.png", film([offimg, Image.new("RGB", (TAG_W, h_tag), ORANGE)]))
         defs.append(o(("key", "hx tag"), ("value", component([
-            entry("button", "Button", o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", 1), ("numButtonsInGroup", 1),
-                                        ("handleName", "Data"), ("gestureBehaviour", "Instant")), bounds((0, 0, TAG_W, h_tag))),
-            focus_entry()]))))
+            entry("state", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", tag), ("numFrames", 2),
+                                      ("handleName", "Data")), bounds((0, 0, TAG_W, h_tag))),
+            focus_entry()], [act("Mouse Down", "Toggle Switch", "Data")]))))
         # knob cells
         for size, cw in ((KNOB, 250), (KNOB, 380), (KNOB_S, 215)):
             for bi in (False, True):
@@ -891,16 +892,16 @@ class Builder:
                                  bounds((x, by, w, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
             elif t == "toggle":
                 self.discrete(c["param"])
-                on = self.save("btn_on_%d.png" % w, box_image(w, box_h, ORANGE).convert("RGB"))
-                off = self.save("btn_off_%d.png" % w, box_image(w, box_h, OFF).convert("RGB"))
+                strip = self.save("toggle_onoff_%d.png" % w, film([box_image(w, box_h, OFF).convert("RGB"),
+                                                                   box_image(w, box_h, ORANGE).convert("RGB")]))
                 key = "hx toggle %d" % w
                 if key not in self.comp_keys:
                     self.comp_keys.add(key)
+                    # same as the tag: film strip for the state, Toggle Switch on Mouse Down (then bank the Q-Links)
                     self.defs.append(o(("key", key), ("value", component([
-                        entry("button", "Button", o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", 1),
-                                                    ("numButtonsInGroup", 1), ("handleName", "Data"), ("gestureBehaviour", "Instant")),
-                              bounds((0, 0, w, box_h))),
-                        focus_entry()], [act("Mouse Down", "Q-Link", "Data")]))))
+                        entry("state", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", strip),
+                                                  ("numFrames", 2), ("handleName", "Data")), bounds((0, 0, w, box_h))),
+                        focus_entry()], [act("Mouse Down", "Toggle Switch", "Data"), act("Mouse Down", "Q-Link", "Data")]))))
                 out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
                                  bounds((x, by, w, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
                 out.append(entry("value", "Label", label("Value", 28, "Bold", just="horizontallyCentred verticallyCentred"),
@@ -927,7 +928,7 @@ class Builder:
                 off = self.save("seg_off_%d.png" % bw, box_image(bw, box_h, SCREEN).convert("RGB"))
                 btns.append(entry("seg %d" % i, "Button",
                                   o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i), ("numButtonsInGroup", n),
-                                    ("handleName", "Data"), ("gestureBehaviour", "Instant")), bounds((bx, 0, bw, box_h))))
+                                    ("handleName", "Data"), ("gestureBehaviour", "Hold")), bounds((bx, 0, bw, box_h))))
                 caps.append(self.caption(lab, c["param"], (x + bx, by, bw, box_h), 24, "Bold", TEXT,
                                          "horizontallyCentred verticallyCentred"))
                 bx += bw - 3
@@ -991,7 +992,8 @@ def preview(builder, outdir):
             lines = st["title"].split("\n")
             if st["toggle"]:
                 on = step(st["toggle"], 2) == 1
-                tab.paste(Image.open(os.path.join(builder.out, "tag_on_flat.png" if on else "tag_off.png")), (x, y))
+                st_img = Image.open(os.path.join(builder.out, "tag_onoff.png"))
+                tab.paste(st_img.crop((0, h if on else 0, TAG_W, 2 * h if on else h)), (x, y))
                 ty = y + h / 2 - 17 * len(lines) - 14
                 for i, line in enumerate(lines):
                     txt(x, ty + i * 34, TAG_W, 34, line, 28, center=True)
@@ -1045,7 +1047,8 @@ def preview(builder, outdir):
                         txt(cx + 14, by, w - 50, 60, shown(c["param"]), 28)
                     elif t == "toggle":
                         on = step(c["param"], 2) == 1
-                        tab.paste(Image.open(os.path.join(builder.out, "btn_%s_%d.png" % ("on" if on else "off", w))), (cx, by))
+                        st_img = Image.open(os.path.join(builder.out, "toggle_onoff_%d.png" % w))
+                        tab.paste(st_img.crop((0, 60 if on else 0, w, 120 if on else 60)), (cx, by))
                         txt(cx, by, w, 60, shown(c["param"]), 28, center=True)
                     else:
                         tab.paste(Image.open(os.path.join(builder.out, "box_plain_%d.png" % w)), (cx, by))
