@@ -128,7 +128,7 @@ def menu_overlay():
     return o(("version", 1), ("version", 1), ("actions", FOCUS_LOST), ("withNumbers", False), ("handleName", "Data"))
 
 def overlay_component(typ, data):
-    return component([entry("overlay", typ, data, bounds((0, 0, 1280, 800), focus="Yes"))], ignore=True)
+    return component([entry("overlay", typ, data, bounds((0, 0, 1280, 800)))], colour=argb(SCREEN), ignore=True)
 
 def actions_for(overlay):
     return [act("Mouse Down", "Q-Link", "Data"), act("Double Click", "Show Overlay", "Data", overlay),
@@ -702,6 +702,17 @@ def check_no_labels_over_touch(path):
                 seen.append((e["componentData"]["name"], (x, y, w, h)))
     if bad:
         raise SystemExit("make_skin: labels on top of touch areas:\n  " + "\n  ".join(bad))
+    # A cell that opens an overlay must itself contain a child reading its "Data" handle (a Label or Knob); a cell with
+    # only a focus ring opened an empty menu on hardware (0.2.3).
+    empty = []
+    for d in t["pageData"]["componentDefinitions"]["localComponentDefinitions"]:
+        v = d["value"]
+        if any(a_["handler"] == "Show Overlay" for a_ in v["actions"]):
+            if not any(k["componentData"]["type"] not in ("Focus",) and k["componentData"]["data"].get("handleName") == "Data"
+                       for k in v["componentsData"]):
+                empty.append(d["key"])
+    if empty:
+        raise SystemExit("make_skin: overlay cells with nothing reading Data: " + ", ".join(empty))
 
 
 # ---------------------------------------------------------------- build
@@ -761,9 +772,18 @@ class Builder:
         for key, bip in (("hx knob overlay", False), ("hx knob overlay bi", True)):
             defs.append(o(("key", key), ("value", overlay_component("KnobOverlay", knob_overlay(bip)))))
         defs.append(o(("key", "hx menu overlay"), ("value", overlay_component("MenuOverlay", menu_overlay()))))
-        # tap targets: just a focus ring plus actions; the visuals sit at tab level underneath
-        for kind, ov in OVERLAYS.items():
-            defs.append(o(("key", "hx tap " + kind), ("value", component([focus_entry()], actions_for(ov)))))
+        # Tap cells over a picture (list boxes, waveform screens). Each one contains the Label that shows its value, so
+        # the component reads its own parameter (a cell with only a focus ring opened a blank menu on hardware).
+        # List boxes and type screens open their list on a single touch; the Q-Link banks on the same touch.
+        menu = OVERLAYS["menu"]
+        tap_menu = [act("Mouse Down", "Q-Link", "Data"), act("Mouse Down", "Show Overlay", "Data", menu),
+                    act("Enter Pressed", "Show Overlay", "Data", menu)]
+        box_val = entry("value", "Label", label("Value", 28, "Bold"), bounds((0.06, 0, 0.78, 1), prop=True))
+        scr_val = entry("value", "Label", label("Value", 26, "Bold", just="horizontallyCentred verticallyCentred"),
+                        bounds((0.03, 0.66, 0.94, 0.28), prop=True))
+        defs.append(o(("key", "hx menu box"), ("value", component([box_val, focus_entry()], tap_menu))))
+        defs.append(o(("key", "hx menu screen"), ("value", component([scr_val, focus_entry()], tap_menu))))
+        defs.append(o(("key", "hx knob screen"), ("value", component([scr_val, focus_entry()], actions_for(OVERLAYS["knob"])))))
         # on/off tags are one component per tag (see tag()); not Buttons, and no labels on top of them
         # knob cells
         for size, cw in ((KNOB, 250), (KNOB, 380), (KNOB_S, 215)):
@@ -901,9 +921,7 @@ class Builder:
             out.append(entry("screen", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", fname),
                                                   ("numFrames", n), ("handleName", "Data")),
                              bounds((x, y, w, h), invalid="Hide"), remap=[("Data", self.h(frames_from))]))
-            out.append(entry("screen value", "Label", label("Value", 26, "Bold", just="horizontallyCentred verticallyCentred"),
-                             bounds((x + 6, y + h - 40, w - 12, 34)), remap=[("Data", self.h(c["param"]))]))
-            out.append(entry(c["param"], "hx tap " + ("menu" if ovl == "menu" else "knob"), o(("version", 1), ("handleName", "Data")),
+            out.append(entry(c["param"], "hx menu screen" if ovl == "menu" else "hx knob screen", o(("version", 1), ("handleName", "Data")),
                              bounds((x, y, w, h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
         elif t == "picture":
             fname, n = self.screen_strip(c["kind"], [], w, h)
@@ -933,9 +951,7 @@ class Builder:
                 bx = self.save("box_%d.png" % w, box_image(w, box_h, SCREEN, chevron=True).convert("RGB"))
                 out.append(entry("box", "Image", o(("version", 2), ("imageType", "Regular"), ("colour", "0"), ("image", bx)),
                                  bounds((x, by, w, box_h))))
-                out.append(entry("value", "Label", label("Value", 28, "Bold"), bounds((x + 14, by, w - 50, box_h)),
-                                 remap=[("Data", self.h(c["param"]))]))
-                out.append(entry(c["param"], "hx tap menu", o(("version", 1), ("handleName", "Data")),
+                out.append(entry(c["param"], "hx menu box", o(("version", 1), ("handleName", "Data")),
                                  bounds((x, by, w, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
             elif t == "toggle":
                 ch = self.discrete(c["param"])["choices"]
@@ -966,19 +982,31 @@ class Builder:
             by = y + h - box_h
             out.append(self.name_label(c["name"], c["param"], x, y, w))
             key = "hx seg %s" % c["param"]
-            btns, caps, bx = [], [], 0
-            for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
-                bw = sw + 6
-                on = self.save("seg_%d_%s_on.png" % (bw, slug(lab)), labelled_box(bw, box_h, ORANGE, lab, 24))
-                off = self.save("seg_%d_%s_off.png" % (bw, slug(lab)), labelled_box(bw, box_h, SCREEN, lab, 24))
-                btns.append(entry("seg %d" % i, "Button",
-                                  o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i), ("numButtonsInGroup", n),
-                                    ("handleName", "Data"), ("gestureBehaviour", "Hold")), bounds((bx, 0, bw, box_h))))
-                bx += bw - 3
-            total = bx + 3
+            # Not Buttons: segment Buttons were unreliable on hardware. A film strip shows the group with the current
+            # choice lit. Two choices: the touch flips it (Toggle Switch, like the on/off switches). Three: the touch opens
+            # the list (no touch action can set one of three values directly); the Q-Link and data wheel step through.
+            total = sum(sw + 6 for sw in c["seg_w"]) - 3 * (n - 1)
+            frames = []
+            for cur in range(n):
+                im = Image.new("RGB", (total, box_h), SCREEN)
+                bx = 0
+                for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
+                    bw = sw + 6
+                    im.paste(labelled_box(bw, box_h, ORANGE if i == cur else SCREEN, lab, 24), (bx, 0))
+                    bx += bw - 3
+                frames.append(im)
+            strip = self.save("seg_%s.png" % slug(c["param"]), film(frames))
+            if n == 2:
+                acts = [act("Mouse Down", "Toggle Switch", "Data"), act("Mouse Down", "Q-Link", "Data")]
+            else:
+                acts = [act("Mouse Down", "Q-Link", "Data"), act("Mouse Down", "Show Overlay", "Data", OVERLAYS["menu"]),
+                        act("Enter Pressed", "Show Overlay", "Data", OVERLAYS["menu"])]
             if key not in self.comp_keys:
                 self.comp_keys.add(key)
-                self.defs.append(o(("key", key), ("value", component(btns + [focus_entry()], [act("Mouse Down", "Q-Link", "Data")]))))
+                self.defs.append(o(("key", key), ("value", component([
+                    entry("state", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", strip),
+                                              ("numFrames", n), ("handleName", "Data")), bounds((0, 0, total, box_h))),
+                    focus_entry()], acts))))
             out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
                              bounds((x, by, total, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
         return out
@@ -1094,11 +1122,8 @@ def preview(builder, outdir):
                     by = cy + hh - 60
                     txt(cx, cy, w, 32, c["name"], 24, 600, (46, 46, 46))
                     cur = step(c["param"], len(c["labels"]))
-                    bx = cx
-                    for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
-                        bw = sw + 6
-                        tab.paste(Image.open(os.path.join(builder.out, "seg_%d_%s_%s.png" % (bw, slug(lab), "on" if i == cur else "off"))), (bx, by))
-                        bx += bw - 3
+                    st_img = Image.open(os.path.join(builder.out, "seg_%s.png" % slug(c["param"])))
+                    tab.paste(st_img.crop((0, cur * 60, st_img.size[0], (cur + 1) * 60)), (cx, by))
         canvas.paste(tab, (0, 110))
         dc = ImageDraw.Draw(canvas)
         f = pil_font(22, 600)

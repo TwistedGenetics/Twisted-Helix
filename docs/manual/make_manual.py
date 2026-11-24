@@ -912,12 +912,15 @@ def chapter_mpc():
                     "on; hatched grey with 'Off' means off, and the section costs no CPU.",
                     "<b>Screens</b> show the oscillator's wavetable position, the warp mode, the unison stack, the sub shape, "
                     "the noise type, the filter response, the LFO shape and the effect types. They change as soon as you change "
-                    "the parameter. Tap a screen to put its Q-Link under your hand, double-tap it (or press Enter) to pick from "
-                    "the list.",
+                    "the parameter. Touch a screen to open its list and pick from it (the Q-Link moves under your hand at the same "
+                    "time). The wavetable and unison screens open the large knob editor on a double-tap instead.",
                     "<b>Knobs</b>: drag up and down, use the data wheel, or the Q-Link. Double-tap for the large editor. Knobs "
                     "that go both ways from the middle (fine tune, pan, mod amounts) light up from the centre.",
-                    "<b>Boxes with an arrow</b> are lists (matrix sources and destinations, FX order, step shapes): double-tap "
-                    "for the full list.",
+                    "<b>Boxes with an arrow</b> are lists (matrix sources and destinations, FX order, step shapes): touch one to "
+                    "open the full list. The data wheel and the Q-Link also step through it.",
+                    "<b>Button rows</b> such as -1 Oct / -2 Oct flip with each touch when there are two choices. With three "
+                    "(Retrig / Free / 1-shot, Poly / Mono / Legato, Quality), a touch opens the list; the Q-Link and data wheel "
+                    "also step through them.",
                     "<b>Envelopes</b> (ENV page) use the MPC's own envelope display: drag its points or use the four knobs "
                     "beside it.",
                     "When an LFO or the delay is tempo-synced, the free <b>Rate</b> / <b>Time</b> knob is hidden and its place "
