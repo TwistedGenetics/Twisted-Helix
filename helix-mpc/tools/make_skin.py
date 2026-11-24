@@ -452,6 +452,35 @@ def box_image(w, h, fill, chevron=False):
         d.polygon([(cx - 8 * s, cy - 4 * s), (cx + 8 * s, cy - 4 * s), (cx, cy + 6 * s)], fill=INK + (255,))
     return finish(im, w, h)
 
+def slug(t):
+    return "".join(ch if ch.isalnum() else "_" for ch in t).strip("_").lower() or "x"
+
+def draw_text(im, text, cx, cy, size, weight=700, colour=INK):
+    """Text drawn into the picture itself. Labels placed over a touch area take the touch on the MPC, so anything
+    written on something you press (tags, switches, segment buttons) is part of its image instead."""
+    d = ImageDraw.Draw(im)
+    d.text((cx, cy), text, font=pil_font(size, weight), fill=colour, anchor="mm")
+
+def tag_frame(lines, state, on):
+    h = STRIP_H - 2 * BORDER
+    if on:
+        im = Image.new("RGB", (TAG_W, h), ORANGE)
+    else:
+        im = Image.new("RGB", (TAG_W, h), OFF)
+        d = ImageDraw.Draw(im)
+        for i in range(-h, TAG_W, 14):
+            d.line([(i, h), (i + h, 0)], fill=(186, 186, 180), width=4)
+    ty = h / 2 - 17 * len(lines) - 14
+    for i, line in enumerate(lines):
+        draw_text(im, line, TAG_W / 2, ty + i * 34 + 17, 28, 700, INK)
+    draw_text(im, state, TAG_W / 2, ty + len(lines) * 34 + 6 + 15, 24, 600, (46, 46, 46))
+    return im
+
+def labelled_box(w, h, fill, text, size=28):
+    im = box_image(w, h, fill).convert("RGB")
+    draw_text(im, text, w / 2, h / 2, size, 700, INK)
+    return im
+
 def background(page):
     im = Image.new("RGB", (1280, 628), GROUND)
     d = ImageDraw.Draw(im)
@@ -651,6 +680,30 @@ def layout(page):
             c["rect"] = (int(round(x)), int(y0 + (STRIP_H - h) // 2), w, h)
             x += w + gap
 
+# ---------------------------------------------------------------- self-check
+def check_no_labels_over_touch(path):
+    """On the MPC a Label drawn over a touch area takes the touch: the control under it can no longer be pressed or
+    focused (seen on hardware in 0.2.2). Fail if any tab-level Label overlaps an interactive entry painted before it.
+    Labels that only show while that control is hidden (additionalInvalidatingHandles) are allowed."""
+    t = json.load(open(path))
+    bad = []
+    for tab in t["pageData"]["tabs"]:
+        seen = []
+        for e in tab["componentDefinition"]["componentsData"]:
+            typ, b = e["componentData"]["type"], e["bounds"]
+            x, y, w, h = map(float, b["bounds"].split())
+            if typ == "Label":
+                if b.get("additionalInvalidatingHandles"):
+                    continue
+                for nm, (X, Y, W, H) in seen:
+                    if x < X + W and X < x + w and y < Y + H and Y < y + h:
+                        bad.append("%s: label '%s' over '%s'" % (tab["tabName"], e["componentData"]["name"], nm))
+            elif typ not in ("Image", "Focus"):
+                seen.append((e["componentData"]["name"], (x, y, w, h)))
+    if bad:
+        raise SystemExit("make_skin: labels on top of touch areas:\n  " + "\n  ".join(bad))
+
+
 # ---------------------------------------------------------------- build
 class Builder:
     def __init__(self, params, out):
@@ -711,19 +764,7 @@ class Builder:
         # tap targets: just a focus ring plus actions; the visuals sit at tab level underneath
         for kind, ov in OVERLAYS.items():
             defs.append(o(("key", "hx tap " + kind), ("value", component([focus_entry()], actions_for(ov)))))
-        # on/off tag. Not a Button: on hardware the Button widget's tap recognition missed presses (a touch that moves
-        # a little is not a tap). Instead a 2-frame film strip (off, on) shows the state and the cell flips the parameter
-        # with the "Toggle Switch" action on Mouse Down, i.e. the moment the finger lands.
-        h_tag = STRIP_H - 2 * BORDER
-        offimg = Image.new("RGB", (TAG_W, h_tag), OFF)
-        d = ImageDraw.Draw(offimg)
-        for i in range(-h_tag, TAG_W, 14):
-            d.line([(i, h_tag), (i + h_tag, 0)], fill=(186, 186, 180), width=4)
-        tag = self.save("tag_onoff.png", film([offimg, Image.new("RGB", (TAG_W, h_tag), ORANGE)]))
-        defs.append(o(("key", "hx tag"), ("value", component([
-            entry("state", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", tag), ("numFrames", 2),
-                                      ("handleName", "Data")), bounds((0, 0, TAG_W, h_tag))),
-            focus_entry()], [act("Mouse Down", "Toggle Switch", "Data")]))))
+        # on/off tags are one component per tag (see tag()); not Buttons, and no labels on top of them
         # knob cells
         for size, cw in ((KNOB, 250), (KNOB, 380), (KNOB_S, 215)):
             for bi in (False, True):
@@ -753,6 +794,7 @@ class Builder:
                                ("tabs", tabs))))
         with open(os.path.join(self.out, "TUI.json"), "w") as f:
             f.write(dump(tui) + "\n")
+        check_no_labels_over_touch(os.path.join(self.out, "TUI.json"))
         prog = [self.p(n)["index"] for n in ("Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8",
                                              "F1 Cutoff", "F1 Reso", "F1 Drive", "A WT Pos", "B WT Pos", "Delay Mix", "Reverb Mix", "Master")]
         ql = o(("version", 4), ("info", o(("version", 1), ("type", "CompleteDescription"))),
@@ -786,18 +828,23 @@ class Builder:
         cells = [c for c in st["cells"] if c.get("param")]
         anchor = st["toggle"] or (cells[0]["param"] if cells else st["cells"][0]["params"][0])
         if st["toggle"]:
-            self.discrete(st["toggle"])
-            out.append(entry("tag " + st["toggle"], "hx tag", o(("version", 1), ("handleName", "Data")),
+            # The whole tag is one touch cell: title and On/Off are drawn into its 2-frame film strip (no labels on top).
+            ch = self.discrete(st["toggle"])["choices"]
+            key = "hx tag " + st["toggle"]
+            if key not in self.comp_keys:
+                self.comp_keys.add(key)
+                strip = self.save("tag_%s.png" % slug(st["toggle"]), film([tag_frame(lines, ch[0], False), tag_frame(lines, ch[-1], True)]))
+                self.defs.append(o(("key", key), ("value", component([
+                    entry("state", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", strip),
+                                              ("numFrames", 2), ("handleName", "Data")), bounds((0, 0, TAG_W, h))),
+                    focus_entry()], [act("Mouse Down", "Toggle Switch", "Data")]))))
+            out.append(entry("tag " + st["toggle"], key, o(("version", 1), ("handleName", "Data")),
                              bounds((x, y, TAG_W, h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(st["toggle"]))]))
-            ty = y + h / 2 - 17 * len(lines) - 14
         else:
             ty = y + h / 2 - 17 * len(lines)
-        for i, line in enumerate(lines):
-            out.append(self.caption(line, anchor, (x, ty + i * 34, TAG_W, 34), 28, "Bold", TEXT,
-                                    "horizontallyCentred verticallyCentred"))
-        if st["toggle"]:
-            out.append(entry("tag state", "Label", label("Value", 24, "SemiBold", MUTED, "horizontallyCentred verticallyCentred"),
-                             bounds((x, ty + len(lines) * 34 + 6, TAG_W, 30)), remap=[("Data", self.h(st["toggle"]))]))
+            for i, line in enumerate(lines):
+                out.append(self.caption(line, anchor, (x, ty + i * 34, TAG_W, 34), 28, "Bold", TEXT,
+                                        "horizontallyCentred verticallyCentred"))
         return out
 
     def vis(self, c):
@@ -891,10 +938,10 @@ class Builder:
                 out.append(entry(c["param"], "hx tap menu", o(("version", 1), ("handleName", "Data")),
                                  bounds((x, by, w, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
             elif t == "toggle":
-                self.discrete(c["param"])
-                strip = self.save("toggle_onoff_%d.png" % w, film([box_image(w, box_h, OFF).convert("RGB"),
-                                                                   box_image(w, box_h, ORANGE).convert("RGB")]))
-                key = "hx toggle %d" % w
+                ch = self.discrete(c["param"])["choices"]
+                strip = self.save("toggle_%s.png" % slug(c["param"]), film([labelled_box(w, box_h, OFF, ch[0]),
+                                                                            labelled_box(w, box_h, ORANGE, ch[-1])]))
+                key = "hx toggle " + c["param"]
                 if key not in self.comp_keys:
                     self.comp_keys.add(key)
                     # same as the tag: film strip for the state, Toggle Switch on Mouse Down (then bank the Q-Links)
@@ -904,8 +951,6 @@ class Builder:
                         focus_entry()], [act("Mouse Down", "Toggle Switch", "Data"), act("Mouse Down", "Q-Link", "Data")]))))
                 out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
                                  bounds((x, by, w, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
-                out.append(entry("value", "Label", label("Value", 28, "Bold", just="horizontallyCentred verticallyCentred"),
-                                 bounds((x, by, w, box_h)), remap=[("Data", self.h(c["param"]))]))
             else:
                 bx = self.save("box_plain_%d.png" % w, box_image(w, box_h, SCREEN).convert("RGB"))
                 out.append(entry("box", "Image", o(("version", 2), ("imageType", "Regular"), ("colour", "0"), ("image", bx)),
@@ -924,13 +969,11 @@ class Builder:
             btns, caps, bx = [], [], 0
             for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
                 bw = sw + 6
-                on = self.save("seg_on_%d.png" % bw, box_image(bw, box_h, ORANGE).convert("RGB"))
-                off = self.save("seg_off_%d.png" % bw, box_image(bw, box_h, SCREEN).convert("RGB"))
+                on = self.save("seg_%d_%s_on.png" % (bw, slug(lab)), labelled_box(bw, box_h, ORANGE, lab, 24))
+                off = self.save("seg_%d_%s_off.png" % (bw, slug(lab)), labelled_box(bw, box_h, SCREEN, lab, 24))
                 btns.append(entry("seg %d" % i, "Button",
                                   o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i), ("numButtonsInGroup", n),
                                     ("handleName", "Data"), ("gestureBehaviour", "Hold")), bounds((bx, 0, bw, box_h))))
-                caps.append(self.caption(lab, c["param"], (x + bx, by, bw, box_h), 24, "Bold", TEXT,
-                                         "horizontallyCentred verticallyCentred"))
                 bx += bw - 3
             total = bx + 3
             if key not in self.comp_keys:
@@ -938,7 +981,6 @@ class Builder:
                 self.defs.append(o(("key", key), ("value", component(btns + [focus_entry()], [act("Mouse Down", "Q-Link", "Data")]))))
             out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
                              bounds((x, by, total, box_h), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
-            out += caps
         return out
 
     def qmap(self, page):
@@ -992,12 +1034,8 @@ def preview(builder, outdir):
             lines = st["title"].split("\n")
             if st["toggle"]:
                 on = step(st["toggle"], 2) == 1
-                st_img = Image.open(os.path.join(builder.out, "tag_onoff.png"))
+                st_img = Image.open(os.path.join(builder.out, "tag_%s.png" % slug(st["toggle"])))
                 tab.paste(st_img.crop((0, h if on else 0, TAG_W, 2 * h if on else h)), (x, y))
-                ty = y + h / 2 - 17 * len(lines) - 14
-                for i, line in enumerate(lines):
-                    txt(x, ty + i * 34, TAG_W, 34, line, 28, center=True)
-                txt(x, ty + len(lines) * 34 + 6, TAG_W, 30, shown(st["toggle"]), 24, 600, (46, 46, 46), center=True)
             else:
                 ty = y + h / 2 - 17 * len(lines)
                 for i, line in enumerate(lines):
@@ -1047,9 +1085,8 @@ def preview(builder, outdir):
                         txt(cx + 14, by, w - 50, 60, shown(c["param"]), 28)
                     elif t == "toggle":
                         on = step(c["param"], 2) == 1
-                        st_img = Image.open(os.path.join(builder.out, "toggle_onoff_%d.png" % w))
+                        st_img = Image.open(os.path.join(builder.out, "toggle_%s.png" % slug(c["param"])))
                         tab.paste(st_img.crop((0, 60 if on else 0, w, 120 if on else 60)), (cx, by))
-                        txt(cx, by, w, 60, shown(c["param"]), 28, center=True)
                     else:
                         tab.paste(Image.open(os.path.join(builder.out, "box_plain_%d.png" % w)), (cx, by))
                         txt(cx, by, w, 60, shown(c["param"]), 32, center=True)
@@ -1060,8 +1097,7 @@ def preview(builder, outdir):
                     bx = cx
                     for i, (lab, sw) in enumerate(zip(c["labels"], c["seg_w"])):
                         bw = sw + 6
-                        tab.paste(Image.open(os.path.join(builder.out, "seg_%s_%d.png" % ("on" if i == cur else "off", bw))), (bx, by))
-                        txt(bx, by, bw, 60, lab, 24, center=True)
+                        tab.paste(Image.open(os.path.join(builder.out, "seg_%d_%s_%s.png" % (bw, slug(lab), "on" if i == cur else "off"))), (bx, by))
                         bx += bw - 3
         canvas.paste(tab, (0, 110))
         dc = ImageDraw.Draw(canvas)

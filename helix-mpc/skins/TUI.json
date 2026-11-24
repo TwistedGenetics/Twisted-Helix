@@ -408,93 +408,6 @@
      }
     },
     {
-     "key": "hx tag",
-     "value": {
-      "version": 2,
-      "actions": [
-       {
-        "version": 1,
-        "onAction": "Mouse Down",
-        "handler": "Toggle Switch",
-        "handleName": "Data",
-        "additionalData": ""
-       }
-      ],
-      "backgroundData": {
-       "version": 1,
-       "focussed": {
-        "version": 1,
-        "colour": "0",
-        "image": ""
-       },
-       "unfocussed": {
-        "version": 1,
-        "colour": "0",
-        "image": ""
-       }
-      },
-      "ignoreMousePresses": false,
-      "disableCoarseDataWheel": false,
-      "componentsData": [
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "state",
-         "type": "Image",
-         "data": {
-          "version": 2,
-          "imageType": "FilmStrip",
-          "colour": "0",
-          "image": "tag_onoff.png",
-          "numFrames": 2,
-          "handleName": "Data"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "0 0 150 140"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "focus",
-         "type": "Focus",
-         "data": {
-          "version": 1,
-          "backgroundColour": "1aff8a2a",
-          "outlineColour": "fff26100",
-          "backgroundInset": 0.0,
-          "outlineThickness": 4.0
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "WhenFocussed",
-         "boundsType": "Proportional",
-         "bounds": "0 0 1 1"
-        }
-       }
-      ]
-     }
-    },
-    {
      "key": "hx knob88",
      "value": {
       "version": 2,
@@ -2151,6 +2064,267 @@
      }
     },
     {
+     "key": "hx tag Osc A",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_osc_a.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag Osc B",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_osc_b.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag Sub",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_sub.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
      "key": "hx seg Sub Octave",
      "value": {
       "version": 2,
@@ -2187,8 +2361,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_103.png",
-          "offImage": "seg_off_103.png",
+          "onImage": "seg_103_1_oct_on.png",
+          "offImage": "seg_103_1_oct_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 2,
           "handleName": "Data",
@@ -2216,8 +2390,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_103.png",
-          "offImage": "seg_off_103.png",
+          "onImage": "seg_103_2_oct_on.png",
+          "offImage": "seg_103_2_oct_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 2,
           "handleName": "Data",
@@ -2268,7 +2442,7 @@
      }
     },
     {
-     "key": "hx toggle 190",
+     "key": "hx toggle Sub Direct",
      "value": {
       "version": 2,
       "actions": [
@@ -2313,7 +2487,7 @@
           "version": 2,
           "imageType": "FilmStrip",
           "colour": "0",
-          "image": "toggle_onoff_190.png",
+          "image": "toggle_sub_direct.png",
           "numFrames": 2,
           "handleName": "Data"
          }
@@ -2329,6 +2503,455 @@
          "whenVisible": "Always",
          "boundsType": "Absolute",
          "bounds": "0 0 190 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag Noise",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_noise.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle Noise Track",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_noise_track.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 190 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle Noise Loop",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_noise_loop.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 190 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag Filter 1",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_filter_1.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag Filter 2",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_filter_2.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
         }
        },
        {
@@ -2398,8 +3021,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_102.png",
-          "offImage": "seg_off_102.png",
+          "onImage": "seg_102_retrig_on.png",
+          "offImage": "seg_102_retrig_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2427,8 +3050,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_85.png",
-          "offImage": "seg_off_85.png",
+          "onImage": "seg_85_free_on.png",
+          "offImage": "seg_85_free_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2456,8 +3079,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_107.png",
-          "offImage": "seg_off_107.png",
+          "onImage": "seg_107_1_shot_on.png",
+          "offImage": "seg_107_1_shot_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2544,8 +3167,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_102.png",
-          "offImage": "seg_off_102.png",
+          "onImage": "seg_102_retrig_on.png",
+          "offImage": "seg_102_retrig_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2573,8 +3196,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_85.png",
-          "offImage": "seg_off_85.png",
+          "onImage": "seg_85_free_on.png",
+          "offImage": "seg_85_free_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2602,8 +3225,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_107.png",
-          "offImage": "seg_off_107.png",
+          "onImage": "seg_107_1_shot_on.png",
+          "offImage": "seg_107_1_shot_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2690,8 +3313,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_102.png",
-          "offImage": "seg_off_102.png",
+          "onImage": "seg_102_retrig_on.png",
+          "offImage": "seg_102_retrig_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2719,8 +3342,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_85.png",
-          "offImage": "seg_off_85.png",
+          "onImage": "seg_85_free_on.png",
+          "offImage": "seg_85_free_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2748,8 +3371,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_107.png",
-          "offImage": "seg_off_107.png",
+          "onImage": "seg_107_1_shot_on.png",
+          "offImage": "seg_107_1_shot_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2836,8 +3459,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_102.png",
-          "offImage": "seg_off_102.png",
+          "onImage": "seg_102_retrig_on.png",
+          "offImage": "seg_102_retrig_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2865,8 +3488,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_85.png",
-          "offImage": "seg_off_85.png",
+          "onImage": "seg_85_free_on.png",
+          "offImage": "seg_85_free_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2894,8 +3517,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_107.png",
-          "offImage": "seg_off_107.png",
+          "onImage": "seg_107_1_shot_on.png",
+          "offImage": "seg_107_1_shot_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -2946,7 +3569,7 @@
      }
     },
     {
-     "key": "hx toggle 170",
+     "key": "hx toggle L1 Sync",
      "value": {
       "version": 2,
       "actions": [
@@ -2991,7 +3614,7 @@
           "version": 2,
           "imageType": "FilmStrip",
           "colour": "0",
-          "image": "toggle_onoff_170.png",
+          "image": "toggle_l1_sync.png",
           "numFrames": 2,
           "handleName": "Data"
          }
@@ -3007,6 +3630,991 @@
          "whenVisible": "Always",
          "boundsType": "Absolute",
          "bounds": "0 0 170 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle L2 Sync",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_l2_sync.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 170 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle L3 Sync",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_l3_sync.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 170 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle L4 Sync",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_l4_sync.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 170 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag Distortion",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_distortion.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag Delay",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_delay.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag Reverb",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_reverb.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag OTT",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_ott.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle Delay Sync",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_delay_sync.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 170 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag Chorus",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_chorus.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag Phaser",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_phaser.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx tag EQ",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_eq.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
         }
        },
        {
@@ -3076,8 +4684,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_102.png",
-          "offImage": "seg_off_102.png",
+          "onImage": "seg_102_retrig_on.png",
+          "offImage": "seg_102_retrig_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -3105,8 +4713,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_85.png",
-          "offImage": "seg_off_85.png",
+          "onImage": "seg_85_free_on.png",
+          "offImage": "seg_85_free_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -3134,8 +4742,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_107.png",
-          "offImage": "seg_off_107.png",
+          "onImage": "seg_107_1_shot_on.png",
+          "offImage": "seg_107_1_shot_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -3222,8 +4830,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_102.png",
-          "offImage": "seg_off_102.png",
+          "onImage": "seg_102_retrig_on.png",
+          "offImage": "seg_102_retrig_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -3251,8 +4859,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_85.png",
-          "offImage": "seg_off_85.png",
+          "onImage": "seg_85_free_on.png",
+          "offImage": "seg_85_free_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -3280,8 +4888,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_107.png",
-          "offImage": "seg_off_107.png",
+          "onImage": "seg_107_1_shot_on.png",
+          "offImage": "seg_107_1_shot_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -3332,7 +4940,7 @@
      }
     },
     {
-     "key": "hx toggle 150",
+     "key": "hx toggle Load",
      "value": {
       "version": 2,
       "actions": [
@@ -3377,7 +4985,7 @@
           "version": 2,
           "imageType": "FilmStrip",
           "colour": "0",
-          "image": "toggle_onoff_150.png",
+          "image": "toggle_load.png",
           "numFrames": 2,
           "handleName": "Data"
          }
@@ -3393,6 +5001,194 @@
          "whenVisible": "Always",
          "boundsType": "Absolute",
          "bounds": "0 0 150 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle Mutate 10%",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_mutate_10.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 170 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle Pad Browse",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_pad_browse.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 190 60"
         }
        },
        {
@@ -3462,8 +5258,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_101.png",
-          "offImage": "seg_off_101.png",
+          "onImage": "seg_101_osc_a_on.png",
+          "offImage": "seg_101_osc_a_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 2,
           "handleName": "Data",
@@ -3491,8 +5287,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_100.png",
-          "offImage": "seg_off_100.png",
+          "onImage": "seg_100_osc_b_on.png",
+          "offImage": "seg_100_osc_b_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 2,
           "handleName": "Data",
@@ -3510,6 +5306,100 @@
          "whenVisible": "Always",
          "boundsType": "Absolute",
          "bounds": "98 0 100 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle Make Table",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_make_table.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 170 60"
         }
        },
        {
@@ -3579,8 +5469,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_84.png",
-          "offImage": "seg_off_84.png",
+          "onImage": "seg_84_poly_on.png",
+          "offImage": "seg_84_poly_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -3608,8 +5498,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_99.png",
-          "offImage": "seg_off_99.png",
+          "onImage": "seg_99_mono_on.png",
+          "offImage": "seg_99_mono_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -3637,8 +5527,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_111.png",
-          "offImage": "seg_off_111.png",
+          "onImage": "seg_111_legato_on.png",
+          "offImage": "seg_111_legato_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -3725,8 +5615,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_114.png",
-          "offImage": "seg_off_114.png",
+          "onImage": "seg_114_always_on.png",
+          "offImage": "seg_114_always_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 2,
           "handleName": "Data",
@@ -3754,8 +5644,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_111.png",
-          "offImage": "seg_off_111.png",
+          "onImage": "seg_111_legato_on.png",
+          "offImage": "seg_111_legato_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 2,
           "handleName": "Data",
@@ -3842,8 +5732,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_107.png",
-          "offImage": "seg_off_107.png",
+          "onImage": "seg_107_oldest_on.png",
+          "offImage": "seg_107_oldest_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 2,
           "handleName": "Data",
@@ -3871,8 +5761,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_128.png",
-          "offImage": "seg_off_128.png",
+          "onImage": "seg_128_quietest_on.png",
+          "offImage": "seg_128_quietest_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 2,
           "handleName": "Data",
@@ -3959,8 +5849,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_82.png",
-          "offImage": "seg_off_82.png",
+          "onImage": "seg_82_eco_on.png",
+          "offImage": "seg_82_eco_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -3988,8 +5878,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_117.png",
-          "offImage": "seg_off_117.png",
+          "onImage": "seg_117_normal_on.png",
+          "offImage": "seg_117_normal_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -4017,8 +5907,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_on_88.png",
-          "offImage": "seg_off_88.png",
+          "onImage": "seg_88_high_on.png",
+          "offImage": "seg_88_high_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 3,
           "handleName": "Data",
@@ -4036,6 +5926,100 @@
          "whenVisible": "Always",
          "boundsType": "Absolute",
          "bounds": "193 0 88 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "1aff8a2a",
+          "outlineColour": "fff26100",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle CPU Guard",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_cpu_guard.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 190 60"
         }
        },
        {
@@ -4732,7 +6716,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Osc A",
-        "type": "hx tag",
+        "type": "hx tag Osc A",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -4754,85 +6738,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 13 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[OSC A]/Parameter 10"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 52 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 10"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 92 150 30"
        }
       },
       {
@@ -5142,7 +7047,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Osc B",
-        "type": "hx tag",
+        "type": "hx tag Osc B",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -5164,85 +7069,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 167 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[OSC B]/Parameter 30"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 206 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 30"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 246 150 30"
        }
       },
       {
@@ -7807,7 +9633,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Osc A",
-        "type": "hx tag",
+        "type": "hx tag Osc A",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -7829,85 +9655,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 13 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[OSC A]/Parameter 10"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 52 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 10"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 92 150 30"
        }
       },
       {
@@ -8414,7 +10161,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Osc B",
-        "type": "hx tag",
+        "type": "hx tag Osc B",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -8436,85 +10183,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 321 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[OSC B]/Parameter 30"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 360 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 30"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 400 150 30"
        }
       },
       {
@@ -9075,7 +10743,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Sub",
-        "type": "hx tag",
+        "type": "hx tag Sub",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -9097,85 +10765,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 13 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[SUB]/Parameter 50"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 52 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 50"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 92 150 30"
        }
       },
       {
@@ -9242,80 +10831,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "188 73 203 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[-1 Oct]/Parameter 52"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "188 73 103 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[-2 Oct]/Parameter 52"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "288 73 103 60"
        }
       },
       {
@@ -9426,7 +10941,7 @@
        "componentData": {
         "version": 1,
         "name": "Sub Direct",
-        "type": "hx toggle 190",
+        "type": "hx toggle Sub Direct",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -9454,50 +10969,8 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 55"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "737 73 190 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
         "name": "tag Noise",
-        "type": "hx tag",
+        "type": "hx tag Noise",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -9519,85 +10992,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 167 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[NOISE]/Parameter 58"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 206 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 58"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 246 150 30"
        }
       },
       {
@@ -9708,7 +11102,7 @@
        "componentData": {
         "version": 1,
         "name": "Noise Track",
-        "type": "hx toggle 190",
+        "type": "hx toggle Noise Track",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -9727,48 +11121,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "486 227 190 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 61"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "486 227 190 60"
@@ -9816,7 +11168,7 @@
        "componentData": {
         "version": 1,
         "name": "Noise Loop",
-        "type": "hx toggle 190",
+        "type": "hx toggle Noise Loop",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -9835,48 +11187,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "724 227 190 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 62"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "724 227 190 60"
@@ -10242,7 +11552,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Filter 1",
-        "type": "hx tag",
+        "type": "hx tag Filter 1",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -10264,85 +11574,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 13 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[FILTER 1]/Parameter 66"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 52 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 66"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 92 150 30"
        }
       },
       {
@@ -10887,7 +12118,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Filter 2",
-        "type": "hx tag",
+        "type": "hx tag Filter 2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -10909,85 +12140,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 321 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[FILTER 2]/Parameter 74"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 360 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 74"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 400 150 30"
        }
       },
       {
@@ -14813,117 +15965,6 @@
            "version": 1,
            "name": "Roboto",
            "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Retrig]/Parameter 112"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "959 73 102 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Free]/Parameter 112"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "1058 73 85 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[1-shot]/Parameter 112"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "1140 73 107 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
            "height": 28.0
           },
           "colour": "ff111111",
@@ -15403,117 +16444,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "959 227 288 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Retrig]/Parameter 121"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "959 227 102 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Free]/Parameter 121"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "1058 227 85 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[1-shot]/Parameter 121"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "1140 227 107 60"
        }
       },
       {
@@ -16025,117 +16955,6 @@
            "version": 1,
            "name": "Roboto",
            "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Retrig]/Parameter 130"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "959 381 102 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Free]/Parameter 130"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "1058 381 85 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[1-shot]/Parameter 130"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "1140 381 107 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
            "height": 28.0
           },
           "colour": "ff111111",
@@ -16616,117 +17435,6 @@
         "boundsType": "Absolute",
         "bounds": "959 535 288 60"
        }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Retrig]/Parameter 139"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "959 535 102 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Free]/Parameter 139"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "1058 535 85 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[1-shot]/Parameter 139"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "1140 535 107 60"
-       }
       }
      ]
     },
@@ -16861,7 +17569,7 @@
        "componentData": {
         "version": 1,
         "name": "L1 Sync",
-        "type": "hx toggle 170",
+        "type": "hx toggle L1 Sync",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -16880,48 +17588,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "188 73 170 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 113"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "188 73 170 60"
@@ -17204,7 +17870,7 @@
        "componentData": {
         "version": 1,
         "name": "L2 Sync",
-        "type": "hx toggle 170",
+        "type": "hx toggle L2 Sync",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -17223,48 +17889,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "188 227 170 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 122"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "188 227 170 60"
@@ -17547,7 +18171,7 @@
        "componentData": {
         "version": 1,
         "name": "L3 Sync",
-        "type": "hx toggle 170",
+        "type": "hx toggle L3 Sync",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -17566,48 +18190,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "188 381 170 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 131"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "188 381 170 60"
@@ -17890,7 +18472,7 @@
        "componentData": {
         "version": 1,
         "name": "L4 Sync",
-        "type": "hx toggle 170",
+        "type": "hx toggle L4 Sync",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -17909,48 +18491,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "188 535 170 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 140"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "188 535 170 60"
@@ -18213,7 +18753,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Distortion",
-        "type": "hx tag",
+        "type": "hx tag Distortion",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -18235,85 +18775,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 13 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[DIST]/Parameter 312"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 52 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 312"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 92 150 30"
        }
       },
       {
@@ -18623,7 +19084,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Delay",
-        "type": "hx tag",
+        "type": "hx tag Delay",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -18645,85 +19106,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 167 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[DELAY]/Parameter 330"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 206 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 330"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 246 150 30"
        }
       },
       {
@@ -19111,7 +19493,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Reverb",
-        "type": "hx tag",
+        "type": "hx tag Reverb",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -19133,85 +19515,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 321 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[REVERB]/Parameter 338"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 360 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 338"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 400 150 30"
        }
       },
       {
@@ -19521,7 +19824,7 @@
        "componentData": {
         "version": 1,
         "name": "tag OTT",
-        "type": "hx tag",
+        "type": "hx tag OTT",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -19543,85 +19846,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 475 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[OTT]/Parameter 345"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 514 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 345"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 554 150 30"
        }
       },
       {
@@ -20150,7 +20374,7 @@
        "componentData": {
         "version": 1,
         "name": "Delay Sync",
-        "type": "hx toggle 170",
+        "type": "hx toggle Delay Sync",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -20169,48 +20393,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "188 227 170 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 332"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "188 227 170 60"
@@ -20823,7 +21005,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Chorus",
-        "type": "hx tag",
+        "type": "hx tag Chorus",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -20845,85 +21027,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 13 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[CHORUS]/Parameter 319"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 52 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 319"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 92 150 30"
        }
       },
       {
@@ -21233,7 +21336,7 @@
        "componentData": {
         "version": 1,
         "name": "tag Phaser",
-        "type": "hx tag",
+        "type": "hx tag Phaser",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -21255,85 +21358,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 167 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[PHASER]/Parameter 324"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 206 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 324"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 246 150 30"
        }
       },
       {
@@ -21799,7 +21823,7 @@
        "componentData": {
         "version": 1,
         "name": "tag EQ",
-        "type": "hx tag",
+        "type": "hx tag EQ",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -21821,85 +21845,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "13 13 150 140"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[EQ]/Parameter 351"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 52 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "tag state",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "SemiBold",
-           "height": 24.0
-          },
-          "colour": "ff2e2e2e",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 351"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 92 150 30"
        }
       },
       {
@@ -33884,117 +33829,6 @@
            "version": 1,
            "name": "Roboto",
            "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Retrig]/Parameter 149"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "784 227 102 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Free]/Parameter 149"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "883 227 85 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[1-shot]/Parameter 149"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "965 227 107 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
            "height": 28.0
           },
           "colour": "ff111111",
@@ -34214,117 +34048,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "784 381 288 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Retrig]/Parameter 184"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "784 381 102 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Free]/Parameter 184"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "883 381 85 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[1-shot]/Parameter 184"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "965 381 107 60"
        }
       }
      ]
@@ -43056,7 +42779,7 @@
        "componentData": {
         "version": 1,
         "name": "Load",
-        "type": "hx toggle 150",
+        "type": "hx toggle Load",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -43075,48 +42798,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "616 73 150 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 449"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "616 73 150 60"
@@ -43164,7 +42845,7 @@
        "componentData": {
         "version": 1,
         "name": "Mutate 10%",
-        "type": "hx toggle 170",
+        "type": "hx toggle Mutate 10%",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -43183,48 +42864,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "814 73 170 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 452"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "814 73 170 60"
@@ -43414,7 +43053,7 @@
        "componentData": {
         "version": 1,
         "name": "Pad Browse",
-        "type": "hx toggle 190",
+        "type": "hx toggle Pad Browse",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -43433,48 +43072,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "188 227 190 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 450"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "188 227 190 60"
@@ -44021,80 +43618,6 @@
           "font": {
            "version": 1,
            "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Osc A]/Parameter 456"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "832 73 101 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Osc B]/Parameter 456"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "930 73 100 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
            "style": "SemiBold",
            "height": 24.0
           },
@@ -44124,7 +43647,7 @@
        "componentData": {
         "version": 1,
         "name": "Make Table",
-        "type": "hx toggle 170",
+        "type": "hx toggle Make Table",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -44143,48 +43666,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "1077 73 170 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 457"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "1077 73 170 60"
@@ -44411,117 +43892,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "445 73 288 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Poly]/Parameter 1"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "445 73 84 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Mono]/Parameter 1"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "526 73 99 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Legato]/Parameter 1"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "622 73 111 60"
        }
       },
       {
@@ -44772,80 +44142,6 @@
           "font": {
            "version": 1,
            "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Always]/Parameter 4"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "188 227 114 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Legato]/Parameter 4"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "299 227 111 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
            "style": "SemiBold",
            "height": 24.0
           },
@@ -44897,80 +44193,6 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "445 227 232 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Oldest]/Parameter 5"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "445 227 107 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Quietest]/Parameter 5"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "549 227 128 60"
        }
       },
       {
@@ -45221,117 +44443,6 @@
           "font": {
            "version": 1,
            "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Eco]/Parameter 8"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "188 381 82 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[Normal]/Parameter 8"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "267 381 117 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 24.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[High]/Parameter 8"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "381 381 88 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
            "style": "SemiBold",
            "height": 24.0
           },
@@ -45361,7 +44472,7 @@
        "componentData": {
         "version": 1,
         "name": "CPU Guard",
-        "type": "hx toggle 190",
+        "type": "hx toggle CPU Guard",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -45380,48 +44491,6 @@
         "version": 1,
         "acceptsHWFocus": "Yes",
         "showWhenDataModelInvalid": "Hide",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "517 381 190 60"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "value",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff111111",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Value",
-         "handleName": "Data"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": [
-         {
-          "key": "Data",
-          "value": "Parameter 9"
-         }
-        ]
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "517 381 190 60"
