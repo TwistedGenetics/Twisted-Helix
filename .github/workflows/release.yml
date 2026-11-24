@@ -34,7 +34,7 @@ jobs:
         with: { name: mpc, path: dist/*.zip }
   desktop-macos:
     needs: version
-    runs-on: macos-14
+    runs-on: macos-15   # macos-14 was retired by GitHub on 2026-11-02
     env:
       V: ${{ needs.version.outputs.v }}
     steps:
