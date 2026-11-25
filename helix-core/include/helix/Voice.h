@@ -100,7 +100,8 @@ private:
     float oscL_[2][kCtrlBlock], oscR_[2][kCtrlBlock], oscM_[2][kCtrlBlock];
     float prevM_[2][kCtrlBlock];
     float sub_buf_[kCtrlBlock], noise_buf_[kCtrlBlock];
-    float mo_buf_[kCtrlBlock];     // modulation oscillator (sine, -1..1)
+    float mo_buf_[kCtrlBlock];
+    float driftPhase_ = 0.0f, driftFrom_ = 0.0f, driftTo_ = 0.0f;   // Reese drift     // modulation oscillator (sine, -1..1)
     float moPhase_ = 0.0f;
     bool moOn_ = false;
     float busL_[2][kCtrlBlock], busR_[2][kCtrlBlock], directL_[kCtrlBlock], directR_[kCtrlBlock];

@@ -886,6 +886,13 @@ public:
         for (int i = 0; i < numThemes(); ++i) themeBox_->addItem(themeAt(i).name, i + 1);
         themeBox_->setSelectedId(themeIndex() + 1, juce::dontSendNotification);
         themeBox_->onChange = [this] { const int i = themeBox_->getSelectedId() - 1; juce::MessageManager::callAsync([e = &editor_, i] { e->applyTheme(i); }); };
+        // Reese: drifting detune between Osc A and B, the Growl macro and its amounts, Phase Lock
+        reese_ = own(std::make_unique<PanelFrame>("Reese   (Growl moves cutoff, drive, positions and warps together)"));
+        reeseLock_ = toggle(P_RS_LOCK, reese_, "Phase Lock");
+        reeseTop_ = {knob(P_RS_DRIFT, reese_, "Drift"), knob(P_RS_DRIFT_RATE, reese_, "Drift Rate"),
+                     knob(P_RS_GROWL, reese_, "Growl")};
+        reeseAmt_ = {knob(P_RS_G_CUT, reese_, "Cutoff", ParamKnob::Size::Small), knob(P_RS_G_DRIVE, reese_, "Drive", ParamKnob::Size::Small),
+                     knob(P_RS_G_POS, reese_, "Position", ParamKnob::Size::Small), knob(P_RS_G_WARP, reese_, "Warp", ParamKnob::Size::Small)};
         presets_ = own(std::make_unique<PanelFrame>("Presets"));
         list_ = own(std::make_unique<juce::ListBox>("presets", this), presets_);
         list_->setRowHeight(28);
@@ -901,7 +908,15 @@ public:
         layoutRow(row.withHeight(44), {poly_, glideMode_, steal_}, 12);
         c.removeFromTop(8);
         layoutRow(c, {vk_[0], vk_[1], vk_[2], vk_[3]});
-        engine_->setBounds(0, 248, 580, 460);
+        engine_->setBounds(0, 248, 580, 200);
+        reese_->setBounds(0, 456, 580, 252);
+        {
+            auto rc = reese_->content();
+            auto top = rc.removeFromTop(120);
+            reeseLock_->setBounds(top.removeFromRight(120).withSizeKeepingCentre(110, 26));
+            layoutRow(top, {reeseTop_[0], reeseTop_[1], reeseTop_[2]});
+            layoutRow(rc, {reeseAmt_[0], reeseAmt_[1], reeseAmt_[2], reeseAmt_[3]});
+        }
         auto e = engine_->content();
         auto r1 = e.removeFromTop(52);
         quality_->setBounds(r1.removeFromLeft(180).withHeight(44));
@@ -976,6 +991,9 @@ private:
     std::vector<ParamKnob*> vk_;
     juce::ComboBox* themeBox_;
     juce::ListBox* list_;
+    PanelFrame* reese_ = nullptr;
+    ParamToggle* reeseLock_ = nullptr;
+    std::vector<ParamKnob*> reeseTop_, reeseAmt_;
     juce::TextButton load_{"Load"}, rescan_{"Refresh list"};
     juce::Rectangle<int> cpuArea_;
     int shownRows_ = -1;

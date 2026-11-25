@@ -664,6 +664,13 @@ def pages():
         S("FILTER FM", [PICK("MO Filter FM", "Target", cols=4, labels=["Off", "F1", "F2", "F1 + F2"], where="left", cap_w=80),
                         K("MO FM Amt", "Amount")])])
 
+    # Reese: drift between Osc A and B, Growl (one knob moving cutoff, drive, positions, warps), Phase Lock
+    page(0, 5, "REESE", [
+        S("REESE", [K("Reese Drift", "Drift"), K("Drift Rate", "Drift Rate"), K("Growl", "Growl"),
+                    TG("Phase Lock", "Phase Lock", 200)]),
+        S("GROWL\nMOVES", [K("Growl Cutoff", "Cutoff", bi=True), K("Growl Drive", "Drive"), K("Growl Pos", "Position", bi=True),
+                           K("Growl Warp", "Warp")])])
+
     # ---- FILTER
     def filt(n):
         # The screen is one list per filter: the 13 HELIX types, then every Mega model x type (kept in step with the

@@ -189,6 +189,37 @@ void Voice::computeModulation(const EngineContext& ctx, int n)
         for (int l = 0; l < kNumLfos; ++l)
             if (pi == P_L1_RATE + l * lOff) lfoRateOffset_[l] = offsets_[k].norm;   // applied next block
     }
+
+    // Reese growl: one amount moves cutoff, drive, both wavetable positions and both first warps together
+    const float g = vp_[P_RS_GROWL];
+    if (g > 0.0f)
+    {
+        vp_[P_F1_CUTOFF] = clamp(vp_[P_F1_CUTOFF] * fastExp2(g * vp_[P_RS_G_CUT]), 20.0f, 20000.0f);
+        vp_[P_F1_DRIVE] = clamp(vp_[P_F1_DRIVE] + g * vp_[P_RS_G_DRIVE], 0.0f, 1.0f);
+        const float dp = g * vp_[P_RS_G_POS], dw = g * vp_[P_RS_G_WARP];
+        vp_[P_A_POS] = clamp(vp_[P_A_POS] + dp, 0.0f, 1.0f);
+        vp_[P_B_POS] = clamp(vp_[P_B_POS] + dp, 0.0f, 1.0f);
+        vp_[P_A_W1_AMT] = clamp(vp_[P_A_W1_AMT] + dw, 0.0f, 1.0f);
+        vp_[P_B_W1_AMT] = clamp(vp_[P_B_W1_AMT] + dw, 0.0f, 1.0f);
+    }
+
+    // Reese drift: a slow random walk per voice; Osc A goes up by it and Osc B down
+    const float drift = vp_[P_RS_DRIFT];
+    if (drift > 0.0f)
+    {
+        const float rate = clamp(vp_[P_RS_DRIFT_RATE], 0.01f, 8.0f);
+        driftPhase_ += rate * (float)n / sr_;
+        if (driftPhase_ >= 1.0f || fresh_)
+        {
+            driftPhase_ = fresh_ ? 0.0f : driftPhase_ - std::floor(driftPhase_);
+            driftFrom_ = fresh_ ? rng_.bi() : driftTo_;
+            driftTo_ = rng_.bi();
+        }
+        const float u = driftPhase_ * driftPhase_ * (3.0f - 2.0f * driftPhase_);
+        const float c = drift * 0.25f * (driftFrom_ + (driftTo_ - driftFrom_) * u);   // semitones (25 cents max)
+        pitchModA_ += c;
+        pitchModB_ -= c;
+    }
 }
 
 // ------------------------------------------------------------------------------------------- render
@@ -304,7 +335,9 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
         for (int s = 0; s < 2; ++s)
         {
             const int o = s == 0 ? 0 : (P_B_ON - P_A_ON);
-            osc_[s].start(vp[P_A_PHASE + o], vp[P_A_RAND + o], rng_);
+            // Phase Lock: every note starts at phase 0 with no random spread (the same punch on every hit)
+            if (vp[P_RS_LOCK] >= 0.5f) osc_[s].start(0.0f, 0.0f, rng_);
+            else osc_[s].start(vp[P_A_PHASE + o], vp[P_A_RAND + o], rng_);
         }
         sub_.start(0.0f);
         noise_.start(rng_, vp[P_NOISE_LOOP] >= 0.5f);

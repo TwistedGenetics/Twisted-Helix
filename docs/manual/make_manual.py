@@ -671,6 +671,19 @@ def chapter_subnoise():
                  ["Noise Loop", "On: the texture loops for as long as the note lasts, starting at a random point each time. "
                   "Off: it plays once from the start (useful for clicks and transients)."],
                  ["Noise &gt; F1 / &gt; F2", "Sends to the filters."]], [36, 134])]
+    s += H2("Reese")
+    s += [P("A Reese is two (or more) saws detuned against each other; what makes the classic jungle ones move is that the "
+            "detune never sits still. The <b>REESE</b> page (OSC key; GLOBAL tab on the computer) adds three things:"),
+          table([["Control", "What it does"],
+                 ["Drift / Drift Rate", "Osc A and Osc B pull apart and back by up to 25 cents (Drift), wandering at Drift "
+                  "Rate, so the beating speeds up and slows down by itself. Each note wanders its own way. Turn Osc B on "
+                  "(a saw table, same octave) to hear it; with unison as well it gets huge."],
+                 ["Growl", "One knob, and a matrix destination, that moves Filter 1's cutoff, its drive, both wavetable "
+                  "positions and both first warps together, by the four <b>Growl</b> amounts below it (Cutoff in octaves, "
+                  "Drive, Position, Warp). Put an LFO or the performer on Growl for talking, wobbling neuro."],
+                 ["Phase Lock", "Every note starts both oscillators and all unison voices at the same phase, so every hit "
+                  "has the same punch (the random phase spread is skipped). Off: each note starts differently, which is "
+                  "warmer for pads."]], [32, 138])]
     s += H2("Modulation oscillator")
     s += [P("The mod oscillator works like Massive's. It is a sine wave you never hear directly. It plays at the "
             "note's pitch plus <b>Pitch</b> and follows glide and pitch bend. It changes the other sounds in four "
