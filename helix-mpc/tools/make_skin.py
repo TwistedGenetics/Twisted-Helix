@@ -497,6 +497,22 @@ def labelled_box(w, h, fill, text, size=28):
     draw_text(im, text, w / 2, h / 2, size, 700, INK if is_light(fill) else LINE)
     return im
 
+_fr = lambda x: x - math.floor(x)
+# The performer curve library (helix-core ModSystem.cpp perfCurve), by choice name.
+PERF_CURVES = {
+    "Hold": lambda u: 0.75, "Ramp Up": lambda u: u, "Ramp Down": lambda u: 1 - u,
+    "Smooth": lambda u: 0.5 - 0.5 * math.cos(math.pi * u), "Triangle": lambda u: 1 - abs(2 * u - 1),
+    "Exp": lambda u: (1 - u) ** 3, "Sine": lambda u: math.sin(math.pi * u), "Exp Up": lambda u: u ** 3,
+    "Log Up": lambda u: 1 - (1 - u) ** 3, "Log Down": lambda u: 1 - u ** 3,
+    "S Up": lambda u: u * u * (3 - 2 * u), "S Down": lambda u: (1 - u) ** 2 * (1 + 2 * u),
+    "Gate 1/2": lambda u: 1.0 if u < 0.5 else 0.0, "Gate 1/4": lambda u: 1.0 if u < 0.25 else 0.0,
+    "Gate 3/4": lambda u: 1.0 if u < 0.75 else 0.0, "Saw x2": lambda u: _fr(2 * u),
+    "Saw Dn x2": lambda u: 1 - _fr(2 * u), "Tri x2": lambda u: 1 - abs(2 * _fr(2 * u) - 1),
+    "Sine x2": lambda u: abs(math.sin(2 * math.pi * u)), "Pulse x2": lambda u: 1.0 if _fr(2 * u) < 0.5 else 0.0,
+    "Stairs Up": lambda u: math.floor(u * 4) / 3, "Stairs Dn": lambda u: 1 - math.floor(u * 4) / 3,
+    "Bounce": lambda u: abs(math.sin(3 * math.pi * u)) * (1 - u), "Off": lambda u: 0.0,
+}
+
 def icon_box(w, h, fill, name):
     """A picker button showing a step shape as a small curve (performer step shapes)."""
     im, d = aa_canvas(w, h, fill + (255,))
@@ -505,10 +521,8 @@ def icon_box(w, h, fill, name):
     l, r_, t, b = 14 * s, (w - 14) * s, 14 * s, (h - 14) * s
     X = lambda u: l + (r_ - l) * u
     Y = lambda v: b - (b - t) * v
-    f = {"Hold": lambda u: 0.75, "Ramp Up": lambda u: u, "Ramp Down": lambda u: 1 - u,
-         "Smooth": lambda u: 0.5 - 0.5 * math.cos(math.pi * u), "Triangle": lambda u: 1 - abs(2 * u - 1),
-         "Exp": lambda u: u ** 3}.get(name, lambda u: 0.5)
-    pts = [(X(i / 40), Y(f(i / 40))) for i in range(41)]
+    f = PERF_CURVES.get(name, lambda u: 0.5)
+    pts = [(X(i / 80), Y(f(min(i / 80, 0.9999)))) for i in range(81)]
     d.line(pts, fill=(INK if is_light(fill) else LINE) + (255,), width=int(4 * s), joint="curve")
     return finish(im, w, h).convert("RGB")
 
@@ -522,6 +536,9 @@ def background(page):
         d.rectangle((tx0, y + BORDER, tx0 + TAG_W - 1, y + STRIP_H - BORDER - 1), fill=FRAME)
         d.rectangle((tx0 + TAG_W, y + BORDER, tx0 + TAG_W + BORDER - 1, y + STRIP_H - BORDER - 1), fill=GROUND)
         for c in st["cells"]:
+            if c["type"] == "bar":
+                x, yy, w, h = c["rect"]
+                draw_text(im, str(c["num"]), x + 16, yy + h - 15, 24, 700, LINE)
             if c["type"] == "env":
                 x, yy, w, h = c["rect"]
                 d.rectangle((x, yy, x + w - 1, yy + h - 1), fill=SCREEN, outline=BTN_EDGE, width=3)
@@ -544,6 +561,10 @@ def SEG(param, name, labels, widths=None):
     return {"type": "seg", "param": param, "name": name, "labels": labels, "widths": widths}
 def ENV(a, d, s, r, w=196):
     return {"type": "env", "params": (a, d, s, r), "w": w}
+def BAR(param, shape, num, w=118):
+    """A vertical bipolar bar you drag up and down (Massive-style step drawing), with the step number and the step's
+    curve under it."""
+    return {"type": "bar", "param": param, "shape": shape, "num": num, "w": w}
 def VAL(param, name, w=230):
     return {"type": "readout", "param": param, "name": name, "w": w}
 def PICK(param, caption=None, cols=None, labels=None, icons=False, where="top", bw=None, cap_w=None):
@@ -684,10 +705,12 @@ def pages():
         page(6, sub, "P%d STEP" % p_, [S("P%d\n%d-%d" % (p_, r * 4 + 1, r * 4 + 4),
                                          [K("P%d Step %d" % (p_, i), "Step %d" % i, bi=True)
                                           for i in range(r * 4 + 1, r * 4 + 5)]) for r in range(4)])
-        page(6, sub + 1, "P%d SHAPE" % p_,
-             [S("P%d SHAPE\n%d-%d" % (p_, 4 * r + 1, 4 * r + 4),
-                [PICK("P%d Shape %d" % (p_, i), "Step\n%d" % i, cols=3, icons=True, where="left", cap_w=64)
-                 for i in range(4 * r + 1, 4 * r + 5)]) for r in range(4)])
+        # Massive-style: choose a step, then its curve from the library and its level
+        page(6, sub + 1, "P%d DRAW" % p_,
+             [S("P%d\n1-8" % p_, [BAR("P%d Step %d" % (p_, i), "P%d Shape %d" % (p_, i), i) for i in range(1, 9)]),
+              S("P%d\n9-16" % p_, [BAR("P%d Step %d" % (p_, i), "P%d Shape %d" % (p_, i), i) for i in range(9, 17)]),
+              S("EDIT\nSTEP", [PICK("P%d Edit Step" % p_, None, cols=16, labels=[str(i) for i in range(1, 17)], bw=66)]),
+              S("CURVE", [PICK("P%d Curve" % p_, None, cols=12, icons=True, bw=86)])])
         sub += 2
 
     # ---- MACROS
@@ -722,6 +745,7 @@ def text_w(s, size, weight=600):
 def cell_size(c):
     t = c["type"]
     if t == "knob": return c["w"], 126
+    if t == "bar": return c["w"], 130
     if t == "knobS": return 215, 126
     if t == "screen": return c["w"], 122
     if t == "picture": return c["w"], 122
@@ -733,7 +757,7 @@ def cell_size(c):
         cols = c["cols"] or n
         rows = -(-n // cols)
         if c["icons"]:
-            bw = 66
+            bw = c["bw"] or 66
         else:
             bw = c["bw"] or max(76, int(max(text_w(l, 24, 700) for l in labels) + 28))
         gw, gh = cols * bw - (cols - 1) * 3, rows * PICK_H - (rows - 1) * 3
@@ -902,6 +926,23 @@ class Builder:
             self.save(name, film([knob_frame(size, i / (FRAMES - 1), bi) for i in range(FRAMES)]))
         return name
 
+    def curve_strip(self, choices, w, h):
+        name = "curves_%dx%d.png" % (w, h)
+        if name not in self.images:
+            frames = []
+            for ch in choices:
+                im, d = aa_canvas(w, h, STRIP + (255,))
+                ss = SS
+                X = lambda u: (4 + (w - 8) * u) * ss
+                Y = lambda v: (h - 4 - (h - 8) * v) * ss
+                f = PERF_CURVES.get(ch, lambda u: 0.5)
+                d.line([(X(i / 60), Y(f(min(i / 60, 0.9999)))) for i in range(61)], fill=LED_ON + (255,), width=int(3 * ss),
+                       joint="curve")
+                frames.append(finish(im, w, h).convert("RGBA"))
+            self.save(name, film(frames))
+            self.images[name + "#n"] = len(frames)
+        return name, self.images[name + "#n"]
+
     def screen_strip(self, kind, choices, w, h=122):
         name = "scr_%s_%d.png" % (kind, w)
         if name not in self.images:
@@ -1045,6 +1086,25 @@ class Builder:
             out.append(entry(c["param"], comp, o(("version", 1), ("handleName", "Data")),
                              bounds((x - FM, y - FM, w + 2 * FM, h + 2 * FM), focus="Yes", invalid="Hide"),
                              remap=[("Data", self.h(c["param"]))]))
+        elif t == "bar":
+            bh = h - 34
+            key = "hx bar %dx%d" % (w, bh)
+            if key not in self.comp_keys:
+                self.comp_keys.add(key)
+                sl = o(("version", 2), ("sliderType", "ColourBar"), ("direction", "Vertical"),
+                       ("backgroundColour", argb(SCREEN)), ("outlineColour", argb(BTN_EDGE)), ("valueColour", argb(ACCENT)),
+                       ("isBipolar", True), ("handleName", "Data"))
+                ov = OVERLAYS["bi"]
+                self.defs.append(o(("key", key), ("value", component(
+                    [focus_entry(), entry("bar", "Slider", sl, bounds((FM, FM, w - 2 * FM, bh - 2 * FM)))],
+                    [act("Double Click", "Show Overlay", "Data", ov), act("Enter Pressed", "Show Overlay", "Data", ov)]))))
+            out.append(entry("bar " + c["param"], key, o(("version", 1), ("handleName", "Data")),
+                             bounds((x, y, w, bh), focus="Yes", invalid="Hide"), remap=[("Data", self.h(c["param"]))]))
+            sp = self.p(c["shape"])
+            fname, n = self.curve_strip(sp["choices"], w - 36, 30)
+            out.append(entry("curve", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", fname),
+                                                  ("numFrames", n), ("handleName", "Data")),
+                             bounds((x + 34, y + h - 30, w - 36, 30), invalid="Hide"), remap=[("Data", self.h(c["shape"]))]))
         elif t == "picture":
             fname, n = self.screen_strip(c["kind"], [], w, h)
             out.append(entry("picture", "Image", o(("version", 2), ("imageType", "Regular"), ("colour", "0"), ("image", fname)),
@@ -1182,7 +1242,7 @@ class Builder:
         for r, st in enumerate(page["strips"]):
             col = 0
             for c in st["cells"]:
-                if c["type"] in ("env", "picture", "readout"):
+                if c["type"] in ("env", "picture", "readout", "bar"):
                     continue
                 if col > 3:
                     raise SystemExit("page %s strip %s has more than four Q-Link controls" % (page["name"], st["title"]))
@@ -1241,6 +1301,18 @@ def preview(builder, outdir):
                 if c.get("vis"):
                     pn, i, n = c["vis"]
                     hidden = step(pn, n) != i
+                if t == "bar":
+                    bh = hh - 34
+                    pdef = builder.p(c["param"])
+                    v = val(c["param"])
+                    d.rectangle((cx + FM, cy + FM, cx + w - FM, cy + bh - FM), fill=SCREEN, outline=BTN_EDGE, width=2)
+                    mid = cy + bh / 2
+                    top = cy + FM + (bh - 2 * FM) * (1 - v)
+                    d.rectangle((cx + FM + 2, min(mid, top), cx + w - FM - 2, max(mid, top)), fill=ACCENT)
+                    strip = Image.open(os.path.join(builder.out, "curves_%dx30.png" % (w - 36)))
+                    fi = int(round(val(c["shape"]) * (len(builder.p(c["shape"])["choices"]) - 1)))
+                    tab.paste(strip.crop((0, fi * 30, w - 36, fi * 30 + 30)), (cx + 34, cy + hh - 30))
+                    continue
                 if t in ("knob", "knobS"):
                     size = KNOB if t == "knob" else KNOB_S
                     if hidden:

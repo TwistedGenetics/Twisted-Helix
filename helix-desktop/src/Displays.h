@@ -75,19 +75,51 @@ private:
 };
 
 // Performer steps as bars with their step shapes; drag to set values, right-click a bar to choose its shape.
-class PerformerView : public juce::Component
+// Massive-style curve library: 24 curves. Click one to choose it (then click a step's lane under the performer to
+// paint it there), or drag it onto a step.
+class CurveLibrary : public juce::Component, public juce::SettableTooltipClient
+{
+public:
+    CurveLibrary() = default;
+    void paint(juce::Graphics&) override;
+    void mouseDown(const juce::MouseEvent&) override;
+    void mouseDrag(const juce::MouseEvent&) override;
+    void mouseUp(const juce::MouseEvent&) override { dragging_ = false; }
+    int selected() const { return selected_; }
+    std::function<void()> onSelect;
+private:
+    int cellAt(juce::Point<float>) const;
+    juce::Rectangle<float> cell(int i) const;
+    int selected_ = 0;
+    bool dragging_ = false;
+};
+
+// Draws curve c (perfCurve) into r.
+void drawPerfCurve(juce::Graphics& g, int curve, juce::Rectangle<float> r, juce::Colour col, float thickness);
+
+class PerformerView : public juce::Component, public juce::DragAndDropTarget
 {
 public:
     PerformerView(HelixProcessor& p, int perf) : proc_(p), perf_(perf) {}
+    void setLibrary(CurveLibrary* lib) { lib_ = lib; }
     void paint(juce::Graphics&) override;
     void mouseDown(const juce::MouseEvent&) override;
     void mouseDrag(const juce::MouseEvent&) override;
     void refresh() { repaint(); }
+    bool isInterestedInDragSource(const SourceDetails&) override;
+    void itemDragEnter(const SourceDetails& d) override { itemDragMove(d); }
+    void itemDragMove(const SourceDetails&) override;
+    void itemDragExit(const SourceDetails&) override { hoverStep_ = -1; repaint(); }
+    void itemDropped(const SourceDetails&) override;
 private:
     void setStep(const juce::MouseEvent&);
-    juce::Rectangle<float> plot() const { return getLocalBounds().toFloat().reduced(8.0f, 10.0f); }
+    int stepAt(float x) const;
+    juce::Rectangle<float> plot() const { return getLocalBounds().toFloat().reduced(8.0f, 10.0f).withTrimmedBottom(22.0f); }
+    juce::Rectangle<float> lane() const { return getLocalBounds().toFloat().reduced(8.0f, 6.0f).removeFromBottom(20.0f); }
     HelixProcessor& proc_;
     int perf_;
+    CurveLibrary* lib_ = nullptr;
+    int hoverStep_ = -1;
 };
 
 void drawDisplayBackground(juce::Graphics& g, juce::Rectangle<float> r);

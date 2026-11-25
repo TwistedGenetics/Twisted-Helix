@@ -547,6 +547,86 @@ void LfoView::mouseDoubleClick(const juce::MouseEvent& e)
 
 // ------------------------------------------------------------------------------------------- performer
 
+void drawPerfCurve(juce::Graphics& g, int curve, juce::Rectangle<float> r, juce::Colour col, float thickness)
+{
+    juce::Path p;
+    const int n = 48;
+    for (int i = 0; i <= n; ++i)
+    {
+        const float t = juce::jmin((float)i / (float)n, 0.9999f);
+        const float x = r.getX() + r.getWidth() * (float)i / (float)n;
+        const float y = r.getBottom() - r.getHeight() * (curve == 0 ? 0.75f : perfCurve(curve, t));
+        if (i == 0) p.startNewSubPath(x, y); else p.lineTo(x, y);
+    }
+    g.setColour(col);
+    g.strokePath(p, juce::PathStrokeType(thickness, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+}
+
+// ------------------------------------------------------------------------------------------- curve library
+
+static constexpr int kLibCols = 12;
+
+juce::Rectangle<float> CurveLibrary::cell(int i) const
+{
+    auto r = getLocalBounds().toFloat();
+    const int rows = (kNumPerfCurves + kLibCols - 1) / kLibCols;
+    const float w = r.getWidth() / (float)kLibCols, h = r.getHeight() / (float)rows;
+    return {r.getX() + w * (float)(i % kLibCols), r.getY() + h * (float)(i / kLibCols), w, h};
+}
+
+int CurveLibrary::cellAt(juce::Point<float> p) const
+{
+    for (int i = 0; i < kNumPerfCurves; ++i) if (cell(i).contains(p)) return i;
+    return -1;
+}
+
+void CurveLibrary::paint(juce::Graphics& g)
+{
+    const Theme& t = theme();
+    for (int i = 0; i < kNumPerfCurves; ++i)
+    {
+        auto c = cell(i).reduced(1.0f);
+        const bool sel = i == selected_;
+        g.setColour(sel ? t.mod : t.display);
+        g.fillRoundedRectangle(c, 3.0f);
+        g.setColour(t.displayGrid.brighter(0.3f));
+        g.drawRoundedRectangle(c, 3.0f, 1.0f);
+        drawPerfCurve(g, i, c.reduced(c.getWidth() * 0.16f, c.getHeight() * 0.2f), sel ? t.display : t.mod, 1.6f);
+    }
+}
+
+void CurveLibrary::mouseDown(const juce::MouseEvent& e)
+{
+    const int i = cellAt(e.position);
+    if (i < 0) return;
+    selected_ = i;
+    repaint();
+    if (onSelect) onSelect();
+}
+
+void CurveLibrary::mouseDrag(const juce::MouseEvent& e)
+{
+    if (dragging_ || e.getDistanceFromDragStart() < 4) return;
+    const int i = cellAt(e.mouseDownPosition);
+    if (i < 0) return;
+    if (auto* c = juce::DragAndDropContainer::findParentDragContainerFor(this))
+    {
+        dragging_ = true;
+        auto cr = cell(i).toNearestInt();
+        juce::Image img(juce::Image::ARGB, juce::jmax(1, cr.getWidth()), juce::jmax(1, cr.getHeight()), true);
+        {
+            juce::Graphics ig(img);
+            const Theme& t = theme();
+            ig.setColour(t.mod);
+            ig.fillRoundedRectangle(img.getBounds().toFloat().reduced(1.0f), 3.0f);
+            drawPerfCurve(ig, i, img.getBounds().toFloat().reduced((float)cr.getWidth() * 0.16f, (float)cr.getHeight() * 0.2f), t.display, 1.6f);
+        }
+        c->startDragging("curve:" + juce::String(i), this, juce::ScaledImage(img), true);
+    }
+}
+
+// ------------------------------------------------------------------------------------------- performer
+
 void PerformerView::paint(juce::Graphics& g)
 {
     const Theme& t = theme();
@@ -563,7 +643,7 @@ void PerformerView::paint(juce::Graphics& g)
         const float v = snap[b + 3 + k];
         auto bar = juce::Rectangle<float>(r.getX() + cw * (float)k + 1.5f, juce::jmin(mid, mid - v * r.getHeight() * 0.5f),
                                           cw - 3.0f, std::abs(v) * r.getHeight() * 0.5f);
-        g.setColour(t.mod.withAlpha(0.18f));
+        g.setColour(t.mod.withAlpha(k == hoverStep_ ? 0.4f : 0.18f));
         g.fillRect(bar);
     }
     juce::Path line;
@@ -579,18 +659,36 @@ void PerformerView::paint(juce::Graphics& g)
     g.strokePath(line, juce::PathStrokeType(2.0f));
     g.setColour(t.displayGrid.brighter(0.25f));
     g.drawHorizontalLine((int)mid, r.getX(), r.getRight());
-    g.setColour(t.muted);
-    g.setFont(ui::font(10.0f));
-    g.drawText("drag to set steps, right-click a step for its shape", area.reduced(8.0f, 3.0f).removeFromBottom(12.0f),
-               juce::Justification::centredRight);
+    // lane: each step's curve; click to paint the library's chosen curve
+    auto ln = lane();
+    for (int k = 0; k < len; ++k)
+    {
+        auto c = juce::Rectangle<float>(ln.getX() + cw * (float)k, ln.getY(), cw, ln.getHeight()).reduced(1.0f, 1.0f);
+        g.setColour(k == hoverStep_ ? t.mod.withAlpha(0.35f) : t.displayGrid);
+        g.fillRect(c);
+        drawPerfCurve(g, (int)snap[b + 19 + k], c.reduced(c.getWidth() * 0.15f, 3.0f), t.mod, 1.2f);
+    }
+}
+
+int PerformerView::stepAt(float x) const
+{
+    const int b = perf_ == 0 ? P_P1_DIV : P_P2_DIV;
+    const int len = juce::jlimit(1, kMaxSteps, proc_.engine().params().getInt(b + 1));
+    auto r = plot();
+    return juce::jlimit(0, len - 1, (int)((x - r.getX()) / r.getWidth() * (float)len));
 }
 
 void PerformerView::setStep(const juce::MouseEvent& e)
 {
     const int b = perf_ == 0 ? P_P1_DIV : P_P2_DIV;
-    const int len = juce::jlimit(1, kMaxSteps, proc_.engine().params().getInt(b + 1));
+    const int k = stepAt(e.position.x);
+    if (lane().expanded(0.0f, 4.0f).contains(e.mouseDownPosition))
+    {
+        if (lib_) proc_.setParamFromUI(b + 19 + k, (float)lib_->selected());
+        repaint();
+        return;
+    }
     auto r = plot();
-    const int k = juce::jlimit(0, len - 1, (int)((e.position.x - r.getX()) / r.getWidth() * (float)len));
     const float v = juce::jlimit(-1.0f, 1.0f, (r.getCentreY() - e.position.y) / (r.getHeight() * 0.5f));
     proc_.setParamFromUI(b + 3 + k, v);
     repaint();
@@ -600,11 +698,9 @@ void PerformerView::mouseDown(const juce::MouseEvent& e)
 {
     if (!e.mods.isPopupMenu()) { setStep(e); return; }
     const int b = perf_ == 0 ? P_P1_DIV : P_P2_DIV;
-    const int len = juce::jlimit(1, kMaxSteps, proc_.engine().params().getInt(b + 1));
-    auto r = plot();
-    const int k = juce::jlimit(0, len - 1, (int)((e.position.x - r.getX()) / r.getWidth() * (float)len));
+    const int k = stepAt(e.position.x);
     juce::PopupMenu m;
-    m.addSectionHeader("Step " + juce::String(k + 1) + " shape");
+    m.addSectionHeader("Step " + juce::String(k + 1) + " curve");
     const int cur = proc_.engine().params().getInt(b + 19 + k);
     for (int s = 0; s < (int)choices::perfStepShape.size(); ++s) m.addItem(s + 1, choices::perfStepShape[(size_t)s], true, s == cur);
     juce::Component::SafePointer<PerformerView> self(this);
@@ -614,3 +710,20 @@ void PerformerView::mouseDown(const juce::MouseEvent& e)
 }
 
 void PerformerView::mouseDrag(const juce::MouseEvent& e) { if (!e.mods.isPopupMenu()) setStep(e); }
+
+bool PerformerView::isInterestedInDragSource(const SourceDetails& d) { return d.description.toString().startsWith("curve:"); }
+
+void PerformerView::itemDragMove(const SourceDetails& d)
+{
+    const int k = stepAt((float)d.localPosition.x);
+    if (k != hoverStep_) { hoverStep_ = k; repaint(); }
+}
+
+void PerformerView::itemDropped(const SourceDetails& d)
+{
+    const int b = perf_ == 0 ? P_P1_DIV : P_P2_DIV;
+    const int c = juce::jlimit(0, kNumPerfCurves - 1, d.description.toString().substring(6).getIntValue());
+    proc_.setParamFromUI(b + 19 + stepAt((float)d.localPosition.x), (float)c);
+    hoverStep_ = -1;
+    repaint();
+}

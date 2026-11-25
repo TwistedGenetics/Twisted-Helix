@@ -20,6 +20,10 @@ enum MpcParam : int
     MP_S2T_FRAMES,                // 8..256
     MP_S2T_SLOT,                  // A / B
     MP_S2T_GO,                    // trigger
+    // 0.3.3 Massive-style performer editing: pick a step, then its curve (library) and level. These mirror
+    // P1/P2 Shape n and Step n of the chosen step (the worker keeps both sides in step).
+    MP_P1_EDIT, MP_P1_CURVE, MP_P1_LEVEL,
+    MP_P2_EDIT, MP_P2_CURVE, MP_P2_LEVEL,
     kMpcParamEnd
 };
 constexpr int kMpcNumParams = kMpcParamEnd;

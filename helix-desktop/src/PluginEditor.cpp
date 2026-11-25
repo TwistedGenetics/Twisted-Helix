@@ -323,9 +323,15 @@ public:
             const int b = q == 0 ? P_P1_DIV : P_P2_DIV;
             Pg p;
             p.holder = holder;
-            p.view = pg.own(std::make_unique<PerformerView>(pg.proc, q), holder);
+            auto* pv = pg.own(std::make_unique<PerformerView>(pg.proc, q), holder);
+            p.view = pv;
             p.combos = {pg.combo(b, holder, "Step"), pg.combo(b + 2, holder, "Mode")};
             p.row[1] = {pg.knob(b + 1, holder, "Length")};
+            // Massive-style curve library: drag a curve onto a step, or pick one and click a step's lane
+            p.lib = pg.own(std::make_unique<CurveLibrary>(), holder);
+            p.lib->setTooltip("Curve library: drag a curve onto a step, or click one and then click the steps' lane "
+                              "under the display. Drag in the display to set each step's level.");
+            pv->setLibrary(p.lib);
             pages_.push_back(p);
         }
         // Modulation oscillator (Massive-style): page 10, chosen with its own button
@@ -403,6 +409,13 @@ public:
             }
             else layoutRow(r1, {p.row[0].size() > 0 ? p.row[0][0] : nullptr, p.row[0].size() > 1 ? p.row[0][1] : nullptr,
                                 p.row[0].size() > 2 ? p.row[0][2] : nullptr, p.row[0].size() > 3 ? p.row[0][3] : nullptr});
+            if (p.lib)
+            {
+                p.row[1][0]->setBounds(r.removeFromLeft(80));
+                r.removeFromLeft(6);
+                p.lib->setBounds(r.reduced(0, 4));
+                continue;
+            }
             const int n = (int)p.row[1].size();
             if (n)
             {
@@ -436,6 +449,7 @@ private:
         ParamToggle* syncToggle = nullptr;
         ParamKnob* rate = nullptr;
         ParamCombo* div = nullptr;
+        CurveLibrary* lib = nullptr;
         int syncParam = -1;
     };
     static constexpr int kMoPage = 10;

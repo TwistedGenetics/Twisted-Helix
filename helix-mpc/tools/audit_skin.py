@@ -43,6 +43,7 @@ def mechanism(comp):
     acts = [(x["onAction"], x["handler"], x["additionalData"]) for x in v["actions"]]
     handlers = {h for _, h, _ in acts}
     if "Knob" in types: kind = "knob (drag / Q-Link / wheel)"
+    elif any(k["data"].get("sliderType") == "ColourBar" for k in kids): kind = "draw bar (drag up / down)"
     elif "Toggle Switch" in handlers and "Button" not in types: kind = "flip on touch"
     elif types.count("Button") > 1: kind = "radio buttons"
     elif "Slider" in types: kind = "list (drag sideways / wheel; list on double-tap)"
@@ -105,7 +106,8 @@ for tab in pd["tabs"]:
                 fails.append("%s: %s opens a list but is not a choice parameter" % (name, p["name"]))
         if overlays and not any(k["type"] != "Focus" and k["data"].get("handleName") == "Data" for k in kids):
             fails.append("%s: %s opens an overlay but nothing in the cell reads it" % (name, p["name"]))
-        if pi not in qparams and not e["componentData"]["name"].startswith("tag"):
+        # draw bars (performer steps) are on Q-Links on the P STEP pages, not on the draw page
+        if pi not in qparams and not e["componentData"]["name"].startswith(("tag", "bar ")):
             fails.append("%s: %s is not on this page's Q-Links" % (name, p["name"]))
 
 # The MPC firmware can open MenuOverlay with empty entries: no list pop-ups anywhere.
@@ -119,10 +121,14 @@ for k, n in subs.items():
         fails.append("function key %d has %d pages (the MPC allows 8)" % (k, n))
 
 old = json.load(open(a.ui))
+# Reached through an editing proxy (the app mirrors the chosen step): P1/P2 Shape n via P1/P2 Edit Step + Curve.
+PROXIED = {"P%d Shape %d" % (q, i): "P%d Curve" % q for q in (1, 2) for i in range(1, 17)}
 missing = []
 for pg in old["pages"]:
     for c in pg["controls"]:
         nm = c if isinstance(c, str) else c.get("param")
+        if nm in PROXIED and byname[PROXIED[nm]]["index"] in seen_params:
+            continue
         if nm and nm != "empty" and nm in byname and byname[nm]["index"] not in seen_params:
             missing.append("%s (was on %s)" % (nm, pg["name"]))
 if missing:

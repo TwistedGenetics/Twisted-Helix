@@ -1,4 +1,5 @@
 #include "HelixMpcApp.h"
+#include "helix/ModSystem.h"
 #include "helix/WavetableGen.h"
 #include "helix/WavetableImport.h"
 #include <algorithm>
@@ -19,6 +20,8 @@ namespace mpcchoices {
 static const std::vector<std::string> frames = {"8", "16", "32", "64", "128", "256"};
 static const std::vector<std::string> slot = {"Osc A", "Osc B"};
 static const std::vector<std::string> bank = {"1-16", "17-32", "33-48", "49-64", "65-80", "81-96", "97-112", "113-128"};
+static const std::vector<std::string> steps = {"Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6", "Step 7", "Step 8",
+                                                "Step 9", "Step 10", "Step 11", "Step 12", "Step 13", "Step 14", "Step 15", "Step 16"};
 }
 
 static ParamDef extraDefs[kMpcNumParams - kMpcReserveEnd] = {
@@ -32,6 +35,12 @@ static ParamDef extraDefs[kMpcNumParams - kMpcReserveEnd] = {
     {"mpc_s2t_frames", "Frames", ParamKind::Choice, 0, 5, 3, "", &mpcchoices::frames, false},
     {"mpc_s2t_slot", "To Osc", ParamKind::Choice, 0, 1, 0, "", &mpcchoices::slot, false},
     {"mpc_s2t_go", "Make Table", ParamKind::Bool, 0, 1, 0, "", nullptr, false},
+    {"mpc_p1_edit", "P1 Edit Step", ParamKind::Choice, 0, 15, 0, "", &mpcchoices::steps, false},
+    {"mpc_p1_curve", "P1 Curve", ParamKind::Choice, 0, kNumPerfCurves - 1, 0, "", &choices::perfStepShape, false},
+    {"mpc_p1_level", "P1 Level", ParamKind::Linear, -1, 1, 1, "", nullptr, false},
+    {"mpc_p2_edit", "P2 Edit Step", ParamKind::Choice, 0, 15, 0, "", &mpcchoices::steps, false},
+    {"mpc_p2_curve", "P2 Curve", ParamKind::Choice, 0, kNumPerfCurves - 1, 0, "", &choices::perfStepShape, false},
+    {"mpc_p2_level", "P2 Level", ParamKind::Linear, -1, 1, 1, "", nullptr, false},
 };
 
 bool mpcIsFiller(int i) { return i >= kNumParams && i < kMpcReserveEnd; }
@@ -266,6 +275,37 @@ void HelixMpcApp::tick()
             if (lastTable_[s] >= 0) library_.requestLoad(s, idx);   // wraps
             lastTable_[s] = idx;
         }
+    }
+
+    // Performer editing (Massive-style): Edit Step chooses a step; Curve and Level show and set that step.
+    for (int q = 0; q < 2; ++q)
+    {
+        const int base = q == 0 ? P_P1_DIV : P_P2_DIV;
+        const int ed = q == 0 ? MP_P1_EDIT : MP_P2_EDIT;
+        PerfEdit& pe = perfEdit_[q];
+        const int step = clamp((int)getParam(ed), 0, kMaxSteps - 1);
+        const int shapeP = base + 19 + step, levelP = base + 3 + step;
+        const float shape = getParam(shapeP), level = getParam(levelP);
+        const float pCurve = getParam(ed + 1), pLevel = getParam(ed + 2);
+        auto show = [&](int proxy, float v) { setParam(proxy, v); platform_.notifyParameter(proxy, v); };
+        auto write = [&](int core, float v) { setParam(core, v); platform_.notifyParameter(core, v); };
+        if (step != pe.step)
+        {
+            // a new step: show its curve and level
+            show(ed + 1, shape); show(ed + 2, level);
+        }
+        else
+        {
+            if (pCurve != pe.curve) write(shapeP, pCurve);          // curve tapped in the library
+            else if (shape != pe.shape) show(ed + 1, shape);        // changed elsewhere (preset, step page)
+            if (pLevel != pe.level) write(levelP, pLevel);
+            else if (level != pe.levelCore) show(ed + 2, level);
+        }
+        pe.step = step;
+        pe.curve = getParam(ed + 1);
+        pe.shape = getParam(shapeP);
+        pe.level = getParam(ed + 2);
+        pe.levelCore = getParam(levelP);
     }
 
     // Triggers (momentary parameters).

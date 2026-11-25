@@ -108,6 +108,40 @@ float Lfo::advance(int n, float sr, float rateHz, LfoShape shape, LfoMode mode, 
     return v;
 }
 
+float perfCurve(int c, float t)
+{
+    auto sinePi = [](float x) { return std::sin(kPi * x); };
+    auto fr = [](float x) { return x - std::floor(x); };
+    switch (c)
+    {
+        case 0:  return 1.0f;                                                   // Hold
+        case 1:  return t;                                                      // Ramp Up
+        case 2:  return 1.0f - t;                                               // Ramp Down
+        case 3:  return 0.5f - 0.5f * std::cos(kPi * t);                        // Smooth (shape of the glide)
+        case 4:  return 1.0f - std::fabs(2.0f * t - 1.0f);                      // Triangle
+        case 5:  return (1.0f - t) * (1.0f - t) * (1.0f - t);                   // Exp decay (pluck)
+        case 6:  return sinePi(t);                                              // Sine bump
+        case 7:  return t * t * t;                                              // Exp Up
+        case 8:  { const float u = 1.0f - t; return 1.0f - u * u * u; }         // Log Up
+        case 9:  return 1.0f - t * t * t;                                       // Log Down (hold then fall)
+        case 10: return t * t * (3.0f - 2.0f * t);                              // S-Curve Up
+        case 11: { const float u = 1.0f - t; return u * u * (3.0f - 2.0f * u); } // S-Curve Down
+        case 12: return t < 0.5f ? 1.0f : 0.0f;                                 // Gate 1/2
+        case 13: return t < 0.25f ? 1.0f : 0.0f;                                // Gate 1/4
+        case 14: return t < 0.75f ? 1.0f : 0.0f;                                // Gate 3/4
+        case 15: return fr(2.0f * t);                                           // Saw Up x2
+        case 16: return 1.0f - fr(2.0f * t);                                    // Saw Down x2
+        case 17: return 1.0f - std::fabs(2.0f * fr(2.0f * t) - 1.0f);           // Triangle x2
+        case 18: return std::fabs(sinePi(2.0f * t));                            // Sine x2
+        case 19: return fr(2.0f * t) < 0.5f ? 1.0f : 0.0f;                      // Pulse x2
+        case 20: return std::floor(t * 4.0f) / 3.0f;                            // Stairs Up
+        case 21: return 1.0f - std::floor(t * 4.0f) / 3.0f;                     // Stairs Down
+        case 22: return std::fabs(sinePi(3.0f * t)) * (1.0f - t);               // Bounce
+        case 23: return 0.0f;                                                   // Off
+        default: return 1.0f;
+    }
+}
+
 float performerValue(const float* p, int pi, double pos)
 {
     const int base = pi == 0 ? P_P1_DIV : P_P2_DIV;
@@ -116,17 +150,13 @@ float performerValue(const float* p, int pi, double pos)
     const int k = std::min(len - 1, (int)pos);
     const float t = (float)(pos - k);
     const float v = p[base + 3 + k];
-    const float vNext = p[base + 3 + (k + 1) % len];
-    switch ((int)p[base + 19 + k])
+    const int c = (int)p[base + 19 + k];
+    if (c == 3)                                                                 // Smooth: glide to the next step
     {
-        case 0: return v;                                      // Hold
-        case 1: return v * t;                                  // Ramp up to the step value
-        case 2: return v * (1.0f - t);                         // Ramp down from it
-        case 3: return v + (vNext - v) * (0.5f - 0.5f * std::cos(kPi * t));   // Smooth glide to the next step
-        case 4: return v * (1.0f - std::fabs(2.0f * t - 1.0f));             // Triangle
-        case 5: return v * (1.0f - t) * (1.0f - t) * (1.0f - t);            // Exp decay (pluck)
-        default: return v;
+        const float vNext = p[base + 3 + (k + 1) % len];
+        return v + (vNext - v) * perfCurve(3, t);
     }
+    return v * perfCurve(c, t);
 }
 
 } // namespace helix

@@ -34,7 +34,10 @@ const std::vector<std::string> modSource = {"None", "Env 1", "Env 2", "Env 3", "
                                             "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2",
                                             "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"};
 const std::vector<std::string> modCurve = {"Linear"};
-const std::vector<std::string> perfStepShape = {"Hold", "Ramp Up", "Ramp Down", "Smooth", "Triangle", "Exp"};
+const std::vector<std::string> perfStepShape = {"Hold", "Ramp Up", "Ramp Down", "Smooth", "Triangle", "Exp",
+                                                "Sine", "Exp Up", "Log Up", "Log Down", "S Up", "S Down",
+                                                "Gate 1/2", "Gate 1/4", "Gate 3/4", "Saw x2", "Saw Dn x2", "Tri x2",
+                                                "Sine x2", "Pulse x2", "Stairs Up", "Stairs Dn", "Bounce", "Off"};
 const std::vector<std::string> fxType = {"Distortion", "Chorus", "Phaser", "Delay", "Reverb", "OTT", "EQ"};
 const std::vector<std::string> distType = {"Tube", "Hard Clip", "Fold", "Crush", "Asym"};
 const std::vector<std::string> delayMode = {"Stereo", "Ping-Pong"};

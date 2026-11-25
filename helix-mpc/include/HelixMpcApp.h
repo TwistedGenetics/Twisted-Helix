@@ -72,6 +72,8 @@ private:
     int lastTable_[2] = {-1, -1};
     int lastProgram_ = -1;
     float lastCpuShown_ = -1.0f;
+    struct PerfEdit { int step = -1; float curve = -1, shape = -1, level = -9, levelCore = -9; };
+    PerfEdit perfEdit_[2];
     int cpuCounter_ = 0;
 
     std::atomic<bool> quit_{false};

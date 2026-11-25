@@ -810,9 +810,30 @@ def chapter_lfo():
                  ["Length", "Number of steps, 1-16."],
                  ["Mode", "Retrig (start with each note), Free (follow the song position) or One-shot (play once, hold the "
                   "last step)."],
-                 ["Step 1-16", "The value of each step."],
-                 ["Shape 1-16", "How each step moves: <b>Hold</b> (flat), <b>Ramp Up</b>, <b>Ramp Down</b>, <b>Smooth</b> "
-                  "(glide to the next step), <b>Triangle</b>, <b>Exp</b> (a fast pluck that decays)."]], [36, 134])]
+                 ["Step 1-16", "The level of each step, -100% … +100% (new steps start at 100%)."],
+                 ["Curve 1-16", "The curve each step draws, chosen from the library below and scaled by the step's level."]],
+                [36, 134]),
+          H3("The curve library"),
+          P("Like Massive, every step plays a curve from a library of 24. The first six are the shapes HELIX always had, "
+            "so older presets play exactly as before. <b>Smooth</b> is special: it glides from this step's level to the "
+            "next step's level."),
+          table([["Curves", "What they do"],
+                 ["Hold, Off", "Flat at the step level; silent."],
+                 ["Ramp Up / Down, Exp Up, Log Up / Down, S Up / Down", "Rises and falls with different curves: linear, "
+                  "slow-then-fast, fast-then-slow, and S-shaped."],
+                 ["Smooth, Triangle, Sine", "Glides and rounded bumps."],
+                 ["Exp, Bounce", "Plucks: a fast hit that decays; Bounce also bounces."],
+                 ["Gate 1/4, 1/2, 3/4", "On for part of the step, then off: tight rhythmic gating."],
+                 ["Saw x2, Saw Dn x2, Tri x2, Sine x2, Pulse x2", "Two cycles inside one step: double-time rolls."],
+                 ["Stairs Up / Dn", "Four steps up or down inside the step."]], [52, 118]),
+          P("<b>On the MPC</b>: the <b>P1 DRAW</b> and <b>P2 DRAW</b> pages (PERF key) work like Massive's performer. The "
+            "top two rows are the 16 steps as bars: drag a bar up or down to draw its level (the middle is zero), and "
+            "the step's curve is shown under it. To change curves, tap a step in <b>EDIT STEP</b>, then tap a curve in "
+            "the library. The P1 / P2 STEP pages have the same levels on knobs, for the Q-Links."),
+          P("<b>On the computer</b>: the library sits beside the performer display. Drag a curve onto a step, or click a "
+            "curve and then click steps in the lane under the display to paint it. Draw the levels by dragging across the "
+            "display: every step you pass sets its level to where the pointer is; "
+            "right-click a step for a menu of all curves.")]
     return s
 
 
@@ -1135,7 +1156,7 @@ def appendix_params():
         s += [H3(title), table(rows, [50, 88, 32]), Spacer(1, 4)]
     s += [H3("Choice lists")]
     lists = [("Warp modes", "warpMode"), ("Filter types", "filterType"), ("LFO shapes", "lfoShape"),
-             ("Sync divisions", "syncDiv"), ("Mod sources", "modSource"), ("Performer step shapes", "perfStepShape"),
+             ("Sync divisions", "syncDiv"), ("Mod sources", "modSource"), ("Performer curves", "perfStepShape"),
              ("Noise types", "noiseType"), ("Distortion types", "distType"), ("FX slots", "fxType")]
     s += [table([["List", "Values"]] + [[a, " · ".join(CHOICES.get(b, []))] for a, b in lists], [36, 134])]
     return s

@@ -128,6 +128,27 @@ int main()
     for (int i = 0; i < 12; ++i) app.tick();
     CHECK(pf.notified.count(MP_CPU) == 1, "CPU readout never reported");
 
+    // Performer editing: choose step 5, its curve and level appear; tap a curve / turn the level, the step changes.
+    app.engine().params().set(P_P1_C5, 4.0f);
+    app.engine().params().set(P_P1_S5, -0.5f);
+    app.setParam(MP_P1_EDIT, 4.0f);
+    app.tick();
+    CHECK(app.getParam(MP_P1_CURVE) == 4.0f && app.getParam(MP_P1_LEVEL) == -0.5f, "edit step did not show step 5 (%g, %g)",
+          (double)app.getParam(MP_P1_CURVE), (double)app.getParam(MP_P1_LEVEL));
+    app.setParam(MP_P1_CURVE, 17.0f);
+    app.setParam(MP_P1_LEVEL, 0.75f);
+    app.tick();
+    CHECK(app.engine().params().get(P_P1_C5) == 17.0f && app.engine().params().get(P_P1_S5) == 0.75f, "curve / level not written");
+    CHECK(pf.notified.count(P_P1_C5) == 1, "host not told about the new curve");
+    app.engine().params().set(P_P1_C5, 9.0f);   // changed elsewhere (e.g. a preset)
+    app.tick();
+    CHECK(app.getParam(MP_P1_CURVE) == 9.0f, "curve readout did not follow");
+    CHECK(app.engine().params().get(P_P1_C5) == 9.0f, "the readout overwrote the step");
+    app.setParam(MP_P1_EDIT, 0.0f);
+    app.tick();
+    CHECK(app.engine().params().get(P_P1_C5) == 9.0f && app.getParam(MP_P1_CURVE) == app.engine().params().get(P_P1_C1),
+          "changing the edit step changed a curve");
+
     { std::error_code ec; fs::remove_all(pf.dir, ec); }
     TEST_MAIN_END();
 }
