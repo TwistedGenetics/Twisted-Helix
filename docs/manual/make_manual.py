@@ -941,6 +941,14 @@ def chapter_fx():
             "switched on keeps the extra ones in a hidden rack between Insert 2 and FX 1 (none of the factory presets "
             "has more than two). In the matrix destination list the old rack settings (Dist Drive, Reverb Mix ...) now do "
             "nothing: aim at the slot's knobs instead (Insert 1 A ... FX 2 F).")]
+    s += H2("Sub guardian")
+    s += [P("Drum and bass lives on its sub. With <b>Sub Guard</b> on, HELIX splits the sound at <b>Split</b> (40-300 Hz, "
+            "120 Hz to start) with a steep 24 dB crossover. Everything below goes round the effects: it is summed to mono and "
+            "added back after FX 2, clean, so distortion, OTT, reverb and chorus can go as far as you like without smearing "
+            "or widening the sub. Everything above goes through the slots as usual. <b>Sub Level</b> trims the sub (-12 to "
+            "+6 dB, modulatable) and <b>Warmth</b> adds a little 2nd and 3rd harmonic so it still reads on small speakers. "
+            "With no effects on, switching it on does not change the level. On the MPC it is the <b>SUB GUARD</b> page (FX "
+            "key); on the computer it is under the effect slots.")]
     s += H2("The effects library: Insert 1, Insert 2, FX 1, FX 2")
     s += [P("Four more effect slots, laid out like Massive's: <b>Insert 1</b> and <b>Insert 2</b> run before the rack above, "
             "<b>FX 1</b> and <b>FX 2</b> after it. Each slot picks any effect from the library below and has <b>Mix</b> plus six "

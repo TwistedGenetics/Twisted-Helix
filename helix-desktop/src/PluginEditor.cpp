@@ -611,6 +611,11 @@ public:
             for (int i = 0; i <= fxlib::kNumKnobs; ++i) lr.lastKnobs[i] = proc.engine().params().get(b + 1 + i);
             libRows_.push_back(std::move(lr));
         }
+        // Sub guardian: below the split stays mono and clean and skips every effect
+        sg_ = own(std::make_unique<PanelFrame>("Sub guardian   (below the split: mono, clean, no effects)"));
+        sgOn_ = toggle(P_SG_ON, sg_, "On");
+        sgKnobs_ = {knob(P_SG_FREQ, sg_, "Split", ParamKnob::Size::Small), knob(P_SG_LEVEL, sg_, "Sub Level", ParamKnob::Size::Small),
+                    knob(P_SG_WARMTH, sg_, "Warmth", ParamKnob::Size::Small)};
         select(0);
     }
 
@@ -642,7 +647,13 @@ public:
         info_->setBounds(316, 306, 860, 44);
         // 0.3.6: the rack lives in the effect slots (its effects are the HELIX types), so only the slots show
         hideRack();
-        lib_->setBounds(0, 0, 1184, 708);
+        lib_->setBounds(0, 0, 1184, 600);
+        sg_->setBounds(0, 606, 1184, 102);
+        {
+            auto c = sg_->content();
+            sgOn_->setBounds(c.removeFromLeft(90).withSizeKeepingCentre(80, 26));
+            for (auto* k : sgKnobs_) k->setBounds(c.removeFromLeft(110));
+        }
         auto lc = lib_->content().withTrimmedTop(8);
         for (auto& lr : libRows_)
         {
@@ -762,6 +773,9 @@ private:
     };
     PanelFrame* lib_ = nullptr;
     std::vector<LibRow> libRows_;
+    PanelFrame* sg_ = nullptr;
+    ParamToggle* sgOn_ = nullptr;
+    std::vector<ParamKnob*> sgKnobs_;
     struct Row { std::unique_ptr<juce::ToggleButton> power; std::unique_ptr<juce::TextButton> name, up, down; };
     struct Detail { PanelFrame* panel; std::vector<ParamCombo*> combos; std::vector<ParamKnob*> knobs; ParamToggle* sync = nullptr; };
     PanelFrame* rack_;

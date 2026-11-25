@@ -13763,6 +13763,93 @@
      }
     },
     {
+     "key": "hx tag Sub Guard",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "tag_sub_guard.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 150 140"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
      "key": "hx list 26_ffca695a",
      "value": {
       "version": 2,
@@ -14743,7 +14830,7 @@
      }
     },
     {
-     "key": "hx list 81_9a386559",
+     "key": "hx list 82_47223da2",
      "value": {
       "version": 2,
       "actions": [],
@@ -14811,7 +14898,7 @@
           "version": 2,
           "imageType": "Regular",
           "colour": "0",
-          "image": "listbg_81_9a386559.png"
+          "image": "listbg_82_47223da2.png"
          }
         },
         "handle remapping": {
@@ -14835,10 +14922,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_0_on.png",
-          "offImage": "list_81_9a386559_0_off.png",
+          "onImage": "list_82_47223da2_0_on.png",
+          "offImage": "list_82_47223da2_0_off.png",
           "buttonId": 0,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -14864,10 +14951,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_1_on.png",
-          "offImage": "list_81_9a386559_1_off.png",
+          "onImage": "list_82_47223da2_1_on.png",
+          "offImage": "list_82_47223da2_1_off.png",
           "buttonId": 1,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -14893,10 +14980,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_2_on.png",
-          "offImage": "list_81_9a386559_2_off.png",
+          "onImage": "list_82_47223da2_2_on.png",
+          "offImage": "list_82_47223da2_2_off.png",
           "buttonId": 2,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -14922,10 +15009,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_3_on.png",
-          "offImage": "list_81_9a386559_3_off.png",
+          "onImage": "list_82_47223da2_3_on.png",
+          "offImage": "list_82_47223da2_3_off.png",
           "buttonId": 3,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -14951,10 +15038,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_4_on.png",
-          "offImage": "list_81_9a386559_4_off.png",
+          "onImage": "list_82_47223da2_4_on.png",
+          "offImage": "list_82_47223da2_4_off.png",
           "buttonId": 4,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -14980,10 +15067,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_5_on.png",
-          "offImage": "list_81_9a386559_5_off.png",
+          "onImage": "list_82_47223da2_5_on.png",
+          "offImage": "list_82_47223da2_5_off.png",
           "buttonId": 5,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15009,10 +15096,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_6_on.png",
-          "offImage": "list_81_9a386559_6_off.png",
+          "onImage": "list_82_47223da2_6_on.png",
+          "offImage": "list_82_47223da2_6_off.png",
           "buttonId": 6,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15038,10 +15125,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_7_on.png",
-          "offImage": "list_81_9a386559_7_off.png",
+          "onImage": "list_82_47223da2_7_on.png",
+          "offImage": "list_82_47223da2_7_off.png",
           "buttonId": 7,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15067,10 +15154,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_8_on.png",
-          "offImage": "list_81_9a386559_8_off.png",
+          "onImage": "list_82_47223da2_8_on.png",
+          "offImage": "list_82_47223da2_8_off.png",
           "buttonId": 8,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15096,10 +15183,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_9_on.png",
-          "offImage": "list_81_9a386559_9_off.png",
+          "onImage": "list_82_47223da2_9_on.png",
+          "offImage": "list_82_47223da2_9_off.png",
           "buttonId": 9,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15125,10 +15212,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_10_on.png",
-          "offImage": "list_81_9a386559_10_off.png",
+          "onImage": "list_82_47223da2_10_on.png",
+          "offImage": "list_82_47223da2_10_off.png",
           "buttonId": 10,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15154,10 +15241,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_11_on.png",
-          "offImage": "list_81_9a386559_11_off.png",
+          "onImage": "list_82_47223da2_11_on.png",
+          "offImage": "list_82_47223da2_11_off.png",
           "buttonId": 11,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15183,10 +15270,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_12_on.png",
-          "offImage": "list_81_9a386559_12_off.png",
+          "onImage": "list_82_47223da2_12_on.png",
+          "offImage": "list_82_47223da2_12_off.png",
           "buttonId": 12,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15212,10 +15299,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_13_on.png",
-          "offImage": "list_81_9a386559_13_off.png",
+          "onImage": "list_82_47223da2_13_on.png",
+          "offImage": "list_82_47223da2_13_off.png",
           "buttonId": 13,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15241,10 +15328,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_14_on.png",
-          "offImage": "list_81_9a386559_14_off.png",
+          "onImage": "list_82_47223da2_14_on.png",
+          "offImage": "list_82_47223da2_14_off.png",
           "buttonId": 14,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15270,10 +15357,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_15_on.png",
-          "offImage": "list_81_9a386559_15_off.png",
+          "onImage": "list_82_47223da2_15_on.png",
+          "offImage": "list_82_47223da2_15_off.png",
           "buttonId": 15,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15299,10 +15386,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_16_on.png",
-          "offImage": "list_81_9a386559_16_off.png",
+          "onImage": "list_82_47223da2_16_on.png",
+          "offImage": "list_82_47223da2_16_off.png",
           "buttonId": 16,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15328,10 +15415,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_17_on.png",
-          "offImage": "list_81_9a386559_17_off.png",
+          "onImage": "list_82_47223da2_17_on.png",
+          "offImage": "list_82_47223da2_17_off.png",
           "buttonId": 17,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15357,10 +15444,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_18_on.png",
-          "offImage": "list_81_9a386559_18_off.png",
+          "onImage": "list_82_47223da2_18_on.png",
+          "offImage": "list_82_47223da2_18_off.png",
           "buttonId": 18,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15386,10 +15473,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_19_on.png",
-          "offImage": "list_81_9a386559_19_off.png",
+          "onImage": "list_82_47223da2_19_on.png",
+          "offImage": "list_82_47223da2_19_off.png",
           "buttonId": 19,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15415,10 +15502,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_20_on.png",
-          "offImage": "list_81_9a386559_20_off.png",
+          "onImage": "list_82_47223da2_20_on.png",
+          "offImage": "list_82_47223da2_20_off.png",
           "buttonId": 20,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15444,10 +15531,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_21_on.png",
-          "offImage": "list_81_9a386559_21_off.png",
+          "onImage": "list_82_47223da2_21_on.png",
+          "offImage": "list_82_47223da2_21_off.png",
           "buttonId": 21,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15473,10 +15560,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_22_on.png",
-          "offImage": "list_81_9a386559_22_off.png",
+          "onImage": "list_82_47223da2_22_on.png",
+          "offImage": "list_82_47223da2_22_off.png",
           "buttonId": 22,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15502,10 +15589,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_23_on.png",
-          "offImage": "list_81_9a386559_23_off.png",
+          "onImage": "list_82_47223da2_23_on.png",
+          "offImage": "list_82_47223da2_23_off.png",
           "buttonId": 23,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15531,10 +15618,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_24_on.png",
-          "offImage": "list_81_9a386559_24_off.png",
+          "onImage": "list_82_47223da2_24_on.png",
+          "offImage": "list_82_47223da2_24_off.png",
           "buttonId": 24,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15560,10 +15647,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_25_on.png",
-          "offImage": "list_81_9a386559_25_off.png",
+          "onImage": "list_82_47223da2_25_on.png",
+          "offImage": "list_82_47223da2_25_off.png",
           "buttonId": 25,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15589,10 +15676,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_26_on.png",
-          "offImage": "list_81_9a386559_26_off.png",
+          "onImage": "list_82_47223da2_26_on.png",
+          "offImage": "list_82_47223da2_26_off.png",
           "buttonId": 26,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15618,10 +15705,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_27_on.png",
-          "offImage": "list_81_9a386559_27_off.png",
+          "onImage": "list_82_47223da2_27_on.png",
+          "offImage": "list_82_47223da2_27_off.png",
           "buttonId": 27,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15647,10 +15734,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_28_on.png",
-          "offImage": "list_81_9a386559_28_off.png",
+          "onImage": "list_82_47223da2_28_on.png",
+          "offImage": "list_82_47223da2_28_off.png",
           "buttonId": 28,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15676,10 +15763,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_29_on.png",
-          "offImage": "list_81_9a386559_29_off.png",
+          "onImage": "list_82_47223da2_29_on.png",
+          "offImage": "list_82_47223da2_29_off.png",
           "buttonId": 29,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15705,10 +15792,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_30_on.png",
-          "offImage": "list_81_9a386559_30_off.png",
+          "onImage": "list_82_47223da2_30_on.png",
+          "offImage": "list_82_47223da2_30_off.png",
           "buttonId": 30,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15734,10 +15821,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_31_on.png",
-          "offImage": "list_81_9a386559_31_off.png",
+          "onImage": "list_82_47223da2_31_on.png",
+          "offImage": "list_82_47223da2_31_off.png",
           "buttonId": 31,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15763,10 +15850,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_32_on.png",
-          "offImage": "list_81_9a386559_32_off.png",
+          "onImage": "list_82_47223da2_32_on.png",
+          "offImage": "list_82_47223da2_32_off.png",
           "buttonId": 32,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15792,10 +15879,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_33_on.png",
-          "offImage": "list_81_9a386559_33_off.png",
+          "onImage": "list_82_47223da2_33_on.png",
+          "offImage": "list_82_47223da2_33_off.png",
           "buttonId": 33,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15821,10 +15908,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_34_on.png",
-          "offImage": "list_81_9a386559_34_off.png",
+          "onImage": "list_82_47223da2_34_on.png",
+          "offImage": "list_82_47223da2_34_off.png",
           "buttonId": 34,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15850,10 +15937,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_35_on.png",
-          "offImage": "list_81_9a386559_35_off.png",
+          "onImage": "list_82_47223da2_35_on.png",
+          "offImage": "list_82_47223da2_35_off.png",
           "buttonId": 35,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15879,10 +15966,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_36_on.png",
-          "offImage": "list_81_9a386559_36_off.png",
+          "onImage": "list_82_47223da2_36_on.png",
+          "offImage": "list_82_47223da2_36_off.png",
           "buttonId": 36,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15908,10 +15995,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_37_on.png",
-          "offImage": "list_81_9a386559_37_off.png",
+          "onImage": "list_82_47223da2_37_on.png",
+          "offImage": "list_82_47223da2_37_off.png",
           "buttonId": 37,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15937,10 +16024,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_38_on.png",
-          "offImage": "list_81_9a386559_38_off.png",
+          "onImage": "list_82_47223da2_38_on.png",
+          "offImage": "list_82_47223da2_38_off.png",
           "buttonId": 38,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15966,10 +16053,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_39_on.png",
-          "offImage": "list_81_9a386559_39_off.png",
+          "onImage": "list_82_47223da2_39_on.png",
+          "offImage": "list_82_47223da2_39_off.png",
           "buttonId": 39,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -15995,10 +16082,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_40_on.png",
-          "offImage": "list_81_9a386559_40_off.png",
+          "onImage": "list_82_47223da2_40_on.png",
+          "offImage": "list_82_47223da2_40_off.png",
           "buttonId": 40,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16024,10 +16111,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_41_on.png",
-          "offImage": "list_81_9a386559_41_off.png",
+          "onImage": "list_82_47223da2_41_on.png",
+          "offImage": "list_82_47223da2_41_off.png",
           "buttonId": 41,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16053,10 +16140,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_42_on.png",
-          "offImage": "list_81_9a386559_42_off.png",
+          "onImage": "list_82_47223da2_42_on.png",
+          "offImage": "list_82_47223da2_42_off.png",
           "buttonId": 42,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16082,10 +16169,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_43_on.png",
-          "offImage": "list_81_9a386559_43_off.png",
+          "onImage": "list_82_47223da2_43_on.png",
+          "offImage": "list_82_47223da2_43_off.png",
           "buttonId": 43,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16111,10 +16198,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_44_on.png",
-          "offImage": "list_81_9a386559_44_off.png",
+          "onImage": "list_82_47223da2_44_on.png",
+          "offImage": "list_82_47223da2_44_off.png",
           "buttonId": 44,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16140,10 +16227,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_45_on.png",
-          "offImage": "list_81_9a386559_45_off.png",
+          "onImage": "list_82_47223da2_45_on.png",
+          "offImage": "list_82_47223da2_45_off.png",
           "buttonId": 45,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16169,10 +16256,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_46_on.png",
-          "offImage": "list_81_9a386559_46_off.png",
+          "onImage": "list_82_47223da2_46_on.png",
+          "offImage": "list_82_47223da2_46_off.png",
           "buttonId": 46,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16198,10 +16285,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_47_on.png",
-          "offImage": "list_81_9a386559_47_off.png",
+          "onImage": "list_82_47223da2_47_on.png",
+          "offImage": "list_82_47223da2_47_off.png",
           "buttonId": 47,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16227,10 +16314,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_48_on.png",
-          "offImage": "list_81_9a386559_48_off.png",
+          "onImage": "list_82_47223da2_48_on.png",
+          "offImage": "list_82_47223da2_48_off.png",
           "buttonId": 48,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16256,10 +16343,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_49_on.png",
-          "offImage": "list_81_9a386559_49_off.png",
+          "onImage": "list_82_47223da2_49_on.png",
+          "offImage": "list_82_47223da2_49_off.png",
           "buttonId": 49,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16285,10 +16372,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_50_on.png",
-          "offImage": "list_81_9a386559_50_off.png",
+          "onImage": "list_82_47223da2_50_on.png",
+          "offImage": "list_82_47223da2_50_off.png",
           "buttonId": 50,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16314,10 +16401,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_51_on.png",
-          "offImage": "list_81_9a386559_51_off.png",
+          "onImage": "list_82_47223da2_51_on.png",
+          "offImage": "list_82_47223da2_51_off.png",
           "buttonId": 51,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16343,10 +16430,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_52_on.png",
-          "offImage": "list_81_9a386559_52_off.png",
+          "onImage": "list_82_47223da2_52_on.png",
+          "offImage": "list_82_47223da2_52_off.png",
           "buttonId": 52,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16372,10 +16459,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_53_on.png",
-          "offImage": "list_81_9a386559_53_off.png",
+          "onImage": "list_82_47223da2_53_on.png",
+          "offImage": "list_82_47223da2_53_off.png",
           "buttonId": 53,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16401,10 +16488,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_54_on.png",
-          "offImage": "list_81_9a386559_54_off.png",
+          "onImage": "list_82_47223da2_54_on.png",
+          "offImage": "list_82_47223da2_54_off.png",
           "buttonId": 54,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16430,10 +16517,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_55_on.png",
-          "offImage": "list_81_9a386559_55_off.png",
+          "onImage": "list_82_47223da2_55_on.png",
+          "offImage": "list_82_47223da2_55_off.png",
           "buttonId": 55,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16459,10 +16546,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_56_on.png",
-          "offImage": "list_81_9a386559_56_off.png",
+          "onImage": "list_82_47223da2_56_on.png",
+          "offImage": "list_82_47223da2_56_off.png",
           "buttonId": 56,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16488,10 +16575,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_57_on.png",
-          "offImage": "list_81_9a386559_57_off.png",
+          "onImage": "list_82_47223da2_57_on.png",
+          "offImage": "list_82_47223da2_57_off.png",
           "buttonId": 57,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16517,10 +16604,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_58_on.png",
-          "offImage": "list_81_9a386559_58_off.png",
+          "onImage": "list_82_47223da2_58_on.png",
+          "offImage": "list_82_47223da2_58_off.png",
           "buttonId": 58,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16546,10 +16633,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_59_on.png",
-          "offImage": "list_81_9a386559_59_off.png",
+          "onImage": "list_82_47223da2_59_on.png",
+          "offImage": "list_82_47223da2_59_off.png",
           "buttonId": 59,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16575,10 +16662,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_60_on.png",
-          "offImage": "list_81_9a386559_60_off.png",
+          "onImage": "list_82_47223da2_60_on.png",
+          "offImage": "list_82_47223da2_60_off.png",
           "buttonId": 60,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16604,10 +16691,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_61_on.png",
-          "offImage": "list_81_9a386559_61_off.png",
+          "onImage": "list_82_47223da2_61_on.png",
+          "offImage": "list_82_47223da2_61_off.png",
           "buttonId": 61,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16633,10 +16720,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_62_on.png",
-          "offImage": "list_81_9a386559_62_off.png",
+          "onImage": "list_82_47223da2_62_on.png",
+          "offImage": "list_82_47223da2_62_off.png",
           "buttonId": 62,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16662,10 +16749,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_63_on.png",
-          "offImage": "list_81_9a386559_63_off.png",
+          "onImage": "list_82_47223da2_63_on.png",
+          "offImage": "list_82_47223da2_63_off.png",
           "buttonId": 63,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16691,10 +16778,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_64_on.png",
-          "offImage": "list_81_9a386559_64_off.png",
+          "onImage": "list_82_47223da2_64_on.png",
+          "offImage": "list_82_47223da2_64_off.png",
           "buttonId": 64,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16720,10 +16807,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_65_on.png",
-          "offImage": "list_81_9a386559_65_off.png",
+          "onImage": "list_82_47223da2_65_on.png",
+          "offImage": "list_82_47223da2_65_off.png",
           "buttonId": 65,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16749,10 +16836,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_66_on.png",
-          "offImage": "list_81_9a386559_66_off.png",
+          "onImage": "list_82_47223da2_66_on.png",
+          "offImage": "list_82_47223da2_66_off.png",
           "buttonId": 66,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16778,10 +16865,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_67_on.png",
-          "offImage": "list_81_9a386559_67_off.png",
+          "onImage": "list_82_47223da2_67_on.png",
+          "offImage": "list_82_47223da2_67_off.png",
           "buttonId": 67,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16807,10 +16894,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_68_on.png",
-          "offImage": "list_81_9a386559_68_off.png",
+          "onImage": "list_82_47223da2_68_on.png",
+          "offImage": "list_82_47223da2_68_off.png",
           "buttonId": 68,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16836,10 +16923,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_69_on.png",
-          "offImage": "list_81_9a386559_69_off.png",
+          "onImage": "list_82_47223da2_69_on.png",
+          "offImage": "list_82_47223da2_69_off.png",
           "buttonId": 69,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16865,10 +16952,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_70_on.png",
-          "offImage": "list_81_9a386559_70_off.png",
+          "onImage": "list_82_47223da2_70_on.png",
+          "offImage": "list_82_47223da2_70_off.png",
           "buttonId": 70,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16894,10 +16981,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_71_on.png",
-          "offImage": "list_81_9a386559_71_off.png",
+          "onImage": "list_82_47223da2_71_on.png",
+          "offImage": "list_82_47223da2_71_off.png",
           "buttonId": 71,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16923,10 +17010,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_72_on.png",
-          "offImage": "list_81_9a386559_72_off.png",
+          "onImage": "list_82_47223da2_72_on.png",
+          "offImage": "list_82_47223da2_72_off.png",
           "buttonId": 72,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16952,10 +17039,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_73_on.png",
-          "offImage": "list_81_9a386559_73_off.png",
+          "onImage": "list_82_47223da2_73_on.png",
+          "offImage": "list_82_47223da2_73_off.png",
           "buttonId": 73,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -16981,10 +17068,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_74_on.png",
-          "offImage": "list_81_9a386559_74_off.png",
+          "onImage": "list_82_47223da2_74_on.png",
+          "offImage": "list_82_47223da2_74_off.png",
           "buttonId": 74,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -17010,10 +17097,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_75_on.png",
-          "offImage": "list_81_9a386559_75_off.png",
+          "onImage": "list_82_47223da2_75_on.png",
+          "offImage": "list_82_47223da2_75_off.png",
           "buttonId": 75,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -17039,10 +17126,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_76_on.png",
-          "offImage": "list_81_9a386559_76_off.png",
+          "onImage": "list_82_47223da2_76_on.png",
+          "offImage": "list_82_47223da2_76_off.png",
           "buttonId": 76,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -17068,10 +17155,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_77_on.png",
-          "offImage": "list_81_9a386559_77_off.png",
+          "onImage": "list_82_47223da2_77_on.png",
+          "offImage": "list_82_47223da2_77_off.png",
           "buttonId": 77,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -17097,10 +17184,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_78_on.png",
-          "offImage": "list_81_9a386559_78_off.png",
+          "onImage": "list_82_47223da2_78_on.png",
+          "offImage": "list_82_47223da2_78_off.png",
           "buttonId": 78,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -17126,10 +17213,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_79_on.png",
-          "offImage": "list_81_9a386559_79_off.png",
+          "onImage": "list_82_47223da2_79_on.png",
+          "offImage": "list_82_47223da2_79_off.png",
           "buttonId": 79,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -17155,10 +17242,10 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_81_9a386559_80_on.png",
-          "offImage": "list_81_9a386559_80_off.png",
+          "onImage": "list_82_47223da2_80_on.png",
+          "offImage": "list_82_47223da2_80_off.png",
           "buttonId": 80,
-          "numButtonsInGroup": 81,
+          "numButtonsInGroup": 82,
           "handleName": "Data",
           "gestureBehaviour": "Instant"
          }
@@ -17175,12 +17262,41 @@
          "boundsType": "Absolute",
          "bounds": "30 728 244 38"
         }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "item81",
+         "type": "Button",
+         "data": {
+          "version": 2,
+          "onImage": "list_82_47223da2_81_on.png",
+          "offImage": "list_82_47223da2_81_off.png",
+          "buttonId": 81,
+          "numButtonsInGroup": 82,
+          "handleName": "Data",
+          "gestureBehaviour": "Instant"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "274 728 244 38"
+        }
        }
       ]
      }
     },
     {
-     "key": "hx knob88_w420 list hx list 81_9a386559",
+     "key": "hx knob88_w420 list hx list 82_47223da2",
      "value": {
       "version": 2,
       "actions": [
@@ -17196,14 +17312,14 @@
         "onAction": "Double Click",
         "handler": "Show Overlay",
         "handleName": "Data",
-        "additionalData": "hx list 81_9a386559"
+        "additionalData": "hx list 82_47223da2"
        },
        {
         "version": 1,
         "onAction": "Enter Pressed",
         "handler": "Show Overlay",
         "handleName": "Data",
-        "additionalData": "hx list 81_9a386559"
+        "additionalData": "hx list 82_47223da2"
        }
       ],
       "backgroundData": {
@@ -22928,7 +23044,7 @@
    },
    {
     "key": "Parameter 218",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 220",
@@ -22940,7 +23056,7 @@
    },
    {
     "key": "Parameter 223",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 225",
@@ -22952,7 +23068,7 @@
    },
    {
     "key": "Parameter 228",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 230",
@@ -22964,7 +23080,7 @@
    },
    {
     "key": "Parameter 233",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 235",
@@ -22976,7 +23092,7 @@
    },
    {
     "key": "Parameter 238",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 240",
@@ -22988,7 +23104,7 @@
    },
    {
     "key": "Parameter 243",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 245",
@@ -23000,7 +23116,7 @@
    },
    {
     "key": "Parameter 248",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 250",
@@ -23012,7 +23128,7 @@
    },
    {
     "key": "Parameter 253",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 255",
@@ -23024,7 +23140,7 @@
    },
    {
     "key": "Parameter 258",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 260",
@@ -23036,7 +23152,7 @@
    },
    {
     "key": "Parameter 263",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 265",
@@ -23048,7 +23164,7 @@
    },
    {
     "key": "Parameter 268",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 270",
@@ -23060,7 +23176,7 @@
    },
    {
     "key": "Parameter 273",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 275",
@@ -23072,7 +23188,7 @@
    },
    {
     "key": "Parameter 278",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 280",
@@ -23084,7 +23200,7 @@
    },
    {
     "key": "Parameter 283",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 285",
@@ -23096,7 +23212,7 @@
    },
    {
     "key": "Parameter 288",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 290",
@@ -23108,7 +23224,7 @@
    },
    {
     "key": "Parameter 293",
-    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F"]
+    "value": ["None", "Pitch", "A Pitch", "B Pitch", "Amp", "Pan", "A WT Pos", "A Fine", "A Level", "A Pan", "A Warp 1 Amt", "A Warp 2 Amt", "A Detune", "A Blend", "A Spread", "B WT Pos", "B Fine", "B Level", "B Pan", "B Warp 1 Amt", "B Warp 2 Amt", "B Detune", "B Blend", "B Spread", "Sub Level", "Noise Level", "F1 Cutoff", "F1 Reso", "F1 Drive", "F1 Fat", "F1 Level", "F2 Cutoff", "F2 Reso", "F2 Drive", "F2 Fat", "F2 Level", "Ser/Par", "L1 Rate", "L2 Rate", "L3 Rate", "L4 Rate", "Dist Drive", "Dist Mix", "Chorus Mix", "Phaser Mix", "Delay Mix", "Reverb Mix", "OTT Depth", "MO Pitch", "MO RM Amt", "MO Phase Amt", "MO Pos Amt", "MO FM Amt", "Insert 1 Mix", "Insert 1 A", "Insert 1 B", "Insert 1 C", "Insert 1 D", "Insert 1 E", "Insert 1 F", "Insert 2 Mix", "Insert 2 A", "Insert 2 B", "Insert 2 C", "Insert 2 D", "Insert 2 E", "Insert 2 F", "FX 1 Mix", "FX 1 A", "FX 1 B", "FX 1 C", "FX 1 D", "FX 1 E", "FX 1 F", "FX 2 Mix", "FX 2 A", "FX 2 B", "FX 2 C", "FX 2 D", "FX 2 E", "FX 2 F", "SG Level"]
    },
    {
     "key": "Parameter 295",
@@ -23177,6 +23293,10 @@
    {
     "key": "Parameter 399",
     "value": ["Off", "Ping-Pong", "Tape Echo", "BBD Echo", "Dub Delay", "Spring", "Tomb Room", "Mod Hall", "Celestial", "Dolmen", "Tumulus", "Plate", "Gated Verb", "Vastness", "Super-Massive", "Quadraverb", "Ensemble", "BBD Chorus", "Multi-Chorus", "Dimension", "Widener", "Flanger", "Script Phase", "Colour Phase", "Dual Phaser", "Barber-pole", "Vibe", "Filter", "Ring Mod", "Drive", "SP-1200", "MPC60", "S950", "S1000", "Amiga", "Beat Repeat", "Volume Shaper", "Stereo Tools", "HELIX Dist", "HELIX Chorus", "HELIX Phaser", "HELIX Delay", "HELIX Reverb", "OTT", "HELIX EQ"]
+   },
+   {
+    "key": "Parameter 407",
+    "value": ["Off", "On"]
    },
    {
     "key": "Parameter 449",
@@ -38723,6 +38843,287 @@
    },
    {
     "version": 1,
+    "tabName": "SUB GUARD",
+    "fnKeyIndex": 4,
+    "fnKeySubIndex": 2,
+    "componentDefinition": {
+     "version": 2,
+     "actions": [],
+     "backgroundData": {
+      "version": 1,
+      "focussed": {
+       "version": 1,
+       "colour": "ffb2b6bc",
+       "image": ""
+      },
+      "unfocussed": {
+       "version": 1,
+       "colour": "ffb2b6bc",
+       "image": ""
+      }
+     },
+     "ignoreMousePresses": false,
+     "disableCoarseDataWheel": false,
+     "componentsData": [
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "background",
+        "type": "Image",
+        "data": {
+         "version": 2,
+         "imageType": "Regular",
+         "colour": "0",
+         "image": "bg_4_2.png"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "0 0 1280 628"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "tag Sub Guard",
+        "type": "hx tag Sub Guard",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 407"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 13 150 140"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Split]/Parameter 408"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 46 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "SG Freq",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 408"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 20 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Sub Level]/Parameter 409"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "586 46 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "SG Level",
+        "type": "hx knob88_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 409"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "486 20 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Warmth]/Parameter 410"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "884 46 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "SG Warmth",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 410"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "784 20 250 126"
+       }
+      }
+     ]
+    },
+    "qlinkBoundsData": ["10 10 1260 146"]
+   },
+   {
+    "version": 1,
     "tabName": "M1-4",
     "fnKeyIndex": 5,
     "fnKeySubIndex": 0,
@@ -38916,7 +39317,7 @@
        "componentData": {
         "version": 1,
         "name": "M1 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -39151,7 +39552,7 @@
        "componentData": {
         "version": 1,
         "name": "M2 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -39386,7 +39787,7 @@
        "componentData": {
         "version": 1,
         "name": "M3 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -39621,7 +40022,7 @@
        "componentData": {
         "version": 1,
         "name": "M4 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -39910,7 +40311,7 @@
        "componentData": {
         "version": 1,
         "name": "M5 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -40145,7 +40546,7 @@
        "componentData": {
         "version": 1,
         "name": "M6 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -40380,7 +40781,7 @@
        "componentData": {
         "version": 1,
         "name": "M7 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -40615,7 +41016,7 @@
        "componentData": {
         "version": 1,
         "name": "M8 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -40904,7 +41305,7 @@
        "componentData": {
         "version": 1,
         "name": "M9 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -41139,7 +41540,7 @@
        "componentData": {
         "version": 1,
         "name": "M10 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -41374,7 +41775,7 @@
        "componentData": {
         "version": 1,
         "name": "M11 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -41609,7 +42010,7 @@
        "componentData": {
         "version": 1,
         "name": "M12 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -41898,7 +42299,7 @@
        "componentData": {
         "version": 1,
         "name": "M13 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -42133,7 +42534,7 @@
        "componentData": {
         "version": 1,
         "name": "M14 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -42368,7 +42769,7 @@
        "componentData": {
         "version": 1,
         "name": "M15 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -42603,7 +43004,7 @@
        "componentData": {
         "version": 1,
         "name": "M16 Dest",
-        "type": "hx knob88_w420 list hx list 81_9a386559",
+        "type": "hx knob88_w420 list hx list 82_47223da2",
         "data": {
          "version": 1,
          "handleName": "Data"

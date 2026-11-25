@@ -709,6 +709,9 @@ def pages():
                 S(title + "\nMORE", [K(slot + " " + k, k, dyn=slot + " Name " + k) for k in "CDEF"])]
     page(4, 0, "INSERTS", lib("Insert 1", "INSERT 1") + lib("Insert 2", "INSERT 2"))
     page(4, 1, "FX 1-2", lib("FX 1", "FX 1") + lib("FX 2", "FX 2"))
+    # Sub guardian: below Freq stays mono and clean and skips every effect
+    page(4, 2, "SUB GUARD", [S("SUB\nGUARD", [K("SG Freq", "Split"), K("SG Level", "Sub Level", bi=True),
+                                              K("SG Warmth", "Warmth")], toggle="Sub Guard")])
 
     # ---- MOD MATRIX (long lists: knobs, which step through the choices and show the name)
     for b in range(4):

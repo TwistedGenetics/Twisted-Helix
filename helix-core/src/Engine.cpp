@@ -42,6 +42,8 @@ void Engine::reset()
     for (Voice& v : voices_) v.kill();
     fx_.reset();
     for (auto& sl : lib_) sl.reset();
+    for (auto& b : sgLp_) b.reset();
+    for (auto& b : sgHp_) b.reset();
     pitchBend_ = modWheel_ = chanPressure_ = 0.0f;
     sustain_ = false;
     noteStackSize_ = 0;
@@ -275,6 +277,38 @@ void Engine::runFx(float* l, float* r, int n)
             const int pi = newest->modOffset(k).param;
             if (pi >= P_FX_ORDER1) fxp_[pi] = newest->modulatedParams()[pi];
         }
+    // Sub guardian: the band below Freq is taken out here (mono, clean) and added back after every effect.
+    const bool sg = fxp_[P_SG_ON] >= 0.5f;
+    if (sg)
+    {
+        const float f = clamp(fxp_[P_SG_FREQ], 20.0f, 0.45f * (float)sampleRate_);
+        if (f != sgKey_[0])
+        {
+            sgKey_[0] = f;
+            // two cascaded Butterworth low-passes = Linkwitz-Riley 24 dB
+            const float w = kTwoPi * f / (float)sampleRate_, cs = std::cos(w), al = std::sin(w) / (2.0f * 0.70710678f);
+            const float a0 = 1.0f + al;
+            for (auto& b : sgLp_)
+            {
+                b.b0 = (1.0f - cs) * 0.5f / a0; b.b1 = (1.0f - cs) / a0; b.b2 = b.b0;
+                b.a1 = -2.0f * cs / a0; b.a2 = (1.0f - al) / a0;
+            }
+            for (auto& b : sgHp_)
+            {
+                b.b0 = (1.0f + cs) * 0.5f / a0; b.b1 = -(1.0f + cs) / a0; b.b2 = b.b0;
+                b.a1 = -2.0f * cs / a0; b.a2 = (1.0f - al) / a0;
+            }
+        }
+        for (int i = 0; i < n; ++i)
+        {
+            const float ll = sgLp_[1].process(0, sgLp_[0].process(0, l[i]));
+            const float lr = sgLp_[1].process(1, sgLp_[0].process(1, r[i]));
+            l[i] = sgHp_[1].process(0, sgHp_[0].process(0, l[i]));
+            r[i] = sgHp_[1].process(1, sgHp_[0].process(1, r[i]));
+            sgLow_[i] = 0.5f * (ll + lr);
+        }
+    }
+
     // Effects library: Insert 1, Insert 2, then HELIX's FX rack, then FX 1, FX 2
     fxlib::Context lc;
     lc.bpm = ctx_.bpm;
@@ -290,6 +324,20 @@ void Engine::runFx(float* l, float* r, int n)
     fx_.process(l, r, n, fxp_, ctx_.bpm, ctx_.oversample);
     runSlot(2);
     runSlot(3);
+    if (sg)
+    {
+        const float g = dbToGain(clamp(fxp_[P_SG_LEVEL], -12.0f, 6.0f));
+        const float w = clamp(fxp_[P_SG_WARMTH], 0.0f, 1.0f);
+        for (int i = 0; i < n; ++i)
+        {
+            float s = sgLow_[i];
+            // warmth: soft even + odd harmonics, level-matched at low drive
+            if (w > 0.0f) { const float k = 1.0f + 3.0f * w; s = fastTanh(k * s + 0.2f * w * k * s * s) / k; }
+            s *= g;
+            l[i] += s;
+            r[i] += s;
+        }
+    }
     heavyFx_.store(fx_.heavyActive() || lib_[0].heavy() || lib_[1].heavy() || lib_[2].heavy() || lib_[3].heavy(),
                    std::memory_order_relaxed);
 }
