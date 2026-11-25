@@ -961,8 +961,7 @@ public:
     {
         const Theme& t = theme();
         auto r = getLocalBounds().toFloat();
-        g.setColour(t.display);
-        g.fillRoundedRectangle(r, 6.0f);
+        drawDisplayBackground(g, r);
         const auto& ott = proc_.engine().masterOtt();
         const bool on = proc_.engine().params().get(P_MOTT_ON) >= 0.5f;
         const char* names[3] = {"H", "M", "L"};
@@ -1011,6 +1010,7 @@ public:
             g.setFont(ui::font(18.0f, true));
             g.drawText("OTT off", getLocalBounds(), juce::Justification::centred);
         }
+        drawDisplayGlass(g, r);
     }
 private:
     HelixProcessor& proc_;

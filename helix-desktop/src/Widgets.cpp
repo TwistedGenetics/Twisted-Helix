@@ -211,8 +211,11 @@ void PanelFrame::paint(juce::Graphics& g)
 {
     const Theme& t = theme();
     auto r = getLocalBounds().toFloat().reduced(1.0f);
-    g.setColour(t.panel);
-    g.fillRoundedRectangle(r, 6.0f);
+    // glass panel (0.5.1): lit from above, a sheen over the top half, a thin accent line along the top edge
+    ui::glassFill(g, r, 6.0f, t.panel, 0.10f, 0.22f);
+    ui::glassSheen(g, r, 6.0f, t.dark ? 0.07f : 0.12f);
+    g.setColour(t.accent.withAlpha(0.45f));
+    g.drawHorizontalLine((int)r.getY() + 1, r.getX() + 10.0f, r.getRight() - 10.0f);
     g.setColour(t.edge);
     g.drawRoundedRectangle(r, 6.0f, 1.0f);
     auto title = titleArea();

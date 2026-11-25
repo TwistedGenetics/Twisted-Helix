@@ -8,11 +8,24 @@
 
 using namespace helix;
 
+// Glass reflection over a display (drawn last, over the content).
+void drawDisplayGlass(juce::Graphics& g, juce::Rectangle<float> r)
+{
+    ui::glassSheen(g, r.reduced(1.0f), 5.0f, theme().dark ? 0.09f : 0.14f);
+}
+
 void drawDisplayBackground(juce::Graphics& g, juce::Rectangle<float> r)
 {
     const Theme& t = theme();
-    g.setColour(t.display);
-    g.fillRoundedRectangle(r, 5.0f);
+    // deep glass screen: lighter at the top, an inner shadow under the top edge
+    ui::glassFill(g, r, 5.0f, t.display, 0.12f, 0.45f);
+    {
+        juce::Graphics::ScopedSaveState save(g);
+        g.reduceClipRegion(r.toNearestInt());
+        g.setGradientFill(juce::ColourGradient(juce::Colours::black.withAlpha(0.45f), 0.0f, r.getY(),
+                                               juce::Colours::black.withAlpha(0.0f), 0.0f, r.getY() + 10.0f, false));
+        g.fillRect(r.withHeight(10.0f));
+    }
     g.setColour(t.displayGrid);
     for (int i = 1; i < 8; ++i)
     {
@@ -159,16 +172,18 @@ void WavetableView::paint(juce::Graphics& g)
                 g.setGradientFill(juce::ColourGradient(t.accent.withAlpha(0.35f), 0.0f, fill.getBounds().getY(),
                                                        t.accent.withAlpha(0.02f), 0.0f, fill.getBounds().getBottom(), false));
                 g.fillPath(fill);
-                g.setColour(t.accent.withAlpha(0.14f));
-                g.strokePath(line, juce::PathStrokeType(9.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
-                g.setColour(t.accent.withAlpha(0.30f));
-                g.strokePath(line, juce::PathStrokeType(4.5f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
-                g.setColour(t.accent.brighter(0.15f));
-                g.strokePath(line, juce::PathStrokeType(2.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+                juce::Path stroke;
+                juce::PathStrokeType(2.4f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded).createStrokedPath(stroke, line);
+                juce::DropShadow(juce::Colours::black.withAlpha(0.8f), 5, {2, 4}).drawForPath(g, stroke);   // lift
+                juce::DropShadow(t.accent.withAlpha(0.85f), 10, {0, 0}).drawForPath(g, stroke);              // glow
+                g.setColour(t.accent.brighter(0.5f));
+                g.fillPath(stroke);
             }
             juce::Path line, fill;
             curve(frame, depth, false, line, fill);
-            g.setColour(t.display.withAlpha(t.dark ? 0.86f : 0.80f));
+            const auto fb = fill.getBounds();
+            g.setGradientFill(juce::ColourGradient(t.display.brighter(0.10f).withAlpha(t.dark ? 0.90f : 0.84f), 0.0f, fb.getY(),
+                                                   t.display.darker(0.30f).withAlpha(t.dark ? 0.94f : 0.88f), 0.0f, fb.getBottom(), false));
             g.fillPath(fill);
             const float near = 1.0f - depth;
             g.setColour(t.waveBack.interpolatedWith(t.text, t.dark ? 0.15f * near : 0.0f).withAlpha(0.30f + 0.55f * near));
@@ -205,8 +220,15 @@ void WavetableView::paint(juce::Graphics& g)
                 g.setGradientFill(juce::ColourGradient(c.withAlpha(0.30f), 0, r.getY(), c.withAlpha(0.0f), 0, mid, false));
                 g.fillPath(fill);
             }
-            g.setColour(c);
-            g.strokePath(line, juce::PathStrokeType(thick, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+            juce::Path stroke;
+            juce::PathStrokeType(thick, juce::PathStrokeType::curved, juce::PathStrokeType::rounded).createStrokedPath(stroke, line);
+            if (filled)
+            {
+                juce::DropShadow(juce::Colours::black.withAlpha(0.8f), 5, {2, 4}).drawForPath(g, stroke);
+                juce::DropShadow(c.withAlpha(0.85f), 10, {0, 0}).drawForPath(g, stroke);
+            }
+            g.setColour(filled ? c.brighter(0.5f) : c);
+            g.fillPath(stroke);
         };
         g.setColour(t.displayGrid.brighter(0.2f));
         g.drawHorizontalLine((int)mid, r.getX(), r.getRight());
@@ -219,6 +241,7 @@ void WavetableView::paint(juce::Graphics& g)
         draw2d(fpos, warped, t.accent, 2.2f, true);
     }
 
+    drawDisplayGlass(g, area);
     // labels
     g.setColour(t.text);
     g.setFont(ui::font(12.0f, true));

@@ -16,7 +16,7 @@ params.json comes from the SDK build (host_sim dump). Parameters are looked up b
 plugin's parameter order automatically. Needs Pillow.
 """
 import argparse, json, math, os, random, sys, zlib
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MPC = os.path.dirname(HERE)
@@ -189,21 +189,87 @@ def thick_line(d, pts, width, colour):
     for x, y in (pts[0], pts[-1]):
         d.ellipse((x - r, y - r, x + r, y + r), fill=colour)
 
+
+# ---------------------------------------------------------------- glass (0.5.1): gradients, gloss and glow, same palette
+def shade(rgb, k):
+    """k > 0 lighter (toward white), k < 0 darker (toward black)."""
+    return tuple(int(round(c + (255 - c) * k)) if k >= 0 else int(round(c * (1 + k))) for c in rgb[:3])
+
+def vgrad(w, h, c0, c1, mode="RGB"):
+    """Vertical gradient c0 (top) -> c1 (bottom)."""
+    col = Image.new(mode, (1, h))
+    px = col.load()
+    for y in range(h):
+        t = y / max(1, h - 1)
+        c = tuple(int(round(a + (b - a) * t)) for a, b in zip(c0, c1))
+        px[0, y] = c if mode == "RGB" else c + ((255,) if len(c) == 3 else ())
+    return col.resize((w, h))
+
+def gloss(im, box, top=0.20, depth=0.48, radius=0):
+    """Glass sheen: white fading from `top` alpha at the top of box to nothing `depth` of the way down."""
+    x0, y0, x1, y1 = [int(v) for v in box]
+    w, h = x1 - x0, y1 - y0
+    if w <= 0 or h <= 0:
+        return im
+    hh = max(1, int(h * depth))
+    a = Image.new("L", (1, hh))
+    for y in range(hh):
+        a.putpixel((0, y), int(255 * top * (1 - y / hh) ** 1.6))
+    a = a.resize((w, hh))
+    mask = Image.new("L", (w, h), 0)
+    mask.paste(a, (0, 0))
+    if radius:
+        rm = Image.new("L", (w, h), 0)
+        ImageDraw.Draw(rm).rounded_rectangle((0, 0, w - 1, h - 1), radius=radius, fill=255)
+        mask = Image.composite(mask, Image.new("L", (w, h), 0), rm)
+    white = Image.new(im.mode, (w, h), (255, 255, 255) if im.mode == "RGB" else (255, 255, 255, 255))
+    region = im.crop((x0, y0, x1, y1))
+    im.paste(Image.composite(white, region, mask), (x0, y0))
+    return im
+
+def glow_layer(size, draw_fn, blur):
+    """An RGBA layer: draw_fn(ImageDraw) on transparent, blurred."""
+    lay = Image.new("RGBA", size, (0, 0, 0, 0))
+    draw_fn(ImageDraw.Draw(lay))
+    return lay.filter(ImageFilter.GaussianBlur(blur))
+
 def knob_frame(size, frac, bipolar):
     im, d = aa_canvas(size, size)
     s = SS
     st = 8 * s if size >= 80 else 7 * s
     c = size * s / 2
     r = c - st / 2 - s
-    thick_line(d, arc_pts(c, c, r, -135, 135), st, TRACK + (255,))
     ang = -135 + 270 * frac
     a0, a1 = (0, ang) if bipolar else (-135, ang)
     if a0 > a1:
         a0, a1 = a1, a0
-    if a1 - a0 > 0.5:
+    lit = a1 - a0 > 0.5
+    # glow under the lit arc
+    if lit:
+        im.alpha_composite(glow_layer(im.size, lambda g: thick_line(g, arc_pts(c, c, r, a0, a1), st * 1.9, ACCENT + (150,)), 4 * s))
+    thick_line(d, arc_pts(c, c, r, -135, 135), st, shade(TRACK, -0.25) + (255,))
+    if lit:
         thick_line(d, arc_pts(c, c, r, a0, a1), st, ACCENT + (255,))
+        thick_line(d, arc_pts(c, c, r - st * 0.18, a0, a1), st * 0.28, shade(ACCENT, 0.45) + (255,))   # bright core
     ir = r - st - 4 * s
-    d.ellipse((c - ir, c - ir, c + ir, c + ir), fill=KNOB_BODY + (255,))
+    # drop shadow of the cap
+    im.alpha_composite(glow_layer(im.size, lambda g: g.ellipse((c - ir, c - ir + 3 * s, c + ir, c + ir + 5 * s), fill=(0, 0, 0, 170)), 3 * s))
+    d = ImageDraw.Draw(im)
+    # domed cap: darker edge to a bright top-left
+    steps_n = 28
+    edge, mid = shade(KNOB_BODY, -0.22), KNOB_BODY
+    for i in range(steps_n):
+        t = i / (steps_n - 1)
+        rr = ir * (1 - 0.92 * t)
+        off = -ir * 0.18 * t
+        col = tuple(int(round(a + (b - a) * min(1, t * 1.4))) for a, b in zip(edge, mid))
+        d.ellipse((c - rr + off, c - rr + off, c + rr + off, c + rr + off), fill=col + (255,))
+    d.ellipse((c - ir, c - ir, c + ir, c + ir), outline=shade(ACCENT, 0.2) + (110,), width=int(1.5 * s))   # cyan rim
+    # specular highlight
+    hl = ir * 0.55
+    im.alpha_composite(glow_layer(im.size, lambda g: g.ellipse((c - ir * 0.62, c - ir * 0.78, c - ir * 0.62 + hl * 1.2, c - ir * 0.78 + hl * 0.7),
+                                                               fill=(255, 255, 255, 150)), 3 * s))
+    d = ImageDraw.Draw(im)
     t = math.radians(ang - 90)
     p0 = (c + ir * 0.22 * math.cos(t), c + ir * 0.22 * math.sin(t))
     p1 = (c + ir * 0.82 * math.cos(t), c + ir * 0.82 * math.sin(t))
@@ -218,10 +284,13 @@ def film(frames):
     return out
 
 # ---- waveform drawing inside a screen box. A shape is f(u) -> v, u in 0..1, v in -1..1 (None = pen up)
-def screen_frame(w, h, paths, label_space=True, frame=True):
-    """paths: list of (points [(u,v)], width_px, alpha 0..1). Coordinates normalised to the drawing area."""
-    im, d = aa_canvas(w, h, SCREEN + (255,))
+def screen_frame(w, h, paths, label_space=True, frame=True, fill="centre"):
+    """paths: list of (points [(u,v)], width_px, alpha 0..1). Coordinates normalised to the drawing area.
+    0.5.1: drawn as glass: a deep gradient screen, the main trace with a drop shadow, a translucent fill (to the centre
+    line, or to the bottom for responses) and a cyan glow, and a reflection across the top."""
     s = SS
+    im = vgrad(w * s, h * s, shade(SCREEN, 0.10), shade(SCREEN, -0.35), "RGBA")
+    d = ImageDraw.Draw(im)
     top, bot = 12 * s, (h - (42 if label_space else 12)) * s
     l, rgt = 12 * s, (w - 12) * s
     for i in range(1, 4):
@@ -232,18 +301,52 @@ def screen_frame(w, h, paths, label_space=True, frame=True):
         d.line([(x, 8 * s), (x, bot)], fill=GRID + (255,), width=s)
     X = lambda u: l + (rgt - l) * u
     Y = lambda v: (top + bot) / 2 - (bot - top) / 2 * 0.84 * v
-    for pts, width, alpha in paths:
-        col = LINE + (int(255 * alpha),)
+    base = (top + bot) / 2 if fill == "centre" else bot
+
+    def segments(pts):
         seg = []
         for p in pts + [None]:
             if p is None:
                 if len(seg) > 1:
-                    d.line([(X(u), Y(v)) for u, v in seg], fill=col, width=int(width * s), joint="curve")
+                    yield [(X(u), Y(v)) for u, v in seg]
                 seg = []
             else:
                 seg.append(p)
+
+    main = [p for p in paths if p[2] >= 0.99]
+    # translucent body under the main traces (gives the wave its solid, slightly raised look)
+    if fill and main:
+        body = Image.new("RGBA", im.size, (0, 0, 0, 0))
+        bd = ImageDraw.Draw(body)
+        for pts, width, alpha in main:
+            for sg in segments(pts):
+                bd.polygon(sg + [(sg[-1][0], base), (sg[0][0], base)], fill=ACCENT + (255,))
+        fade = vgrad(1, im.size[1], (110,), (25,), "L").resize(im.size)
+        body.putalpha(Image.composite(fade, Image.new("L", im.size, 0), body.getchannel("A")))
+        im.alpha_composite(body)
+    # drop shadow of the main traces (the 3D lift)
+    if main:
+        def sh(g):
+            for pts, width, alpha in main:
+                for sg in segments(pts):
+                    g.line([(x + 2.5 * s, y + 4 * s) for x, y in sg], fill=(0, 0, 0, 200), width=int(width * s * 1.2), joint="curve")
+        im.alpha_composite(glow_layer(im.size, sh, 2.5 * s))
+        def gl(g):
+            for pts, width, alpha in main:
+                for sg in segments(pts):
+                    g.line(sg, fill=LED_ON + (200,), width=int(width * s * 3.2), joint="curve")
+        im.alpha_composite(glow_layer(im.size, gl, 5 * s))
+    d = ImageDraw.Draw(im)
+    for pts, width, alpha in paths:
+        col = (LINE if alpha < 0.99 else shade(LED_ON, 0.55)) + (int(255 * alpha),)
+        for sg in segments(pts):
+            d.line(sg, fill=col, width=int(width * s), joint="curve")
+    # reflection across the top of the glass
+    gloss(im, (0, 0, w * s, h * s), top=0.13, depth=0.42)
     if frame:
+        d = ImageDraw.Draw(im)
         d.rectangle((0, 0, w * s - 1, h * s - 1), outline=BTN_EDGE + (255,), width=3 * s)
+        d.line([(3 * s, 4 * s), (w * s - 4 * s, 4 * s)], fill=(255, 255, 255, 60), width=s)   # top highlight edge
     return finish(im, w, h)
 
 def sample(f, n=160, u0=0.0, u1=1.0):
@@ -455,6 +558,60 @@ def ott_paths():
 SUB = {"Sine": sample(lambda u: 0.85 * math.sin(2 * math.pi * u * 2)), "Triangle": sample(lambda u: 0.85 * tri(cyc(u))),
        "Square": hard(lambda u: 0.8 * sq(cyc(u))), "Saw": hard(lambda u: 0.85 * saw(cyc(u)))}
 
+def wtpos_frame(w, h, frac):
+    """The wavetable as a 3D stack (0.5.1): seven frames receding up and to the right, each a solid ribbon that hides
+    the ones behind it; the frame at the current position is lit cyan with a glow, the rest are dim glass."""
+    s = SS
+    im = vgrad(w * s, h * s, shade(SCREEN, 0.10), shade(SCREEN, -0.35), "RGBA")
+    d = ImageDraw.Draw(im)
+    top, bot = 10 * s, (h - 42) * s
+    l, rgt = 12 * s, (w - 12) * s
+    N = 7
+    cur = frac * (N - 1)
+    X = lambda u: l + (rgt - l) * u
+    Y = lambda v: (top + bot) / 2 - (bot - top) / 2 * 0.84 * v
+    # floor grid in perspective
+    for i in range(N):
+        back = N - 1 - i
+        dx, dy = back * 0.04, back * 0.115
+        d.line([(X(dx), Y(-0.92 + dy)), (X(dx + 0.74), Y(-0.92 + dy))], fill=GRID + (255,), width=s)
+    for k in range(5):
+        u = k / 4 * 0.74
+        d.line([(X(u), Y(-0.92)), (X(u + 0.24), Y(-0.92 + 0.69))], fill=GRID + (255,), width=s)
+    lit = None
+    for i in range(N):            # back to front
+        m = i / (N - 1)
+        back = N - 1 - i
+        dx, dy = back * 0.04, back * 0.115
+        def f(u, m=m):     # a generic table: sine -> saw -> square
+            sn = math.sin(2 * math.pi * u)
+            sw = saw(cyc(u + 0.5, 1)) * 0.95
+            sqr = math.tanh(5 * sn) / math.tanh(5)
+            return sn + (sw - sn) * (m * 2) if m < 0.5 else sw + (sqr - sw) * (m * 2 - 1)
+        pts = [(X(dx + 0.74 * u), Y(0.42 * v - 0.42 + dy)) for u, v in sample(f, 140)]
+        base = Y(-0.42 + dy - 0.5)
+        near = max(0.0, 1 - abs(i - cur))
+        # solid ribbon: hides what is behind it
+        body = shade(STRIP, -0.35 + 0.25 * near)
+        d.polygon(pts + [(pts[-1][0], base), (pts[0][0], base)], fill=body + (235,))
+        if near > 0.5:
+            lit = pts
+            tint = Image.new("RGBA", im.size, (0, 0, 0, 0))
+            ImageDraw.Draw(tint).polygon(pts + [(pts[-1][0], base), (pts[0][0], base)], fill=ACCENT + (int(90 * near),))
+            im.alpha_composite(tint)
+            d = ImageDraw.Draw(im)
+        col = tuple(int(a + (b - a) * near) for a, b in zip(shade(GRID, 0.35), shade(LED_ON, 0.55)))
+        d.line(pts, fill=col + (255,), width=int((1.4 + 2.4 * near) * s), joint="curve")
+    if lit:
+        im.alpha_composite(glow_layer(im.size, lambda g: g.line(lit, fill=LED_ON + (190,), width=int(9 * s), joint="curve"), 5 * s))
+        d = ImageDraw.Draw(im)
+        d.line(lit, fill=shade(LED_ON, 0.6) + (255,), width=int(3.4 * s), joint="curve")
+    gloss(im, (0, 0, w * s, h * s), top=0.13, depth=0.42)
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, w * s - 1, h * s - 1), outline=BTN_EDGE + (255,), width=3 * s)
+    d.line([(3 * s, 4 * s), (w * s - 4 * s, 4 * s)], fill=(255, 255, 255, 60), width=s)
+    return finish(im, w, h)
+
 def screen_film(kind, choices, w, h):
     """Returns a list of frames for a screen bound to a parameter of this kind."""
     if kind == "warp":
@@ -464,9 +621,9 @@ def screen_film(kind, choices, w, h):
     if kind == "noise":
         return [screen_frame(w, h, [(noise_series(c), 1.6, 1)]) for c in choices]
     if kind == "filter":
-        return [screen_frame(w, h, [(filter_curve(c), 3.5, 1)]) for c in choices]
+        return [screen_frame(w, h, [(filter_curve(c), 3.5, 1)], fill="bottom") for c in choices]
     if kind == "mfilter":
-        return [screen_frame(w, h, [(mega_filter_curve(c), 3.5, 1)]) for c in choices]
+        return [screen_frame(w, h, [(mega_filter_curve(c), 3.5, 1)], fill="bottom") for c in choices]
     if kind == "lfo":
         return [screen_frame(w, h, [(lfo_shape(c), 3.2, 1)]) for c in choices]
     if kind == "dist":
@@ -480,18 +637,27 @@ def screen_film(kind, choices, w, h):
     if kind == "unison":
         return [screen_frame(w, h, unison_paths(n)) for n in range(1, 8)]
     if kind == "wtpos":
-        return [screen_frame(w, h, wtpos_paths(i / 32)) for i in range(33)]
+        return [wtpos_frame(w, h, i / 32) for i in range(33)]
     if kind == "ott":
         return [screen_frame(w, h, ott_paths())]
     raise ValueError(kind)
 
 def box_image(w, h, fill, chevron=False):
-    im, d = aa_canvas(w, h, fill + (255,))
+    """A button / display box as glass: gradient body, sheen on the top half, light top edge, dark frame. Lit
+    (light) boxes get a soft cyan inner glow."""
     s = SS
-    d.rectangle((0, 0, w * s - 1, h * s - 1), outline=(INK if is_light(fill) else BTN_EDGE) + (255,), width=3 * s)
+    light = is_light(fill)
+    im = vgrad(w * s, h * s, shade(fill, 0.10 if light else 0.14), shade(fill, -0.10 if light else -0.30), "RGBA")
+    if light:
+        im.alpha_composite(glow_layer(im.size, lambda g: g.rectangle((6 * s, 6 * s, w * s - 6 * s, h * s - 6 * s),
+                                                                     outline=LED_ON + (160,), width=4 * s), 4 * s))
+    gloss(im, (0, 0, w * s, h * s), top=0.30 if light else 0.16, depth=0.5)
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, w * s - 1, h * s - 1), outline=(INK if light else BTN_EDGE) + (255,), width=3 * s)
+    d.line([(3 * s, 4 * s), (w * s - 4 * s, 4 * s)], fill=(255, 255, 255, 120 if light else 55), width=s)
     if chevron:
         cx, cy = (w - 22) * s, h * s / 2
-        d.polygon([(cx - 8 * s, cy - 4 * s), (cx + 8 * s, cy - 4 * s), (cx, cy + 6 * s)], fill=(INK if is_light(fill) else LINE) + (255,))
+        d.polygon([(cx - 8 * s, cy - 4 * s), (cx + 8 * s, cy - 4 * s), (cx, cy + 6 * s)], fill=(INK if light else LINE) + (255,))
     return finish(im, w, h)
 
 def slug(t):
@@ -507,17 +673,29 @@ def draw_text(im, text, cx, cy, size, weight=700, colour=INK):
     d = ImageDraw.Draw(im)
     d.text((cx, cy), text, font=pil_font(size, weight), fill=colour, anchor="mm")
 
+def tag_face(w, h, on=True):
+    """The section tag's glass face (light grey, darker when off)."""
+    base = FRAME if on else OFF
+    im = vgrad(w, h, shade(base, 0.35), shade(base, -0.12))
+    gloss(im, (0, 0, w, h), top=0.35, depth=0.45)
+    return im
+
 def tag_frame(lines, state, on):
-    """Section tag in Massive's style: light grey (darker when off), dark title, a round LED (cyan = on)."""
+    """Section tag in Massive's style: light grey glass (darker when off), dark title, a round LED (cyan = on, glowing)."""
     h = STRIP_H - 2 * BORDER
-    im = Image.new("RGB", (TAG_W, h), FRAME if on else OFF)
+    im = tag_face(TAG_W, h, on)
     d = ImageDraw.Draw(im)
     ty = h / 2 - 17 * len(lines) - 14
     for i, line in enumerate(lines):
         draw_text(im, line, TAG_W / 2 + 10, ty + i * 34 + 17, 28, 700, INK)
     r = 9
     cx, cy = 16, ty + 17
+    if on:
+        halo = glow_layer((TAG_W, h), lambda g: g.ellipse((cx - 2 * r, cy - 2 * r, cx + 2 * r, cy + 2 * r), fill=LED_ON + (200,)), 5)
+        im = Image.alpha_composite(im.convert("RGBA"), halo).convert("RGB")
+        d = ImageDraw.Draw(im)
     d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=LED_ON if on else LED_OFF, outline=INK, width=2)
+    d.ellipse((cx - r * 0.55, cy - r * 0.7, cx + r * 0.1, cy - r * 0.15), fill=shade(LED_ON if on else LED_OFF, 0.6))
     draw_text(im, state, TAG_W / 2, ty + len(lines) * 34 + 6 + 15, 24, 600, INK)
     return im
 
@@ -545,10 +723,10 @@ PERF_CURVES = {
 }
 
 def icon_box(w, h, fill, name):
-    """A picker button showing a step shape as a small curve (performer step shapes)."""
-    im, d = aa_canvas(w, h, fill + (255,))
+    """A picker button showing a step shape as a small curve (performer step shapes), on a glass button."""
+    im = box_image(w, h, fill).resize((w * SS, h * SS), Image.LANCZOS)
+    d = ImageDraw.Draw(im)
     s = SS
-    d.rectangle((0, 0, w * s - 1, h * s - 1), outline=(INK if is_light(fill) else BTN_EDGE) + (255,), width=3 * s)
     l, r_, t, b = 14 * s, (w - 14) * s, 14 * s, (h - 14) * s
     X = lambda u: l + (r_ - l) * u
     Y = lambda v: b - (b - t) * v
@@ -558,18 +736,38 @@ def icon_box(w, h, fill, name):
     return finish(im, w, h).convert("RGB")
 
 def background(page):
-    im = Image.new("RGB", (1280, 628), GROUND)
+    im = vgrad(1280, 628, shade(GROUND, 0.12), shade(GROUND, -0.10))
+    # soft shadows under the strips
+    sh = Image.new("RGBA", im.size, (0, 0, 0, 0))
+    sd = ImageDraw.Draw(sh)
+    for r, st in enumerate(page["strips"]):
+        y = strip_y(r)
+        sd.rounded_rectangle((PAD + 2, y + 4, 1280 - PAD + 1, y + STRIP_H + 3), radius=10, fill=(0, 0, 0, 110))
+    im = Image.alpha_composite(im.convert("RGBA"), sh.filter(ImageFilter.GaussianBlur(5))).convert("RGB")
     d = ImageDraw.Draw(im)
     for r, st in enumerate(page["strips"]):
         y = strip_y(r)
-        d.rectangle((PAD, y, 1280 - PAD - 1, y + STRIP_H - 1), fill=STRIP, outline=FRAME, width=BORDER)
+        x0, x1 = PAD, 1280 - PAD - 1
+        d.rounded_rectangle((x0, y, x1, y + STRIP_H - 1), radius=10, fill=FRAME, outline=shade(FRAME, -0.25), width=1)
+        # glass body: lighter navy at the top, deep at the bottom, a sheen and a thin cyan edge light
+        bx0 = PAD + BORDER + TAG_W + BORDER
+        body = vgrad(x1 - BORDER - bx0 + 1, STRIP_H - 2 * BORDER, shade(STRIP, 0.12), shade(STRIP, -0.30))
+        gloss(body, (0, 0) + body.size, top=0.10, depth=0.42)
+        im.paste(body, (bx0, y + BORDER))
+        d = ImageDraw.Draw(im)
+        d.line([(bx0 + 2, y + BORDER), (x1 - BORDER - 2, y + BORDER)], fill=shade(ACCENT, 0.15), width=1)
         tx0 = PAD + BORDER
-        d.rectangle((tx0, y + BORDER, tx0 + TAG_W - 1, y + STRIP_H - BORDER - 1), fill=FRAME)
+        im.paste(tag_face(TAG_W, STRIP_H - 2 * BORDER), (tx0, y + BORDER))
+        d = ImageDraw.Draw(im)
         d.rectangle((tx0 + TAG_W, y + BORDER, tx0 + TAG_W + BORDER - 1, y + STRIP_H - BORDER - 1), fill=GROUND)
         for c in st["cells"]:
             if c["type"] == "env":
                 x, yy, w, h = c["rect"]
-                d.rectangle((x, yy, x + w - 1, yy + h - 1), fill=SCREEN, outline=BTN_EDGE, width=3)
+                env = vgrad(w, h, shade(SCREEN, 0.10), shade(SCREEN, -0.35))
+                gloss(env, (0, 0, w, h), top=0.10, depth=0.4)
+                im.paste(env, (x, yy))
+                d = ImageDraw.Draw(im)
+                d.rectangle((x, yy, x + w - 1, yy + h - 1), outline=BTN_EDGE, width=3)
     return im
 
 # ---------------------------------------------------------------- page description

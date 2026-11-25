@@ -123,3 +123,4 @@ private:
 };
 
 void drawDisplayBackground(juce::Graphics& g, juce::Rectangle<float> r);
+void drawDisplayGlass(juce::Graphics& g, juce::Rectangle<float> r);   // the glass reflection, drawn over the content

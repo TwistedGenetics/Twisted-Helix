@@ -72,12 +72,24 @@ void HelixLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int w, 
     const float ang = start + pos * (end - start);
     const float thick = juce::jmax(2.5f, r * 0.13f);
 
-    // body
+    // body: a domed cap with a soft shadow, lit from the top left, and a faint accent rim (glass, 0.5.1)
     const bool massive = t.name == "Massive";              // Massive: white knob caps with a dark pointer
-    g.setColour(massive ? juce::Colour(0xffeceef2) : t.dark ? juce::Colour(0xff0d0f12) : t.panel2);
-    g.fillEllipse(c.x - r * 0.68f, c.y - r * 0.68f, r * 1.36f, r * 1.36f);
-    g.setColour(t.edge);
-    g.drawEllipse(c.x - r * 0.68f, c.y - r * 0.68f, r * 1.36f, r * 1.36f, 1.0f);
+    const juce::Colour cap = massive ? juce::Colour(0xffeceef2) : t.dark ? juce::Colour(0xff1a1d24) : t.panel2;
+    const auto capR = juce::Rectangle<float>(c.x - r * 0.68f, c.y - r * 0.68f, r * 1.36f, r * 1.36f);
+    {
+        juce::Path capPath;
+        capPath.addEllipse(capR);
+        juce::DropShadow(juce::Colours::black.withAlpha(0.55f), juce::jmax(3, (int)(r * 0.22f)), {0, (int)juce::jmax(2.0f, r * 0.10f)})
+            .drawForPath(g, capPath);
+    }
+    g.setGradientFill(juce::ColourGradient(cap.brighter(0.35f), c.x - r * 0.30f, c.y - r * 0.42f,
+                                           cap.darker(massive ? 0.28f : 0.45f), c.x + r * 0.55f, c.y + r * 0.62f, true));
+    g.fillEllipse(capR);
+    g.setGradientFill(juce::ColourGradient(juce::Colours::white.withAlpha(massive ? 0.55f : 0.18f), c.x, capR.getY(),
+                                           juce::Colours::white.withAlpha(0.0f), c.x, c.y, false));
+    g.fillEllipse(capR.reduced(r * 0.10f).withHeight(r * 0.62f));
+    g.setColour(t.accent.withAlpha(0.35f));
+    g.drawEllipse(capR, 1.0f);
 
     juce::Path track;
     track.addCentredArc(c.x, c.y, r - thick * 0.5f, r - thick * 0.5f, 0.0f, start, end, true);
@@ -88,8 +100,17 @@ void HelixLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int w, 
     const float from = bipolar ? (start + end) * 0.5f : start;
     juce::Path val;
     val.addCentredArc(c.x, c.y, r - thick * 0.5f, r - thick * 0.5f, 0.0f, juce::jmin(from, ang), juce::jmax(from, ang), true);
-    g.setColour(s.isEnabled() ? t.accent : t.muted);
-    g.strokePath(val, juce::PathStrokeType(thick, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+    {
+        juce::Path lit;
+        juce::PathStrokeType(thick, juce::PathStrokeType::curved, juce::PathStrokeType::rounded).createStrokedPath(lit, val);
+        if (s.isEnabled() && std::abs(ang - from) > 0.01f)
+            juce::DropShadow(t.accent.withAlpha(0.75f), juce::jmax(4, (int)(thick * 1.6f)), {0, 0}).drawForPath(g, lit);
+        g.setColour(s.isEnabled() ? t.accent : t.muted);
+        g.fillPath(lit);
+        juce::Path core;   // bright core along the arc
+        juce::PathStrokeType(thick * 0.3f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded).createStrokedPath(core, val);
+        if (s.isEnabled()) { g.setColour(t.accent.brighter(0.6f).withAlpha(0.8f)); g.fillPath(core); }
+    }
 
     // modulation range (outside ring)
     const float lo = (float)(double)s.getProperties().getWithDefault("modLo", -1.0);
@@ -136,8 +157,8 @@ void HelixLookAndFeel::drawComboBox(juce::Graphics& g, int w, int h, bool, int, 
 {
     const Theme& t = theme();
     auto r = juce::Rectangle<float>(0, 0, (float)w, (float)h).reduced(0.5f);
-    g.setColour(t.panel2);
-    g.fillRoundedRectangle(r, 4.0f);
+    ui::glassFill(g, r, 4.0f, t.panel2, 0.12f, 0.25f);
+    ui::glassSheen(g, r, 4.0f, 0.10f);
     g.setColour(box.hasKeyboardFocus(false) ? t.accent : t.edge);
     g.drawRoundedRectangle(r, 4.0f, 1.0f);
     juce::Path arrow;
@@ -160,9 +181,16 @@ void HelixLookAndFeel::drawButtonBackground(juce::Graphics& g, juce::Button& b, 
     const Theme& t = theme();
     auto r = b.getLocalBounds().toFloat().reduced(0.5f);
     const bool on = b.getToggleState();
-    g.setColour(on ? t.accent : (down ? t.edge : (over ? t.panel2.brighter(t.dark ? 0.08f : -0.04f) : t.panel2)));
-    g.fillRoundedRectangle(r, 4.0f);
-    g.setColour(on ? t.accent : t.edge);
+    const juce::Colour base = on ? t.accent : (down ? t.edge : (over ? t.panel2.brighter(t.dark ? 0.08f : -0.04f) : t.panel2));
+    if (on)
+    {
+        juce::Path glowPath;
+        glowPath.addRoundedRectangle(r, 4.0f);
+        juce::DropShadow(t.accent.withAlpha(0.6f), 8, {0, 0}).drawForPath(g, glowPath);
+    }
+    ui::glassFill(g, r, 4.0f, base, 0.18f, 0.28f);
+    ui::glassSheen(g, r, 4.0f, on ? 0.30f : 0.12f);
+    g.setColour(on ? t.accent.brighter(0.3f) : t.edge);
     g.drawRoundedRectangle(r, 4.0f, 1.0f);
 }
 
@@ -176,13 +204,18 @@ void HelixLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& b
     const bool on = b.getToggleState();
     const float d = juce::jmin(r.getHeight(), 16.0f);
     auto dot = juce::Rectangle<float>(r.getX() + 1.0f, r.getCentreY() - d / 2, d, d);
-    g.setColour(on ? t.accent : (over ? t.edge : t.track));
-    g.fillEllipse(dot);
     if (on)
     {
-        g.setColour(t.accent.withAlpha(0.35f));
-        g.drawEllipse(dot.expanded(2.0f), 2.0f);
+        juce::Path lamp;
+        lamp.addEllipse(dot);
+        juce::DropShadow(t.accent.withAlpha(0.9f), 7, {0, 0}).drawForPath(g, lamp);
     }
+    const juce::Colour lampCol = on ? t.accent : (over ? t.edge : t.track);
+    g.setGradientFill(juce::ColourGradient(lampCol.brighter(0.6f), dot.getX() + d * 0.35f, dot.getY() + d * 0.3f,
+                                           lampCol.darker(0.3f), dot.getRight(), dot.getBottom(), true));
+    g.fillEllipse(dot);
+    g.setColour(juce::Colours::black.withAlpha(0.5f));
+    g.drawEllipse(dot, 1.0f);
     if (b.getButtonText().isNotEmpty())
     {
         g.setColour(on ? t.text : t.muted);
