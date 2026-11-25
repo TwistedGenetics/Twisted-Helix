@@ -57,6 +57,8 @@ private:
     void scanContent();
     void scanContentImpl();
     void applyPreset(const Preset& p);
+    void startPrint();
+    void flipPrintStatus();
 
     IPlatform& platform_;
     Engine engine_;
@@ -87,6 +89,17 @@ private:
 
     std::atomic<bool> quit_{false};
     std::thread worker_;
+
+    // Print to wavetable (its own thread: a print takes seconds)
+    std::thread printThread_;
+    std::atomic<bool> printing_{false}, printCancel_{false}, printDone_{false};
+    mutable std::mutex printMutex_;
+    std::string printStatus_;
+    std::atomic<int> printLoad_{-1};   // (slot << 16) | library index of the new print, for the worker
+public:
+    bool printing() const { return printing_.load(); }
+    void waitPrint() { if (printThread_.joinable()) printThread_.join(); library_.waitIdle(); }
+private:
 };
 
 } // namespace helix

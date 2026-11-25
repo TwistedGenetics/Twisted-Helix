@@ -96,7 +96,49 @@ juce::File HelixProcessor::userWavetableFolder()
     return dir;
 }
 
-HelixProcessor::~HelixProcessor() { stopTimer(); }
+HelixProcessor::~HelixProcessor()
+{
+    stopTimer();
+    printCancel_ = true;
+    if (printThread_.joinable()) printThread_.join();
+}
+
+void HelixProcessor::startPrint(int slot, const helix::PrintOptions& o)
+{
+    if (printing_.load()) return;
+    if (printThread_.joinable()) printThread_.join();
+    const helix::Preset patch = helix::capturePreset(engine_, &library_);
+    const helix::WavetablePtr ta = engine_.uiTable(helix::kSlotA), tb = engine_.uiTable(helix::kSlotB);
+    const std::string dir = userWavetableFolder().getChildFile("Prints").getFullPathName().toStdString();
+    printing_ = true;
+    { std::lock_guard<std::mutex> lk(printMutex_); printStatus_ = "Printing..."; }
+    printThread_ = std::thread([this, patch, ta, tb, o, slot, dir] {
+        std::string status;
+        try
+        {
+            std::vector<float> raw;
+            std::string err;
+            const std::string path = helix::nextPrintPath(dir);
+            const std::string name = juce::File(juce::String(path)).getFileNameWithoutExtension().toStdString();
+            helix::WavetablePtr t = path.empty() ? nullptr : helix::printToTable(patch, ta, tb, o, name, &raw, &err, &printCancel_);
+            if (!t) status = err.empty() ? "Print failed" : err;
+            else if (!helix::writePrintWav(path, raw)) status = "Could not write " + path;
+            else
+            {
+                library_.rescan();
+                library_.waitIdle();
+                const int idx = library_.indexOfId("file:Prints/" + name + ".wav");
+                if (idx >= 0) printLoad_ = (slot << 16) | idx;
+                else library_.requestLoadFile(slot, path);
+                status = name;
+            }
+        }
+        catch (...) { status = "Print failed"; }
+        { std::lock_guard<std::mutex> lk(printMutex_); printStatus_ = status; }
+        printing_ = false;
+        printDone_ = true;
+    });
+}
 
 bool HelixProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
 {
@@ -163,6 +205,24 @@ void HelixProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBu
 void HelixProcessor::timerCallback()
 {
     engine_.collectGarbage();
+    if (printDone_.exchange(false))
+    {
+        const int req = printLoad_.exchange(-1);
+        if (req >= 0)
+        {
+            // The rescan may have moved entries: keep both table parameters naming what they play, then select the print.
+            for (int s = 0; s < helix::kNumTableSlots; ++s)
+            {
+                const int at = library_.indexOfId(library_.slotId(s));
+                const int tp = s == 0 ? helix::P_A_TABLE : helix::P_B_TABLE;
+                if (at >= 0 && library_.wrap(engine_.params().getInt(tp)) != at) { lastTableIndex_[s] = at; setParamFromUI(tp, (float)at); }
+            }
+            const int s = req >> 16, idx = req & 0xFFFF;
+            lastTableIndex_[s] = idx;
+            setParamFromUI(s == 0 ? helix::P_A_TABLE : helix::P_B_TABLE, (float)idx);
+            library_.requestLoad(s, idx);
+        }
+    }
     // Table parameters drive the (asynchronous) table loader.
     for (int slot = 0; slot < helix::kNumTableSlots; ++slot)
     {

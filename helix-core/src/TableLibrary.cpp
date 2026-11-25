@@ -212,19 +212,30 @@ void TableLibrary::doScanImpl()
     std::vector<std::string> roots;
     { std::lock_guard<std::mutex> lk(mutex_); roots = roots_; }
     std::vector<TableEntry> found;
-    // Walk each root: a folder holding WAVs and no sub-folders is one "folder of single cycles" entry;
-    // other WAVs are tables of their own.
+    // Walk each root: a folder holding only single-cycle WAVs and no sub-folders is one "folder of single cycles"
+    // entry; other WAVs are tables of their own.
     std::function<void(const std::string&, const std::string&, int)> walk = [&](const std::string& root, const std::string& dir, int depth) {
         std::error_code ec;
         const std::vector<std::string> items = listDirectory(dir);
-        bool hasWav = false, hasDir = false;
+        bool hasWav = false, hasDir = false, hasTable = false;
         for (const std::string& c : items)
         {
             if (fs::is_directory(c, ec)) hasDir = true;
-            else { std::string x = fs::path(c).extension().string(); std::transform(x.begin(), x.end(), x.begin(), ::tolower); hasWav |= x == ".wav"; }
+            else
+            {
+                std::string x = fs::path(c).extension().string();
+                std::transform(x.begin(), x.end(), x.begin(), ::tolower);
+                if (x == ".wav")
+                {
+                    hasWav = true;
+                    // longer than a single cycle (4096 stereo float samples): a table, not a frame (Prints, Serum packs)
+                    const auto sz = fs::file_size(c, ec);
+                    if (!ec && sz > 32768 + 1024) hasTable = true;
+                }
+            }
         }
         const std::string rel = fs::path(dir).lexically_relative(root).generic_string();
-        if (dir != root && hasWav && !hasDir)
+        if (dir != root && hasWav && !hasDir && !hasTable)
         {
             found.push_back({"folder:" + rel, fs::path(dir).filename().string() + " (cycles)", dir, -1, true});
             return;   // its files are frames, not tables of their own

@@ -450,7 +450,7 @@ def chapter_install():
                  ["Content/Wavetables", "Serum-style wavetables, single-cycle WAVs, or folders of single cycles", "After the "
                   "8 built-in tables when you turn A Table / B Table"],
                  ["Content/Samples", "Any WAVs you want to turn into wavetables (breaks, vocals, one-shots)",
-                  "The Sample control on the SAMPLE page under BROWSE (Sample → Table)"],
+                  "The Sample control on the TABLES page under BROWSE (Sample → Table)"],
                  ["Content/Presets", "HELIX presets (.json), in sub-folders by category", "After the 24 factory presets "
                   "in the Preset list"]], [36, 70, 64])]
     s += [Spacer(1, 4), P("To update HELIX later, copy the new folder over the old one, then remove HELIX from the track and "
@@ -638,7 +638,7 @@ def chapter_tables():
             "into plain slices instead."),
           H3("On the MPC"),
           *steps(["Copy WAVs into <b>Content/Samples</b>.",
-                  "On the SAMPLE page (under BROWSE), choose the file with <b>Sample</b>, the number of frames with <b>Frames</b> (8-256) and "
+                  "On the TABLES page (under BROWSE), choose the file with <b>Sample</b>, the number of frames with <b>Frames</b> (8-256) and "
                   "the oscillator with <b>To Osc</b>.",
                   "Press <b>Make Table</b>."]),
           H3("On the computer"),
@@ -647,6 +647,36 @@ def chapter_tables():
             "Wavetables folder and rescans it."),
           P("Tables made with Sample → Table are remembered in your project and presets as long as the original file is "
             "still in the same place.")]
+    s += H2("Print to wavetable")
+    s += [P("Print renders the sound you are playing back into a new wavetable: neuro resampling without leaving HELIX. "
+            "It holds one note, sweeps one control from its lowest to its highest setting while the note plays, and takes "
+            "a cycle at evenly spaced moments as the frames. Everything that shapes the sound goes in: both oscillators, "
+            "unison, Reese drift, the filters, the mod oscillator, envelopes, LFOs, performers and (if you like) the "
+            "effects. Load the result into an oscillator and scan it with <b>WT Pos</b>, push it through the warps and "
+            "filters again, and print again: that is how the layered, re-resampled neuro basses are made."),
+          P("The note is rendered at a sample rate chosen so one cycle is exactly 2048 samples, so every frame is a whole, "
+            "phase-aligned cycle and the table plays cleanly at any pitch."),
+          table([["Control", "What it does"],
+                 ["Sweep", "What moves from 0 to 100% during the print: <b>Time</b> (nothing: the patch's own envelopes, "
+                  "LFOs and performers make the changes), Macro 1-4, Growl, Pos A, Pos B, Cutoff 1 or Warp A (Osc A's "
+                  "first warp amount)."],
+                 ["Length", "How long the note is held (0.25-8 s). Longer catches more of slow LFOs and envelopes."],
+                 ["Note", "The note held, C1 to F#2. Key tracking and pitch envelopes follow it; C2 suits basses."],
+                 ["Frames", "8 to 256 frames, spread evenly over the length."],
+                 ["To Osc", "Which oscillator gets the new table."],
+                 ["Through FX", "On: the insert and FX slots (distortion, OTT ...) are printed too. Off: the dry voices only."],
+                 ["Print / Made", "Press Print. It takes a second or two (longer on the MPC); <b>Made</b> then shows the "
+                  "new table's name, or what went wrong."]], [32, 138]),
+          P("Prints are saved as <b>Wavetables/Prints/Print 001.wav</b>, 002 and so on (on the MPC in Content/Wavetables; "
+            "on the computer in Documents/HELIX/Wavetables), as Serum-compatible tables, so they stay in the table list "
+            "and your presets find them again. They load into Serum and other wavetable synths as well."),
+          H3("On the MPC"),
+          P("The <b>PRINT</b> strips on the TABLES page (BROWSE key)."),
+          H3("On the computer"),
+          P("Click <b>…</b> in the oscillator's title bar, open <b>Print patch to table</b>, set Frames, Length, Note and "
+            "Through the effects, then choose <b>Print, sweeping</b> and the control. The table goes into that oscillator."),
+          P("Tip: a Reese with Growl on a slow LFO, printed with Sweep: Time over 4 s, gives a table that growls on its own "
+            "when you sweep its position with a fast envelope or the performer.")]
     return s
 
 

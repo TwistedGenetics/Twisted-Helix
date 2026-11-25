@@ -211,6 +211,22 @@ int main()
               fxlib::typeName((int)app.getParam(P_X2_TYPE)));
     }
 
+    // Print to wavetable: renders the patch into Wavetables/Prints and loads it into osc A.
+    app.setParam(MP_PR_FRAMES, 0.0f);    // 8
+    app.setParam(MP_PR_LEN, 0.25f);
+    app.setParam(MP_PR_SLOT, 0.0f);
+    app.setParam(MP_PR_GO, 1.0f);
+    app.tick();
+    CHECK(app.getParam(MP_PR_GO) < 0.5f, "print trigger not reset");
+    app.waitPrint();
+    app.tick();
+    app.waitIdle();
+    CHECK(fs::exists(fs::path(pf.dir) / "Wavetables" / "Prints" / "Print 001.wav"), "print file missing");
+    CHECK(app.engine().uiTable(kSlotA) && app.engine().uiTable(kSlotA)->numFrames() == 8, "print not loaded into osc A");
+    CHECK(app.formatValue(MP_PR_STATUS, 0.0f, text) && text == "Print 001", "print status '%s'", text.c_str());
+    CHECK(app.formatValue(P_A_TABLE, app.getParam(P_A_TABLE), text) && text == "Print 001", "A table shows '%s'", text.c_str());
+    CHECK(app.formatValue(MP_PR_NOTE, 36.0f, text) && text == "C2", "print note '%s'", text.c_str());
+
     { std::error_code ec; fs::remove_all(pf.dir, ec); }
     TEST_MAIN_END();
 }

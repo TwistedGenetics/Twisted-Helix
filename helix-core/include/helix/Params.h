@@ -82,6 +82,7 @@ extern const std::vector<std::string> modSource;
 extern const std::vector<std::string> modDest;
 extern const std::vector<std::string> modCurve;
 extern const std::vector<std::string> perfStepShape;
+extern const std::vector<std::string> printSource;   // Print to wavetable: what sweeps (PrintTable.h)
 extern const std::vector<std::string> fxType;
 extern const std::vector<std::string> distType;
 extern const std::vector<std::string> delayMode;

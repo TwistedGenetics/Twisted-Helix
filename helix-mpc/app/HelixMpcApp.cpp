@@ -1,4 +1,5 @@
 #include "HelixMpcApp.h"
+#include "helix/PrintTable.h"
 #include "helix/FxLibrary.h"
 #include "helix/ModSystem.h"
 #include "helix/WavetableGen.h"
@@ -85,6 +86,14 @@ static ParamDef extraDefs[kMpcNumParams - kMpcReserveEnd] = {
                    {"mpc_" s "_nf", S " Name F", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
     LIBN("i1", "Insert 1") LIBN("i2", "Insert 2") LIBN("x1", "FX 1") LIBN("x2", "FX 2")
 #undef LIBN
+    {"mpc_pr_src", "Print Sweep", ParamKind::Choice, 0, kNumPrintSources - 1, kPrintGrowl, "", &choices::printSource, false},
+    {"mpc_pr_frames", "Print Frames", ParamKind::Choice, 0, 5, 3, "", &mpcchoices::frames, false},
+    {"mpc_pr_len", "Print Length", ParamKind::Linear, 0.25f, 8.0f, 2.0f, "s", nullptr, false},
+    {"mpc_pr_note", "Print Note", ParamKind::Int, 24, 42, 36, "", nullptr, false},
+    {"mpc_pr_slot", "Print To", ParamKind::Choice, 0, 1, 0, "", &mpcchoices::slot, false},
+    {"mpc_pr_fx", "Print FX", ParamKind::Bool, 0, 1, 1, "", nullptr, false},
+    {"mpc_pr_go", "Print", ParamKind::Bool, 0, 1, 0, "", nullptr, false},
+    {"mpc_pr_status", "Print Status", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
 };
 static_assert(sizeof(extraDefs) / sizeof(extraDefs[0]) == kMpcNumParams - kMpcReserveEnd, "extraDefs out of step");
 
@@ -123,7 +132,62 @@ HelixMpcApp::HelixMpcApp(IPlatform& platform, bool startWorker) : platform_(plat
 HelixMpcApp::~HelixMpcApp()
 {
     quit_ = true;
+    printCancel_ = true;
     if (worker_.joinable()) worker_.join();
+    if (printThread_.joinable()) printThread_.join();
+}
+
+// Print to wavetable: snapshot the patch here (worker thread), render on a thread of its own (a few seconds on
+// the MPC), write Wavetables/Prints/Print NNN.wav and load it into the chosen oscillator.
+void HelixMpcApp::startPrint()
+{
+    if (printThread_.joinable()) printThread_.join();
+    Preset patch = capturePreset(engine_, &library_);
+    WavetablePtr ta = engine_.uiTable(kSlotA), tb = engine_.uiTable(kSlotB);
+    PrintOptions o;
+    o.source = (int)getParam(MP_PR_SRC);
+    o.frames = s2tFrames((int)getParam(MP_PR_FRAMES));
+    o.seconds = getParam(MP_PR_LEN);
+    o.note = (int)std::lround(getParam(MP_PR_NOTE));
+    o.effects = getParam(MP_PR_FX) >= 0.5f;
+    const int slot = (int)getParam(MP_PR_SLOT);
+    const std::string dir = (fs::path(platform_.contentDir()) / "Wavetables" / "Prints").string();
+    printing_ = true;
+    flipPrintStatus();
+    printThread_ = std::thread([this, patch, ta, tb, o, slot, dir] {
+        std::string status;
+        try
+        {
+            std::vector<float> raw;
+            std::string err;
+            const std::string path = nextPrintPath(dir);
+            const std::string name = fs::path(path).stem().string();
+            WavetablePtr t = path.empty() ? nullptr : printToTable(patch, ta, tb, o, name, &raw, &err, &printCancel_);
+            if (!t) status = err.empty() ? "Failed" : err;
+            else if (!writePrintWav(path, raw)) status = "Can't write";
+            else
+            {
+                // Rescan so the print is a library entry, then let the worker point the oscillator's table at it
+                library_.rescan();
+                library_.waitIdle();
+                const int idx = library_.indexOfId("file:Prints/" + fs::path(path).filename().string());
+                if (idx >= 0) printLoad_ = (slot << 16) | idx;
+                else library_.requestLoadFile(slot, path);
+                status = name;
+            }
+        }
+        catch (...) { status = "Failed"; }
+        { std::lock_guard<std::mutex> lk(printMutex_); printStatus_ = status; }
+        printing_ = false;
+        printDone_ = true;   // the worker redraws the status (notifyParameter stays on the worker thread)
+    });
+}
+
+void HelixMpcApp::flipPrintStatus()
+{
+    const float v = getParam(MP_PR_STATUS) >= 0.5f ? 0.0f : 1.0f;   // a new value, so the status label redraws
+    setParam(MP_PR_STATUS, v);
+    platform_.notifyParameter(MP_PR_STATUS, v);
 }
 
 void HelixMpcApp::prepare(double sampleRate, int maxBlock) { engine_.prepare(sampleRate, maxBlock); }
@@ -217,6 +281,21 @@ bool HelixMpcApp::formatValue(int index, float plain, std::string& out) const
             return true;
         }
         case MP_LOAD: case MP_MUTATE: case MP_S2T_GO: out = plain >= 0.5f ? "..." : "Press"; return true;
+        case MP_PR_GO: out = plain >= 0.5f || printing_.load() ? "..." : "Press"; return true;
+        case MP_PR_STATUS:
+        {
+            std::lock_guard<std::mutex> lk(printMutex_);
+            out = printing_.load() ? std::string("Printing...") : (printStatus_.empty() ? std::string("-") : printStatus_);
+            return true;
+        }
+        case MP_PR_NOTE:
+        {
+            static const char* nn[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+            const int n = (int)std::lround(plain);
+            std::snprintf(buf, sizeof buf, "%s%d", nn[((n % 12) + 12) % 12], n / 12 - 1);
+            out = buf;
+            return true;
+        }
         default: break;
     }
     // Effects library: knob names (read-only proxies) and knob values, both following the slot's effect
@@ -512,6 +591,31 @@ void HelixMpcApp::tick()
             if (i >= 0 && i < (int)samples_.size()) path = samples_[(size_t)i];
         }
         if (!path.empty()) library_.requestLoadFile((int)getParam(MP_S2T_SLOT), path, s2tFrames((int)getParam(MP_S2T_FRAMES)));
+    }
+
+    if (trigger(MP_PR_GO) && !printing_.load()) startPrint();
+    if (printDone_.exchange(false))
+    {
+        const int req = printLoad_.exchange(-1);
+        if (req >= 0)
+        {
+            // The rescan may have moved entries: keep both table knobs naming what they play, then select the print.
+            for (int s = 0; s < 2; ++s)
+            {
+                const int at = library_.indexOfId(library_.slotId(s));
+                const int tp = s == 0 ? P_A_TABLE : P_B_TABLE;
+                if (at >= 0 && library_.wrap(engine_.params().getInt(tp)) != at)
+                {
+                    setParam(tp, (float)at); lastTable_[s] = at; platform_.notifyParameter(tp, (float)at);
+                }
+            }
+            const int s = req >> 16, idx = req & 0xFFFF, tp = s == 0 ? P_A_TABLE : P_B_TABLE;
+            setParam(tp, (float)idx);
+            platform_.notifyParameter(tp, (float)idx);
+            library_.requestLoad(s, idx);
+            lastTable_[s] = idx;
+        }
+        flipPrintStatus();
     }
 
     // Pad browse requests from the audio thread.

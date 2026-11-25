@@ -757,8 +757,14 @@ def pages():
     page(8, 0, "BROWSE", [S("PRESET", [K("Preset", "Preset", w=380), TG("Load", "Load", 150), TG("Mutate 10%", "Mutate 10%", 170),
                                        VAL("CPU", "CPU Load", 170)]),
                           S("PADS", [TG("Pad Browse", "Pad Browse", 190), PICK("Pad Bank", "Pad\nBank", cols=4, where="left")])])
-    page(8, 1, "SAMPLE", [S("SAMPLE\n> TABLE", [K("Sample", "Sample", w=380), TG("Make Table", "Make Table", 170)]),
-                          S("TABLE\nSETUP", [PICK("Frames", "Frames"), SEG("To Osc", "To Osc", ["Osc A", "Osc B"])])])
+    # Sample > Table, and Print to wavetable: render the patch (sweeping one control) into Wavetables/Prints
+    page(8, 1, "TABLES", [S("SAMPLE\n> TABLE", [K("Sample", "Sample", w=380), TG("Make Table", "Make Table", 170)]),
+                          S("TABLE\nSETUP", [PICK("Frames", "Frames"), SEG("To Osc", "To Osc", ["Osc A", "Osc B"])]),
+                          S("PRINT", [K("Print Sweep", "Sweep", w=270), K("Print Length", "Length", w=200),
+                                      K("Print Note", "Note", w=180), TG("Print", "Print", 150),
+                                      VAL("Print Status", "Made", 250)]),
+                          S("PRINT\nSETUP", [PICK("Print Frames", "Frames"), SEG("Print To", "To Osc", ["Osc A", "Osc B"]),
+                                            TG("Print FX", "Through FX", 180)])])
     page(8, 2, "VOICE", [S("VOICE", [K("Master", "Master"), SEG("Poly Mode", "Mode", ["Poly", "Mono", "Legato"]),
                                      K("Voices", "Voices"), K("Glide", "Glide")]),
                          S("PLAY", [SEG("Glide Mode", "Glide", ["Always", "Legato"]), SEG("Steal", "Steal", ["Oldest", "Quietest"]),

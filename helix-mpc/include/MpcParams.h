@@ -30,7 +30,10 @@ enum MpcParam : int
     // 0.3.5 the effects library slots' knob names (read-only: their text is the name of knob A-F for the slot's
     // effect; the app flips the value when the effect changes so the screen redraws). Slot s, knob k: MP_LIBNAME + 6s + k
     MP_LIBNAME,
-    kMpcParamEnd = MP_LIBNAME + 24
+    // 0.4.2 Print to wavetable: render the patch (sweeping a control) into a new table in Wavetables/Prints
+    MP_PR_SRC = MP_LIBNAME + 24, MP_PR_FRAMES, MP_PR_LEN, MP_PR_NOTE, MP_PR_SLOT, MP_PR_FX, MP_PR_GO,
+    MP_PR_STATUS,                 // read-only: "Printing...", the new table's name or the error (value flips to redraw)
+    kMpcParamEnd
 };
 constexpr int kMpcNumParams = kMpcParamEnd;
 constexpr int kNumPresetBanks = 8;

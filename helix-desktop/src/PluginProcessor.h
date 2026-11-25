@@ -3,6 +3,11 @@
 #include "helix/Engine.h"
 #include "helix/TableLibrary.h"
 #include "helix/Preset.h"
+#include "helix/PrintTable.h"
+#include <atomic>
+#include <mutex>
+#include <string>
+#include <thread>
 #include <functional>
 #include <vector>
 
@@ -94,6 +99,12 @@ public:
     bool loadPresetEntry(int index);
     int currentPresetEntry() const { return currentEntry_; }
 
+    // Print to wavetable (message thread): render the patch on a thread of its own into
+    // Wavetables/Prints/Print NNN.wav, then select it on the oscillator `slot`.
+    void startPrint(int slot, const helix::PrintOptions& o);
+    bool printing() const { return printing_.load(); }
+    juce::String printStatus() const { std::lock_guard<std::mutex> lk(printMutex_); return juce::String(printStatus_); }
+
     // Per-user settings that are not part of a sound (theme, display options).
     juce::PropertiesFile& settings() { return *settings_; }
 private:
@@ -102,6 +113,11 @@ private:
     helix::Engine engine_;
     helix::TableLibrary library_{engine_};
     int lastTableIndex_[helix::kNumTableSlots] = {-1, -1};
+    std::thread printThread_;
+    std::atomic<bool> printing_{false}, printCancel_{false}, printDone_{false};
+    std::atomic<int> printLoad_{-1};
+    mutable std::mutex printMutex_;
+    std::string printStatus_;
     int currentProgram_ = 0;
     juce::String presetName_ = "Init";
     std::vector<PresetEntry> presets_;

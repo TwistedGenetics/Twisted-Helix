@@ -8,6 +8,8 @@ namespace {
 
 int oscOff(int slot) { return slot == 0 ? 0 : P_B_ON - P_A_ON; }
 int filtOff(int f) { return f == 0 ? 0 : P_F2_ON - P_F1_ON; }
+// Print to wavetable settings, shared by both oscillators' menus for the session
+helix::PrintOptions& printOptions() { static helix::PrintOptions o; return o; }
 
 // --------------------------------------------------------------------------------------------- oscillator panel
 
@@ -98,6 +100,26 @@ private:
         m.addItem(1, "Load WAV as wavetable...");
         for (int f : {8, 16, 32, 64, 128, 256}) s2t.addItem(100 + f, juce::String(f) + " frames");
         m.addSubMenu("Sample > Table...", s2t);
+        // Print to wavetable: render this patch (sweeping one control) into a new table on this oscillator
+        {
+            auto& po = printOptions();
+            juce::PopupMenu pr, frames, len, note;
+            const bool busy = page_.proc.printing();
+            for (int src = 0; src < helix::kNumPrintSources; ++src)
+                pr.addItem(1000 + src, "Print, sweeping " + juce::String(helix::choices::printSource[(size_t)src]), !busy);
+            pr.addSeparator();
+            for (int f : {16, 32, 64, 128, 256}) frames.addItem(2000 + f, juce::String(f) + " frames", true, po.frames == f);
+            pr.addSubMenu("Frames", frames);
+            for (int t : {5, 10, 20, 40, 80}) len.addItem(3000 + t, juce::String(t / 10.0, 1) + " s", true, std::lround(po.seconds * 10) == t);
+            pr.addSubMenu("Length", len);
+            static const char* nn[] = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
+            for (int n = 24; n <= 42; ++n) note.addItem(4000 + n, juce::String(nn[n % 12]) + juce::String(n / 12 - 1), true, po.note == n);
+            pr.addSubMenu("Note", note);
+            pr.addItem(5000, "Through the effects", true, po.effects);
+            const auto st = page_.proc.printStatus();
+            if (st.isNotEmpty()) { pr.addSeparator(); pr.addItem(5001, "Last: " + st, false); }
+            m.addSubMenu("Print patch to table", pr);
+        }
         m.addSeparator();
         m.addItem(2, "Open the Wavetables folder");
         m.addItem(3, "Rescan the Wavetables folder");
@@ -106,6 +128,12 @@ private:
             if (!self || r == 0) return;
             if (r == 2) { HelixProcessor::userWavetableFolder().startAsProcess(); return; }
             if (r == 3) { self->page_.proc.library().rescan(); return; }
+            auto& po = printOptions();
+            if (r >= 1000 && r < 1000 + helix::kNumPrintSources) { po.source = r - 1000; self->page_.proc.startPrint(self->slot_, po); return; }
+            if (r >= 2000 && r < 2300) { po.frames = r - 2000; return; }
+            if (r >= 3000 && r < 3100) { po.seconds = (float)(r - 3000) / 10.0f; return; }
+            if (r >= 4000 && r < 4100) { po.note = r - 4000; return; }
+            if (r == 5000) { po.effects = !po.effects; return; }
             const int frames = r >= 100 ? r - 100 : 0;
             self->chooser_ = std::make_unique<juce::FileChooser>(frames ? "Make a wavetable from a sample" : "Load a wavetable",
                                                                  HelixProcessor::userWavetableFolder(), "*.wav");
