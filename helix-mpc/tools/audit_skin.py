@@ -129,11 +129,20 @@ old = json.load(open(a.ui))
 # Reached through an editing proxy (the app mirrors the chosen step): P1/P2 Shape n via P1/P2 Edit Step + Curve.
 PROXIED = {"P%d Shape %d" % (q, i): "P%d Curve" % q for q in (1, 2) for i in range(1, 17)}
 PROXIED.update({"F1 Type": "F1 Filter", "F2 Type": "F2 Filter"})
+# 0.3.6: the old FX rack folded into the effect slots (its effects are slot types; the app moves them on load)
+FOLDED = {"FX Slot %d" % i for i in range(1, 8)} | {"Distortion", "Dist Type", "Dist Drive", "Dist Tone", "Crush Bits",
+    "Crush Rate", "Dist Mix", "Chorus", "Chorus Mode", "Chorus Rate", "Chorus Depth", "Chorus Mix", "Phaser", "Phaser Rate",
+    "Phaser Depth", "Phaser Freq", "Phaser Fdbk", "Phaser Mix", "Delay", "Delay Mode", "Delay Sync", "Delay Time", "Delay Div",
+    "Delay Fdbk", "Delay Tone", "Delay Mix", "Reverb", "Reverb Type", "Rev Size", "Rev Decay", "Rev Damp", "Rev Predelay",
+    "Reverb Mix", "OTT", "OTT Depth", "OTT Time", "OTT Upward", "OTT Down", "OTT Out", "EQ", "Low Freq", "Low Gain",
+    "Mid Freq", "Mid Gain", "Mid Q", "High Freq", "High Gain"}
 missing = []
 for pg in old["pages"]:
     for c in pg["controls"]:
         nm = c if isinstance(c, str) else c.get("param")
         if nm in PROXIED and byname[PROXIED[nm]]["index"] in seen_params:
+            continue
+        if nm in FOLDED:
             continue
         if nm and nm != "empty" and nm in byname and byname[nm]["index"] not in seen_params:
             missing.append("%s (was on %s)" % (nm, pg["name"]))

@@ -594,7 +594,7 @@ public:
         info_->setJustificationType(juce::Justification::topLeft);
         info_->setFont(ui::font(13.0f));
         // Effects library: Insert 1 / 2 before the rack, FX 1 / 2 after it
-        lib_ = own(std::make_unique<PanelFrame>("Effects library   (Insert 1, Insert 2 > rack above > FX 1, FX 2)"));
+        lib_ = own(std::make_unique<PanelFrame>("Effects   (Insert 1 > Insert 2 > FX 1 > FX 2)"));
         static const char* slotNames[fxlib::kNumSlots] = {"INSERT 1", "INSERT 2", "FX 1", "FX 2"};
         for (int sl = 0; sl < fxlib::kNumSlots; ++sl)
         {
@@ -640,8 +640,10 @@ public:
             for (int k = 0; k < n; ++k) d.knobs[(size_t)k]->setBounds(r.getX() + k * w, r.getY() + 20, w, 130);
         }
         info_->setBounds(316, 306, 860, 44);
-        lib_->setBounds(308, 352, 876, 356);
-        auto lc = lib_->content().withTrimmedTop(2);
+        // 0.3.6: the rack lives in the effect slots (its effects are the HELIX types), so only the slots show
+        hideRack();
+        lib_->setBounds(0, 0, 1184, 708);
+        auto lc = lib_->content().withTrimmedTop(8);
         for (auto& lr : libRows_)
         {
             auto row = lc.removeFromTop(lc.getHeight() / (int)(&libRows_.back() - &lr + 1));
@@ -722,10 +724,17 @@ private:
         std::swap(o[(size_t)a], o[(size_t)b]);
         for (int s = 0; s < kNumFxSlots; ++s) proc.setParamFromUI(P_FX_ORDER1 + s, (float)o[(size_t)s]);
     }
+    void hideRack()
+    {
+        rack_->setVisible(false);
+        info_->setVisible(false);
+        for (auto& d : details_) d.panel->setVisible(false);
+    }
+
     void select(int t)
     {
         selected_ = t;
-        for (int k = 0; k < (int)details_.size(); ++k) details_[(size_t)k].panel->setVisible(k == t);
+        for (int k = 0; k < (int)details_.size(); ++k) details_[(size_t)k].panel->setVisible(false);   // (rack hidden: 0.3.6)
         static const char* help[] = {
             "Tube: warm and asymmetric.  Hard Clip: square-edged.  Fold: wavefolder for growls.  Crush: bit depth and sample rate "
             "(12 bit / 26 kHz = SP-1200, lower for S950 grit).  Asym: half-wave crunch.  Tone is a low-pass after the distortion.",

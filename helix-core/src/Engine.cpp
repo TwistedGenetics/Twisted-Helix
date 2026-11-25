@@ -279,6 +279,8 @@ void Engine::runFx(float* l, float* r, int n)
     fxlib::Context lc;
     lc.bpm = ctx_.bpm;
     lc.beat = ctx_.songBeats;
+    lc.params = fxp_;
+    lc.oversample = ctx_.oversample;
     auto runSlot = [&](int s) {
         const int b = P_I1_TYPE + s * (P_I2_TYPE - P_I1_TYPE);
         lib_[s].process(l, r, n, (int)fxp_[b], fxp_[b + 1], fxp_ + b + 2, lc);
@@ -288,7 +290,8 @@ void Engine::runFx(float* l, float* r, int n)
     fx_.process(l, r, n, fxp_, ctx_.bpm, ctx_.oversample);
     runSlot(2);
     runSlot(3);
-    heavyFx_.store(fx_.heavyActive(), std::memory_order_relaxed);
+    heavyFx_.store(fx_.heavyActive() || lib_[0].heavy() || lib_[1].heavy() || lib_[2].heavy() || lib_[3].heavy(),
+                   std::memory_order_relaxed);
 }
 
 void Engine::publishLive()

@@ -133,24 +133,36 @@ void HelixMpcApp::scanContent()
     try { scanContentImpl(); } catch (...) {}   // a broken drive must never take MPC down
 }
 
+std::vector<Preset> HelixMpcApp::userPresets(const std::string& contentDir)
+{
+    std::vector<Preset> list;
+    try
+    {
+        const fs::path root(contentDir);
+        std::vector<std::string> all, files;
+        listFilesRecursive((root / "Presets").string(), all);
+        for (const std::string& f : all) if (fs::path(f).extension() == ".json") files.push_back(f);
+        std::sort(files.begin(), files.end());
+        for (const auto& f : files)
+        {
+            if ((int)(list.size() + factoryPresets().size()) >= kMaxPresets) break;
+            std::ifstream in(f);
+            std::stringstream ss; ss << in.rdbuf();
+            Preset p;
+            if (Preset::fromString(ss.str(), p)) { if (p.name.empty()) p.name = fs::path(f).stem().string(); list.push_back(p); }
+        }
+    }
+    catch (...) {}
+    return list;
+}
+
 void HelixMpcApp::scanContentImpl()
 {
     std::vector<Preset> list(factoryPresets().begin(), factoryPresets().end());
     std::vector<std::string> samples;
     std::error_code ec;
     const fs::path root(platform_.contentDir());
-    std::vector<std::string> all, files;
-    listFilesRecursive((root / "Presets").string(), all);
-    for (const std::string& f : all) if (fs::path(f).extension() == ".json") files.push_back(f);
-    std::sort(files.begin(), files.end());
-    for (const auto& f : files)
-    {
-        if ((int)list.size() >= kMaxPresets) break;
-        std::ifstream in(f);
-        std::stringstream ss; ss << in.rdbuf();
-        Preset p;
-        if (Preset::fromString(ss.str(), p)) { if (p.name.empty()) p.name = fs::path(f).stem().string(); list.push_back(p); }
-    }
+    for (Preset& p : userPresets(platform_.contentDir())) list.push_back(std::move(p));
     for (const std::string& f : listDirectory((root / "Samples").string()))
     {
         std::string ext = fs::path(f).extension().string();
@@ -293,9 +305,18 @@ void HelixMpcApp::loadPresetIndex(int index, int auditionNote)
 
 void HelixMpcApp::onProgramSelected(int index)
 {
-    if (index < 0 || index >= (int)factoryPresets().size()) return;
-    // Plain values were set by the host; LFO shapes and tables are not parameters, so apply the whole preset.
-    applyPreset(factoryPresets()[(size_t)index]);
+    // Programs: the factory presets, then the user presets that were in Presets/ when HELIX loaded (same order as
+    // the browser's list). Plain values were set by the host; tables and LFO shapes are not parameters, so the whole
+    // preset is applied.
+    if (index < 0) return;
+    if (index < (int)factoryPresets().size()) { applyPreset(factoryPresets()[(size_t)index]); return; }
+    Preset p;
+    {
+        std::lock_guard<std::mutex> lk(presetsMutex_);
+        if (index >= (int)presets_.size()) return;
+        p = presets_[(size_t)index];
+    }
+    applyPreset(p);
 }
 
 std::string HelixMpcApp::saveState() const
@@ -433,6 +454,23 @@ void HelixMpcApp::tick()
         }
         lastProxy = (int)getParam(proxy);
         lastCore = combinedFilterIndex((int)getParam(pModel), (int)getParam(pType), (int)getParam(pKind));
+    }
+
+    // 0.3.6: the old FX rack lives in the effect slots. Anything that switches a rack effect on (an old project's
+    // saved values, automation) is moved into a free slot here, and the MPC is told about every change.
+    {
+        static const int rackOn[] = {P_DIST_ON, P_CHO_ON, P_PH_ON, P_DLY_ON, P_REV_ON, P_OTT_ON, P_EQ_ON};
+        bool any = false;
+        for (int p : rackOn) any |= getParam(p) >= 0.5f;
+        if (any)
+        {
+            std::vector<float> before((size_t)kNumParams), after((size_t)kNumParams);
+            for (int i = 0; i < kNumParams; ++i) before[(size_t)i] = after[(size_t)i] = getParam(i);
+            fxlib::foldRack(after.data());
+            for (int i = 0; i < kNumParams; ++i)
+                if (after[(size_t)i] != before[(size_t)i]) { setParam(i, after[(size_t)i]); platform_.notifyParameter(i, after[(size_t)i]); }
+            for (auto& ls : libSlot_) ls.type = -1;   // (types changed with their knobs: no defaults)
+        }
     }
 
     // Effects library: a new effect in a slot gets its own defaults (unless the knobs moved with it: a preset), and

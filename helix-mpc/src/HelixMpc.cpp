@@ -8,6 +8,7 @@
 //              -> FX chain -> both outputs.
 #include "mpc_plugin.h"
 #include "HelixMpcApp.h"
+#include "helix/FxLibrary.h"
 #include <memory>
 
 using namespace helix;
@@ -38,7 +39,7 @@ public:
         i.name = "HELIX";
         i.vendor = "Twisted Genetics";
         i.uniqueId = MPC_FOURCC('T', 'g', 'H', 'x');   // == "uid" in plugin.json
-        i.version = 3005;
+        i.version = 3006;
         i.isInstrument = true;
         i.numInputs = 0;
         i.numOutputs = 2;
@@ -58,6 +59,19 @@ public:
             for (int i = 0; i < kMpcNumParams; ++i) v[(size_t)i] = i < kNumParams ? f[k].params[i] : mpcParamDef(i).def;
             v[(size_t)MP_PRESET] = (float)k;
             addProgram(f[k].name.c_str(), v);
+        }
+        // ... and the user's own (saved with HELIX's Save into its Presets folder): they show in the MPC's preset
+        // menu from the next time HELIX loads. (The MPC's own save button, top right, adds them at once.)
+        const auto user = HelixMpcApp::userPresets(mpc::contentFolder());
+        for (size_t k = 0; k < user.size(); ++k)
+        {
+            std::vector<float> v((size_t)kMpcNumParams);
+            float folded[kNumParams];
+            std::copy(user[k].params, user[k].params + kNumParams, folded);
+            fxlib::foldRack(folded);
+            for (int i = 0; i < kMpcNumParams; ++i) v[(size_t)i] = i < kNumParams ? folded[i] : mpcParamDef(i).def;
+            v[(size_t)MP_PRESET] = (float)(f.size() + k);
+            addProgram(("* " + user[k].name).c_str(), v);
         }
         app_ = std::make_unique<HelixMpcApp>(*this);
         for (int i = 0; i < kMpcNumParams; ++i) app_->setParam(i, get(i));

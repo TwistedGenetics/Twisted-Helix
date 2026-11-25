@@ -913,29 +913,34 @@ def chapter_macros_voices():
 
 def chapter_fx():
     s = H1("13  Effects", need=135)
-    s += shot("fx.jpg", "The FX tab (90s Pad): the rack on the left, the selected effect on the right.")
-    s += [P("The effects work on the sum of all notes, after the amp envelope. The seven <b>FX Slot</b> controls set the "
-            "order: choose an effect for each slot from the first. If an effect appears twice, the second time is skipped, "
-            "and effects you leave out are added at the end, so every effect is always available. An effect only runs when "
-            "its own switch is on.")]
-    s += [table([["Effect", "Controls", "Notes"],
-                 ["Distortion", "Type, Drive, Tone, Mix; Crush Bits, Crush Rate", "<b>Tube</b> (warm, asymmetric), <b>Hard "
+    s += [P("The effects work on the sum of all notes, after the amp envelope, in four slots like Massive's: <b>Insert 1</b> "
+            "> <b>Insert 2</b> > <b>FX 1</b> > <b>FX 2</b>. Each slot plays one effect from the library below. HELIX's own "
+            "seven effects are in the library too (the <b>HELIX</b> group); until 0.3.6 they lived in a fixed rack, which "
+            "is now folded into the slots.")]
+    s += [table([["HELIX effect", "Knobs", "Notes"],
+                 ["HELIX Dist", "Type, Drive, Tone, Crush Bits, Crush Rate; Mix", "<b>Tube</b> (warm, asymmetric), <b>Hard "
                   "Clip</b>, <b>Fold</b> (wavefolder), <b>Crush</b> (bit depth and sample rate, e.g. 12 bit / 26 kHz for "
                   "SP-1200, lower for S950 grit), <b>Asym</b> (half-wave crunch). Tone is a low-pass after the distortion."],
-                 ["Chorus", "Mode, Rate, Depth, Mix", "<b>Chorus</b>: two voices. <b>Ensemble</b>: three shimmering voices "
-                  "per side, the 80s/90s string-machine sound."],
-                 ["Phaser", "Rate, Depth, Freq, Fdbk, Mix", "Six-stage stereo phaser; negative feedback gives a hollower "
-                  "sound."],
-                 ["Delay", "Mode, Sync, Div / Time, Fdbk, Tone, Mix", "<b>Stereo</b> or <b>Ping-Pong</b>. With Sync on, the "
-                  "time is a note value from the tempo. Tone darkens each repeat. The dry sound always stays; Mix adds the "
-                  "echoes."],
-                 ["Reverb", "Type, Size, Decay, Damp, Predelay, Mix", "<b>Plate</b> (bright, dense) or <b>Hall</b> "
+                 ["HELIX Chorus", "Mode, Rate, Depth; Mix", "<b>Chorus</b>: two voices. <b>Ensemble</b>: three shimmering "
+                  "voices per side, the 80s/90s string-machine sound."],
+                 ["HELIX Phaser", "Rate, Depth, Freq, Feedback; Mix", "Six-stage stereo phaser; negative feedback gives a "
+                  "hollower sound."],
+                 ["HELIX Delay", "Mode, Sync, Division, Time, Feedback, Tone; Mix", "<b>Stereo</b> or <b>Ping-Pong</b>. With "
+                  "Sync on, the time is the Division from the tempo. Tone darkens each repeat. Mix adds the echoes."],
+                 ["HELIX Reverb", "Type, Size, Decay, Damp, Predelay; Mix", "<b>Plate</b> (bright, dense) or <b>Hall</b> "
                   "(bigger, longer)."],
-                 ["OTT", "Depth, Time, Upward, Down, Out", "Three-band compressor (split at 120 Hz and 2.5 kHz) that pushes "
-                  "loud parts down and pulls quiet parts up: the modern bass sound. Depth is the overall amount; Upward and "
-                  "Down set each direction. It is the most CPU-hungry effect (the CPU readout says OTT when it is on)."],
-                 ["EQ", "Low Freq / Gain, Mid Freq / Gain / Q, High Freq / Gain", "Low shelf, bell and high shelf, ±18 dB."]],
+                 ["OTT", "Depth, Time, Upward, Downward, Output", "Three-band compressor (split at 120 Hz and 2.5 kHz) that "
+                  "pushes loud parts down and pulls quiet parts up: the modern bass sound. The most CPU-hungry HELIX effect "
+                  "(the CPU readout says OTT when it is on)."],
+                 ["HELIX EQ", "Low / Mid / High Freq and Gain", "Low shelf, bell and high shelf, ±18 dB (the bell's Q stays "
+                  "as the preset set it)."]],
                 [24, 48, 98])]
+    s += [P("<b>Older presets</b> open with their rack effects already moved into the slots, in the same order, with the "
+            "same settings and modulation, so they sound the same. Effects before the first delay or reverb go to the "
+            "inserts and the delay / reverb onwards to FX 1 / 2, as in Massive. A preset with more than four rack effects "
+            "switched on keeps the extra ones in a hidden rack between Insert 2 and FX 1 (none of the factory presets "
+            "has more than two). In the matrix destination list the old rack settings (Dist Drive, Reverb Mix ...) now do "
+            "nothing: aim at the slot's knobs instead (Insert 1 A ... FX 2 F).")]
     s += H2("The effects library: Insert 1, Insert 2, FX 1, FX 2")
     s += [P("Four more effect slots, laid out like Massive's: <b>Insert 1</b> and <b>Insert 2</b> run before the rack above, "
             "<b>FX 1</b> and <b>FX 2</b> after it. Each slot picks any effect from the library below and has <b>Mix</b> plus six "
@@ -943,11 +948,10 @@ def chapter_fx():
             "effect, its knobs and Mix go to that effect's own starting values. For delays and reverbs Mix adds the "
             "effect to the dry sound; for the others it blends from dry to fully processed. Every knob and Mix can be "
             "modulated from the matrix."),
-          P("On the computer the slots are under the rack on the FX tab. On the MPC they are the <b>INSERTS</b> and "
-            "<b>FX 1-2</b> pages (FX key): turn <b>Effect</b> to choose, and the knob names follow it. (To make room, the "
-            "PERF key's two STEP pages went: the step bars on the DRAW pages and their Step Level knob do the same job.)"),
+          P("On the computer the slots fill the FX tab. On the MPC they are the <b>INSERTS</b> and <b>FX 1-2</b> pages (FX "
+            "key): turn <b>Effect</b> or double-tap it for the list, and the knob names follow it."),
           P("The library brings together the effects from Twisted Genetics' other projects, each copy only once. "
-            "Presets made before 0.3.5 have every slot Off, so they sound the same; their rack effects stay where they were."),
+            "Each effect appears once."),
           table([["Group", "Effects", "From"],
                  ["Delay", "<b>Ping-Pong</b> (dark half-rate dub echo), <b>Tape Echo</b> (wow, flutter, wear), <b>BBD Echo</b> "
                   "(bucket brigade), <b>Dub Delay</b> (filtered, driven, runs away past 100%)", "DREADNOUGHT, Mega Synth"],
@@ -988,11 +992,14 @@ def chapter_presets():
     s += [table([["", "On the computer", "On the MPC"],
                  ["Load", "Click the preset name at the top of the window, use &lt; and &gt;, or double-click a preset on "
                   "the GLOBAL tab.",
-                  "The MPC's preset menu (factory presets), or <b>Preset</b> + <b>Load</b> on the BROWSE page (factory and "
-                  "Content/Presets)."],
+                  "The MPC's preset menu at the top of the screen (factory presets, then yours: those saved with the MPC's "
+                  "save button, and HELIX presets in Content/Presets, marked *), or <b>Preset</b> + <b>Load</b> on the "
+                  "BROWSE page."],
                  ["Save", "<b>Save</b> at the top of the window: name and category; saved in Documents/HELIX/Presets.",
-                  "Save the plugin preset or the project with the MPC's own save functions. To use a sound on the computer, "
-                  "save it there and copy the file to Content/Presets."],
+                  "To put a sound in the MPC's preset menu: tap the MPC's <b>save button</b> (the disk icon at the top right "
+                  "of the plugin screen), name it, and it is in the menu straight away (the MPC keeps it in its Plugin "
+                  "Presets folder). Presets copied into HELIX's Content/Presets folder (from the computer) are listed in "
+                  "the menu too, marked *, from the next time HELIX loads."],
                  ["Init", "<b>Init</b> (top of the window) resets everything to the starting sound.", "Start from a factory preset, or remove "
                   "HELIX from the track and add it again."]], [18, 76, 76])]
     s += H2("Mutate")
@@ -1028,20 +1035,21 @@ def chapter_mpc():
                     "the parameter. Each screen is also the control that sets it: drag up or down on it, or turn its Q-Link. "
                     "Warp modes, filter types, LFO shapes and the effect types are all set this way.",
                     "<b>Rows of buttons</b> choose directly: touch the one you want. Sub shape and noise type (SUB/NSE), the "
-                    "effect order (<b>FX ORDER</b>), Pad Bank, Frames and the performer step shapes (PERF, drawn as small "
-                    "curves) are buttons. Rows with two choices (-1 Oct / -2 Oct) flip with each touch.",
+                    "Pad Bank, Frames and the performer curves (PERF, drawn as small curves) are buttons. Rows with two choices (-1 Oct / -2 Oct) flip with each touch.",
                     "<b>Knobs</b>: drag up and down, use the data wheel, or the Q-Link. Double-tap for the large editor. Knobs "
-                    "that go both ways from the middle (fine tune, pan, mod amounts) light up from the centre. The long lists "
-                    "are knobs too: mod-matrix sources and destinations, sync divisions and step rates step through their "
-                    "choices as you turn, with the name shown in large type.",
-                    "HELIX does not use the MPC's pop-up lists: on current firmware they can open with no entries.",
+                    "that go both ways from the middle (fine tune, pan, mod amounts) light up from the centre.",
+                    "<b>Lists</b> (filter types, warp modes, LFO shapes, effects, mod-matrix sources and destinations, sync "
+                    "divisions ...): touch the control and turn the data wheel to step through, as before, or <b>double-tap</b> "
+                    "it (or push the data wheel) for the whole list on one screen. Tap the entry you want, then tap outside "
+                    "the list or push the wheel again to close it. (These are HELIX's own lists: the MPC's built-in pop-up "
+                    "menus can open with no entries on current firmware.)",
                     "<b>Envelopes</b> (ENV page) use the MPC's own envelope display: drag its points or use the four knobs "
                     "beside it.",
                     "When an LFO or the delay is tempo-synced, the free <b>Rate</b> / <b>Time</b> knob is hidden and its place "
-                    "says so; with sync off, the <b>Sync Div</b> knob is hidden instead. Tempo sync is on the LFO+ and FX+ pages.",
+                    "says so; with sync off, the <b>Sync Div</b> knob is hidden instead. LFO tempo sync is on the LFO+ page.",
                     "Names are 24 px and values 32 px, white on the navy panels, and values are kept short "
                     "(<b>500 ms</b>, <b>1.20 s</b>, <b>12.0 kHz</b>, <b>80%</b>)."])]
-    s += shot("mpc_fx.png", "The FX page: Distortion is on (cyan light), the other effects are off (darker tags).")
+    s += shot("mpc_fx.png", "The INSERTS page: each slot's effect, Mix and knobs A-F, named after the effect.")
     s += H2("Page map")
     rows = [["Key", "Page", "Strips (top to bottom) and their controls"]]
     for p in MPC_PAGES:

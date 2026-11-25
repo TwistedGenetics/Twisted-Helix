@@ -3,6 +3,9 @@
 //   MEGA Mega Synth's rack effects (float, in place; each reads its settings from a full Mega Synth parameter array)
 //   ERA  EraCrush's machines (float, in place)
 #include "helix/FxLibrary.h"
+#include "helix/Effects.h"
+#include "helix/ModSystem.h"
+#include "helix/Params.h"
 
 #include <algorithm>
 #include <cmath>
@@ -84,7 +87,7 @@ float megaTo01(int p, float v)
 
 // ------------------------------------------------------------------------------------------- the effects
 
-enum Eng { E_OFF, E_DN, E_MEGA, E_ERA };
+enum Eng { E_OFF, E_DN, E_MEGA, E_ERA, E_HELIX };
 enum MegaFx { M_DUB, M_PLATE, M_GATED, M_VAST, M_ENS, M_BBD, M_MULTI, M_DIM, M_WIDEN, M_FLP, M_SCRIPT, M_COLOUR, M_DUAL,
               M_BARBER, M_VIBE, M_RPT, M_SHAPER, M_STEREO };
 // knob kinds for the Mega effects that need more than "set this parameter"
@@ -179,9 +182,36 @@ const TypeSpec kTypes[] = {
     {"Stereo Tools", "Utility", E_MEGA, M_STEREO, 1.0f, false,
      {{"Bass Mono", P_sttMono, ""}, {"Mono Below", P_sttMonoFreq, "Hz"}, {"Width", P_sttWidth, "%"}, {"Haas", P_sttHaas, "ms"},
       KN, KN}},
+    // ---- HELIX's own effects (the old FX rack, folded into the slots in 0.3.6): knobs are the old parameters
+    {"HELIX Dist", "HELIX", E_HELIX, 0, 1.0f, false, {}},
+    {"HELIX Chorus", "HELIX", E_HELIX, 1, 0.4f, false, {}},
+    {"HELIX Phaser", "HELIX", E_HELIX, 2, 0.5f, false, {}},
+    {"HELIX Delay", "HELIX", E_HELIX, 3, 0.25f, false, {}},
+    {"HELIX Reverb", "HELIX", E_HELIX, 4, 0.25f, false, {}},
+    {"OTT", "HELIX", E_HELIX, 5, 1.0f, false, {}},
+    {"HELIX EQ", "HELIX", E_HELIX, 6, 1.0f, false, {}},
 };
 #undef KN
 constexpr int kTypeCount = (int)(sizeof(kTypes) / sizeof(kTypes[0]));
+
+// The old rack effects: on switch, the parameter Mix stands for (-1: none, the slot crossfades), and the knobs' old
+// parameters with short names. Order = FxType.
+struct Legacy { int on; int mix; int knob[kNumKnobs]; const char* name[kNumKnobs]; };
+const Legacy kLegacy[(int)FxType::Count] = {
+    {P_DIST_ON, P_DIST_MIX, {P_DIST_TYPE, P_DIST_DRIVE, P_DIST_TONE, P_DIST_BITS, P_DIST_RATE, -1},
+     {"Type", "Drive", "Tone", "Crush Bits", "Crush Rate", nullptr}},
+    {P_CHO_ON, P_CHO_MIX, {P_CHO_MODE, P_CHO_RATE, P_CHO_DEPTH, -1, -1, -1}, {"Mode", "Rate", "Depth", nullptr, nullptr, nullptr}},
+    {P_PH_ON, P_PH_MIX, {P_PH_RATE, P_PH_DEPTH, P_PH_FREQ, P_PH_FEEDBACK, -1, -1}, {"Rate", "Depth", "Freq", "Feedback", nullptr, nullptr}},
+    {P_DLY_ON, P_DLY_MIX, {P_DLY_MODE, P_DLY_SYNC, P_DLY_DIV, P_DLY_TIME, P_DLY_FEEDBACK, P_DLY_TONE},
+     {"Mode", "Sync", "Division", "Time", "Feedback", "Tone"}},
+    {P_REV_ON, P_REV_MIX, {P_REV_TYPE, P_REV_SIZE, P_REV_DECAY, P_REV_DAMP, P_REV_PREDELAY, -1},
+     {"Type", "Size", "Decay", "Damp", "Predelay", nullptr}},
+    {P_OTT_ON, -1, {P_OTT_DEPTH, P_OTT_TIME, P_OTT_UP, P_OTT_DOWN, P_OTT_GAIN, -1}, {"Depth", "Time", "Upward", "Downward", "Output", nullptr}},
+    // (EQ's Mid Q stays on its old parameter: six knobs, seven settings)
+    {P_EQ_ON, -1, {P_EQ_LOW_FREQ, P_EQ_LOW_GAIN, P_EQ_MID_FREQ, P_EQ_MID_GAIN, P_EQ_HIGH_FREQ, P_EQ_HIGH_GAIN},
+     {"Low Freq", "Low Gain", "Mid Freq", "Mid Gain", "High Freq", "High Gain"}},
+};
+constexpr int kFirstHelixType = kTypeCount - (int)FxType::Count;
 
 const char* const kEraKnobs[kNumKnobs] = {"Rate", "Bits", "Drive", "Alias", "Tone", "Age"};
 const char* const kDimModes[4] = {"Mode 1", "Mode 2", "Mode 3", "Mode 4"};
@@ -258,6 +288,7 @@ std::string knobName(int t, int k, const float* knobs)
             return n[0] == '-' ? std::string() : titleCase(n);
         }
         case E_MEGA: return s.k[k].name ? s.k[k].name : "";
+        case E_HELIX: return kLegacy[s.sub].name[k] ? kLegacy[s.sub].name[k] : "";
     }
     return "";
 }
@@ -308,6 +339,13 @@ std::string knobText(int t, int k, float v, const float* knobs, double bpm)
             // feedback / width style values with a range beyond 0..1 still read as %
             return fmtNum(x, s.k[k].unit);
         }
+        case E_HELIX:
+        {
+            const int pi = kLegacy[s.sub].knob[k];
+            if (pi < 0) return "";
+            const ParamDef& d = paramDef(pi);
+            return d.format(d.toPlain(v));
+        }
     }
     return "";
 }
@@ -342,6 +380,13 @@ float knobDefault(int t, int k)
             const MInfo& m = megaInfo()[(size_t)src];
             if (m.list && std::string(s.k[k].name) == "Sync") return 0.0f;
             return std::min(1.0f, std::max(0.0f, megaTo01(src, m.df)));
+        }
+        case E_HELIX:
+        {
+            const int pi = kLegacy[s.sub].knob[k];
+            if (pi < 0) return 0.0f;
+            const ParamDef& d = paramDef(pi);
+            return d.toNormalised(d.def);
         }
     }
     return 0.0f;
@@ -379,6 +424,10 @@ struct Slot::Impl
     // EraCrush
     eracrush::Crusher era;
     std::vector<float> eraBuf;
+
+    // HELIX (the old rack's effects): one effect of a private chain, run with a copy of the engine's parameters
+    FxChain chain;
+    std::vector<float> hp;
 
     void megaReset(int which)
     {
@@ -428,6 +477,8 @@ void Slot::prepare(double sampleRate, int maxBlock)
     eracrush::kSampleRate = (float)sampleRate;
     d.era.reset();
     d.eraBuf.assign((size_t)d.maxBlock * 2u, 0.0f);
+    d.chain.prepare((float)sampleRate);
+    d.hp.assign((size_t)kNumParams, 0.0f);
     cur_ = -1;
 }
 
@@ -437,6 +488,7 @@ void Slot::reset()
     if (d.dn.type != DN_FX_OFF) dn_fx_init(&d.dn, d.dn.type, d.dnMem.data(), d.dnBytes);
     for (int m = 0; m <= M_STEREO; ++m) d.megaReset(m);
     d.era.reset();
+    d.chain.reset();
 }
 
 void Slot::process(float* l, float* r, int n, int type, float mix, const float* knobs, const Context& ctx)
@@ -452,6 +504,7 @@ void Slot::process(float* l, float* r, int n, int type, float mix, const float* 
         else if (d.dn.type != DN_FX_OFF) dn_fx_init(&d.dn, DN_FX_OFF, nullptr, 0);
         if (s.eng == E_MEGA) d.megaReset(s.sub);
         if (s.eng == E_ERA) d.era.reset();
+        if (s.eng == E_HELIX) d.chain.reset();
         cur_ = type;
     }
     if (s.eng == E_OFF || mix <= 0.0f) return;
@@ -538,6 +591,28 @@ void Slot::process(float* l, float* r, int n, int type, float mix, const float* 
             for (int i = 0; i < n; ++i) { l[i] = d.eraBuf[(size_t)(2 * i)]; r[i] = d.eraBuf[(size_t)(2 * i + 1)]; }
             break;
         }
+        case E_HELIX:
+        {
+            const Legacy& L = kLegacy[s.sub];
+            float* hp = d.hp.data();
+            if (ctx.params) std::memcpy(hp, ctx.params, sizeof(float) * (size_t)kNumParams);
+            else for (int i = 0; i < kNumParams; ++i) hp[i] = paramDef(i).def;
+            for (const Legacy& o : kLegacy) hp[o.on] = 0.0f;
+            hp[L.on] = 1.0f;
+            for (int k = 0; k < kNumKnobs; ++k)
+                if (L.knob[k] >= 0) hp[L.knob[k]] = paramDef(L.knob[k]).toPlain(std::min(1.0f, std::max(0.0f, knobs[k])));
+            if (L.mix >= 0) hp[L.mix] = mix;
+            d.chain.process(l, r, n, hp, ctx.bpm, ctx.oversample);
+            if (L.mix >= 0)
+            {
+                // its own Mix did the blend (exactly as in the rack)
+                for (int i = 0; i < n; ++i)
+                    if (!std::isfinite(l[i]) || !std::isfinite(r[i])) { std::fill(l, l + n, 0.0f); std::fill(r, r + n, 0.0f); reset(); break; }
+                return;
+            }
+            if (mix >= 1.0f) return;
+            break;
+        }
         default: break;
     }
 
@@ -553,6 +628,82 @@ void Slot::process(float* l, float* r, int n, int type, float mix, const float* 
             r[i] = d.dryR[(size_t)i] + (wr - d.dryR[(size_t)i]) * mix;
         }
     }
+}
+
+bool isHeavy(int type) { return type >= 0 && type < kTypeCount && kTypes[type].eng == E_HELIX && kTypes[type].sub == (int)FxType::Ott; }
+
+int foldRack(float* p)
+{
+    // the rack's order (as FxChain: repeats skipped, missing effects appended)
+    int order[(int)FxType::Count], count = 0;
+    bool used[(int)FxType::Count] = {};
+    for (int sl = 0; sl < kNumFxSlots; ++sl)
+    {
+        const int t = std::min((int)FxType::Count - 1, std::max(0, (int)p[P_FX_ORDER1 + sl]));
+        if (!used[t]) { used[t] = true; order[count++] = t; }
+    }
+    for (int t = 0; t < (int)FxType::Count; ++t) if (!used[t]) order[count++] = t;
+
+    // matrix destination index of a parameter (or -1)
+    auto destOf = [](int param) {
+        for (int dd = kNumSpecialDests; dd < numModDests(); ++dd) if (modDestParam(dd) == param) return dd;
+        return -1;
+    };
+    const int stride = P_I2_TYPE - P_I1_TYPE;
+    // Where each switched-on effect goes. Like Massive: what comes before the first delay / reverb goes in the
+    // inserts, the delay / reverb and what follows in FX 1 / 2, when that fits; otherwise the free slots in order.
+    // Either way the order is kept (Insert 1, Insert 2, FX 1, FX 2 run in that order).
+    int on[(int)FxType::Count], nOn = 0, split = -1;
+    for (int k = 0; k < count; ++k)
+        if (p[kLegacy[order[k]].on] >= 0.5f)
+        {
+            if (split < 0 && (order[k] == (int)FxType::Delay || order[k] == (int)FxType::Reverb)) split = nOn;
+            on[nOn++] = order[k];
+        }
+    if (split < 0) split = nOn;
+    auto freeSlot = [&](int sl) { return (int)p[P_I1_TYPE + sl * stride] == 0; };
+    int target[(int)FxType::Count];
+    {
+        int ins[2], fx[2], ni = 0, nf = 0;
+        for (int sl = 0; sl < 2; ++sl) if (freeSlot(sl)) ins[ni++] = sl;
+        for (int sl = 2; sl < 4; ++sl) if (freeSlot(sl)) fx[nf++] = sl;
+        const bool massive = split <= ni && nOn - split <= nf;
+        int next = 0;
+        for (int k = 0; k < nOn; ++k)
+        {
+            if (massive) target[k] = k < split ? ins[k] : fx[k - split];
+            else
+            {
+                while (next < kNumSlots && !freeSlot(next)) ++next;
+                target[k] = next < kNumSlots ? next++ : -1;
+            }
+        }
+    }
+    int left = 0;
+    for (int k = 0; k < nOn; ++k)
+    {
+        const Legacy& L = kLegacy[on[k]];
+        const int slot = target[k];
+        if (slot < 0) { ++left; continue; }
+        const int b = P_I1_TYPE + slot * stride;
+        p[b] = (float)(kFirstHelixType + on[k]);
+        p[b + 1] = L.mix >= 0 ? p[L.mix] : 1.0f;
+        for (int kn = 0; kn < kNumKnobs; ++kn)
+            p[b + 2 + kn] = L.knob[kn] >= 0 ? paramDef(L.knob[kn]).toNormalised(p[L.knob[kn]]) : 0.0f;
+        p[L.on] = 0.0f;
+        // matrix routings aimed at its settings now aim at the slot (amounts were in the old parameter's
+        // normalised units, as the slot knobs are, so they carry over)
+        for (int m = 0; m < kNumModSlots; ++m)
+        {
+            float& dst = p[P_M1_DST + m * (P_M2_DST - P_M1_DST)];
+            const int param = modDestParam((int)dst);
+            int to = -1;
+            if (param >= 0 && param == L.mix) to = b + 1;
+            for (int kn = 0; kn < kNumKnobs; ++kn) if (param >= 0 && param == L.knob[kn]) to = b + 2 + kn;
+            if (to >= 0) { const int nd = destOf(to); if (nd >= 0) dst = (float)nd; }
+        }
+    }
+    return left;
 }
 
 } // namespace fxlib

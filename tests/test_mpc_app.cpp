@@ -189,6 +189,14 @@ int main()
     app.tick();
     CHECK(std::fabs(app.getParam(P_X1_A) - 0.123f) < 1e-6f, "preset knob overwritten (%.3f)", (double)app.getParam(P_X1_A));
 
+    // An old project switching a rack effect on: it moves into a free slot.
+    app.setParam(P_X2_TYPE, 0.0f);
+    app.setParam(P_REV_ON, 1.0f);
+    app.setParam(P_REV_MIX, 0.33f);
+    app.tick();
+    CHECK(app.getParam(P_REV_ON) < 0.5f && std::string(fxlib::typeName((int)app.getParam(P_X2_TYPE))) == "HELIX Reverb"
+          && std::fabs(app.getParam(P_X2_MIX) - 0.33f) < 1e-6f, "rack reverb not folded (FX 2 = %s)", fxlib::typeName((int)app.getParam(P_X2_TYPE)));
+
     { std::error_code ec; fs::remove_all(pf.dir, ec); }
     TEST_MAIN_END();
 }

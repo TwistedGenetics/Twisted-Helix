@@ -4,6 +4,8 @@
 #include "helix/Denormals.h"
 #include "helix/FxLibrary.h"
 #include "helix/Params.h"
+#include "helix/Engine.h"
+#include "helix/ModSystem.h"
 #include <chrono>
 #include <cmath>
 #include <cstdio>
@@ -101,6 +103,48 @@ int main()
         s.process(l, r, 32, (t * 7) % fxlib::numTypes(), 0.5f, k, fxlib::Context());
         for (int i = 0; i < 32; ++i) e += l[i] * l[i];
         CHECK(std::isfinite(e), "switching types went non-finite");
+    }
+    // 0.3.6 fold: a rack setup and its folded version (effects moved into the slots) sound the same.
+    {
+        float p[kNumParams];
+        for (int i = 0; i < kNumParams; ++i) p[i] = paramDef(i).def;
+        p[P_DIST_ON] = 1; p[P_DIST_DRIVE] = 0.6f; p[P_DIST_TYPE] = 3;
+        p[P_PH_ON] = 1; p[P_PH_MIX] = 0.7f;
+        p[P_DLY_ON] = 1; p[P_DLY_FEEDBACK] = 0.6f;
+        p[P_REV_ON] = 1; p[P_REV_MIX] = 0.4f;
+        p[P_EQ_ON] = 0; p[P_EQ_MID_GAIN] = 9.0f; p[P_EQ_MID_Q] = 4.0f;
+        p[P_M1_SRC] = 6; p[P_M1_AMT] = 0.5f;                             // LFO 1 -> Dist Drive
+        for (int d = 0; d < numModDests(); ++d) if (modDestParam(d) == P_DIST_DRIVE) p[P_M1_DST] = (float)d;
+        auto render = [](const float* params) {
+            Engine e;
+            e.prepare(44100.0, 256);
+            for (int i = 0; i < kNumParams; ++i) e.params().set(i, params[i]);
+            std::vector<float> out, l(256), r(256);
+            Transport tr;
+            MidiMsg on = MidiMsg::make(0, 0x90, 48, 110);
+            for (int b = 0; b < 300; ++b)
+            {
+                e.process(l.data(), r.data(), 256, b == 0 ? &on : nullptr, b == 0 ? 1 : 0, tr);
+                out.insert(out.end(), l.begin(), l.end());
+            }
+            return out;
+        };
+        const auto a = render(p);
+        float q[kNumParams];
+        std::copy(p, p + kNumParams, q);
+        const int left = fxlib::foldRack(q);
+        CHECK(left == 0, "expected all to fit, %d left", left);
+        CHECK(fxlib::foldRack(q) == left, "fold not idempotent");
+        CHECK(modDestParam((int)q[P_M1_DST]) == P_I1_B, "matrix routing did not follow Dist Drive (dest param %d)",
+              modDestParam((int)q[P_M1_DST]));
+        const auto b = render(q);
+        double d = 0, e = 0;
+        for (size_t i = 0; i < a.size(); ++i) { d += (a[i] - b[i]) * (a[i] - b[i]); e += a[i] * a[i]; }
+        CHECK(e > 0 && d / e < 1e-8, "folded preset sounds different (rel. error %.3g)", d / e);
+        // the destination list fits the dest parameters
+        CHECK((int)paramDef(P_M1_DST).max == numModDests() - 1, "M Dest range %g vs %d destinations", (double)paramDef(P_M1_DST).max,
+              numModDests());
+        CHECK((int)paramDef(P_I1_TYPE).max == fxlib::numTypes() - 1, "slot type range");
     }
     TEST_MAIN_END();
 }

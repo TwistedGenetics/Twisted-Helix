@@ -17,7 +17,8 @@ const std::vector<std::string> filterSlope = {"Model", "6 dB", "12 dB", "18 dB",
 const std::vector<std::string> moOscTarget = {"Off", "Osc A", "Osc B", "A + B"};
 const std::vector<std::string> moFilterTarget = {"Off", "F1", "F2", "F1 + F2"};
 // (kept in step with FxLibrary.cpp's table: test_fx_library checks)
-const std::vector<std::string> fxLibType = {"Off", "Ping-Pong", "Tape Echo", "BBD Echo", "Dub Delay", "Spring", "Tomb Room", "Mod Hall", "Celestial", "Dolmen", "Tumulus", "Plate", "Gated Verb", "Vastness", "Super-Massive", "Quadraverb", "Ensemble", "BBD Chorus", "Multi-Chorus", "Dimension", "Widener", "Flanger", "Script Phase", "Colour Phase", "Dual Phaser", "Barber-pole", "Vibe", "Filter", "Ring Mod", "Drive", "SP-1200", "MPC60", "S950", "S1000", "Amiga", "Beat Repeat", "Volume Shaper", "Stereo Tools"};
+const std::vector<std::string> fxLibType = {"Off", "Ping-Pong", "Tape Echo", "BBD Echo", "Dub Delay", "Spring", "Tomb Room", "Mod Hall", "Celestial", "Dolmen", "Tumulus", "Plate", "Gated Verb", "Vastness", "Super-Massive", "Quadraverb", "Ensemble", "BBD Chorus", "Multi-Chorus", "Dimension", "Widener", "Flanger", "Script Phase", "Colour Phase", "Dual Phaser", "Barber-pole", "Vibe", "Filter", "Ring Mod", "Drive", "SP-1200", "MPC60", "S950", "S1000", "Amiga", "Beat Repeat", "Volume Shaper", "Stereo Tools",
+                                             "HELIX Dist", "HELIX Chorus", "HELIX Phaser", "HELIX Delay", "HELIX Reverb", "OTT", "HELIX EQ"};
 const std::vector<std::string> warpMode = {"Off", "Bend +", "Bend -", "Asym", "PWM", "Mirror", "Sync", "Formant",
                                            "FM Other", "FM Sub", "FM Noise", "AM", "RM", "Quantize", "Bit Red"};
 const std::vector<std::string> subShape = {"Sine", "Triangle", "Square", "Saw"};

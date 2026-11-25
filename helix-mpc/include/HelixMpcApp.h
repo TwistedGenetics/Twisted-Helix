@@ -49,6 +49,8 @@ public:
 
     Engine& engine() { return engine_; }
     TableLibrary& library() { return library_; }
+    // The presets saved in <content>/Presets (sorted by path), as the plugin lists them after the factory ones.
+    static std::vector<Preset> userPresets(const std::string& contentDir);
 
 private:
     void workerLoop();

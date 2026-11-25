@@ -15,7 +15,7 @@ Envelope widget. Text: Roboto, names 24 px, values 32 px, dark on light everywhe
 params.json comes from the SDK build (host_sim dump). Parameters are looked up by name, so the skin follows the
 plugin's parameter order automatically. Needs Pillow.
 """
-import argparse, json, math, os, random, sys
+import argparse, json, math, os, random, sys, zlib
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -588,6 +588,14 @@ def SEG(param, name, labels, widths=None):
     return {"type": "seg", "param": param, "name": name, "labels": labels, "widths": widths}
 def ENV(a, d, s, r, w=196):
     return {"type": "env", "params": (a, d, s, r), "w": w}
+def list_cell(w, h, text, fs, on):
+    """One entry of a list pop-up: big text, lit when chosen."""
+    im = Image.new("RGBA", (w, h), (LED_ON if on else BTN_OFF) + (255,))
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, w - 1, h - 1), outline=BTN_EDGE + (255,), width=2)
+    d.text((w / 2, h / 2), text, font=pil_font(fs, 700), fill=(INK if on else LINE) + (255,), anchor="mm")
+    return im
+
 def step_select_img(w, h, num, on):
     """See-through select button under a draw bar: the step number, an outline, lit (translucent) when chosen."""
     im = Image.new("RGBA", (w, h), (96, 214, 244, 110) if on else (0, 0, 0, 0))
@@ -694,39 +702,13 @@ def pages():
                                          K("L%d Phase" % n, "Phase")]) for n in range(1, 5)])
 
     # ---- FX
-    page(4, 0, "FX", [
-        S("DIST", [SCR("Dist Type", "dist", 230), K("Dist Drive", "Drive"), K("Dist Tone", "Tone"), K("Dist Mix", "Mix")], toggle="Distortion"),
-        S("DELAY", [SCR("Delay Mode", "delay", 230), K("Delay Div", "Sync Div", vis=("Delay Sync", 1, 2)),
-                    K("Delay Fdbk", "Feedback"), K("Delay Mix", "Mix")], toggle="Delay"),
-        S("REVERB", [SCR("Reverb Type", "reverb", 230), K("Rev Size", "Size"), K("Rev Decay", "Decay"), K("Reverb Mix", "Mix")],
-          toggle="Reverb"),
-        S("OTT", [PIC("ott", 230), K("OTT Depth", "Depth"), K("OTT Time", "Time"), K("OTT Out", "Output")], toggle="OTT")])
-    page(4, 1, "FX+", [
-        S("CRUSH", [K("Crush Bits", "Bits"), K("Crush Rate", "Rate")]),
-        S("DELAY+", [TG("Delay Sync", "Tempo Sync", 170), K("Delay Time", "Time", vis=("Delay Sync", 0, 2)), K("Delay Tone", "Tone")]),
-        S("REVERB+", [K("Rev Damp", "Damp"), K("Rev Predelay", "Predelay")]),
-        S("OTT+", [K("OTT Upward", "Upward"), K("OTT Down", "Downward")])])
-    page(4, 2, "CHO/PHS", [
-        S("CHORUS", [SCR("Chorus Mode", "chorus", 230), K("Chorus Rate", "Rate"), K("Chorus Depth", "Depth"), K("Chorus Mix", "Mix")],
-          toggle="Chorus"),
-        S("PHASER", [K("Phaser Rate", "Rate"), K("Phaser Depth", "Depth"), K("Phaser Freq", "Freq"), K("Phaser Fdbk", "Feedback")],
-          toggle="Phaser"),
-        S("PHASER\nMIX", [K("Phaser Mix", "Mix")])])
-    page(4, 3, "EQ", [
-        S("EQ", [K("Low Freq", "Low Freq"), K("Low Gain", "Low Gain", bi=True), K("High Freq", "High Freq"),
-                 K("High Gain", "High Gain", bi=True)], toggle="EQ"),
-        S("EQ MID", [K("Mid Freq", "Mid Freq"), K("Mid Gain", "Mid Gain", bi=True), K("Mid Q", "Mid Q")])])
     # Effects library slots: Insert 1 / 2 before the rack, FX 1 / 2 after it. The knob names follow the effect.
     def lib(slot, title):
         return [S(title, [K(slot + " Type", "Effect", w=309), K(slot + " Mix", "Mix"),
                           K(slot + " A", "A", dyn=slot + " Name A"), K(slot + " B", "B", dyn=slot + " Name B")]),
                 S(title + "\nMORE", [K(slot + " " + k, k, dyn=slot + " Name " + k) for k in "CDEF"])]
-    page(4, 5, "INSERTS", lib("Insert 1", "INSERT 1") + lib("Insert 2", "INSERT 2"))
-    page(4, 6, "FX 1-2", lib("FX 1", "FX 1") + lib("FX 2", "FX 2"))
-    FXS = ["Dist", "Chorus", "Phaser", "Delay", "Reverb", "OTT", "EQ"]
-    page(4, 4, "FX ORDER", [S("FX ORDER\n%s" % ("%d-%d" % (i, i + 1) if i < 7 else "7"),
-                              [PICK("FX Slot %d" % j, "Slot\n%d" % j, cols=4, labels=FXS, where="left", cap_w=70)
-                               for j in range(i, min(i + 2, 8))]) for i in (1, 3, 5, 7)])
+    page(4, 0, "INSERTS", lib("Insert 1", "INSERT 1") + lib("Insert 2", "INSERT 2"))
+    page(4, 1, "FX 1-2", lib("FX 1", "FX 1") + lib("FX 2", "FX 2"))
 
     # ---- MOD MATRIX (long lists: knobs, which step through the choices and show the name)
     for b in range(4):
@@ -894,8 +876,15 @@ class Builder:
     def __init__(self, params, out):
         self.params = params
         self.by_name = {}
-        # host_sim cannot tell a list of more than ~64 entries from a float, so rebuild the combined filter lists
-        # (MP_F1/F2_FILTER: the HELIX types, then every Mega model x type) from their parts.
+        # host_sim cannot tell a list of more than ~64 entries from a float: the lists come from choices.json (written
+        # from the code by tests/test_choice_lists.cpp, which fails when it is stale).
+        cj = os.path.join(os.path.dirname(os.path.abspath(__file__)), "choices.json")
+        if os.path.exists(cj):
+            lists = json.load(open(cj))
+            for p in params:
+                if p["name"] in lists and p["kind"] != "bool":
+                    p["kind"] = "choice"
+                    p["choices"] = lists[p["name"]]
         pn = {p["name"]: p for p in params}
         for f in ("F1", "F2"):
             p = pn.get(f + " Filter")
@@ -937,8 +926,8 @@ class Builder:
             self.images[fname] = image
         return fname
 
-    def knob_def(self, size, cw, bi):
-        key = self.knob_comp(size, cw, bi, False)
+    def knob_def(self, size, cw, bi, lst=None):
+        key = self.knob_comp(size, cw, bi, False) + (" list " + lst if lst else "")
         if key not in self.comp_keys:
             self.comp_keys.add(key)
             tx = size + 12
@@ -947,14 +936,14 @@ class Builder:
             kids = [focus_entry(),
                     entry("knob", "Knob", kid, bounds((0, (126 - size) // 2, size, size))),
                     entry("value", "Label", label("Value", 32, "Bold"), bounds((tx, 60, cw - tx, 44)))]
-            self.defs.append(o(("key", key), ("value", component(kids, actions_for(OVERLAYS["bi" if bi else "knob"])))))
+            self.defs.append(o(("key", key), ("value", component(kids, actions_for(lst or OVERLAYS["bi" if bi else "knob"])))))
         return key
 
-    def screen_def(self, fname, n, w, h):
+    def screen_def(self, fname, n, w, h, lst=None):
         """A waveform screen that is also the control: a Knob widget whose film strip is the screen artwork (drag to change
         the shape / type, like any knob), with the value written in its bottom band. fname None = an invisible knob
         over a picture drawn underneath (the wavetable screen follows Position but edits Table)."""
-        key = "hx screen " + (fname or "blank %dx%d" % (w, h))
+        key = "hx screen " + (fname or "blank %dx%d" % (w, h)) + (" list " + lst if lst else "")
         if key not in self.comp_keys:
             self.comp_keys.add(key)
             if fname is None:
@@ -965,7 +954,55 @@ class Builder:
             val = entry("value", "Label", label("Value", 26, "Bold", just="horizontallyCentred verticallyCentred"),
                         bounds((FM + 6, FM + h - 40, w - 12, 34)))
             self.defs.append(o(("key", key), ("value", component(
-                [focus_entry(), entry("knob", "Knob", kid, bounds((FM, FM, w, h))), val], actions_for(OVERLAYS["knob"])))))
+                [focus_entry(), entry("knob", "Knob", kid, bounds((FM, FM, w, h))), val], actions_for(lst or OVERLAYS["knob"])))))
+        return key
+
+    def list_overlay(self, name):
+        """Tap-to-open list for a list parameter (double-tap the control, or push the data wheel): every entry as a button
+        on one screen. Not a MenuOverlay (the firmware can open that empty): a knob overlay underneath does the closing
+        (tap outside the list / push the wheel again) and keeps the wheel working, the buttons on top pick directly.
+        Returns the overlay's name, or None for short lists (they are buttons already) and wavetable lists."""
+        p = self.p(name)
+        ch = p["choices"]
+        if p["kind"] != "choice" or len(ch) < 5 or name in ("A Table", "B Table"):
+            return None
+        sig = "%d_%08x" % (len(ch), zlib.crc32("\x00".join(ch).encode()))
+        key = "hx list " + sig
+        if key in self.comp_keys:
+            return key
+        self.comp_keys.add(key)
+        PX, PY, PW, PH = 30, 120, 1220, 650
+        n = len(ch)
+        best = None
+        for fs in (30, 28, 26, 24, 22, 20, 18, 16):
+            f = pil_font(fs, 700)
+            tw = max(f.getlength(c) for c in ch) + 18
+            for cols in range(1, 11):
+                cw = PW // cols
+                rows = (n + cols - 1) // cols
+                chh = PH // rows
+                if cw >= tw and chh >= max(28, fs + 8):
+                    best = (fs, cols, rows, cw, min(chh, 84))
+                    break
+            if best:
+                break
+        if not best:
+            best = (16, 10, (n + 9) // 10, PW // 10, max(20, PH // ((n + 9) // 10)))
+        fs, cols, rows, cw, chh = best
+        kids = [entry("overlay", "KnobOverlay", knob_overlay(False), bounds((0, 0, 1280, 800)))]
+        bg = Image.new("RGBA", (PW + 16, rows * chh + 16), SCREEN + (255,))
+        ImageDraw.Draw(bg).rectangle((0, 0, PW + 15, rows * chh + 15), outline=FRAME + (255,), width=3)
+        kids.append(entry("panel", "Image", o(("version", 2), ("imageType", "Regular"), ("colour", "0"),
+                                              ("image", self.save("listbg_%s.png" % sig, bg))),
+                          bounds((PX - 8, PY - 8, PW + 16, rows * chh + 16))))
+        for i, c in enumerate(ch):
+            on = self.save("list_%s_%d_on.png" % (sig, i), list_cell(cw, chh, c, fs, True))
+            off = self.save("list_%s_%d_off.png" % (sig, i), list_cell(cw, chh, c, fs, False))
+            kids.append(entry("item%d" % i, "Button", o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", i),
+                                                        ("numButtonsInGroup", n), ("handleName", "Data"),
+                                                        ("gestureBehaviour", "Instant")),
+                              bounds((PX + (i % cols) * cw, PY + (i // cols) * chh, cw, chh))))
+        self.defs.append(o(("key", key), ("value", component(kids, colour=argb(SCREEN), ignore=True))))
         return key
 
     @staticmethod
@@ -1111,7 +1148,7 @@ class Builder:
             if p["kind"] in ("choice", "bool"):
                 self.discrete(c["param"])       # long lists (mod source / dest, divisions) are knobs that step through
             size = KNOB if t == "knob" else KNOB_S
-            comp = self.knob_def(size, w, c["bi"])
+            comp = self.knob_def(size, w, c["bi"], self.list_overlay(c["param"]))
             inval = self.vis(c)
             if c.get("dyn"):
                 out.append(entry("caption", "Label", label("Value", 24, "SemiBold", MUTED, handle="Data"),
@@ -1139,7 +1176,7 @@ class Builder:
                                  bounds((x, y, w, h), invalid="Hide"), remap=[("Data", self.h(c["pos"]))]))
                 comp = self.screen_def(None, 1, w, h)
             else:
-                comp = self.screen_def(fname, n, w, h)
+                comp = self.screen_def(fname, n, w, h, self.list_overlay(c["param"]))
             out.append(entry(c["param"], comp, o(("version", 1), ("handleName", "Data")),
                              bounds((x - FM, y - FM, w + 2 * FM, h + 2 * FM), focus="Yes", invalid="Hide"),
                              remap=[("Data", self.h(c["param"]))]))

@@ -30,7 +30,19 @@ std::string knobText(int type, int k, float v, const float* knobs = nullptr, dou
 float knobDefault(int type, int k);   // 0..1
 float mixDefault(int type);           // 0..1
 
-struct Context { double bpm = 120.0; double beat = 0.0; };
+struct Context
+{
+    double bpm = 120.0, beat = 0.0;
+    const float* params = nullptr;   // the engine's (modulated) parameters: the HELIX effects read their other settings
+    bool oversample = false;         // HELIX Dist's oversampling (engine quality)
+};
+
+// 0.3.6: the old FX rack folds into the slots. Each switched-on rack effect (in rack order) moves into the next free
+// slot (Insert 1, Insert 2, FX 1, FX 2) as its HELIX type, with its settings and Mix, and its switch goes off; matrix
+// routings aimed at its settings follow it. Returns how many switched-on effects did not fit (they stay in the rack,
+// which still runs). Safe to call again (nothing left to move).
+int foldRack(float* params);
+bool isHeavy(int type);   // OTT (the CPU meter marks it)
 
 // One slot. prepare() allocates everything (every effect's memory) so changing type never allocates.
 class Slot
@@ -43,6 +55,7 @@ public:
     // In place. type, mix (0..1), knobs[6] (0..1). n <= maxBlock.
     void process(float* l, float* r, int n, int type, float mix, const float* knobs, const Context& ctx);
     int activeType() const { return cur_; }
+    bool heavy() const { return isHeavy(cur_); }
 private:
     struct Impl;
     std::unique_ptr<Impl> d_;

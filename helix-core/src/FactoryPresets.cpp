@@ -1,3 +1,4 @@
+#include "helix/FxLibrary.h"
 // The 24 HELIX factory presets: jungle, drum & bass and dark music. Built in code so every target (desktop,
 // MPC, render CLI) has them without files; tools write them out as JSON into Presets/<Category>/.
 #include "helix/Filter.h"
@@ -238,7 +239,11 @@ std::vector<Preset> build()
 
 const std::vector<Preset>& factoryPresets()
 {
-    static const std::vector<Preset> presets = build();
+    static const std::vector<Preset> presets = [] {
+        auto v = build();
+        for (auto& p : v) fxlib::foldRack(p.params);   // (written with the old rack; shown in the effect slots)
+        return v;
+    }();
     return presets;
 }
 

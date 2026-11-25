@@ -1,4 +1,5 @@
 #include "helix/Preset.h"
+#include "helix/FxLibrary.h"
 #include "helix/Engine.h"
 #include "helix/Math.h"
 #include "helix/TableLibrary.h"
@@ -140,6 +141,7 @@ void applyPreset(const Preset& p, Engine& e, TableLibrary* lib)
     }
     float params[kNumParams];
     std::copy(p.params, p.params + kNumParams, params);
+    fxlib::foldRack(params);   // presets from before 0.3.6: the FX rack's effects move into the effect slots
     if (lib)
         for (int s = 0; s < 2; ++s)
         {
