@@ -35,7 +35,9 @@ enum MpcParam : int
     MP_PR_STATUS,                 // read-only: "Printing...", the new table's name or the error (value flips to redraw)
     // 0.4.4 character oscillator knob names (read-only, follow the engine like the effect slots' names)
     MP_CONAME,
-    kMpcParamEnd = MP_CONAME + 6
+    // 0.4.5 pad scenes: the scene shown / recalled (touching one recalls it), and Store (into the shown scene)
+    MP_SCENE = MP_CONAME + 6, MP_SCENE_STORE,
+    kMpcParamEnd
 };
 constexpr int kMpcNumParams = kMpcParamEnd;
 constexpr int kNumPresetBanks = 8;

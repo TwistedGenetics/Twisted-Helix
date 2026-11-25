@@ -193,6 +193,16 @@ void Voice::computeModulation(const EngineContext& ctx, int n)
             if (pi == P_L1_RATE + l * lOff) lfoRateOffset_[l] = offsets_[k].norm;   // applied next block
     }
 
+    // Filth: the mod wheel x Filth pushes Growl (cutoff, drive, positions, warps), filter drive and the character
+    // oscillator's drive all at once
+    const float filth = ctx.modWheel * p[P_FILTH];
+    if (filth > 0.0f)
+    {
+        vp_[P_RS_GROWL] = clamp(vp_[P_RS_GROWL] + filth, 0.0f, 1.0f);
+        vp_[P_F1_DRIVE] = clamp(vp_[P_F1_DRIVE] + 0.3f * filth, 0.0f, 1.0f);
+        vp_[P_CO_DRIVE] = clamp(vp_[P_CO_DRIVE] + 0.8f * filth, 0.0f, 1.0f);
+    }
+
     // Reese growl: one amount moves cutoff, drive, both wavetable positions and both first warps together
     const float g = vp_[P_RS_GROWL];
     if (g > 0.0f)

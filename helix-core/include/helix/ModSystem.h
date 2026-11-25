@@ -30,6 +30,16 @@ enum class LfoMode : int { Retrig = 0, Free, OneShot };
 
 // Shared user-drawn data: step values and breakpoint shapes for the 4 LFOs. Written by the UI / preset loader,
 // read by the audio thread (relaxed atomics: a torn read only means one block sees a half-edited shape).
+// Pad scenes: 16 snapshots of the 8 macros. Written from any thread; the engine morphs to one on recall.
+constexpr int kNumScenes = 16;
+struct MacroScenes
+{
+    std::atomic<float> v[kNumScenes][kNumMacros];
+    MacroScenes() { resetToDefaults(); }
+    // Scene s = every macro at s / 15: a ladder from all-off (pad 1) to all-full (pad 16).
+    void resetToDefaults() { for (int s = 0; s < kNumScenes; ++s) for (int m = 0; m < kNumMacros; ++m) v[s][m].store((float)s / 15.0f); }
+};
+
 struct LfoShapes
 {
     std::atomic<float> steps[kNumLfos][kMaxSteps];

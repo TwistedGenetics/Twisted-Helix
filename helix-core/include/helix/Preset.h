@@ -11,6 +11,7 @@
 #pragma once
 #include "helix/Config.h"
 #include "helix/Json.h"
+#include "helix/ModSystem.h"
 #include "helix/Params.h"
 #include <string>
 #include <vector>
@@ -31,6 +32,7 @@ struct Preset
     float lfoSteps[kNumLfos][kMaxSteps];
     int lfoPoints[kNumLfos];
     float lfoPx[kNumLfos][kLfoMaxPoints], lfoPy[kNumLfos][kLfoMaxPoints];
+    float scenes[kNumScenes][kNumMacros];   // pad scenes (0.4.5): "scenes": [[8 macros] x 16]
 
     Preset();   // = Init (all defaults)
     Json toJson() const;

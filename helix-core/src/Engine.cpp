@@ -112,6 +112,47 @@ void Engine::snapshotParams(const Transport& tr, int n)
         }
     }
     ownBeats_ += (double)n / sampleRate_ * ctx_.bpm / 60.0;
+    updateSceneMorph(n);
+}
+
+void Engine::storeScene(int s)
+{
+    if (s < 0 || s >= kNumScenes) return;
+    for (int m = 0; m < kNumMacros; ++m) scenes_.v[s][m].store(params_.get(P_MACRO1 + m));
+}
+
+// Scene recall: an S-curve from where the macros are to the scene's values over Scene Morph. While it runs the
+// macros this block sees are the morph's; at the end the macro parameters themselves take the scene's values.
+void Engine::updateSceneMorph(int n)
+{
+    const int req = sceneRequest_.exchange(-1, std::memory_order_acq_rel);
+    if (req >= 0)
+    {
+        for (int m = 0; m < kNumMacros; ++m)
+        {
+            morphFrom_[m] = ctx_.p[P_MACRO1 + m];   // the morph's current value if one is running (set last block)
+            morphTo_[m] = scenes_.v[req][m].load(std::memory_order_relaxed);
+        }
+        if (morphing_) for (int m = 0; m < kNumMacros; ++m) morphFrom_[m] = morphNow_[m];
+        morphLen_ = (double)ctx_.p[P_SCENE_MORPH] * 0.001 * sampleRate_;
+        morphPos_ = 0.0;
+        morphing_ = true;
+        lastScene_.store(req, std::memory_order_relaxed);
+    }
+    if (!morphing_) return;
+    const double t = morphLen_ < 1.0 ? 1.0 : std::min(1.0, morphPos_ / morphLen_);
+    const float sm = (float)(t * t * (3.0 - 2.0 * t));
+    for (int m = 0; m < kNumMacros; ++m)
+    {
+        morphNow_[m] = morphFrom_[m] + (morphTo_[m] - morphFrom_[m]) * sm;
+        ctx_.p[P_MACRO1 + m] = morphNow_[m];
+    }
+    morphPos_ += n;
+    if (t >= 1.0)
+    {
+        morphing_ = false;
+        for (int m = 0; m < kNumMacros; ++m) params_.set(P_MACRO1 + m, morphTo_[m]);
+    }
 }
 
 // ------------------------------------------------------------------------------------------- notes
@@ -244,8 +285,17 @@ void Engine::handleMidi(const MidiMsg& m)
 {
     switch (m.status())
     {
-        case 0x90: if (m.data[2] > 0) chordOn(m.data[1], m.data[2]); else chordOff(m.data[1]); break;
-        case 0x80: chordOff(m.data[1]); break;
+        case 0x90: case 0x80:
+        {
+            // Scene Pads: notes 36-51 (pads A01-A16) recall scenes 1-16 instead of playing
+            if (ctx_.p[P_SCENE_PADS] >= 0.5f && m.data[1] >= 36 && m.data[1] <= 51)
+            {
+                if (m.status() == 0x90 && m.data[2] > 0) recallScene(m.data[1] - 36);
+                break;
+            }
+            if (m.status() == 0x90 && m.data[2] > 0) chordOn(m.data[1], m.data[2]); else chordOff(m.data[1]);
+            break;
+        }
         case 0xA0:   // poly aftertouch (pad pressure)
             for (Voice& v : voices_) if (v.active() && v.note() == m.data[1]) v.setPressure((float)m.data[2] / 127.0f);
             break;

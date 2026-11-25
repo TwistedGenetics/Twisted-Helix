@@ -23,6 +23,9 @@ namespace mpcchoices {
 static const std::vector<std::string> frames = {"8", "16", "32", "64", "128", "256"};
 static const std::vector<std::string> slot = {"Osc A", "Osc B"};
 static const std::vector<std::string> bank = {"1-16", "17-32", "33-48", "49-64", "65-80", "81-96", "97-112", "113-128"};
+static const std::vector<std::string> scenes = {"Scene 1", "Scene 2", "Scene 3", "Scene 4", "Scene 5", "Scene 6", "Scene 7",
+                                                 "Scene 8", "Scene 9", "Scene 10", "Scene 11", "Scene 12", "Scene 13",
+                                                 "Scene 14", "Scene 15", "Scene 16"};
 static const std::vector<std::string> steps = {"Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6", "Step 7", "Step 8",
                                                 "Step 9", "Step 10", "Step 11", "Step 12", "Step 13", "Step 14", "Step 15", "Step 16"};
 }
@@ -101,6 +104,8 @@ static ParamDef extraDefs[kMpcNumParams - kMpcReserveEnd] = {
     {"mpc_co_nd", "CO Name D", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
     {"mpc_co_ne", "CO Name E", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
     {"mpc_co_nf", "CO Name F", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
+    {"mpc_scene", "Scene", ParamKind::Choice, 0, 15, 0, "", &mpcchoices::scenes, false},
+    {"mpc_scene_store", "Store Scene", ParamKind::Bool, 0, 1, 0, "", nullptr, false},
 };
 static_assert(sizeof(extraDefs) / sizeof(extraDefs[0]) == kMpcNumParams - kMpcReserveEnd, "extraDefs out of step");
 
@@ -287,7 +292,7 @@ bool HelixMpcApp::formatValue(int index, float plain, std::string& out) const
             out = samples_.empty() ? std::string("(no samples)") : (i < (int)samples_.size() ? fs::path(samples_[(size_t)i]).stem().string() : std::string("-"));
             return true;
         }
-        case MP_LOAD: case MP_MUTATE: case MP_S2T_GO: out = plain >= 0.5f ? "..." : "Press"; return true;
+        case MP_LOAD: case MP_MUTATE: case MP_S2T_GO: case MP_SCENE_STORE: out = plain >= 0.5f ? "..." : "Press"; return true;
         case MP_PR_GO: out = plain >= 0.5f || printing_.load() ? "..." : "Press"; return true;
         case MP_PR_STATUS:
         {
@@ -364,6 +369,7 @@ bool HelixMpcApp::formatValue(int index, float plain, std::string& out) const
 
 void HelixMpcApp::applyPreset(const Preset& p)
 {
+    sceneResync_ = true;   // a restored Scene value must not recall a scene over the preset's macros
     float before[kNumParams];
     for (int i = 0; i < kNumParams; ++i) before[i] = engine_.params().get(i);
     helix::applyPreset(p, engine_, &library_);
@@ -595,6 +601,30 @@ void HelixMpcApp::tick()
         }
     }
 
+    // Pad scenes: touching a scene recalls it; a pad recall (Scene Pads) moves the selection; Store saves the
+    // macros into the selected scene. The macro knobs follow a morph when it lands.
+    {
+        const int shown = (int)getParam(MP_SCENE);
+        const int last = engine_.lastScene();
+        if (sceneResync_.exchange(false)) { lastSceneParam_ = shown; lastEngineScene_ = last; }
+        if (last != lastEngineScene_)
+        {
+            lastEngineScene_ = last;
+            if (last >= 0 && last != shown) { setParam(MP_SCENE, (float)last); platform_.notifyParameter(MP_SCENE, (float)last); }
+            lastSceneParam_ = last >= 0 ? last : shown;
+        }
+        else if (shown != lastSceneParam_)
+        {
+            if (lastSceneParam_ != -1) engine_.recallScene(shown);
+            lastSceneParam_ = shown;
+        }
+        for (int m = 0; m < kNumMacros; ++m)
+        {
+            const float v = engine_.params().get(P_MACRO1 + m);
+            if (v != lastMacro_[m]) { if (lastMacro_[m] > -1.0f) platform_.notifyParameter(P_MACRO1 + m, v); lastMacro_[m] = v; }
+        }
+    }
+
     // Triggers (momentary parameters).
     auto trigger = [&](int p) {
         if (getParam(p) < 0.5f) return false;
@@ -622,6 +652,7 @@ void HelixMpcApp::tick()
     }
 
     if (trigger(MP_PR_GO) && !printing_.load()) startPrint();
+    if (trigger(MP_SCENE_STORE)) engine_.storeScene((int)getParam(MP_SCENE));
     if (printDone_.exchange(false))
     {
         const int req = printLoad_.exchange(-1);

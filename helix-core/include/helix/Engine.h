@@ -58,6 +58,14 @@ public:
     LfoShapes& lfoShapes() { return lfoShapes_; }
     const LfoShapes& lfoShapes() const { return lfoShapes_; }
 
+    // Pad scenes (any thread): recall morphs the 8 macros to scene s over Scene Morph (the macro parameters take
+    // the scene's values when the morph ends); store copies the macros' current values into scene s.
+    MacroScenes& scenes() { return scenes_; }
+    const MacroScenes& scenes() const { return scenes_; }
+    void recallScene(int s) { if (s >= 0 && s < kNumScenes) sceneRequest_.store(s, std::memory_order_release); }
+    void storeScene(int s);
+    int lastScene() const { return lastScene_.load(std::memory_order_relaxed); }   // -1 before the first recall
+
     // Non-real-time: hand a table to the engine. Returns false if the hand-over queue is full (try again later).
     bool setTable(int slot, WavetablePtr table);
     WavetablePtr uiTable(int slot) const;
@@ -104,6 +112,12 @@ private:
 
     ParamStore params_;
     LfoShapes lfoShapes_;
+    MacroScenes scenes_;
+    std::atomic<int> sceneRequest_{-1}, lastScene_{-1};
+    float morphFrom_[kNumMacros] = {}, morphTo_[kNumMacros] = {}, morphNow_[kNumMacros] = {};
+    double morphPos_ = 0.0, morphLen_ = 0.0;
+    bool morphing_ = false;
+    void updateSceneMorph(int n);
     EngineContext ctx_;
     Voice voices_[kMaxVoices];
     FxChain fx_;

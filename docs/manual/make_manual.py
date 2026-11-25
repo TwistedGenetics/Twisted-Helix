@@ -984,6 +984,28 @@ def chapter_macros_voices():
             "to the first macros (for example in Classic Reese, Macro 1 opens the filter and Macro 2 widens the detune). On "
             "the MPC, put the macros on the Q-Links (the MACRO key's page holds all eight, and the OSC page has Macro 1-4) and record their movements into your "
             "sequences.")]
+    s += H2("Pad scenes")
+    s += [P("A scene is a snapshot of all eight macros; there are sixteen, one per pad. Recalling a scene glides every "
+            "macro from where it is to the scene's values over <b>Scene Morph</b> (0 = a jump, up to 8 s, with a smooth "
+            "S-shaped curve), then the macro knobs take the new values. Because the macros drive the matrix, one pad can "
+            "switch a whole patch from a sub to a screaming growl, in time with the beat if you hit it on the beat."),
+          table([["Control", "What it does"],
+                 ["Scene 1-16", "Touch (MPC) or click (computer) to recall. The last one recalled is lit."],
+                 ["Store", "Saves the macros' current values into the lit scene: set the macros, press Store."],
+                 ["Scene Morph", "The glide time of a recall."],
+                 ["Scene Pads", "On: notes 36-51 (the MPC's pads A01-A16) recall scenes 1-16 instead of playing; "
+                  "every other note still plays. Put HELIX on two tracks (one for the pads, one for the bassline), "
+                  "or record scene changes into a sequence."]], [36, 134]),
+          P("New patches start with a ladder: scene 1 has every macro at 0, scene 16 every macro at 100%, the ones between "
+            "evenly spaced. Scenes are saved with presets and projects. On the MPC: the <b>SCENES</b> page (MACRO key); "
+            "on the computer: the numbered buttons above the macros (OSC tab) with Store, and Pads in the panel's title "
+            "bar; Scene Morph is on the GLOBAL tab.")]
+    s += H2("Filth (mod wheel)")
+    s += [P("<b>Filth</b> turns the mod wheel into a one-hand dirt control: as the wheel goes up it adds Growl (which opens "
+            "Filter 1 and pushes its drive, the wavetable positions and the warps by the Growl amounts on the REESE page), "
+            "a little more Filter 1 drive, and the character oscillator's drive. Filth sets how far the wheel goes (0 = the "
+            "wheel does only what the matrix tells it). On the MPC it is on the SCENES page; on the computer on the GLOBAL "
+            "tab. The MPC has no mod wheel of its own: assign a Q-Link or the touch strip to CC 1, or use a keyboard.")]
     s += H2("Voices and playing")
     s += [table([["Control", "What it does"],
                  ["Poly Mode", "<b>Poly</b>: up to 8 notes at once. <b>Mono</b>: one note; every new note restarts the "

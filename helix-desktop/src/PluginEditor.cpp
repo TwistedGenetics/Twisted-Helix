@@ -513,18 +513,43 @@ private:
 class MacroPanel : public PanelFrame
 {
 public:
-    explicit MacroPanel(Page& pg) : PanelFrame("Macros")
+    explicit MacroPanel(Page& pg) : PanelFrame("Macros"), proc_(pg.proc)
     {
         for (int m = 0; m < kNumMacros; ++m)
         {
             chips_.push_back(pg.own(std::make_unique<ModChip>(SRC_MACRO1 + m, "M" + juce::String(m + 1)), this));
             knobs_.push_back(pg.knob(P_MACRO1 + m, this, "Macro " + juce::String(m + 1)));
         }
+        // Pad scenes: 16 snapshots of the macros. Click to morph there; Store saves the macros into the lit scene.
+        for (int s = 0; s < kNumScenes; ++s)
+        {
+            auto* b = pg.own(std::make_unique<juce::TextButton>(juce::String(s + 1)), this);
+            b->setClickingTogglesState(false);
+            b->setTooltip("Scene " + juce::String(s + 1) + ": morph the macros here (Scene Morph on the GLOBAL tab)");
+            b->onClick = [this, s] { proc_.engine().recallScene(s); };
+            scenes_.push_back(b);
+        }
+        store_ = pg.own(std::make_unique<juce::TextButton>("Store"), this);
+        store_->setTooltip("Save the macros into the lit scene");
+        store_->onClick = [this] { proc_.engine().storeScene(juce::jmax(0, proc_.engine().lastScene())); };
+        pads_ = pg.toggle(P_SCENE_PADS, this, "Pads");
+        pads_->button().setTooltip("Scene Pads: notes 36-51 (MPC pads A01-A16) recall scenes 1-16 instead of playing");
+    }
+    void tick()
+    {
+        const int cur = proc_.engine().lastScene();
+        for (int s = 0; s < kNumScenes; ++s) scenes_[(size_t)s]->setToggleState(s == cur, juce::dontSendNotification);
     }
     void resized() override
     {
         PanelFrame::resized();
+        pads_->setBounds(titleArea().removeFromRight(70).withSizeKeepingCentre(66, 20));
         auto c = content();
+        auto row = c.removeFromTop(24);
+        store_->setBounds(row.removeFromRight(54).reduced(1, 1));
+        const int bw = row.getWidth() / kNumScenes;
+        for (int s = 0; s < kNumScenes; ++s) scenes_[(size_t)s]->setBounds(row.removeFromLeft(bw).reduced(1, 1));
+        c.removeFromTop(2);
         const int w = c.getWidth() / 4, h = c.getHeight() / 2;
         for (int m = 0; m < kNumMacros; ++m)
         {
@@ -534,8 +559,12 @@ public:
         }
     }
 private:
+    HelixProcessor& proc_;
     std::vector<ModChip*> chips_;
     std::vector<ParamKnob*> knobs_;
+    std::vector<juce::TextButton*> scenes_;
+    juce::TextButton* store_ = nullptr;
+    ParamToggle* pads_ = nullptr;
 };
 
 // --------------------------------------------------------------------------------------------- OSC tab
@@ -570,7 +599,7 @@ public:
     void tick() override
     {
         Page::tick();
-        oscA_->tick(); oscB_->tick(); f1_->tick(); f2_->tick(); mod_->tick();
+        oscA_->tick(); oscB_->tick(); f1_->tick(); f2_->tick(); mod_->tick(); macros_->tick();
     }
 private:
     OscPanel *oscA_, *oscB_;
@@ -925,7 +954,9 @@ public:
         glideMode_ = combo(P_GLIDE_MODE, voice_, "Glide mode");
         steal_ = combo(P_STEAL, voice_, "Steal");
         vk_ = {knob(P_VOICES, voice_, "Voices", ParamKnob::Size::Large), knob(P_GLIDE, voice_, "Glide", ParamKnob::Size::Large),
-               knob(P_BEND_RANGE, voice_, "Bend Range", ParamKnob::Size::Large), knob(P_VEL_SENS, voice_, "Vel Sens", ParamKnob::Size::Large)};
+               knob(P_BEND_RANGE, voice_, "Bend Range", ParamKnob::Size::Large), knob(P_VEL_SENS, voice_, "Vel Sens", ParamKnob::Size::Large),
+               knob(P_SCENE_MORPH, voice_, "Scene Morph", ParamKnob::Size::Large), knob(P_FILTH, voice_, "Filth", ParamKnob::Size::Large)};
+        vk_[5]->setTooltip("Filth: the mod wheel pushes Growl, filter drive and the character oscillator's drive together");
         engine_ = own(std::make_unique<PanelFrame>("Engine"));
         quality_ = combo(P_QUALITY, engine_, "Quality");
         guard_ = toggle(P_AUTO_SCALE, engine_, "CPU Guard");
@@ -963,7 +994,7 @@ public:
         auto row = c.removeFromTop(52);
         layoutRow(row.withHeight(44), {poly_, glideMode_, steal_, chord_}, 12);
         c.removeFromTop(8);
-        layoutRow(c, {vk_[0], vk_[1], vk_[2], vk_[3]});
+        layoutRow(c, {vk_[0], vk_[1], vk_[2], vk_[3], vk_[4], vk_[5]});
         engine_->setBounds(0, 248, 580, 200);
         reese_->setBounds(0, 456, 580, 252);
         {

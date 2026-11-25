@@ -770,6 +770,11 @@ def pages():
     # ---- MACROS
     page(7, 0, "MACROS", [S("MACROS\n1-4", [K("Macro %d" % i, "Macro %d" % i) for i in range(1, 5)]),
                           S("MACROS\n5-8", [K("Macro %d" % i, "Macro %d" % i) for i in range(5, 9)])])
+    # Pad scenes: 16 snapshots of the macros; touch one to morph there, Store saves the macros into the lit one
+    page(7, 1, "SCENES", [S("SCENE", [PICK("Scene", None, cols=8, labels=[str(i) for i in range(1, 17)], bw=118)]),
+                          S("SCENE\nSETUP", [K("Scene Morph", "Morph Time"), TG("Store Scene", "Store", 170),
+                                             TG("Scene Pads", "Scene Pads", 190)]),
+                          S("FILTH", [K("Filth", "Filth (Mod Wheel)", w=360)])])
 
     # ---- BROWSE / GLOBAL
     page(8, 0, "BROWSE", [S("PRESET", [K("Preset", "Preset", w=380), TG("Load", "Load", 150), TG("Mutate 10%", "Mutate 10%", 170),

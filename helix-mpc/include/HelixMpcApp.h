@@ -87,6 +87,9 @@ private:
     LibSlot libSlot_[4];   // last shown list value, last core value
     int cpuCounter_ = 0;
     int lastCharFam_ = -99;
+    int lastSceneParam_ = -1, lastEngineScene_ = -1;
+    std::atomic<bool> sceneResync_{false};
+    float lastMacro_[kNumMacros] = {-9, -9, -9, -9, -9, -9, -9, -9};
 
     std::atomic<bool> quit_{false};
     std::thread worker_;

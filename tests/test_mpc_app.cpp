@@ -227,6 +227,18 @@ int main()
     CHECK(app.formatValue(P_A_TABLE, app.getParam(P_A_TABLE), text) && text == "Print 001", "A table shows '%s'", text.c_str());
     CHECK(app.formatValue(MP_PR_NOTE, 36.0f, text) && text == "C2", "print note '%s'", text.c_str());
 
+    // Pad scenes: touching a scene recalls it (the macro knobs follow), Store saves into the shown scene
+    app.engine().params().set(P_SCENE_MORPH, 0.0f);
+    app.tick();
+    app.setParam(MP_SCENE, 12.0f);
+    app.tick();
+    { std::vector<float> l(256), r(256); app.process(l.data(), r.data(), 256, nullptr, 0, Transport{}); }
+    CHECK(std::fabs(app.getParam(P_MACRO3) - 12.0f / 15.0f) < 1e-6f, "scene touch did not recall (%f)", app.getParam(P_MACRO3));
+    app.setParam(P_MACRO3, 0.33f);
+    app.setParam(MP_SCENE_STORE, 1.0f);
+    app.tick();
+    CHECK(std::fabs(app.engine().scenes().v[12][2].load() - 0.33f) < 1e-6f, "store into the shown scene");
+
     { std::error_code ec; fs::remove_all(pf.dir, ec); }
     TEST_MAIN_END();
 }

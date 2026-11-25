@@ -116,6 +116,7 @@ private:
     std::thread printThread_;
     std::atomic<bool> printing_{false}, printCancel_{false}, printDone_{false};
     std::atomic<int> printLoad_{-1};
+    float lastMacro_[helix::kNumMacros] = {-9, -9, -9, -9, -9, -9, -9, -9};
     mutable std::mutex printMutex_;
     std::string printStatus_;
     int currentProgram_ = 0;

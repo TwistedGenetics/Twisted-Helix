@@ -16,6 +16,8 @@ Preset::Preset()
         lfoPoints[l] = d.numPoints[l].load();
         for (int k = 0; k < kLfoMaxPoints; ++k) { lfoPx[l][k] = d.px[l][k].load(); lfoPy[l][k] = d.py[l][k].load(); }
     }
+    MacroScenes sc;
+    for (int s = 0; s < kNumScenes; ++s) for (int m = 0; m < kNumMacros; ++m) scenes[s][m] = sc.v[s][m].load();
 }
 
 Json Preset::toJson() const
@@ -53,6 +55,14 @@ Json Preset::toJson() const
         lfos.push(o);
     }
     j.set("lfo", lfos);
+    Json sc = Json::array();
+    for (int s = 0; s < kNumScenes; ++s)
+    {
+        Json row = Json::array();
+        for (int m = 0; m < kNumMacros; ++m) row.push((double)scenes[s][m]);
+        sc.push(row);
+    }
+    j.set("scenes", sc);
     return j;
 }
 
@@ -97,6 +107,10 @@ bool Preset::fromJson(const Json& j, Preset& out, std::string* error)
             p.lfoPoints[l] = n;
         }
     }
+    const Json& sc = j.get("scenes");
+    for (int s = 0; s < kNumScenes && s < (int)sc.size(); ++s)
+        for (int m = 0; m < kNumMacros && m < (int)sc[(size_t)s].size(); ++m)
+            p.scenes[s][m] = clamp((float)sc[(size_t)s][(size_t)m].number(), 0.0f, 1.0f);
     // Presets from before 0.3.6 (version 1): the FX rack's switched-on effects move into the effect slots.
     if (version < 2) fxlib::foldRack(p.params);
     out = p;
@@ -129,6 +143,7 @@ Preset capturePreset(const Engine& e, const TableLibrary* lib)
         p.lfoPoints[l] = sh.numPoints[l].load();
         for (int k = 0; k < kLfoMaxPoints; ++k) { p.lfoPx[l][k] = sh.px[l][k].load(); p.lfoPy[l][k] = sh.py[l][k].load(); }
     }
+    for (int s = 0; s < kNumScenes; ++s) for (int m = 0; m < kNumMacros; ++m) p.scenes[s][m] = e.scenes().v[s][m].load();
     return p;
 }
 
@@ -141,6 +156,7 @@ void applyPreset(const Preset& p, Engine& e, TableLibrary* lib)
         for (int k = 0; k < kLfoMaxPoints; ++k) { sh.px[l][k].store(p.lfoPx[l][k]); sh.py[l][k].store(p.lfoPy[l][k]); }
         sh.numPoints[l].store(p.lfoPoints[l]);
     }
+    for (int s = 0; s < kNumScenes; ++s) for (int m = 0; m < kNumMacros; ++m) e.scenes().v[s][m].store(p.scenes[s][m]);
     float params[kNumParams];
     std::copy(p.params, p.params + kNumParams, params);
     if (lib)

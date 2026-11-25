@@ -480,3 +480,7 @@ HP(P_CO_TIME         , "co_time", "CO Env Time", ParamKind::Linear, 0.0f, 1.0f, 
 HP(P_CO_TO_F1        , "co_to_f1", "CO > F1", ParamKind::Linear, 0.0f, 1.0f, 1.0f, "", nullptr, false)
 HP(P_CO_TO_F2        , "co_to_f2", "CO > F2", ParamKind::Linear, 0.0f, 1.0f, 0.0f, "", nullptr, false)
 HP(P_CHORD           , "chord", "Chord", ParamKind::Choice, 0.0f, 13.0f, 0.0f, "", &choices::chordMemory, false)
+// ---- 0.4.5 pad scenes (macro snapshots with morph) and the filth mod wheel ----
+HP(P_SCENE_MORPH     , "scene_morph", "Scene Morph", ParamKind::Squared, 0.0f, 8000.0f, 250.0f, "ms", nullptr, false)
+HP(P_SCENE_PADS      , "scene_pads", "Scene Pads", ParamKind::Bool, 0.0f, 1.0f, 0.0f, "", nullptr, false)
+HP(P_FILTH           , "filth", "Filth", ParamKind::Linear, 0.0f, 1.0f, 0.0f, "", nullptr, false)

@@ -205,6 +205,16 @@ void HelixProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBu
 void HelixProcessor::timerCallback()
 {
     engine_.collectGarbage();
+    // A scene morph writes the macros when it lands: tell the host and the controls
+    for (int m = 0; m < helix::kNumMacros; ++m)
+    {
+        const float v = engine_.params().get(helix::P_MACRO1 + m);
+        if (v != lastMacro_[m])
+        {
+            if (lastMacro_[m] > -1.0f) params_[(size_t)(helix::P_MACRO1 + m)]->sendValueChangedMessageToListeners(params_[(size_t)(helix::P_MACRO1 + m)]->getValue());
+            lastMacro_[m] = v;
+        }
+    }
     if (printDone_.exchange(false))
     {
         const int req = printLoad_.exchange(-1);
