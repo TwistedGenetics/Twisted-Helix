@@ -1155,6 +1155,73 @@ private:
     std::vector<ParamKnob*> bands_;
 };
 
+
+// --------------------------------------------------------------------------------------------- performers (big)
+
+// Both performers full size: draw the steps, give each a curve from the library, and set the timing and the loop
+// (mode, start and end; the loop's ends can also be dragged by their handles along the top of the steps).
+class PerfTab : public Page
+{
+public:
+    explicit PerfTab(HelixProcessor& p) : Page(p)
+    {
+        for (int q = 0; q < 2; ++q)
+        {
+            Perf& f = perfs_[q];
+            const int b = q == 0 ? P_P1_DIV : P_P2_DIV, lp = q == 0 ? P_P1_LOOP : P_P2_LOOP;
+            f.panel = own(std::make_unique<PanelFrame>(q == 0 ? "Performer 1" : "Performer 2"));
+            f.view = own(std::make_unique<PerformerView>(p, q), f.panel);
+            f.lib = own(std::make_unique<CurveLibrary>(), f.panel);
+            f.lib->setTooltip("Curve library: click a curve, then click a step's lane under the steps (or drag the curve onto a step)");
+            f.view->setLibrary(f.lib);
+            f.step = combo(b, f.panel, "Step");
+            f.mode = combo(b + 2, f.panel, "Mode");
+            f.feel = combo(q == 0 ? P_P1_FEEL : P_P2_FEEL, f.panel, "Feel");
+            f.fill = combo(q == 0 ? P_P1_FILL : P_P2_FILL, f.panel, "Fill");
+            f.loop = combo(lp, f.panel, "Loop");
+            f.loop->box().setTooltip("Loop: Off plays steps 1 to Length. Forward, Backward, Ping-Pong, Random and Intro+Loop "
+                                     "(steps 1 to End once, then Start to End) play between Loop Start and Loop End.");
+            f.length = knob(b + 1, f.panel, "Length");
+            f.swing = knob(q == 0 ? P_P1_SWING : P_P2_SWING, f.panel, "Swing");
+            f.start = knob(lp + 1, f.panel, "Loop Start");
+            f.end = knob(lp + 2, f.panel, "Loop End");
+        }
+    }
+    void resized() override
+    {
+        for (int q = 0; q < 2; ++q)
+        {
+            Perf& f = perfs_[q];
+            f.panel->setBounds(0, q * 356, 1184, 350);
+            auto c = f.panel->content().reduced(4, 2);
+            auto controls = c.removeFromBottom(78);
+            f.lib->setBounds(c.removeFromRight(380).reduced(0, 4));
+            c.removeFromRight(8);
+            f.view->setBounds(c);
+            auto menus = controls.removeFromLeft(5 * 112);
+            for (auto* cb : {f.step, f.mode, f.loop, f.feel, f.fill})
+                cb->setBounds(menus.removeFromLeft(112).withSizeKeepingCentre(104, 44));
+            controls.removeFromLeft(12);
+            layoutRow(controls, {f.start, f.end, f.length, f.swing});
+        }
+    }
+    void tick() override
+    {
+        Page::tick();
+        for (auto& f : perfs_) f.view->refresh();
+    }
+private:
+    struct Perf
+    {
+        PanelFrame* panel = nullptr;
+        PerformerView* view = nullptr;
+        CurveLibrary* lib = nullptr;
+        ParamCombo *step = nullptr, *mode = nullptr, *feel = nullptr, *fill = nullptr, *loop = nullptr;
+        ParamKnob *length = nullptr, *swing = nullptr, *start = nullptr, *end = nullptr;
+    };
+    Perf perfs_[2];
+};
+
 class GlobalTab : public Page, public juce::ListBoxModel
 {
 public:
@@ -1328,9 +1395,10 @@ HelixEditor::HelixEditor(HelixProcessor& p) : AudioProcessorEditor(&p), proc_(p)
     tabs_.push_back(std::make_unique<FxTab>(proc_));
     tabs_.push_back(std::make_unique<MatrixTab>(proc_));
     tabs_.push_back(std::make_unique<MixTab>(proc_));
+    tabs_.push_back(std::make_unique<PerfTab>(proc_));
     tabs_.push_back(std::make_unique<GlobalTab>(proc_, *this));
-    const char* names[] = {"OSC", "FX", "MATRIX", "MIX / OTT", "GLOBAL"};
-    for (int i = 0; i < 5; ++i)
+    const char* names[] = {"OSC", "FX", "MATRIX", "MIX / OTT", "PERFORMER", "GLOBAL"};
+    for (int i = 0; i < 6; ++i)
     {
         auto* b = tabButtons_.add(new juce::TextButton(names[i]));
         b->onClick = [this, i] { showTab(i); };
@@ -1347,7 +1415,7 @@ HelixEditor::HelixEditor(HelixProcessor& p) : AudioProcessorEditor(&p), proc_(p)
     // (screenshots and UI checks).
     if (const char* prog = std::getenv("HELIX_START_PROGRAM")) proc_.setCurrentProgram(std::atoi(prog));
     const char* start = std::getenv("HELIX_START_PAGE");
-    showTab(start ? juce::jlimit(0, 4, std::atoi(start)) : 0);
+    showTab(start ? juce::jlimit(0, 5, std::atoi(start)) : 0);
     startTimerHz(30);
 }
 

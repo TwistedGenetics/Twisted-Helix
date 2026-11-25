@@ -674,7 +674,7 @@ void PerformerView::paint(juce::Graphics& g)
     for (int i = 0; i <= n; ++i)
     {
         const double pos = (double)i / 24.0;
-        const float v = performerValue(snap, perf_, juce::jmin(pos, (double)len - 1e-4));
+        const float v = performerPatternValue(snap, perf_, juce::jmin(pos, (double)len - 1e-4));
         const float x = r.getX() + r.getWidth() * (float)i / (float)n, y = mid - v * r.getHeight() * 0.5f;
         if (i == 0) line.startNewSubPath(x, y); else line.lineTo(x, y);
     }
@@ -682,6 +682,30 @@ void PerformerView::paint(juce::Graphics& g)
     g.strokePath(line, juce::PathStrokeType(2.0f));
     g.setColour(t.displayGrid.brighter(0.25f));
     g.drawHorizontalLine((int)mid, r.getX(), r.getRight());
+    // loop: the steps outside the loop are dimmed; the loop's ends have handles along the top to drag
+    const int loopParam = perf_ == 0 ? P_P1_LOOP : P_P2_LOOP;
+    if ((int)snap[loopParam] > 0)
+    {
+        int ls = juce::jlimit(1, len, (int)snap[loopParam + 1]) - 1, le = juce::jlimit(1, len, (int)snap[loopParam + 2]) - 1;
+        if (ls > le) std::swap(ls, le);
+        const float x0 = r.getX() + cw * (float)ls, x1 = r.getX() + cw * (float)(le + 1);
+        g.setColour(juce::Colours::black.withAlpha(0.45f));
+        g.fillRect(juce::Rectangle<float>(r.getX(), r.getY(), x0 - r.getX(), r.getHeight()));
+        g.fillRect(juce::Rectangle<float>(x1, r.getY(), r.getRight() - x1, r.getHeight()));
+        g.setColour(t.accent);
+        for (float x : {x0, x1})
+        {
+            g.fillRect(juce::Rectangle<float>(x - 1.0f, r.getY(), 2.0f, r.getHeight()));
+            juce::Path h;
+            const bool left = x == x0;
+            h.addTriangle(x, r.getY(), x + (left ? 9.0f : -9.0f), r.getY(), x, r.getY() + 10.0f);
+            g.fillPath(h);
+        }
+        g.setFont(ui::font(11.0f, true));
+        g.drawText(juce::String(choices::perfLoop[(size_t)juce::jlimit(0, 5, (int)snap[loopParam])]) + "  " +
+                       juce::String(ls + 1) + "-" + juce::String(le + 1),
+                   r.withHeight(14.0f).translated(0.0f, 1.0f), juce::Justification::centredRight);
+    }
     // lane: each step's curve; click to paint the library's chosen curve
     auto ln = lane();
     for (int k = 0; k < len; ++k)
@@ -717,8 +741,43 @@ void PerformerView::setStep(const juce::MouseEvent& e)
     repaint();
 }
 
+// Near a loop handle (top 14 px of the steps, within half a step of an end): drag that end.
+int PerformerView::loopHandleAt(juce::Point<float> pos) const
+{
+    const auto& ps = proc_.engine().params();
+    const int lp = perf_ == 0 ? P_P1_LOOP : P_P2_LOOP;
+    if (ps.getInt(lp) <= 0) return 0;
+    const int b = perf_ == 0 ? P_P1_DIV : P_P2_DIV;
+    const int len = juce::jlimit(1, kMaxSteps, ps.getInt(b + 1));
+    auto r = plot();
+    if (pos.y > r.getY() + 14.0f) return 0;
+    const float cw = r.getWidth() / (float)len;
+    int ls = juce::jlimit(1, len, ps.getInt(lp + 1)) - 1, le = juce::jlimit(1, len, ps.getInt(lp + 2)) - 1;
+    if (ls > le) std::swap(ls, le);
+    const float x0 = r.getX() + cw * (float)ls, x1 = r.getX() + cw * (float)(le + 1);
+    const float d0 = std::abs(pos.x - x0), d1 = std::abs(pos.x - x1);
+    if (juce::jmin(d0, d1) > cw * 0.5f + 4.0f) return 0;
+    return d0 <= d1 ? 1 : 2;
+}
+
+void PerformerView::dragLoop(const juce::MouseEvent& e)
+{
+    const int lp = perf_ == 0 ? P_P1_LOOP : P_P2_LOOP;
+    const int b = perf_ == 0 ? P_P1_DIV : P_P2_DIV;
+    const int len = juce::jlimit(1, kMaxSteps, proc_.engine().params().getInt(b + 1));
+    auto r = plot();
+    const float cw = r.getWidth() / (float)len;
+    if (loopDrag_ == 1)   // start: the step whose left edge is nearest
+        proc_.setParamFromUI(lp + 1, (float)juce::jlimit(1, len, (int)std::round((e.position.x - r.getX()) / cw) + 1));
+    else                  // end: the step whose right edge is nearest
+        proc_.setParamFromUI(lp + 2, (float)juce::jlimit(1, len, (int)std::round((e.position.x - r.getX()) / cw)));
+    repaint();
+}
+
 void PerformerView::mouseDown(const juce::MouseEvent& e)
 {
+    loopDrag_ = e.mods.isPopupMenu() ? 0 : loopHandleAt(e.position);
+    if (loopDrag_) { dragLoop(e); return; }
     if (!e.mods.isPopupMenu()) { setStep(e); return; }
     const int b = perf_ == 0 ? P_P1_DIV : P_P2_DIV;
     const int k = stepAt(e.position.x);
@@ -732,7 +791,11 @@ void PerformerView::mouseDown(const juce::MouseEvent& e)
     });
 }
 
-void PerformerView::mouseDrag(const juce::MouseEvent& e) { if (!e.mods.isPopupMenu()) setStep(e); }
+void PerformerView::mouseDrag(const juce::MouseEvent& e)
+{
+    if (loopDrag_) { dragLoop(e); return; }
+    if (!e.mods.isPopupMenu()) setStep(e);
+}
 
 bool PerformerView::isInterestedInDragSource(const SourceDetails& d) { return d.description.toString().startsWith("curve:"); }
 

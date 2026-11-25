@@ -58,6 +58,7 @@ int chordIntervals(int c, int* out)
     for (int k = 0; k < iv[c][0]; ++k) out[k] = iv[c][k + 1];
     return iv[c][0];
 }
+const std::vector<std::string> perfLoop = {"Off", "Forward", "Backward", "Ping-Pong", "Random", "Intro+Loop"};
 const std::vector<std::string> perfFeel = {"Normal", "Half-time", "Double", "Triplet"};
 const std::vector<std::string> perfFill = {"Off", "Every 2", "Every 4"};
 const std::vector<std::string> lfoJump = {"Off", "x2", "x3", "x4", "x8", "x1/2"};

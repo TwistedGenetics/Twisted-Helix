@@ -68,6 +68,10 @@ private:
 
 // Performer value at position pos (in steps, 0..len): per-step level -1..1 times the step's curve.
 float performerValue(const float* p, int perfIndex, double posSteps);
+// The pattern as drawn (steps 1..Length in order, no loop or fill), for displays.
+float performerPatternValue(const float* p, int perfIndex, double posSteps);
+// Which step (0-based) plays at step count n (from the start), following Loop / Loop Start / Loop End.
+int performerStepAt(const float* p, int perfIndex, long long n);
 // Steps of performer `perfIndex` played after `beats` quarter notes (Step rate and Feel), before swing.
 double performerSteps(const float* p, int perfIndex, double beats);
 // LFO rate multiplier from Jump (1 when off or the Jump Macro is below half way).

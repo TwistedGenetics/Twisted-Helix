@@ -463,7 +463,13 @@
     "mott_out": 0,
     "mott_low": 0,
     "mott_mid": 0,
-    "mott_high": 0
+    "mott_high": 0,
+    "p1_loop": 0,
+    "p1_lstart": 1,
+    "p1_lend": 16,
+    "p2_loop": 0,
+    "p2_lstart": 1,
+    "p2_lend": 16
   },
   "tables": {
     "A": "builtin:Harmonic Sweep",

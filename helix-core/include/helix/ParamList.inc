@@ -497,3 +497,10 @@ HP(P_MOTT_OUT        , "mott_out", "OTT Out Gain", ParamKind::Linear, -24.0f, 24
 HP(P_MOTT_LOW        , "mott_low", "OTT Low", ParamKind::Linear, -24.0f, 24.0f, 0.0f, "dB", nullptr, false)
 HP(P_MOTT_MID        , "mott_mid", "OTT Mid", ParamKind::Linear, -24.0f, 24.0f, 0.0f, "dB", nullptr, false)
 HP(P_MOTT_HIGH       , "mott_high", "OTT High", ParamKind::Linear, -24.0f, 24.0f, 0.0f, "dB", nullptr, false)
+// ---- 0.5.4 performer loops: how the steps are played, and the loop's first and last step ----
+HP(P_P1_LOOP         , "p1_loop", "P1 Loop", ParamKind::Choice, 0.0f, 5.0f, 0.0f, "", &choices::perfLoop, false)
+HP(P_P1_LSTART       , "p1_lstart", "P1 Loop Start", ParamKind::Int, 1.0f, 16.0f, 1.0f, "", nullptr, false)
+HP(P_P1_LEND         , "p1_lend", "P1 Loop End", ParamKind::Int, 1.0f, 16.0f, 16.0f, "", nullptr, false)
+HP(P_P2_LOOP         , "p2_loop", "P2 Loop", ParamKind::Choice, 0.0f, 5.0f, 0.0f, "", &choices::perfLoop, false)
+HP(P_P2_LSTART       , "p2_lstart", "P2 Loop Start", ParamKind::Int, 1.0f, 16.0f, 1.0f, "", nullptr, false)
+HP(P_P2_LEND         , "p2_lend", "P2 Loop End", ParamKind::Int, 1.0f, 16.0f, 16.0f, "", nullptr, false)

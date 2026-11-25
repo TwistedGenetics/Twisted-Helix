@@ -913,6 +913,14 @@ def chapter_lfo():
                   "drop); <b>Double</b>; <b>Triplet</b> (1.5 x as fast)."],
                  ["Fill", "On the last pass of every 2 or every 4 (with a one-bar pattern: the end of each 2- or 4-bar "
                   "phrase) the last quarter of the steps rolls x4, keeping their levels: a built-in fill. Off steps stay off."],
+                 ["Loop", "How the steps are played. <b>Off</b>: steps 1 to Length, round and round (as before). The others "
+                  "play between <b>Loop Start</b> and <b>Loop End</b>: <b>Forward</b>; <b>Backward</b>; <b>Ping-Pong</b> "
+                  "(there and back, the end steps not repeated); <b>Random</b> (a shuffle that is the same every time you "
+                  "play it, so a riff stays a riff); <b>Intro+Loop</b> (steps 1 to Loop End once, then Loop Start to Loop "
+                  "End round and round: a pick-up into a loop)."],
+                 ["Loop Start / End", "The loop's first and last step (kept inside 1 to Length; set them the other way round "
+                  "and they swap). Fill rolls the last quarter of each pass of the loop, and a Smooth step glides to "
+                  "whichever step plays next."],
                  ["Step 1-16", "The level of each step, -100% … +100% (new steps start at 100%)."],
                  ["Curve 1-16", "The curve each step draws, chosen from the library below and scaled by the step's level."]],
                 [36, 134]),
@@ -940,6 +948,12 @@ def chapter_lfo():
             "curve and then click steps in the lane under the display to paint it. Draw the levels by dragging across the "
             "display: every step you pass sets its level to where the pointer is; "
             "right-click a step for a menu of all curves. Swing is the knob beside Length, Feel and Fill the menus next to it."),
+          P("<b>On the computer</b> the <b>PERFORMER</b> tab shows both performers full size: draw the steps, click a curve "
+            "in the library and then a step's lane, and set Step, Mode, Loop, Feel, Fill, Loop Start, Loop End, Length and "
+            "Swing underneath. When a loop is on, the steps outside it are dimmed and its ends have handles along the top "
+            "of the steps: drag them to move the loop. The small performer pages in the modulation panel (OSC tab) are "
+            "still there for quick edits and for dragging PERF 1 / PERF 2 onto a knob. <b>On the MPC</b> Loop, Start and "
+            "End are on the P1 / P2 DRAW pages, next to Step Level."),
           P("<b>Longer patterns</b>: Length counts steps, Step sets their size, so 16 steps of 1/8 is a 2-bar pattern and "
             "16 of 1/4 a 4-bar one; Half-time doubles either.")]
     return s

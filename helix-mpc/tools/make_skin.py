@@ -987,8 +987,9 @@ def pages():
              [S("P%d\n1-8" % p_, [BAR("P%d Step %d" % (p_, i), "P%d Shape %d" % (p_, i), i) for i in range(1, 9)]),
               S("P%d\n9-16" % p_, [BAR("P%d Step %d" % (p_, i), "P%d Shape %d" % (p_, i), i) for i in range(9, 17)]),
               S("CURVE", [PICK("P%d Curve" % p_, None, cols=14, icons=True, bw=74)]),
-              S("STEP", [K("P%d Level" % p_, "Step Level", bi=True), K("P%d Step" % p_, "Step Rate"),
-                         K("P%d Length" % p_, "Length")])])
+              # Step rate and Length are on the PERF page; here the chosen step's level and the loop
+              S("STEP /\nLOOP", [K("P%d Level" % p_, "Step Level", bi=True), K("P%d Loop" % p_, "Loop", w=280),
+                                 K("P%d Loop Start" % p_, "Start"), K("P%d Loop End" % p_, "End")])])
         sub += 1
 
     # ---- MACROS

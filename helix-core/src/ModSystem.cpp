@@ -173,28 +173,93 @@ float lfoJumpFactor(const float* p, int l)
     return f[clamp(j, 0, 5)];
 }
 
-float performerValue(const float* p, int pi, double pos)
+// Loop (0.5.4): Off plays steps 1..Length; the other modes play between Loop Start and Loop End (kept inside the
+// pattern): Forward, Backward, Ping-Pong (ends not repeated), Random (a fixed shuffle per pass, the same every
+// time you play it) and Intro+Loop (steps 1..End once, then Start..End round and round).
+struct LoopShape { int mode, len, s, e, L; };
+static LoopShape loopShape(const float* p, int pi)
+{
+    const int base = pi == 0 ? P_P1_DIV : P_P2_DIV;
+    LoopShape ls;
+    ls.len = clamp((int)p[base + 1], 1, kMaxSteps);
+    ls.mode = clamp((int)p[pi == 0 ? P_P1_LOOP : P_P2_LOOP], 0, 5);
+    int a = clamp((int)p[pi == 0 ? P_P1_LSTART : P_P2_LSTART], 1, ls.len) - 1;
+    int b = clamp((int)p[pi == 0 ? P_P1_LEND : P_P2_LEND], 1, ls.len) - 1;
+    if (a > b) std::swap(a, b);
+    ls.s = a; ls.e = b; ls.L = b - a + 1;
+    return ls;
+}
+
+static uint32_t stepHash(long long n, int pi)
+{
+    uint32_t x = (uint32_t)(n * 2654435761u) ^ (uint32_t)(pi * 0x9E3779B9u) ^ 0x5bd1e995u;
+    x ^= x >> 15; x *= 0x2c1b3c6du; x ^= x >> 12; x *= 0x297a2d39u; x ^= x >> 15;
+    return x;
+}
+
+int performerStepAt(const float* p, int pi, long long n)
+{
+    const LoopShape ls = loopShape(p, pi);
+    if (n < 0) n = 0;
+    switch (ls.mode)
+    {
+        case 1: return ls.s + (int)(n % ls.L);
+        case 2: return ls.e - (int)(n % ls.L);
+        case 3:
+        {
+            if (ls.L < 2) return ls.s;
+            const long long P = 2LL * ls.L - 2, m = n % P;
+            return ls.s + (int)(m < ls.L ? m : P - m);
+        }
+        case 4: return ls.s + (int)(stepHash(n, pi) % (uint32_t)ls.L);
+        case 5: return n <= ls.e ? (int)n : ls.s + (int)((n - ls.e - 1) % ls.L);
+        default: return (int)(n % ls.len);
+    }
+}
+
+float performerPatternValue(const float* p, int pi, double pos)
 {
     const int base = pi == 0 ? P_P1_DIV : P_P2_DIV;
     const int len = clamp((int)p[base + 1], 1, kMaxSteps);
     pos = swingPos(std::max(pos, 0.0), p[pi == 0 ? P_P1_SWING : P_P2_SWING]);
-    const double cycle = std::floor(pos / (double)len);
-    pos -= cycle * (double)len;
+    pos -= std::floor(pos / (double)len) * (double)len;
     const int k = std::min(len - 1, (int)pos);
     const float t = (float)(pos - k);
     const float v = p[base + 3 + k];
-    int c = (int)p[base + 19 + k];
-    // Fill: on the last pass of every 2 or 4, the last quarter of the pattern rolls (x4)
+    const int c = (int)p[base + 19 + k];
+    if (c == 3) return v + (p[base + 3 + (k + 1) % len] - v) * perfCurve(3, t);
+    return v * perfCurve(c, t);
+}
+
+float performerValue(const float* p, int pi, double pos)
+{
+    const int base = pi == 0 ? P_P1_DIV : P_P2_DIV;
+    const LoopShape ls = loopShape(p, pi);
+    pos = swingPos(std::max(pos, 0.0), p[pi == 0 ? P_P1_SWING : P_P2_SWING]);
+    const long long n = (long long)std::floor(pos);
+    const float t = (float)(pos - (double)n);
+    const int k = performerStepAt(p, pi, n);
+    const float v = p[base + 3 + k];
+    const int c = (int)p[base + 19 + k];
+    // Fill: on the last pass of every 2 or 4, the last quarter of the pass rolls (x4)
     const int fill = (int)p[pi == 0 ? P_P1_FILL : P_P2_FILL];
-    if (fill > 0)
+    if (fill > 0 && c != 23)
     {
         const int every = fill == 1 ? 2 : 4;
-        const int from = len - std::max(1, len / 4);
-        if ((int)std::fmod(cycle, (double)every) == every - 1 && k >= from && c != 23) return v * perfCurve(26, t);
+        long long q = n;
+        int cyc = ls.len;
+        if (ls.mode == 5) { q = n - (ls.e + 1); cyc = ls.L; }              // passes start after the intro
+        else if (ls.mode == 3) cyc = std::max(1, 2 * ls.L - 2);
+        else if (ls.mode != 0) cyc = ls.L;
+        if (q >= 0)
+        {
+            const long long pass = q / cyc, inPass = q % cyc;
+            if ((int)(pass % every) == every - 1 && inPass >= cyc - std::max(1, cyc / 4)) return v * perfCurve(26, t);
+        }
     }
-    if (c == 3)                                                                 // Smooth: glide to the next step
+    if (c == 3)                                                                 // Smooth: glide to the next step played
     {
-        const float vNext = p[base + 3 + (k + 1) % len];
+        const float vNext = p[base + 3 + performerStepAt(p, pi, n + 1)];
         return v + (vNext - v) * perfCurve(3, t);
     }
     return v * perfCurve(c, t);

@@ -84,7 +84,7 @@ extern const std::vector<std::string> modCurve;
 extern const std::vector<std::string> perfStepShape;
 extern const std::vector<std::string> printSource;
 extern const std::vector<std::string> perfFeel, perfFill, lfoJump, macroPick;
-extern const std::vector<std::string> charType, chordMemory;
+extern const std::vector<std::string> charType, chordMemory, perfLoop;
 // Chord memory c: the extra notes (semitones from the played note), up to 5. Returns how many.
 int chordIntervals(int c, int* out);   // Print to wavetable: what sweeps (PrintTable.h)
 extern const std::vector<std::string> fxType;

@@ -114,6 +114,9 @@ public:
 private:
     void setStep(const juce::MouseEvent&);
     int stepAt(float x) const;
+    int loopHandleAt(juce::Point<float> pos) const;   // 0 none, 1 loop start, 2 loop end
+    void dragLoop(const juce::MouseEvent&);
+    int loopDrag_ = 0;
     juce::Rectangle<float> plot() const { return getLocalBounds().toFloat().reduced(8.0f, 10.0f).withTrimmedBottom(22.0f); }
     juce::Rectangle<float> lane() const { return getLocalBounds().toFloat().reduced(8.0f, 6.0f).removeFromBottom(20.0f); }
     HelixProcessor& proc_;

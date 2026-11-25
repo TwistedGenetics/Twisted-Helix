@@ -145,6 +145,8 @@
   "Jump Macro": ["Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"],
   "Char Osc": ["Off", "Hoover", "Mentasm", "Hoover Reese", "Rave", "Dread", "Donk", "Growl", "Dread Hoover", "Rollers Sub", "Rollers Reese", "Rollers Sub+Reese", "Rollers Hoover"],
   "Chord": ["Off", "Octave", "Fifth", "Power", "Minor", "Major", "Minor 7", "Major 7", "Sus 4", "Minor 9", "Minor 11", "Rave Stab", "Dub Stab", "Hoover Oct"],
+  "P1 Loop": ["Off", "Forward", "Backward", "Ping-Pong", "Random", "Intro+Loop"],
+  "P2 Loop": ["Off", "Forward", "Backward", "Ping-Pong", "Random", "Intro+Loop"],
   "Pad Bank": ["1-16", "17-32", "33-48", "49-64", "65-80", "81-96", "97-112", "113-128"],
   "Frames": ["8", "16", "32", "64", "128", "256"],
   "To Osc": ["Osc A", "Osc B"],
