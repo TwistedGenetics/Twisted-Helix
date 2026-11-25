@@ -193,6 +193,14 @@ void Voice::computeModulation(const EngineContext& ctx, int n)
             if (pi == P_L1_RATE + l * lOff) lfoRateOffset_[l] = offsets_[k].norm;   // applied next block
     }
 
+    // Filter envelope (Env 2): each filter's bipolar Env Amt moves its cutoff up to +-6 octaves
+    for (int f = 0; f < 2; ++f)
+    {
+        const int o = f == 0 ? 0 : P_F2_CUTOFF - P_F1_CUTOFF;
+        const float amt = p[f == 0 ? P_F1_ENV : P_F2_ENV];
+        if (amt != 0.0f) vp_[P_F1_CUTOFF + o] = clamp(vp_[P_F1_CUTOFF + o] * fastExp2(6.0f * amt * src[SRC_ENV2]), 20.0f, 20000.0f);
+    }
+
     // Filth: the mod wheel x Filth pushes Growl (cutoff, drive, positions, warps), filter drive and the character
     // oscillator's drive all at once
     const float filth = ctx.modWheel * p[P_FILTH];

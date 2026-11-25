@@ -451,7 +451,19 @@
     "chord": 0,
     "scene_morph": 1200,
     "scene_pads": 0,
-    "filth": 0
+    "filth": 0,
+    "f1_env": 0,
+    "f2_env": 0,
+    "mott_on": 0,
+    "mott_depth": 1,
+    "mott_time": 1,
+    "mott_up": 1,
+    "mott_down": 1,
+    "mott_in": 0,
+    "mott_out": 0,
+    "mott_low": 0,
+    "mott_mid": 0,
+    "mott_high": 0
   },
   "tables": {
     "A": "builtin:Harmonic Sweep",

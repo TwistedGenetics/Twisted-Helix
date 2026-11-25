@@ -10,6 +10,7 @@
 #include "helix/Config.h"
 #include "helix/Effects.h"
 #include "helix/FxLibrary.h"
+#include "helix/MasterOtt.h"
 #include "helix/Midi.h"
 #include "helix/ModSystem.h"
 #include "helix/Params.h"
@@ -60,6 +61,7 @@ public:
 
     // Pad scenes (any thread): recall morphs the 8 macros to scene s over Scene Morph (the macro parameters take
     // the scene's values when the morph ends); store copies the macros' current values into scene s.
+    const MasterOtt& masterOtt() const { return ott_; }
     MacroScenes& scenes() { return scenes_; }
     const MacroScenes& scenes() const { return scenes_; }
     void recallScene(int s) { if (s >= 0 && s < kNumScenes) sceneRequest_.store(s, std::memory_order_release); }
@@ -124,6 +126,7 @@ private:
     fxlib::Slot lib_[fxlib::kNumSlots];
     // Sub guardian: Linkwitz-Riley 24 dB crossover (two Butterworth stages each way); the bands sum flat
     Biquad sgLp_[2], sgHp_[2];
+    MasterOtt ott_;
     float sgKey_[1] = {-1.0f};
     float sgLow_[kCtrlBlock];   // Insert 1, Insert 2 (before fx_), FX 1, FX 2 (after)
     float fxp_[kNumParams];

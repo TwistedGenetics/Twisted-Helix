@@ -32,7 +32,7 @@ const std::vector<std::string> lfoShape = {"Sine", "Triangle", "Saw Up", "Saw Do
 const std::vector<std::string> lfoMode = {"Retrig", "Free", "One-shot"};
 const std::vector<std::string> syncDiv = {"8 Bar", "4 Bar", "2 Bar", "1 Bar", "1/2", "1/2T", "1/4D", "1/4", "1/4T",
                                           "1/8D", "1/8", "1/8T", "1/16D", "1/16", "1/16T", "1/32", "1/32T", "1/64"};
-const std::vector<std::string> modSource = {"None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3",
+const std::vector<std::string> modSource = {"None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3",
                                             "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT",
                                             "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2",
                                             "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"};

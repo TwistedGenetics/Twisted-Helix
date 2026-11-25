@@ -183,6 +183,8 @@ public:
         key_ = pg.knob(P_F1_KEYTRK + o, this, "Key Trk");
         fat_ = pg.knob(P_F1_FAT + o, this, "Fat");
         level_ = pg.knob(P_F1_LEVEL + o, this, "Level");
+        env_ = pg.knob(f == 0 ? P_F1_ENV : P_F2_ENV, this, "Env Amt");
+        env_->setTooltip("Filter Envelope amount: how far the Filter Envelope (ENV 2) moves the cutoff, up or down (+-6 octaves)");
     }
     void resized() override
     {
@@ -198,14 +200,14 @@ public:
         slope_->setBounds(models.reduced(2, 0));
         c.removeFromTop(2);
         auto top = c.removeFromTop(c.getHeight() / 2);
-        layoutRow(top, {cut_, res_, drive_});
+        layoutRow(top, {cut_, res_, drive_, env_});
         layoutRow(c, {key_, fat_, level_});
     }
     void tick() { view_->refresh(); }
 private:
     ParamCombo *type_, *model_, *kind_, *slope_;
     FilterResponseView* view_;
-    ParamKnob *cut_, *res_, *drive_, *key_, *fat_, *level_;
+    ParamKnob *cut_, *res_, *drive_, *key_, *fat_, *level_, *env_;
 };
 
 // --------------------------------------------------------------------------------------------- sub / noise / routing
@@ -306,7 +308,7 @@ class ModPanel : public PanelFrame
 public:
     explicit ModPanel(Page& pg) : PanelFrame(""), page_(pg)
     {
-        const char* main[] = {"ENV 1", "ENV 2", "ENV 3", "ENV 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "PERF 1", "PERF 2"};
+        const char* main[] = {"ENV 1", "F.ENV", "ENV 3", "ENV 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "PERF 1", "PERF 2"};
         for (int i = 0; i < 10; ++i)
         {
             auto* chip = pg.own(std::make_unique<ModChip>(SRC_ENV1 + i, main[i]), this);
@@ -944,6 +946,150 @@ private:
 
 // --------------------------------------------------------------------------------------------- GLOBAL tab
 
+
+// --------------------------------------------------------------------------------------------- mixer and master OTT
+
+// OTT display in the manner of the original: one row per band (H, M, L). The bar is the band's level going in;
+// the two marks are where it starts being lifted (below, left) and squashed (above, right); the arrow shows what
+// OTT is doing to it right now (up = lifted, down = squashed).
+class OttView : public juce::Component
+{
+public:
+    explicit OttView(HelixProcessor& p) : proc_(p) {}
+    void refresh() { repaint(); }
+    void paint(juce::Graphics& g) override
+    {
+        const Theme& t = theme();
+        auto r = getLocalBounds().toFloat();
+        g.setColour(t.display);
+        g.fillRoundedRectangle(r, 6.0f);
+        const auto& ott = proc_.engine().masterOtt();
+        const bool on = proc_.engine().params().get(P_MOTT_ON) >= 0.5f;
+        const char* names[3] = {"H", "M", "L"};
+        const float lo = -60.0f, hi = 0.0f;
+        auto inner = r.reduced(12.0f, 10.0f);
+        const float rowH = inner.getHeight() / 3.0f;
+        for (int row = 0; row < 3; ++row)
+        {
+            const int b = 2 - row;   // high band on top, as on the original
+            auto rr = inner.removeFromTop(rowH).reduced(0.0f, 6.0f);
+            auto label = rr.removeFromLeft(26.0f);
+            g.setColour(t.text);
+            g.setFont(ui::font(16.0f, true));
+            g.drawText(names[row], label, juce::Justification::centred);
+            auto txt = rr.removeFromRight(84.0f);
+            auto bar = rr.reduced(4.0f, rr.getHeight() * 0.18f);
+            auto xOf = [&](float db) { return bar.getX() + bar.getWidth() * (juce::jlimit(lo, hi, db) - lo) / (hi - lo); };
+            g.setColour(t.track);
+            g.fillRoundedRectangle(bar, 3.0f);
+            // the gap between the thresholds (left alone apart from the make-up)
+            const float xb = xOf(MasterOtt::kBelow[b]), xa = xOf(MasterOtt::kAbove[b]);
+            g.setColour(t.displayGrid);
+            g.fillRect(juce::Rectangle<float>(xb, bar.getY(), xa - xb, bar.getHeight()));
+            // level
+            const float lv = on ? ott.bandLevel(b) : -120.0f;
+            if (lv > lo)
+            {
+                juce::ColourGradient grad(t.accent2, bar.getX(), 0.0f, t.accent, xOf(lv), 0.0f, false);
+                g.setGradientFill(grad);
+                g.fillRoundedRectangle(bar.withRight(xOf(lv)), 3.0f);
+            }
+            // threshold marks: below (upward) and above (downward)
+            g.setColour(t.mod);
+            g.fillRect(juce::Rectangle<float>(xb - 1.5f, bar.getY() - 5.0f, 3.0f, bar.getHeight() + 10.0f));
+            g.setColour(t.accent);
+            g.fillRect(juce::Rectangle<float>(xa - 1.5f, bar.getY() - 5.0f, 3.0f, bar.getHeight() + 10.0f));
+            // what it is doing
+            const float gn = on ? ott.bandGain(b) : 0.0f;
+            g.setColour(gn >= 0.0f ? t.mod : t.accent);
+            g.setFont(ui::font(14.0f, true));
+            g.drawText((gn >= 0.0f ? "+" : "") + juce::String(gn, 1) + " dB", txt, juce::Justification::centredRight);
+        }
+        if (!on)
+        {
+            g.setColour(t.muted);
+            g.setFont(ui::font(18.0f, true));
+            g.drawText("OTT off", getLocalBounds(), juce::Justification::centred);
+        }
+    }
+private:
+    HelixProcessor& proc_;
+};
+
+class MixTab : public Page
+{
+public:
+    explicit MixTab(HelixProcessor& p) : Page(p)
+    {
+        mixer_ = own(std::make_unique<PanelFrame>("Mixer"));
+        struct Ch { const char* name; int level, pan, f1, f2; };
+        const Ch chans[] = {{"Osc A", P_A_LEVEL, P_A_PAN, P_A_TO_F1, P_A_TO_F2},
+                            {"Osc B", P_B_LEVEL, P_B_PAN, P_B_TO_F1, P_B_TO_F2},
+                            {"Sub", P_SUB_LEVEL, P_SUB_PAN, P_SUB_TO_F1, P_SUB_TO_F2},
+                            {"Noise", P_NOISE_LEVEL, P_NOISE_PAN, P_NOISE_TO_F1, P_NOISE_TO_F2},
+                            {"Char", P_CO_LEVEL, P_CO_PAN, P_CO_TO_F1, P_CO_TO_F2}};
+        for (const Ch& c : chans)
+        {
+            Strip s;
+            s.title = own(std::make_unique<juce::Label>(juce::String(), c.name), mixer_);
+            s.title->setJustificationType(juce::Justification::centred);
+            s.title->setFont(ui::font(16.0f, true));
+            s.level = knob(c.level, mixer_, "Level", ParamKnob::Size::Large);
+            s.pan = knob(c.pan, mixer_, "Pan");
+            s.f1 = knob(c.f1, mixer_, "> F1");
+            s.f2 = knob(c.f2, mixer_, "> F2");
+            strips_.push_back(s);
+        }
+        ott_ = own(std::make_unique<PanelFrame>("Master OTT"));
+        ott_->setPower(std::make_unique<ParamToggle>(p, P_MOTT_ON));
+        view_ = own(std::make_unique<OttView>(p), ott_);
+        depth_ = knob(P_MOTT_DEPTH, ott_, "Depth", ParamKnob::Size::Large);
+        time_ = knob(P_MOTT_TIME, ott_, "Time");
+        in_ = knob(P_MOTT_IN, ott_, "In Gain");
+        out_ = knob(P_MOTT_OUT, ott_, "Out Gain");
+        up_ = knob(P_MOTT_UP, ott_, "Upward");
+        down_ = knob(P_MOTT_DOWN, ott_, "Downward");
+        bands_ = {knob(P_MOTT_HIGH, ott_, "H"), knob(P_MOTT_MID, ott_, "M"), knob(P_MOTT_LOW, ott_, "L")};
+        depth_->setTooltip("Depth: how much of the OTT sound is mixed in (0% = untouched)");
+        time_->setTooltip("Time: attack and release (100% = 13.5 ms / 132 ms, as the original)");
+        up_->setTooltip("Upward: how hard quiet parts are lifted toward the lower mark");
+        down_->setTooltip("Downward: how hard loud parts are squashed down to the upper mark");
+    }
+    void resized() override
+    {
+        mixer_->setBounds(0, 0, 560, 708);
+        {
+            auto c = mixer_->content().reduced(4, 6);
+            const int w = c.getWidth() / (int)strips_.size();
+            for (size_t i = 0; i < strips_.size(); ++i)
+            {
+                auto col = c.removeFromLeft(w).reduced(4, 0);
+                strips_[i].title->setBounds(col.removeFromTop(28));
+                const int h = col.getHeight() / 4;
+                strips_[i].level->setBounds(col.removeFromTop(h + 30));
+                strips_[i].pan->setBounds(col.removeFromTop(h - 10));
+                strips_[i].f1->setBounds(col.removeFromTop(h - 10));
+                strips_[i].f2->setBounds(col);
+            }
+        }
+        ott_->setBounds(568, 0, 616, 708);
+        auto c = ott_->content().reduced(6, 4);
+        view_->setBounds(c.removeFromTop(300));
+        c.removeFromTop(10);
+        auto row1 = c.removeFromTop(c.getHeight() / 2);
+        layoutRow(row1, {in_, depth_, time_, out_});
+        layoutRow(c, {up_, down_, bands_[0], bands_[1], bands_[2]});
+    }
+    void tick() override { Page::tick(); view_->refresh(); }
+private:
+    struct Strip { juce::Label* title; ParamKnob *level, *pan, *f1, *f2; };
+    PanelFrame *mixer_, *ott_;
+    std::vector<Strip> strips_;
+    OttView* view_;
+    ParamKnob *depth_, *time_, *in_, *out_, *up_, *down_;
+    std::vector<ParamKnob*> bands_;
+};
+
 class GlobalTab : public Page, public juce::ListBoxModel
 {
 public:
@@ -1116,9 +1262,10 @@ HelixEditor::HelixEditor(HelixProcessor& p) : AudioProcessorEditor(&p), proc_(p)
     tabs_.push_back(std::make_unique<OscTab>(proc_));
     tabs_.push_back(std::make_unique<FxTab>(proc_));
     tabs_.push_back(std::make_unique<MatrixTab>(proc_));
+    tabs_.push_back(std::make_unique<MixTab>(proc_));
     tabs_.push_back(std::make_unique<GlobalTab>(proc_, *this));
-    const char* names[] = {"OSC", "FX", "MATRIX", "GLOBAL"};
-    for (int i = 0; i < 4; ++i)
+    const char* names[] = {"OSC", "FX", "MATRIX", "MIX / OTT", "GLOBAL"};
+    for (int i = 0; i < 5; ++i)
     {
         auto* b = tabButtons_.add(new juce::TextButton(names[i]));
         b->onClick = [this, i] { showTab(i); };
@@ -1135,7 +1282,7 @@ HelixEditor::HelixEditor(HelixProcessor& p) : AudioProcessorEditor(&p), proc_(p)
     // (screenshots and UI checks).
     if (const char* prog = std::getenv("HELIX_START_PROGRAM")) proc_.setCurrentProgram(std::atoi(prog));
     const char* start = std::getenv("HELIX_START_PAGE");
-    showTab(start ? juce::jlimit(0, 3, std::atoi(start)) : 0);
+    showTab(start ? juce::jlimit(0, 4, std::atoi(start)) : 0);
     startTimerHz(30);
 }
 

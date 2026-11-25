@@ -10121,7 +10121,7 @@
      }
     },
     {
-     "key": "hx knob88_w320 list hx list 18_254e592b",
+     "key": "hx knob88_w286 list hx list 18_254e592b",
      "value": {
       "version": 2,
       "actions": [
@@ -10252,7 +10252,7 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "100 60 220 44"
+         "bounds": "100 60 186 44"
         }
        }
       ]
@@ -10457,6 +10457,144 @@
          "whenVisible": "Always",
          "boundsType": "Absolute",
          "bounds": "374 6 95 56"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx knob88_w210_bi",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Double Click",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay bi"
+       },
+       {
+        "version": 1,
+        "onAction": "Enter Pressed",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay bi"
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "knob",
+         "type": "Knob",
+         "data": {
+          "version": 2,
+          "knobType": "FilmStrip",
+          "filmStrip": "knob88_bi.png",
+          "numFrames": 128,
+          "invert": false,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 19 88 88"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "value",
+         "type": "Label",
+         "data": {
+          "version": 1,
+          "textStyle": {
+           "version": 1,
+           "font": {
+            "version": 1,
+            "name": "Roboto",
+            "style": "Bold",
+            "height": 32.0
+           },
+           "colour": "ffffffff",
+           "justification": "left verticallyCentred",
+           "case": "Original"
+          },
+          "type": "Value",
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "100 60 110 44"
         }
        }
       ]
@@ -16059,6 +16197,282 @@
      }
     },
     {
+     "key": "hx knob88_w230",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Double Click",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay"
+       },
+       {
+        "version": 1,
+        "onAction": "Enter Pressed",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay"
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "knob",
+         "type": "Knob",
+         "data": {
+          "version": 2,
+          "knobType": "FilmStrip",
+          "filmStrip": "knob88.png",
+          "numFrames": 128,
+          "invert": false,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 19 88 88"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "value",
+         "type": "Label",
+         "data": {
+          "version": 1,
+          "textStyle": {
+           "version": 1,
+           "font": {
+            "version": 1,
+            "name": "Roboto",
+            "style": "Bold",
+            "height": 32.0
+           },
+           "colour": "ffffffff",
+           "justification": "left verticallyCentred",
+           "case": "Original"
+          },
+          "type": "Value",
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "100 60 130 44"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx knob88_w230_bi",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Double Click",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay bi"
+       },
+       {
+        "version": 1,
+        "onAction": "Enter Pressed",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay bi"
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "knob",
+         "type": "Knob",
+         "data": {
+          "version": 2,
+          "knobType": "FilmStrip",
+          "filmStrip": "knob88_bi.png",
+          "numFrames": 128,
+          "invert": false,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 19 88 88"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "value",
+         "type": "Label",
+         "data": {
+          "version": 1,
+          "textStyle": {
+           "version": 1,
+           "font": {
+            "version": 1,
+            "name": "Roboto",
+            "style": "Bold",
+            "height": 32.0
+           },
+           "colour": "ffffffff",
+           "justification": "left verticallyCentred",
+           "case": "Original"
+          },
+          "type": "Value",
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "100 60 130 44"
+        }
+       }
+      ]
+     }
+    },
+    {
      "key": "hx tag Sub Guard",
      "value": {
       "version": 2,
@@ -16146,7 +16560,653 @@
      }
     },
     {
-     "key": "hx list 26_ffca695a",
+     "key": "hx toggle OTT",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_ott.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 170 60"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx knob88_w240",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Double Click",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay"
+       },
+       {
+        "version": 1,
+        "onAction": "Enter Pressed",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay"
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "knob",
+         "type": "Knob",
+         "data": {
+          "version": 2,
+          "knobType": "FilmStrip",
+          "filmStrip": "knob88.png",
+          "numFrames": 128,
+          "invert": false,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 19 88 88"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "value",
+         "type": "Label",
+         "data": {
+          "version": 1,
+          "textStyle": {
+           "version": 1,
+           "font": {
+            "version": 1,
+            "name": "Roboto",
+            "style": "Bold",
+            "height": 32.0
+           },
+           "colour": "ffffffff",
+           "justification": "left verticallyCentred",
+           "case": "Original"
+          },
+          "type": "Value",
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "100 60 140 44"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx knob88_w260",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Double Click",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay"
+       },
+       {
+        "version": 1,
+        "onAction": "Enter Pressed",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay"
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "knob",
+         "type": "Knob",
+         "data": {
+          "version": 2,
+          "knobType": "FilmStrip",
+          "filmStrip": "knob88.png",
+          "numFrames": 128,
+          "invert": false,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 19 88 88"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "value",
+         "type": "Label",
+         "data": {
+          "version": 1,
+          "textStyle": {
+           "version": 1,
+           "font": {
+            "version": 1,
+            "name": "Roboto",
+            "style": "Bold",
+            "height": 32.0
+           },
+           "colour": "ffffffff",
+           "justification": "left verticallyCentred",
+           "case": "Original"
+          },
+          "type": "Value",
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "100 60 160 44"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx knob88_w260_bi",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Double Click",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay bi"
+       },
+       {
+        "version": 1,
+        "onAction": "Enter Pressed",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay bi"
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "knob",
+         "type": "Knob",
+         "data": {
+          "version": 2,
+          "knobType": "FilmStrip",
+          "filmStrip": "knob88_bi.png",
+          "numFrames": 128,
+          "invert": false,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 19 88 88"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "value",
+         "type": "Label",
+         "data": {
+          "version": 1,
+          "textStyle": {
+           "version": 1,
+           "font": {
+            "version": 1,
+            "name": "Roboto",
+            "style": "Bold",
+            "height": 32.0
+           },
+           "colour": "ffffffff",
+           "justification": "left verticallyCentred",
+           "case": "Original"
+          },
+          "type": "Value",
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "100 60 160 44"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx knob88_w240_bi",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Double Click",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay bi"
+       },
+       {
+        "version": 1,
+        "onAction": "Enter Pressed",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay bi"
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "knob",
+         "type": "Knob",
+         "data": {
+          "version": 2,
+          "knobType": "FilmStrip",
+          "filmStrip": "knob88_bi.png",
+          "numFrames": 128,
+          "invert": false,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 19 88 88"
+        }
+       },
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "value",
+         "type": "Label",
+         "data": {
+          "version": 1,
+          "textStyle": {
+           "version": 1,
+           "font": {
+            "version": 1,
+            "name": "Roboto",
+            "style": "Bold",
+            "height": 32.0
+           },
+           "colour": "ffffffff",
+           "justification": "left verticallyCentred",
+           "case": "Original"
+          },
+          "type": "Value",
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "100 60 140 44"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx list 26_97323e97",
      "value": {
       "version": 2,
       "actions": [],
@@ -16214,7 +17274,7 @@
           "version": 2,
           "imageType": "Regular",
           "colour": "0",
-          "image": "listbg_26_ffca695a.png"
+          "image": "listbg_26_97323e97.png"
          }
         },
         "handle remapping": {
@@ -16238,8 +17298,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_0_on.png",
-          "offImage": "list_26_ffca695a_0_off.png",
+          "onImage": "list_26_97323e97_0_on.png",
+          "offImage": "list_26_97323e97_0_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16267,8 +17327,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_1_on.png",
-          "offImage": "list_26_ffca695a_1_off.png",
+          "onImage": "list_26_97323e97_1_on.png",
+          "offImage": "list_26_97323e97_1_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16296,8 +17356,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_2_on.png",
-          "offImage": "list_26_ffca695a_2_off.png",
+          "onImage": "list_26_97323e97_2_on.png",
+          "offImage": "list_26_97323e97_2_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16325,8 +17385,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_3_on.png",
-          "offImage": "list_26_ffca695a_3_off.png",
+          "onImage": "list_26_97323e97_3_on.png",
+          "offImage": "list_26_97323e97_3_off.png",
           "buttonId": 3,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16354,8 +17414,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_4_on.png",
-          "offImage": "list_26_ffca695a_4_off.png",
+          "onImage": "list_26_97323e97_4_on.png",
+          "offImage": "list_26_97323e97_4_off.png",
           "buttonId": 4,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16383,8 +17443,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_5_on.png",
-          "offImage": "list_26_ffca695a_5_off.png",
+          "onImage": "list_26_97323e97_5_on.png",
+          "offImage": "list_26_97323e97_5_off.png",
           "buttonId": 5,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16412,8 +17472,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_6_on.png",
-          "offImage": "list_26_ffca695a_6_off.png",
+          "onImage": "list_26_97323e97_6_on.png",
+          "offImage": "list_26_97323e97_6_off.png",
           "buttonId": 6,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16441,8 +17501,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_7_on.png",
-          "offImage": "list_26_ffca695a_7_off.png",
+          "onImage": "list_26_97323e97_7_on.png",
+          "offImage": "list_26_97323e97_7_off.png",
           "buttonId": 7,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16470,8 +17530,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_8_on.png",
-          "offImage": "list_26_ffca695a_8_off.png",
+          "onImage": "list_26_97323e97_8_on.png",
+          "offImage": "list_26_97323e97_8_off.png",
           "buttonId": 8,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16499,8 +17559,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_9_on.png",
-          "offImage": "list_26_ffca695a_9_off.png",
+          "onImage": "list_26_97323e97_9_on.png",
+          "offImage": "list_26_97323e97_9_off.png",
           "buttonId": 9,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16528,8 +17588,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_10_on.png",
-          "offImage": "list_26_ffca695a_10_off.png",
+          "onImage": "list_26_97323e97_10_on.png",
+          "offImage": "list_26_97323e97_10_off.png",
           "buttonId": 10,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16557,8 +17617,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_11_on.png",
-          "offImage": "list_26_ffca695a_11_off.png",
+          "onImage": "list_26_97323e97_11_on.png",
+          "offImage": "list_26_97323e97_11_off.png",
           "buttonId": 11,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16586,8 +17646,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_12_on.png",
-          "offImage": "list_26_ffca695a_12_off.png",
+          "onImage": "list_26_97323e97_12_on.png",
+          "offImage": "list_26_97323e97_12_off.png",
           "buttonId": 12,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16615,8 +17675,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_13_on.png",
-          "offImage": "list_26_ffca695a_13_off.png",
+          "onImage": "list_26_97323e97_13_on.png",
+          "offImage": "list_26_97323e97_13_off.png",
           "buttonId": 13,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16644,8 +17704,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_14_on.png",
-          "offImage": "list_26_ffca695a_14_off.png",
+          "onImage": "list_26_97323e97_14_on.png",
+          "offImage": "list_26_97323e97_14_off.png",
           "buttonId": 14,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16673,8 +17733,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_15_on.png",
-          "offImage": "list_26_ffca695a_15_off.png",
+          "onImage": "list_26_97323e97_15_on.png",
+          "offImage": "list_26_97323e97_15_off.png",
           "buttonId": 15,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16702,8 +17762,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_16_on.png",
-          "offImage": "list_26_ffca695a_16_off.png",
+          "onImage": "list_26_97323e97_16_on.png",
+          "offImage": "list_26_97323e97_16_off.png",
           "buttonId": 16,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16731,8 +17791,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_17_on.png",
-          "offImage": "list_26_ffca695a_17_off.png",
+          "onImage": "list_26_97323e97_17_on.png",
+          "offImage": "list_26_97323e97_17_off.png",
           "buttonId": 17,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16760,8 +17820,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_18_on.png",
-          "offImage": "list_26_ffca695a_18_off.png",
+          "onImage": "list_26_97323e97_18_on.png",
+          "offImage": "list_26_97323e97_18_off.png",
           "buttonId": 18,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16789,8 +17849,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_19_on.png",
-          "offImage": "list_26_ffca695a_19_off.png",
+          "onImage": "list_26_97323e97_19_on.png",
+          "offImage": "list_26_97323e97_19_off.png",
           "buttonId": 19,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16818,8 +17878,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_20_on.png",
-          "offImage": "list_26_ffca695a_20_off.png",
+          "onImage": "list_26_97323e97_20_on.png",
+          "offImage": "list_26_97323e97_20_off.png",
           "buttonId": 20,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16847,8 +17907,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_21_on.png",
-          "offImage": "list_26_ffca695a_21_off.png",
+          "onImage": "list_26_97323e97_21_on.png",
+          "offImage": "list_26_97323e97_21_off.png",
           "buttonId": 21,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16876,8 +17936,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_22_on.png",
-          "offImage": "list_26_ffca695a_22_off.png",
+          "onImage": "list_26_97323e97_22_on.png",
+          "offImage": "list_26_97323e97_22_off.png",
           "buttonId": 22,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16905,8 +17965,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_23_on.png",
-          "offImage": "list_26_ffca695a_23_off.png",
+          "onImage": "list_26_97323e97_23_on.png",
+          "offImage": "list_26_97323e97_23_off.png",
           "buttonId": 23,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16934,8 +17994,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_24_on.png",
-          "offImage": "list_26_ffca695a_24_off.png",
+          "onImage": "list_26_97323e97_24_on.png",
+          "offImage": "list_26_97323e97_24_off.png",
           "buttonId": 24,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16963,8 +18023,8 @@
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "list_26_ffca695a_25_on.png",
-          "offImage": "list_26_ffca695a_25_off.png",
+          "onImage": "list_26_97323e97_25_on.png",
+          "offImage": "list_26_97323e97_25_off.png",
           "buttonId": 25,
           "numButtonsInGroup": 26,
           "handleName": "Data",
@@ -16988,7 +18048,7 @@
      }
     },
     {
-     "key": "hx knob88_w300 list hx list 26_ffca695a",
+     "key": "hx knob88_w300 list hx list 26_97323e97",
      "value": {
       "version": 2,
       "actions": [
@@ -17004,14 +18064,14 @@
         "onAction": "Double Click",
         "handler": "Show Overlay",
         "handleName": "Data",
-        "additionalData": "hx list 26_ffca695a"
+        "additionalData": "hx list 26_97323e97"
        },
        {
         "version": 1,
         "onAction": "Enter Pressed",
         "handler": "Show Overlay",
         "handleName": "Data",
-        "additionalData": "hx list 26_ffca695a"
+        "additionalData": "hx list 26_97323e97"
        }
       ],
       "backgroundData": {
@@ -19904,7 +20964,7 @@
      }
     },
     {
-     "key": "hx knob88_w262 list hx list 26_ffca695a",
+     "key": "hx knob88_w262 list hx list 26_97323e97",
      "value": {
       "version": 2,
       "actions": [
@@ -19920,14 +20980,14 @@
         "onAction": "Double Click",
         "handler": "Show Overlay",
         "handleName": "Data",
-        "additionalData": "hx list 26_ffca695a"
+        "additionalData": "hx list 26_97323e97"
        },
        {
         "version": 1,
         "onAction": "Enter Pressed",
         "handler": "Show Overlay",
         "handleName": "Data",
-        "additionalData": "hx list 26_ffca695a"
+        "additionalData": "hx list 26_97323e97"
        }
       ],
       "backgroundData": {
@@ -29919,7 +30979,7 @@
    },
    {
     "key": "Parameter 217",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 218",
@@ -29927,11 +30987,11 @@
    },
    {
     "key": "Parameter 220",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 222",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 223",
@@ -29939,11 +30999,11 @@
    },
    {
     "key": "Parameter 225",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 227",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 228",
@@ -29951,11 +31011,11 @@
    },
    {
     "key": "Parameter 230",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 232",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 233",
@@ -29963,11 +31023,11 @@
    },
    {
     "key": "Parameter 235",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 237",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 238",
@@ -29975,11 +31035,11 @@
    },
    {
     "key": "Parameter 240",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 242",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 243",
@@ -29987,11 +31047,11 @@
    },
    {
     "key": "Parameter 245",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 247",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 248",
@@ -29999,11 +31059,11 @@
    },
    {
     "key": "Parameter 250",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 252",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 253",
@@ -30011,11 +31071,11 @@
    },
    {
     "key": "Parameter 255",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 257",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 258",
@@ -30023,11 +31083,11 @@
    },
    {
     "key": "Parameter 260",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 262",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 263",
@@ -30035,11 +31095,11 @@
    },
    {
     "key": "Parameter 265",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 267",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 268",
@@ -30047,11 +31107,11 @@
    },
    {
     "key": "Parameter 270",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 272",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 273",
@@ -30059,11 +31119,11 @@
    },
    {
     "key": "Parameter 275",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 277",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 278",
@@ -30071,11 +31131,11 @@
    },
    {
     "key": "Parameter 280",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 282",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 283",
@@ -30083,11 +31143,11 @@
    },
    {
     "key": "Parameter 285",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 287",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 288",
@@ -30095,11 +31155,11 @@
    },
    {
     "key": "Parameter 290",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 292",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
    },
    {
     "key": "Parameter 293",
@@ -30107,7 +31167,11 @@
    },
    {
     "key": "Parameter 295",
-    "value": ["None", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+    "value": ["None", "Env 1", "Filter Env", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3", "LFO 4", "Perf 1", "Perf 2", "Velocity", "Pressure", "Chan AT", "Mod Wheel", "Pitch Bend", "Note", "Random", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Macro 5", "Macro 6", "Macro 7", "Macro 8"]
+   },
+   {
+    "key": "Parameter 345",
+    "value": ["Off", "On"]
    },
    {
     "key": "Parameter 359",
@@ -30230,95 +31294,95 @@
     "value": ["Off", "On"]
    },
    {
-    "key": "Parameter 449",
+    "key": "Parameter 577",
     "value": ["Press", "..."]
    },
    {
-    "key": "Parameter 450",
+    "key": "Parameter 578",
     "value": ["Off", "On"]
    },
    {
-    "key": "Parameter 451",
+    "key": "Parameter 579",
     "value": ["1-16", "17-32", "33-48", "49-64", "65-80", "81-96", "97-112", "113-128"]
    },
    {
-    "key": "Parameter 452",
+    "key": "Parameter 580",
     "value": ["Press", "..."]
    },
    {
-    "key": "Parameter 455",
+    "key": "Parameter 583",
     "value": ["8", "16", "32", "64", "128", "256"]
    },
    {
-    "key": "Parameter 456",
+    "key": "Parameter 584",
     "value": ["Osc A", "Osc B"]
    },
    {
-    "key": "Parameter 457",
+    "key": "Parameter 585",
     "value": ["Press", "..."]
    },
    {
-    "key": "Parameter 458",
+    "key": "Parameter 586",
     "value": ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6", "Step 7", "Step 8", "Step 9", "Step 10", "Step 11", "Step 12", "Step 13", "Step 14", "Step 15", "Step 16"]
    },
    {
-    "key": "Parameter 459",
+    "key": "Parameter 587",
     "value": ["Hold", "Ramp Up", "Ramp Down", "Smooth", "Triangle", "Exp", "Sine", "Exp Up", "Log Up", "Log Down", "S Up", "S Down", "Gate 1/2", "Gate 1/4", "Gate 3/4", "Saw x2", "Saw Dn x2", "Tri x2", "Sine x2", "Pulse x2", "Stairs Up", "Stairs Dn", "Bounce", "Off", "Roll x2", "Roll x3", "Roll x4", "Roll x8"]
    },
    {
-    "key": "Parameter 461",
+    "key": "Parameter 589",
     "value": ["Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6", "Step 7", "Step 8", "Step 9", "Step 10", "Step 11", "Step 12", "Step 13", "Step 14", "Step 15", "Step 16"]
    },
    {
-    "key": "Parameter 462",
+    "key": "Parameter 590",
     "value": ["Hold", "Ramp Up", "Ramp Down", "Smooth", "Triangle", "Exp", "Sine", "Exp Up", "Log Up", "Log Down", "S Up", "S Down", "Gate 1/2", "Gate 1/4", "Gate 3/4", "Saw x2", "Saw Dn x2", "Tri x2", "Sine x2", "Pulse x2", "Stairs Up", "Stairs Dn", "Bounce", "Off", "Roll x2", "Roll x3", "Roll x4", "Roll x8"]
    },
    {
-    "key": "Parameter 464",
+    "key": "Parameter 592",
     "value": ["LP 12", "LP 24", "BP 12", "BP 24", "HP 12", "HP 24", "Notch 12", "Notch 24", "Ladder 24", "Comb +", "Comb -", "Formant", "Phaser", "Standard LP LP", "Standard LP HP", "Standard LP BP", "Standard LP Notch", "Standard LP Peak", "Standard LP AP", "Sallen-Key LP", "Sallen-Key HP", "Sallen-Key BP", "Sallen-Key Notch", "Sallen-Key Peak", "Sallen-Key AP", "Ladder LP", "Ladder HP", "Ladder BP", "Ladder Notch", "Ladder Peak", "Ladder AP", "Steiner-Parker LP", "Steiner-Parker HP", "Steiner-Parker BP", "Steiner-Parker Notch", "Steiner-Parker Peak", "Steiner-Parker AP", "State Var LP", "State Var HP", "State Var BP", "State Var Notch", "State Var Peak", "State Var AP", "OTA LP", "OTA HP", "OTA BP", "OTA Notch", "OTA Peak", "OTA AP", "Polivoks LP", "Polivoks HP", "Polivoks BP", "Polivoks Notch", "Polivoks Peak", "Polivoks AP", "Sw Cap LP", "Sw Cap HP", "Sw Cap BP", "Sw Cap Notch", "Sw Cap Peak", "Sw Cap AP", "Acid LP", "Acid HP", "Acid BP", "Acid Notch", "Acid Peak", "Acid AP", "MS-20 LP", "MS-20 HP", "MS-20 BP", "MS-20 Notch", "MS-20 Peak", "MS-20 AP", "Oberheim LP", "Oberheim HP", "Oberheim BP", "Oberheim Notch", "Oberheim Peak", "Oberheim AP", "SEM LP", "SEM HP", "SEM BP", "SEM Notch", "SEM Peak", "SEM AP", "TB-303 LP", "TB-303 HP", "TB-303 BP", "TB-303 Notch", "TB-303 Peak", "TB-303 AP", "Fat Cat LP", "Fat Cat HP", "Fat Cat BP", "Fat Cat Notch", "Fat Cat Peak", "Fat Cat AP", "Odyssey LP", "Odyssey HP", "Odyssey BP", "Odyssey Notch", "Odyssey Peak", "Odyssey AP", "CS-15 LP", "CS-15 HP", "CS-15 BP", "CS-15 Notch", "CS-15 Peak", "CS-15 AP", "SH-2 LP", "SH-2 HP", "SH-2 BP", "SH-2 Notch", "SH-2 Peak", "SH-2 AP"]
    },
    {
-    "key": "Parameter 465",
+    "key": "Parameter 593",
     "value": ["LP 12", "LP 24", "BP 12", "BP 24", "HP 12", "HP 24", "Notch 12", "Notch 24", "Ladder 24", "Comb +", "Comb -", "Formant", "Phaser", "Standard LP LP", "Standard LP HP", "Standard LP BP", "Standard LP Notch", "Standard LP Peak", "Standard LP AP", "Sallen-Key LP", "Sallen-Key HP", "Sallen-Key BP", "Sallen-Key Notch", "Sallen-Key Peak", "Sallen-Key AP", "Ladder LP", "Ladder HP", "Ladder BP", "Ladder Notch", "Ladder Peak", "Ladder AP", "Steiner-Parker LP", "Steiner-Parker HP", "Steiner-Parker BP", "Steiner-Parker Notch", "Steiner-Parker Peak", "Steiner-Parker AP", "State Var LP", "State Var HP", "State Var BP", "State Var Notch", "State Var Peak", "State Var AP", "OTA LP", "OTA HP", "OTA BP", "OTA Notch", "OTA Peak", "OTA AP", "Polivoks LP", "Polivoks HP", "Polivoks BP", "Polivoks Notch", "Polivoks Peak", "Polivoks AP", "Sw Cap LP", "Sw Cap HP", "Sw Cap BP", "Sw Cap Notch", "Sw Cap Peak", "Sw Cap AP", "Acid LP", "Acid HP", "Acid BP", "Acid Notch", "Acid Peak", "Acid AP", "MS-20 LP", "MS-20 HP", "MS-20 BP", "MS-20 Notch", "MS-20 Peak", "MS-20 AP", "Oberheim LP", "Oberheim HP", "Oberheim BP", "Oberheim Notch", "Oberheim Peak", "Oberheim AP", "SEM LP", "SEM HP", "SEM BP", "SEM Notch", "SEM Peak", "SEM AP", "TB-303 LP", "TB-303 HP", "TB-303 BP", "TB-303 Notch", "TB-303 Peak", "TB-303 AP", "Fat Cat LP", "Fat Cat HP", "Fat Cat BP", "Fat Cat Notch", "Fat Cat Peak", "Fat Cat AP", "Odyssey LP", "Odyssey HP", "Odyssey BP", "Odyssey Notch", "Odyssey Peak", "Odyssey AP", "CS-15 LP", "CS-15 HP", "CS-15 BP", "CS-15 Notch", "CS-15 Peak", "CS-15 AP", "SH-2 LP", "SH-2 HP", "SH-2 BP", "SH-2 Notch", "SH-2 Peak", "SH-2 AP"]
    },
    {
-    "key": "Parameter 490",
+    "key": "Parameter 618",
     "value": ["Time", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Growl", "Pos A", "Pos B", "Cutoff 1", "Warp A"]
    },
    {
-    "key": "Parameter 491",
+    "key": "Parameter 619",
     "value": ["8", "16", "32", "64", "128", "256"]
    },
    {
-    "key": "Parameter 493",
+    "key": "Parameter 621",
     "value": ["C1", "C#1", "D1", "D#1", "E1", "F1", "F#1", "G1", "G#1", "A1", "A#1", "B1", "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2"]
    },
    {
-    "key": "Parameter 494",
+    "key": "Parameter 622",
     "value": ["Osc A", "Osc B"]
    },
    {
-    "key": "Parameter 495",
+    "key": "Parameter 623",
     "value": ["Off", "On"]
    },
    {
-    "key": "Parameter 496",
+    "key": "Parameter 624",
     "value": ["Press", "..."]
    },
    {
-    "key": "Parameter 504",
+    "key": "Parameter 632",
     "value": ["Scene 1", "Scene 2", "Scene 3", "Scene 4", "Scene 5", "Scene 6", "Scene 7", "Scene 8", "Scene 9", "Scene 10", "Scene 11", "Scene 12", "Scene 13", "Scene 14", "Scene 15", "Scene 16"]
    },
    {
-    "key": "Parameter 505",
+    "key": "Parameter 633",
     "value": ["Press", "..."]
    },
    {
-    "key": "Parameter 507",
+    "key": "Parameter 635",
     "value": ["Press", "..."]
    },
    {
-    "key": "Parameter 511",
+    "key": "Parameter 639",
     "value": ["Clear", "..."]
    }
   ],
@@ -36694,7 +37758,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 498"
+          "value": "Parameter 626"
          }
         ]
        },
@@ -36765,7 +37829,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 499"
+          "value": "Parameter 627"
          }
         ]
        },
@@ -36836,7 +37900,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 500"
+          "value": "Parameter 628"
          }
         ]
        },
@@ -36907,7 +37971,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 501"
+          "value": "Parameter 629"
          }
         ]
        },
@@ -37052,7 +38116,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 502"
+          "value": "Parameter 630"
          }
         ]
        },
@@ -37123,7 +38187,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 503"
+          "value": "Parameter 631"
          }
         ]
        },
@@ -37499,7 +38563,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 464"
+          "value": "Parameter 592"
          }
         ]
        },
@@ -38056,7 +39120,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 465"
+          "value": "Parameter 593"
          }
         ]
        },
@@ -38693,7 +39757,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "288 46 220 32"
+        "bounds": "288 46 186 32"
        }
       },
       {
@@ -38701,7 +39765,7 @@
        "componentData": {
         "version": 1,
         "name": "F1 Model",
-        "type": "hx knob88_w320 list hx list 18_254e592b",
+        "type": "hx knob88_w286 list hx list 18_254e592b",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -38722,7 +39786,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "188 20 320 126"
+        "bounds": "188 20 286 126"
        }
       },
       {
@@ -38759,7 +39823,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "556 68 94 30"
+        "bounds": "474 68 94 30"
        }
       },
       {
@@ -38788,7 +39852,73 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "650 49 475 68"
+        "bounds": "568 49 475 68"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Filter Env]/Parameter 446"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1137 46 110 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "F1 Env Amt",
+        "type": "hx knob88_w210_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 446"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1037 20 210 126"
        }
       },
       {
@@ -38965,7 +40095,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "288 354 220 32"
+        "bounds": "288 354 186 32"
        }
       },
       {
@@ -38973,7 +40103,7 @@
        "componentData": {
         "version": 1,
         "name": "F2 Model",
-        "type": "hx knob88_w320 list hx list 18_254e592b",
+        "type": "hx knob88_w286 list hx list 18_254e592b",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -38994,7 +40124,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "188 328 320 126"
+        "bounds": "188 328 286 126"
        }
       },
       {
@@ -39031,7 +40161,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "556 376 94 30"
+        "bounds": "474 376 94 30"
        }
       },
       {
@@ -39060,7 +40190,73 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "650 357 475 68"
+        "bounds": "568 357 475 68"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Filter Env]/Parameter 447"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1137 354 110 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "F2 Env Amt",
+        "type": "hx knob88_w210_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 447"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1037 328 210 126"
        }
       },
       {
@@ -39700,7 +40896,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[ENV 2]/Parameter 90"
+         "handleName": "WithName[FILTER]/Parameter 90"
         }
        },
        "handle remapping": {
@@ -39713,7 +40909,44 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "13 220 150 34"
+        "bounds": "13 203 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[ENV]/Parameter 90"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 237 150 34"
        }
       },
       {
@@ -39812,7 +41045,7 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "E2 Attack",
+        "name": "FEnv Attack",
         "type": "hx knob72",
         "data": {
          "version": 1,
@@ -39878,7 +41111,7 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "E2 Decay",
+        "name": "FEnv Decay",
         "type": "hx knob72",
         "data": {
          "version": 1,
@@ -39944,7 +41177,7 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "E2 Sustain",
+        "name": "FEnv Sustain",
         "type": "hx knob72",
         "data": {
          "version": 1,
@@ -40010,7 +41243,7 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "E2 Release",
+        "name": "FEnv Release",
         "type": "hx knob72",
         "data": {
          "version": 1,
@@ -41094,7 +42327,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[ENV 2]/Parameter 94"
+         "handleName": "WithName[F.ENV]/Parameter 94"
         }
        },
        "handle remapping": {
@@ -41188,7 +42421,7 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "E2 A Curve",
+        "name": "FEnv A Curve",
         "type": "hx knob88_bi",
         "data": {
          "version": 1,
@@ -41254,7 +42487,7 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "E2 D Curve",
+        "name": "FEnv D Curve",
         "type": "hx knob88_bi",
         "data": {
          "version": 1,
@@ -41320,7 +42553,7 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "E2 R Curve",
+        "name": "FEnv R Curve",
         "type": "hx knob88_bi",
         "data": {
          "version": 1,
@@ -45966,7 +47199,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 466"
+          "value": "Parameter 594"
          }
         ]
        },
@@ -46037,7 +47270,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 467"
+          "value": "Parameter 595"
          }
         ]
        },
@@ -46182,7 +47415,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 468"
+          "value": "Parameter 596"
          }
         ]
        },
@@ -46253,7 +47486,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 469"
+          "value": "Parameter 597"
          }
         ]
        },
@@ -46324,7 +47557,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 470"
+          "value": "Parameter 598"
          }
         ]
        },
@@ -46395,7 +47628,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 471"
+          "value": "Parameter 599"
          }
         ]
        },
@@ -46635,7 +47868,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 472"
+          "value": "Parameter 600"
          }
         ]
        },
@@ -46706,7 +47939,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 473"
+          "value": "Parameter 601"
          }
         ]
        },
@@ -46851,7 +48084,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 474"
+          "value": "Parameter 602"
          }
         ]
        },
@@ -46922,7 +48155,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 475"
+          "value": "Parameter 603"
          }
         ]
        },
@@ -46993,7 +48226,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 476"
+          "value": "Parameter 604"
          }
         ]
        },
@@ -47064,7 +48297,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 477"
+          "value": "Parameter 605"
          }
         ]
        },
@@ -47358,7 +48591,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 478"
+          "value": "Parameter 606"
          }
         ]
        },
@@ -47429,7 +48662,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 479"
+          "value": "Parameter 607"
          }
         ]
        },
@@ -47574,7 +48807,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 480"
+          "value": "Parameter 608"
          }
         ]
        },
@@ -47645,7 +48878,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 481"
+          "value": "Parameter 609"
          }
         ]
        },
@@ -47716,7 +48949,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 482"
+          "value": "Parameter 610"
          }
         ]
        },
@@ -47787,7 +49020,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 483"
+          "value": "Parameter 611"
          }
         ]
        },
@@ -48027,7 +49260,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 484"
+          "value": "Parameter 612"
          }
         ]
        },
@@ -48098,7 +49331,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 485"
+          "value": "Parameter 613"
          }
         ]
        },
@@ -48243,7 +49476,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 486"
+          "value": "Parameter 614"
          }
         ]
        },
@@ -48314,7 +49547,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 487"
+          "value": "Parameter 615"
          }
         ]
        },
@@ -48385,7 +49618,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 488"
+          "value": "Parameter 616"
          }
         ]
        },
@@ -48456,7 +49689,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 489"
+          "value": "Parameter 617"
          }
         ]
        },
@@ -48504,7 +49737,7 @@
    },
    {
     "version": 1,
-    "tabName": "SUB GUARD",
+    "tabName": "MIXER",
     "fnKeyIndex": 4,
     "fnKeySubIndex": 2,
     "componentDefinition": {
@@ -48556,6 +49789,814 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[LEVEL]/Parameter 16"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 66 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Osc A]/Parameter 16"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 46 130 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "A Level",
+        "type": "hx knob88_w230",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 16"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 20 230 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Osc B]/Parameter 36"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "564 46 130 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "B Level",
+        "type": "hx knob88_w230",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 36"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "464 20 230 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Sub]/Parameter 53"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "841 46 130 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "Sub Level",
+        "type": "hx knob88_w230",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 53"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "741 20 230 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Noise]/Parameter 60"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1117 46 130 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "Noise Level",
+        "type": "hx knob88_w230",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 60"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1017 20 230 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[PAN]/Parameter 17"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 220 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Osc A]/Parameter 17"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 200 130 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "A Pan",
+        "type": "hx knob88_w230_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 17"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 174 230 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Osc B]/Parameter 37"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "564 200 130 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "B Pan",
+        "type": "hx knob88_w230_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 37"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "464 174 230 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Sub]/Parameter 54"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "841 200 130 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "Sub Pan",
+        "type": "hx knob88_w230_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 54"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "741 174 230 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Noise]/Parameter 63"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1117 200 130 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "Noise Pan",
+        "type": "hx knob88_w230_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 63"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1017 174 230 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[CHAR]/Parameter 431"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 357 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[OSC]/Parameter 431"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 391 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Level]/Parameter 431"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 354 130 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "CO Level",
+        "type": "hx knob88_w230",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 431"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 328 230 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Pan]/Parameter 433"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "566 354 130 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "CO Pan",
+        "type": "hx knob88_w230_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 433"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "466 328 230 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "tag Sub Guard",
         "type": "hx tag Sub Guard",
         "data": {
@@ -48578,7 +50619,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "13 13 150 140"
+        "bounds": "13 475 150 140"
        }
       },
       {
@@ -48615,7 +50656,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "288 46 150 32"
+        "bounds": "288 508 150 32"
        }
       },
       {
@@ -48644,7 +50685,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "188 20 250 126"
+        "bounds": "188 482 250 126"
        }
       },
       {
@@ -48681,7 +50722,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "586 46 150 32"
+        "bounds": "586 508 150 32"
        }
       },
       {
@@ -48710,7 +50751,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "486 20 250 126"
+        "bounds": "486 482 250 126"
        }
       },
       {
@@ -48747,7 +50788,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "884 46 150 32"
+        "bounds": "884 508 150 32"
        }
       },
       {
@@ -48776,12 +50817,911 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "784 20 250 126"
+        "bounds": "784 482 250 126"
        }
       }
      ]
     },
-    "qlinkBoundsData": ["10 10 1260 146"]
+    "qlinkBoundsData": ["10 10 1260 146", "10 164 1260 146", "10 318 1260 146", "10 472 1260 146"]
+   },
+   {
+    "version": 1,
+    "tabName": "OTT",
+    "fnKeyIndex": 4,
+    "fnKeySubIndex": 3,
+    "componentDefinition": {
+     "version": 2,
+     "actions": [],
+     "backgroundData": {
+      "version": 1,
+      "focussed": {
+       "version": 1,
+       "colour": "ffb2b6bc",
+       "image": ""
+      },
+      "unfocussed": {
+       "version": 1,
+       "colour": "ffb2b6bc",
+       "image": ""
+      }
+     },
+     "ignoreMousePresses": false,
+     "disableCoarseDataWheel": false,
+     "componentsData": [
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "background",
+        "type": "Image",
+        "data": {
+         "version": 2,
+         "imageType": "Regular",
+         "colour": "0",
+         "image": "bg_4_3.png"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "0 0 1280 628"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[OTT]/Parameter 345"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 66 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[OTT]/Parameter 345"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 33 170 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "OTT",
+        "type": "hx toggle OTT",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 345"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 73 170 60"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Depth]/Parameter 346"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "506 46 140 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "OTT Depth",
+        "type": "hx knob88_w240",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 346"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "406 20 240 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Time]/Parameter 347"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "794 46 140 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "OTT Time",
+        "type": "hx knob88_w240",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 347"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "694 20 240 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[UP -]/Parameter 348"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 203 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[DOWN]/Parameter 348"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 237 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Upward]/Parameter 348"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 200 160 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "OTT Upward",
+        "type": "hx knob88_w260",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 348"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 174 260 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Downward]/Parameter 452"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "596 200 160 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "OTT Downward",
+        "type": "hx knob88_w260",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 452"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "496 174 260 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[GAIN]/Parameter 453"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 374 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[In Gain]/Parameter 453"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 354 160 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "OTT In Gain",
+        "type": "hx knob88_w260_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 453"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 328 260 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Out Gain]/Parameter 454"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "596 354 160 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "OTT Out Gain",
+        "type": "hx knob88_w260_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 454"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "496 328 260 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[BANDS]/Parameter 455"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 528 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Low]/Parameter 455"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 508 140 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "OTT Low",
+        "type": "hx knob88_w240_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 455"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 482 240 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Mid]/Parameter 456"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "576 508 140 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "OTT Mid",
+        "type": "hx knob88_w240_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 456"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "476 482 240 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[High]/Parameter 457"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "864 508 140 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "OTT High",
+        "type": "hx knob88_w240_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 457"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "764 482 240 126"
+       }
+      }
+     ]
+    },
+    "qlinkBoundsData": ["10 10 1260 146", "10 164 1260 146", "10 318 1260 146", "10 472 1260 146"]
    },
    {
     "version": 1,
@@ -48912,7 +51852,7 @@
        "componentData": {
         "version": 1,
         "name": "M1 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -49147,7 +52087,7 @@
        "componentData": {
         "version": 1,
         "name": "M2 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -49382,7 +52322,7 @@
        "componentData": {
         "version": 1,
         "name": "M3 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -49617,7 +52557,7 @@
        "componentData": {
         "version": 1,
         "name": "M4 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -49906,7 +52846,7 @@
        "componentData": {
         "version": 1,
         "name": "M5 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -50141,7 +53081,7 @@
        "componentData": {
         "version": 1,
         "name": "M6 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -50376,7 +53316,7 @@
        "componentData": {
         "version": 1,
         "name": "M7 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -50611,7 +53551,7 @@
        "componentData": {
         "version": 1,
         "name": "M8 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -50900,7 +53840,7 @@
        "componentData": {
         "version": 1,
         "name": "M9 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -51135,7 +54075,7 @@
        "componentData": {
         "version": 1,
         "name": "M10 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -51370,7 +54310,7 @@
        "componentData": {
         "version": 1,
         "name": "M11 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -51605,7 +54545,7 @@
        "componentData": {
         "version": 1,
         "name": "M12 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -51894,7 +54834,7 @@
        "componentData": {
         "version": 1,
         "name": "M13 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -52129,7 +55069,7 @@
        "componentData": {
         "version": 1,
         "name": "M14 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -52364,7 +55304,7 @@
        "componentData": {
         "version": 1,
         "name": "M15 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -52599,7 +55539,7 @@
        "componentData": {
         "version": 1,
         "name": "M16 Source",
-        "type": "hx knob88_w300 list hx list 26_ffca695a",
+        "type": "hx knob88_w300 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -52925,7 +55865,7 @@
        "componentData": {
         "version": 1,
         "name": "M1 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -52991,7 +55931,7 @@
        "componentData": {
         "version": 1,
         "name": "M2 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53057,7 +55997,7 @@
        "componentData": {
         "version": 1,
         "name": "M3 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53123,7 +56063,7 @@
        "componentData": {
         "version": 1,
         "name": "M4 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53263,7 +56203,7 @@
        "componentData": {
         "version": 1,
         "name": "M5 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53329,7 +56269,7 @@
        "componentData": {
         "version": 1,
         "name": "M6 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53395,7 +56335,7 @@
        "componentData": {
         "version": 1,
         "name": "M7 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53461,7 +56401,7 @@
        "componentData": {
         "version": 1,
         "name": "M8 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53601,7 +56541,7 @@
        "componentData": {
         "version": 1,
         "name": "M9 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53667,7 +56607,7 @@
        "componentData": {
         "version": 1,
         "name": "M10 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53733,7 +56673,7 @@
        "componentData": {
         "version": 1,
         "name": "M11 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53799,7 +56739,7 @@
        "componentData": {
         "version": 1,
         "name": "M12 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -53939,7 +56879,7 @@
        "componentData": {
         "version": 1,
         "name": "M13 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -54005,7 +56945,7 @@
        "componentData": {
         "version": 1,
         "name": "M14 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -54071,7 +57011,7 @@
        "componentData": {
         "version": 1,
         "name": "M15 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -54137,7 +57077,7 @@
        "componentData": {
         "version": 1,
         "name": "M16 Aux",
-        "type": "hx knob88_w262 list hx list 26_ffca695a",
+        "type": "hx knob88_w262 list hx list 26_97323e97",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -56767,7 +59707,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -56858,7 +59798,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -56949,7 +59889,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -57040,7 +59980,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -57131,7 +60071,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -57222,7 +60162,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -57313,7 +60253,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -57404,7 +60344,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -57569,7 +60509,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -57660,7 +60600,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -57751,7 +60691,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -57842,7 +60782,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -57933,7 +60873,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -58024,7 +60964,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -58115,7 +61055,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -58206,7 +61146,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 458"
+          "value": "Parameter 586"
          }
         ]
        },
@@ -58240,7 +61180,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[CURVE]/Parameter 459"
+         "handleName": "WithName[CURVE]/Parameter 587"
         }
        },
        "handle remapping": {
@@ -58272,7 +61212,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 459"
+          "value": "Parameter 587"
          }
         ]
        },
@@ -58306,7 +61246,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[STEP]/Parameter 460"
+         "handleName": "WithName[STEP]/Parameter 588"
         }
        },
        "handle remapping": {
@@ -58343,7 +61283,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Step Level]/Parameter 460"
+         "handleName": "WithName[Step Level]/Parameter 588"
         }
        },
        "handle remapping": {
@@ -58375,7 +61315,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 460"
+          "value": "Parameter 588"
          }
         ]
        },
@@ -58726,7 +61666,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -58817,7 +61757,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -58908,7 +61848,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -58999,7 +61939,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -59090,7 +62030,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -59181,7 +62121,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -59272,7 +62212,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -59363,7 +62303,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -59528,7 +62468,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -59619,7 +62559,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -59710,7 +62650,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -59801,7 +62741,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -59892,7 +62832,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -59983,7 +62923,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -60074,7 +63014,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -60165,7 +63105,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 461"
+          "value": "Parameter 589"
          }
         ]
        },
@@ -60199,7 +63139,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[CURVE]/Parameter 462"
+         "handleName": "WithName[CURVE]/Parameter 590"
         }
        },
        "handle remapping": {
@@ -60231,7 +63171,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 462"
+          "value": "Parameter 590"
          }
         ]
        },
@@ -60265,7 +63205,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[STEP]/Parameter 463"
+         "handleName": "WithName[STEP]/Parameter 591"
         }
        },
        "handle remapping": {
@@ -60302,7 +63242,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Step Level]/Parameter 463"
+         "handleName": "WithName[Step Level]/Parameter 591"
         }
        },
        "handle remapping": {
@@ -60334,7 +63274,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 463"
+          "value": "Parameter 591"
          }
         ]
        },
@@ -61284,7 +64224,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[SCENE]/Parameter 504"
+         "handleName": "WithName[SCENE]/Parameter 632"
         }
        },
        "handle remapping": {
@@ -61316,7 +64256,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 504"
+          "value": "Parameter 632"
          }
         ]
        },
@@ -61490,7 +64430,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Store]/Parameter 505"
+         "handleName": "WithName[Store]/Parameter 633"
         }
        },
        "handle remapping": {
@@ -61522,7 +64462,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 505"
+          "value": "Parameter 633"
          }
         ]
        },
@@ -61779,7 +64719,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[PRESET]/Parameter 448"
+         "handleName": "WithName[PRESET]/Parameter 576"
         }
        },
        "handle remapping": {
@@ -61816,7 +64756,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Preset]/Parameter 448"
+         "handleName": "WithName[Preset]/Parameter 576"
         }
        },
        "handle remapping": {
@@ -61848,7 +64788,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 448"
+          "value": "Parameter 576"
          }
         ]
        },
@@ -61882,7 +64822,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Load]/Parameter 449"
+         "handleName": "WithName[Load]/Parameter 577"
         }
        },
        "handle remapping": {
@@ -61914,7 +64854,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 449"
+          "value": "Parameter 577"
          }
         ]
        },
@@ -61948,7 +64888,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Mutate 10%]/Parameter 452"
+         "handleName": "WithName[Mutate 10%]/Parameter 580"
         }
        },
        "handle remapping": {
@@ -61980,7 +64920,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 452"
+          "value": "Parameter 580"
          }
         ]
        },
@@ -62014,7 +64954,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[CPU Load]/Parameter 453"
+         "handleName": "WithName[CPU Load]/Parameter 581"
         }
        },
        "handle remapping": {
@@ -62085,7 +65025,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 453"
+          "value": "Parameter 581"
          }
         ]
        },
@@ -62119,7 +65059,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[PADS]/Parameter 450"
+         "handleName": "WithName[PADS]/Parameter 578"
         }
        },
        "handle remapping": {
@@ -62156,7 +65096,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Pad Browse]/Parameter 450"
+         "handleName": "WithName[Pad Browse]/Parameter 578"
         }
        },
        "handle remapping": {
@@ -62188,7 +65128,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 450"
+          "value": "Parameter 578"
          }
         ]
        },
@@ -62222,7 +65162,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Pad]/Parameter 451"
+         "handleName": "WithName[Pad]/Parameter 579"
         }
        },
        "handle remapping": {
@@ -62259,7 +65199,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Bank]/Parameter 451"
+         "handleName": "WithName[Bank]/Parameter 579"
         }
        },
        "handle remapping": {
@@ -62291,7 +65231,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 451"
+          "value": "Parameter 579"
          }
         ]
        },
@@ -62325,7 +65265,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[NAME]/Parameter 510"
+         "handleName": "WithName[NAME]/Parameter 638"
         }
        },
        "handle remapping": {
@@ -62362,7 +65302,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Name (letter in ( ) is under the cursor)]/Parameter 510"
+         "handleName": "WithName[Name (letter in ( ) is under the cursor)]/Parameter 638"
         }
        },
        "handle remapping": {
@@ -62433,7 +65373,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 510"
+          "value": "Parameter 638"
          }
         ]
        },
@@ -62467,7 +65407,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Cursor]/Parameter 508"
+         "handleName": "WithName[Cursor]/Parameter 636"
         }
        },
        "handle remapping": {
@@ -62499,7 +65439,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 508"
+          "value": "Parameter 636"
          }
         ]
        },
@@ -62533,7 +65473,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Letter]/Parameter 509"
+         "handleName": "WithName[Letter]/Parameter 637"
         }
        },
        "handle remapping": {
@@ -62565,7 +65505,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 509"
+          "value": "Parameter 637"
          }
         ]
        },
@@ -62599,7 +65539,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Clear]/Parameter 511"
+         "handleName": "WithName[Clear]/Parameter 639"
         }
        },
        "handle remapping": {
@@ -62631,7 +65571,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 511"
+          "value": "Parameter 639"
          }
         ]
        },
@@ -62665,7 +65605,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[SAVE TO]/Parameter 506"
+         "handleName": "WithName[SAVE TO]/Parameter 634"
         }
        },
        "handle remapping": {
@@ -62702,7 +65642,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[MENU]/Parameter 506"
+         "handleName": "WithName[MENU]/Parameter 634"
         }
        },
        "handle remapping": {
@@ -62739,7 +65679,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Slot]/Parameter 506"
+         "handleName": "WithName[Slot]/Parameter 634"
         }
        },
        "handle remapping": {
@@ -62771,7 +65711,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 506"
+          "value": "Parameter 634"
          }
         ]
        },
@@ -62805,7 +65745,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Save]/Parameter 507"
+         "handleName": "WithName[Save]/Parameter 635"
         }
        },
        "handle remapping": {
@@ -62837,7 +65777,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 507"
+          "value": "Parameter 635"
          }
         ]
        },
@@ -62925,7 +65865,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[SAMPLE]/Parameter 454"
+         "handleName": "WithName[SAMPLE]/Parameter 582"
         }
        },
        "handle remapping": {
@@ -62962,7 +65902,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[> TABLE]/Parameter 454"
+         "handleName": "WithName[> TABLE]/Parameter 582"
         }
        },
        "handle remapping": {
@@ -62999,7 +65939,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Sample]/Parameter 454"
+         "handleName": "WithName[Sample]/Parameter 582"
         }
        },
        "handle remapping": {
@@ -63031,7 +65971,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 454"
+          "value": "Parameter 582"
          }
         ]
        },
@@ -63065,7 +66005,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Make Table]/Parameter 457"
+         "handleName": "WithName[Make Table]/Parameter 585"
         }
        },
        "handle remapping": {
@@ -63097,7 +66037,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 457"
+          "value": "Parameter 585"
          }
         ]
        },
@@ -63131,7 +66071,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[TABLE]/Parameter 455"
+         "handleName": "WithName[TABLE]/Parameter 583"
         }
        },
        "handle remapping": {
@@ -63168,7 +66108,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[SETUP]/Parameter 455"
+         "handleName": "WithName[SETUP]/Parameter 583"
         }
        },
        "handle remapping": {
@@ -63205,7 +66145,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Frames]/Parameter 455"
+         "handleName": "WithName[Frames]/Parameter 583"
         }
        },
        "handle remapping": {
@@ -63237,7 +66177,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 455"
+          "value": "Parameter 583"
          }
         ]
        },
@@ -63271,7 +66211,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[To Osc]/Parameter 456"
+         "handleName": "WithName[To Osc]/Parameter 584"
         }
        },
        "handle remapping": {
@@ -63303,7 +66243,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 456"
+          "value": "Parameter 584"
          }
         ]
        },
@@ -63337,7 +66277,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[PRINT]/Parameter 490"
+         "handleName": "WithName[PRINT]/Parameter 618"
         }
        },
        "handle remapping": {
@@ -63374,7 +66314,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Sweep]/Parameter 490"
+         "handleName": "WithName[Sweep]/Parameter 618"
         }
        },
        "handle remapping": {
@@ -63406,7 +66346,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 490"
+          "value": "Parameter 618"
          }
         ]
        },
@@ -63440,7 +66380,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Length]/Parameter 492"
+         "handleName": "WithName[Length]/Parameter 620"
         }
        },
        "handle remapping": {
@@ -63472,7 +66412,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 492"
+          "value": "Parameter 620"
          }
         ]
        },
@@ -63506,7 +66446,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Note]/Parameter 493"
+         "handleName": "WithName[Note]/Parameter 621"
         }
        },
        "handle remapping": {
@@ -63538,7 +66478,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 493"
+          "value": "Parameter 621"
          }
         ]
        },
@@ -63572,7 +66512,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Print]/Parameter 496"
+         "handleName": "WithName[Print]/Parameter 624"
         }
        },
        "handle remapping": {
@@ -63604,7 +66544,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 496"
+          "value": "Parameter 624"
          }
         ]
        },
@@ -63638,7 +66578,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Made]/Parameter 497"
+         "handleName": "WithName[Made]/Parameter 625"
         }
        },
        "handle remapping": {
@@ -63709,7 +66649,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 497"
+          "value": "Parameter 625"
          }
         ]
        },
@@ -63743,7 +66683,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[PRINT]/Parameter 491"
+         "handleName": "WithName[PRINT]/Parameter 619"
         }
        },
        "handle remapping": {
@@ -63780,7 +66720,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[SETUP]/Parameter 491"
+         "handleName": "WithName[SETUP]/Parameter 619"
         }
        },
        "handle remapping": {
@@ -63817,7 +66757,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Frames]/Parameter 491"
+         "handleName": "WithName[Frames]/Parameter 619"
         }
        },
        "handle remapping": {
@@ -63849,7 +66789,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 491"
+          "value": "Parameter 619"
          }
         ]
        },
@@ -63883,7 +66823,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[To Osc]/Parameter 494"
+         "handleName": "WithName[To Osc]/Parameter 622"
         }
        },
        "handle remapping": {
@@ -63915,7 +66855,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 494"
+          "value": "Parameter 622"
          }
         ]
        },
@@ -63949,7 +66889,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Through FX]/Parameter 495"
+         "handleName": "WithName[Through FX]/Parameter 623"
         }
        },
        "handle remapping": {
@@ -63981,7 +66921,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 495"
+          "value": "Parameter 623"
          }
         ]
        },

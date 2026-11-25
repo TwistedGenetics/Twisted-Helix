@@ -695,20 +695,25 @@ def pages():
     # Mega Synth models: Model HELIX = the original filter (F Type above); any other model uses Type + Slope
     def model(n):
         f = "F%d " % n
-        return [S("F%d MODEL" % n, [K(f + "Model", "Model", w=320),
-                                    PICK(f + "Slope", "Slope", cols=5, labels=["Model", "6", "12", "18", "24"], where="left")]),
+        return [S("F%d MODEL" % n, [K(f + "Model", "Model", w=286),
+                                    PICK(f + "Slope", "Slope", cols=5, labels=["Model", "6", "12", "18", "24"], where="left"),
+                                    K(f + "Env Amt", "Filter Env", bi=True, w=210)]),
                 S("F%d TYPE" % n, [PICK(f + "Filter Type", "Type", cols=6, labels=["LP", "HP", "BP", "Notch", "Peak", "AP"],
                                         where="left")] + ([K("Ser/Par", "Ser / Par")] if n == 2 else []))]
     page(1, 1, "MODEL", model(1) + model(2))
 
     # ---- ENV
     def env(n):
-        e = "E%d " % n
-        return S("ENV %d" % n + ("\nAMP" if n == 1 else ""), [ENV(e + "Attack", e + "Decay", e + "Sustain", e + "Release"),
+        e = "FEnv " if n == 2 else "E%d " % n   # Env 2 is the Filter Envelope
+        cap = {1: "ENV 1\nAMP", 2: "FILTER\nENV"}.get(n, "ENV %d" % n)
+        return S(cap, [ENV(e + "Attack", e + "Decay", e + "Sustain", e + "Release"),
                   KS(e + "Attack", "Attack"), KS(e + "Decay", "Decay"), KS(e + "Sustain", "Sustain"), KS(e + "Release", "Release")])
     page(2, 0, "ENV", [env(n) for n in range(1, 5)])
-    page(2, 1, "CURVES", [S("ENV %d\nCURVES" % n, [K("E%d A Curve" % n, "Attack", bi=True), K("E%d D Curve" % n, "Decay", bi=True),
-                                                    K("E%d R Curve" % n, "Release", bi=True)]) for n in range(1, 5)])
+    def ecv(n):
+        e = "FEnv " if n == 2 else "E%d " % n
+        return S("F.ENV\nCURVES" if n == 2 else "ENV %d\nCURVES" % n, [K(e + "A Curve", "Attack", bi=True),
+                 K(e + "D Curve", "Decay", bi=True), K(e + "R Curve", "Release", bi=True)])
+    page(2, 1, "CURVES", [ecv(n) for n in range(1, 5)])
 
     # ---- LFO
     def lfo(n):
@@ -733,8 +738,20 @@ def pages():
     page(4, 0, "INSERTS", lib("Insert 1", "INSERT 1") + lib("Insert 2", "INSERT 2"))
     page(4, 1, "FX 1-2", lib("FX 1", "FX 1") + lib("FX 2", "FX 2"))
     # Sub guardian: below Freq stays mono and clean and skips every effect
-    page(4, 2, "SUB GUARD", [S("SUB\nGUARD", [K("SG Freq", "Split"), K("SG Level", "Sub Level", bi=True),
-                                              K("SG Warmth", "Warmth")], toggle="Sub Guard")])
+    # Mixer (every source's level and pan; the sub guardian on the master) and the master OTT on the final output
+    srcs = [("A", "Osc A"), ("B", "Osc B"), ("Sub", "Sub"), ("Noise", "Noise")]
+    page(4, 2, "MIXER", [
+        S("LEVEL", [K(k + " Level", n, w=230) for k, n in srcs]),
+        S("PAN", [K(k + " Pan", n, bi=True, w=230) for k, n in srcs]),
+        S("CHAR\nOSC", [K("CO Level", "Level", w=230), K("CO Pan", "Pan", bi=True, w=230)]),
+        S("SUB\nGUARD", [K("SG Freq", "Split"), K("SG Level", "Sub Level", bi=True), K("SG Warmth", "Warmth")],
+          toggle="Sub Guard")])
+    page(4, 3, "OTT", [
+        S("OTT", [TG("OTT", "OTT", 170), K("OTT Depth", "Depth", w=240), K("OTT Time", "Time", w=240)]),
+        S("UP /\nDOWN", [K("OTT Upward", "Upward", w=260), K("OTT Downward", "Downward", w=260)]),
+        S("GAIN", [K("OTT In Gain", "In Gain", bi=True, w=260), K("OTT Out Gain", "Out Gain", bi=True, w=260)]),
+        S("BANDS", [K("OTT Low", "Low", bi=True, w=240), K("OTT Mid", "Mid", bi=True, w=240),
+                    K("OTT High", "High", bi=True, w=240)])])
 
     # ---- MOD MATRIX (long lists: knobs, which step through the choices and show the name)
     for b in range(4):

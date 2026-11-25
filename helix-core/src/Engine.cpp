@@ -33,6 +33,7 @@ void Engine::prepare(double sampleRate, int maxBlockSize)
     ctx_.sampleRate = (float)sampleRate;
     for (Voice& v : voices_) v.prepare((float)sampleRate);
     fx_.prepare((float)sampleRate);
+    ott_.prepare(sampleRate);
     for (auto& sl : lib_) sl.prepare(sampleRate, kCtrlBlock);
     reset();
 }
@@ -43,6 +44,7 @@ void Engine::reset()
     fx_.reset();
     for (auto& sl : lib_) sl.reset();
     for (auto& b : sgLp_) b.reset();
+    ott_.reset();
     for (auto& b : sgHp_) b.reset();
     pitchBend_ = modWheel_ = chanPressure_ = 0.0f;
     sustain_ = false;
@@ -412,6 +414,7 @@ void Engine::runFx(float* l, float* r, int n)
             r[i] += s;
         }
     }
+    ott_.process(l, r, n, fxp_);   // master OTT: the last thing before the master level
     heavyFx_.store(fx_.heavyActive() || lib_[0].heavy() || lib_[1].heavy() || lib_[2].heavy() || lib_[3].heavy(),
                    std::memory_order_relaxed);
 }

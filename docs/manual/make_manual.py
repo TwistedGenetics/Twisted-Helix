@@ -842,8 +842,11 @@ def chapter_filters():
 def chapter_env():
     s = H1("9  Envelopes")
     s += [envelope_diagram(), P("An ADSR envelope.", "caption")]
-    s += [P("HELIX has four ADSR envelopes. <b>Envelope 1 always controls the volume</b> of each note; envelopes 2-4 are free "
-            "for anything in the modulation matrix (filter sweeps, pitch drops, wavetable movement)."),
+    s += [P("HELIX has four ADSR envelopes. <b>Envelope 1 always controls the volume</b> of each note. <b>Envelope 2 is the "
+            "Filter Envelope</b>: each filter has a bipolar <b>Env Amt</b> knob (MODEL page on the MPC, in each filter panel on "
+            "the computer) that moves its cutoff up (+) or down (-) by up to 6 octaves as the envelope runs; it is also a "
+            "matrix source (\"Filter Env\") like any other. Envelopes 3 and 4 are free for anything in the modulation "
+            "matrix (pitch drops, wavetable movement)."),
           table([["Control", "Range", "What it does"],
                  ["Attack", "0.5 ms - 20 s", "Time to rise to full level."],
                  ["Decay", "1 ms - 20 s", "Time to fall to the sustain level."],
@@ -972,7 +975,7 @@ def chapter_matrix():
                  ["Moving Reese", "LFO 1, Triangle, Sync 1 Bar → F1 Cutoff, 25%. LFO 2, Sine, free 0.15 Hz → A Detune, 25%."],
                  ["Wobble", "LFO 1, Sine, Sync 1/8 → F1 Cutoff, 55%, LP 24 with Reso 45%. Put the LFO's speed on the beat."],
                  ["Talking bass", "Vowels table. LFO 1 → A WT Pos 90% and → F1 Cutoff (Formant filter) 50%."],
-                 ["Donk / pitch drop", "Env 2 with Attack 0.5 ms, Decay 60 ms, Sustain 0 → Pitch, 50% (an octave drop)."],
+                 ["Donk / pitch drop", "Env 3 with Attack 0.5 ms, Decay 60 ms, Sustain 0 → Pitch, 50% (an octave drop)."],
                  ["Expressive pad", "Mod Wheel → A WT Pos; Velocity → F1 Cutoff 20%; Pressure → F1 Cutoff 30%."]], [36, 134])]
     return s
 
@@ -1061,8 +1064,31 @@ def chapter_fx():
             "added back after FX 2, clean, so distortion, OTT, reverb and chorus can go as far as you like without smearing "
             "or widening the sub. Everything above goes through the slots as usual. <b>Sub Level</b> trims the sub (-12 to "
             "+6 dB, modulatable) and <b>Warmth</b> adds a little 2nd and 3rd harmonic so it still reads on small speakers. "
-            "With no effects on, switching it on does not change the level. On the MPC it is the <b>SUB GUARD</b> page (FX "
+            "With no effects on, switching it on does not change the level. On the MPC it is on the <b>MIXER</b> page (FX "
             "key); on the computer it is under the effect slots.")]
+    s += H2("Mixer")
+    s += [P("Every source's level and pan in one place: Osc A, Osc B, Sub, Noise and the character oscillator. On the MPC "
+            "it is the <b>MIXER</b> page (FX key), which also holds the sub guardian; on the computer the left half of the "
+            "<b>MIX / OTT</b> tab, with each source's sends to Filter 1 and 2 as well.")]
+    s += H2("Master OTT")
+    s += [P("The last thing on the output: a three-band upward and downward compressor that behaves like the original OTT "
+            "(the Ableton Multiband Dynamics preset that Xfer's free plugin recreates). The sound is split at 88 Hz and "
+            "2.5 kHz; in each band, anything above the upper threshold is squashed almost flat (1:66) and anything below "
+            "the lower one is lifted (4.17:1), then each band gets OTT's make-up gain (Low +10.3, Mid +5.7, High +10.3 dB). "
+            "The result is that dense, in-your-face, everything-audible sound, and it works best after the distortion. It "
+            "is off by default; turn the output down with Out Gain when it is on. The OTT type in the effect slots is "
+            "still there for one-band use."),
+          table([["Control", "What it does"],
+                 ["OTT", "On / off."],
+                 ["Depth", "Dry / wet: how much of the OTT sound you hear (100% = all of it). Lower it for parallel squash."],
+                 ["Time", "Attack and release together: 100% = 13.5 ms / 132 ms (the original's); lower = faster and grittier."],
+                 ["Upward / Downward", "How much of the lift (quiet parts brought up) and of the squash (loud parts brought "
+                  "down). Upward at 0 = only downward compression."],
+                 ["In Gain / Out Gain", "Level into OTT (more in = more squash) and out of it, -24 to +24 dB."],
+                 ["Low / Mid / High", "Each band's level after compression, -24 to +24 dB."]], [36, 134]),
+          P("On the computer the display shows each band as on the original: H, M and L rows; the bar is the band's level "
+            "going in, the left mark is where lifting starts and the right mark where squashing starts, and the number is "
+            "what OTT is doing to that band right now. On the MPC it is the <b>OTT</b> page (FX key), without the meters.")]
     s += H2("The effects library: Insert 1, Insert 2, FX 1, FX 2")
     s += [P("Four more effect slots, laid out like Massive's: <b>Insert 1</b> and <b>Insert 2</b> run before the rack above, "
             "<b>FX 1</b> and <b>FX 2</b> after it. Each slot picks any effect from the library below and has <b>Mix</b> plus six "

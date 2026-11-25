@@ -5,7 +5,8 @@
 
 namespace helix {
 
-constexpr int kMpcReserveEnd = 448;              // core params live in [0, kNumParams); fillers up to here
+constexpr int kMpcReserveEnd = 576;              // core params live in [0, kNumParams); fillers up to here
+                                                 // (448 until 0.4.9; MPC-only params are saved by id, so moving them is safe)
 static_assert(kNumParams <= kMpcReserveEnd, "the core parameter list outgrew the MPC reserve");
 
 enum MpcParam : int
