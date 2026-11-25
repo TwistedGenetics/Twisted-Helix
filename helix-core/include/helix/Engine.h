@@ -9,6 +9,7 @@
 #pragma once
 #include "helix/Config.h"
 #include "helix/Effects.h"
+#include "helix/FxLibrary.h"
 #include "helix/Midi.h"
 #include "helix/ModSystem.h"
 #include "helix/Params.h"
@@ -103,6 +104,7 @@ private:
     EngineContext ctx_;
     Voice voices_[kMaxVoices];
     FxChain fx_;
+    fxlib::Slot lib_[fxlib::kNumSlots];   // Insert 1, Insert 2 (before fx_), FX 1, FX 2 (after)
     float fxp_[kNumParams];
     std::atomic<bool> heavyFx_{false};
     uint32_t ageCounter_ = 0;

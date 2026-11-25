@@ -21,6 +21,7 @@ public:
     // Called by the editor ~30 times a second: modulation range ring and live value.
     void refresh();
     int param() const { return index_; }
+    void setLabel(const juce::String& l) { if (l != label_) { label_ = l; repaint(); } }
 
     bool isInterestedInDragSource(const SourceDetails&) override;
     void itemDragEnter(const SourceDetails&) override { dropHover_ = true; repaint(); }

@@ -78,7 +78,9 @@ private:
         float levels[16] = {-9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9};
     };
     PerfEdit perfEdit_[2];
-    int filterProxy_[2][2] = {{-1, -1}, {-1, -1}};   // last shown list value, last core value
+    int filterProxy_[2][2] = {{-1, -1}, {-1, -1}};
+    struct LibSlot { int type = -1; float knobs[7] = {}; };   // Mix + A..F as last seen
+    LibSlot libSlot_[4];   // last shown list value, last core value
     int cpuCounter_ = 0;
 
     std::atomic<bool> quit_{false};

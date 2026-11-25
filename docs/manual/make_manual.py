@@ -936,6 +936,43 @@ def chapter_fx():
                   "Down set each direction. It is the most CPU-hungry effect (the CPU readout says OTT when it is on)."],
                  ["EQ", "Low Freq / Gain, Mid Freq / Gain / Q, High Freq / Gain", "Low shelf, bell and high shelf, ±18 dB."]],
                 [24, 48, 98])]
+    s += H2("The effects library: Insert 1, Insert 2, FX 1, FX 2")
+    s += [P("Four more effect slots, laid out like Massive's: <b>Insert 1</b> and <b>Insert 2</b> run before the rack above, "
+            "<b>FX 1</b> and <b>FX 2</b> after it. Each slot picks any effect from the library below and has <b>Mix</b> plus six "
+            "knobs, <b>A</b> to <b>F</b>, whose names change with the effect (an unused knob shows -). When you pick an "
+            "effect, its knobs and Mix go to that effect's own starting values. For delays and reverbs Mix adds the "
+            "effect to the dry sound; for the others it blends from dry to fully processed. Every knob and Mix can be "
+            "modulated from the matrix."),
+          P("On the computer the slots are under the rack on the FX tab. On the MPC they are the <b>INSERTS</b> and "
+            "<b>FX 1-2</b> pages (FX key): turn <b>Effect</b> to choose, and the knob names follow it. (To make room, the "
+            "PERF key's two STEP pages went: the step bars on the DRAW pages and their Step Level knob do the same job.)"),
+          P("The library brings together the effects from Twisted Genetics' other projects, each copy only once. "
+            "Presets made before 0.3.5 have every slot Off, so they sound the same; their rack effects stay where they were."),
+          table([["Group", "Effects", "From"],
+                 ["Delay", "<b>Ping-Pong</b> (dark half-rate dub echo), <b>Tape Echo</b> (wow, flutter, wear), <b>BBD Echo</b> "
+                  "(bucket brigade), <b>Dub Delay</b> (filtered, driven, runs away past 100%)", "DREADNOUGHT, Mega Synth"],
+                 ["Reverb", "<b>Spring</b>, <b>Tomb Room</b>, <b>Mod Hall</b>, <b>Celestial</b> (octave-up shimmer), "
+                  "<b>Dolmen</b> (small, still), <b>Tumulus</b> (long, dark), <b>Plate</b>, <b>Gated Verb</b>, "
+                  "<b>Vastness</b> (eight huge modes), <b>Super-Massive</b> (the Horizon network: ten modes from room to "
+                  "self-oscillating dub echo), <b>Quadraverb</b> (1989 multi-effect chains, 16-bit grit)",
+                  "DREADNOUGHT, Mega Synth, Super-Massive"],
+                 ["Chorus", "<b>Ensemble</b> (string machine), <b>BBD Chorus</b>, <b>Multi-Chorus</b> (2-8 voices), "
+                  "<b>Dimension</b> (four modes), <b>Widener</b> (micro-pitch), <b>Flanger</b>", "Mega Synth"],
+                 ["Phaser", "<b>Script Phase</b>, <b>Colour Phase</b>, <b>Dual Phaser</b>, <b>Barber-pole</b> (endless "
+                  "rise or fall), <b>Vibe</b>", "Mega Synth"],
+                 ["Character", "<b>Filter</b> (with its own LFO), <b>Ring Mod</b>, <b>Drive</b> (five types)", "DREADNOUGHT"],
+                 ["Sampler", "<b>SP-1200</b>, <b>MPC60</b>, <b>S950</b>, <b>S1000</b>, <b>Amiga</b>: each machine's rate, "
+                  "bits, converter and output filter. Rate pitches the clock down; Bits Native = the machine's own.",
+                  "EraCrush"],
+                 ["Rhythm / utility", "<b>Beat Repeat</b> (random repeats by Chance), <b>Volume Shaper</b> (pump, gate, "
+                  "1/8, triplet, locked to the tempo), <b>Stereo Tools</b> (bass mono, width, Haas)", "Mega Synth"]],
+                [22, 110, 38]),
+          P("Left out as duplicates: DREADNOUGHT's phaser, chorus and crusher (the Mega Synth phasers and choruses and "
+            "EraCrush cover them), Mega Synth's spring (DREADNOUGHT's), vintage sampler (EraCrush) and multiband (HELIX's "
+            "OTT). The IR reverb is not included: it needs impulse files and a convolution engine too heavy for the MPC."),
+          P("CPU: an Off slot costs nothing. Most effects use a few percent of the MPC's CPU; the big reverbs (Plate, Gated "
+            "Verb, Vastness, Super-Massive) and Dub Delay use the most. The library's delays and reverbs were tuned at "
+            "44.1 kHz, the MPC's rate; at 48 kHz their times run about 8% shorter.")]
     return s
 
 

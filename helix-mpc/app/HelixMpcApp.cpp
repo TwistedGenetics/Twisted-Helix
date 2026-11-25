@@ -1,4 +1,5 @@
 #include "HelixMpcApp.h"
+#include "helix/FxLibrary.h"
 #include "helix/ModSystem.h"
 #include "helix/WavetableGen.h"
 #include "helix/WavetableImport.h"
@@ -76,6 +77,14 @@ static ParamDef extraDefs[kMpcNumParams - kMpcReserveEnd] = {
     {"mpc_p2_level", "P2 Level", ParamKind::Linear, -1, 1, 1, "", nullptr, false},
     {"mpc_f1_filter", "F1 Filter", ParamKind::Choice, 0, 114, 0, "", &gCombinedFilters, false},
     {"mpc_f2_filter", "F2 Filter", ParamKind::Choice, 0, 114, 0, "", &gCombinedFilters, false},
+#define LIBN(s, S) {"mpc_" s "_na", S " Name A", ParamKind::Linear, 0, 1, 0, "", nullptr, false}, \
+                   {"mpc_" s "_nb", S " Name B", ParamKind::Linear, 0, 1, 0, "", nullptr, false}, \
+                   {"mpc_" s "_nc", S " Name C", ParamKind::Linear, 0, 1, 0, "", nullptr, false}, \
+                   {"mpc_" s "_nd", S " Name D", ParamKind::Linear, 0, 1, 0, "", nullptr, false}, \
+                   {"mpc_" s "_ne", S " Name E", ParamKind::Linear, 0, 1, 0, "", nullptr, false}, \
+                   {"mpc_" s "_nf", S " Name F", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
+    LIBN("i1", "Insert 1") LIBN("i2", "Insert 2") LIBN("x1", "FX 1") LIBN("x2", "FX 2")
+#undef LIBN
 };
 static_assert(sizeof(extraDefs) / sizeof(extraDefs[0]) == kMpcNumParams - kMpcReserveEnd, "extraDefs out of step");
 
@@ -197,6 +206,37 @@ bool HelixMpcApp::formatValue(int index, float plain, std::string& out) const
         }
         case MP_LOAD: case MP_MUTATE: case MP_S2T_GO: out = plain >= 0.5f ? "..." : "Press"; return true;
         default: break;
+    }
+    // Effects library: knob names (read-only proxies) and knob values, both following the slot's effect
+    auto slotOf = [](int idx, int& s, int& k) {
+        for (s = 0; s < fxlib::kNumSlots; ++s)
+        {
+            const int b = P_I1_TYPE + s * (P_I2_TYPE - P_I1_TYPE);
+            if (idx >= b + 2 && idx < b + 2 + fxlib::kNumKnobs) { k = idx - b - 2; return b; }
+        }
+        return -1;
+    };
+    if (index >= MP_LIBNAME && index < MP_LIBNAME + fxlib::kNumSlots * fxlib::kNumKnobs)
+    {
+        const int s = (index - MP_LIBNAME) / fxlib::kNumKnobs, k = (index - MP_LIBNAME) % fxlib::kNumKnobs;
+        const int b = P_I1_TYPE + s * (P_I2_TYPE - P_I1_TYPE);
+        float kn[fxlib::kNumKnobs];
+        for (int i = 0; i < fxlib::kNumKnobs; ++i) kn[i] = engine_.params().get(b + 2 + i);
+        out = fxlib::knobName(engine_.params().getInt(b), k, kn);
+        if (out.empty()) out = "-";
+        return true;
+    }
+    {
+        int s = 0, k = 0;
+        const int b = slotOf(index, s, k);
+        if (b >= 0)
+        {
+            float kn[fxlib::kNumKnobs];
+            for (int i = 0; i < fxlib::kNumKnobs; ++i) kn[i] = engine_.params().get(b + 2 + i);
+            out = fxlib::knobText(engine_.params().getInt(b), k, plain, kn);
+            if (out.empty()) out = "-";
+            return true;
+        }
     }
     // Continuous core parameters: the compact text the desktop plugin shows ("500 ms", "1.20 s", "12.0 kHz",
     // "80%") instead of the SDK default ("500.0 ms", "12000.0 Hz", "0.80"), so values fit the skin's large type.
@@ -393,6 +433,38 @@ void HelixMpcApp::tick()
         }
         lastProxy = (int)getParam(proxy);
         lastCore = combinedFilterIndex((int)getParam(pModel), (int)getParam(pType), (int)getParam(pKind));
+    }
+
+    // Effects library: a new effect in a slot gets its own defaults (unless the knobs moved with it: a preset), and
+    // the knob names redraw.
+    for (int sl = 0; sl < fxlib::kNumSlots; ++sl)
+    {
+        const int b = P_I1_TYPE + sl * (P_I2_TYPE - P_I1_TYPE);
+        const int type = (int)getParam(b);
+        LibSlot& ls = libSlot_[sl];
+        float kn[fxlib::kNumKnobs + 1];
+        for (int i = 0; i <= fxlib::kNumKnobs; ++i) kn[i] = getParam(b + 1 + i);
+        if (ls.type >= 0 && type != ls.type)
+        {
+            bool knobsMoved = false;
+            for (int i = 0; i <= fxlib::kNumKnobs; ++i) knobsMoved |= kn[i] != ls.knobs[i];
+            if (!knobsMoved)
+            {
+                auto write = [&](int p, float v) { setParam(p, v); platform_.notifyParameter(p, v); };
+                write(b + 1, fxlib::mixDefault(type));
+                for (int i = 0; i < fxlib::kNumKnobs; ++i) write(b + 2 + i, fxlib::knobDefault(type, i));
+            }
+        }
+        if (type != ls.type)
+            for (int i = 0; i < fxlib::kNumKnobs; ++i)
+            {
+                const int px = MP_LIBNAME + sl * fxlib::kNumKnobs + i;
+                const float v = getParam(px) >= 0.5f ? 0.0f : 1.0f;   // a new value, so the name label redraws
+                setParam(px, v);
+                platform_.notifyParameter(px, v);
+            }
+        ls.type = type;
+        for (int i = 0; i <= fxlib::kNumKnobs; ++i) ls.knobs[i] = getParam(b + 1 + i);
     }
 
     // Triggers (momentary parameters).

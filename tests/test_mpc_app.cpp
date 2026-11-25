@@ -3,6 +3,7 @@
 #include "TestUtil.h"
 #include "Analysis.h"
 #include "HelixMpcApp.h"
+#include "helix/FxLibrary.h"
 #include "helix/WavIO.h"
 #include "helix/WavetableGen.h"
 #include <filesystem>
@@ -171,6 +172,22 @@ int main()
     app.setParam(MP_F1_FILTER, (float)combinedFilterIndex(10, 0, 1));   // MS-20 HP
     app.tick();
     CHECK(app.engine().params().getInt(P_F1_MODEL) == 10 && app.engine().params().getInt(P_F1_KIND) == 1, "Mega model not written");
+
+    // Effects library on the MPC: picking an effect gives its defaults, the knob names / values follow it.
+    app.tick();
+    app.setParam(P_X1_TYPE, 11.0f);   // Plate
+    app.tick();
+    CHECK(std::fabs(app.getParam(P_X1_A) - fxlib::knobDefault(11, 0)) < 1e-6f && std::fabs(app.getParam(P_X1_MIX) - fxlib::mixDefault(11)) < 1e-6f,
+          "plate defaults not applied (A %.3f)", (double)app.getParam(P_X1_A));
+    std::string txt;
+    CHECK(app.formatValue(MP_LIBNAME + 2 * fxlib::kNumKnobs + 0, 0.0f, txt) && txt == "Decay", "FX 1 knob A name: %s", txt.c_str());
+    CHECK(app.formatValue(P_X1_A, app.getParam(P_X1_A), txt) && txt.find("s") != std::string::npos, "FX 1 A value: %s", txt.c_str());
+    CHECK(app.formatValue(MP_LIBNAME + 2 * fxlib::kNumKnobs + 5, 0.0f, txt) && txt == "-", "unused knob F name: %s", txt.c_str());
+    // a preset-style change (type and knobs together) keeps its knobs
+    app.setParam(P_X1_TYPE, 2.0f);
+    app.setParam(P_X1_A, 0.123f);
+    app.tick();
+    CHECK(std::fabs(app.getParam(P_X1_A) - 0.123f) < 1e-6f, "preset knob overwritten (%.3f)", (double)app.getParam(P_X1_A));
 
     { std::error_code ec; fs::remove_all(pf.dir, ec); }
     TEST_MAIN_END();

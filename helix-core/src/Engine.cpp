@@ -33,6 +33,7 @@ void Engine::prepare(double sampleRate, int maxBlockSize)
     ctx_.sampleRate = (float)sampleRate;
     for (Voice& v : voices_) v.prepare((float)sampleRate);
     fx_.prepare((float)sampleRate);
+    for (auto& sl : lib_) sl.prepare(sampleRate, kCtrlBlock);
     reset();
 }
 
@@ -40,6 +41,7 @@ void Engine::reset()
 {
     for (Voice& v : voices_) v.kill();
     fx_.reset();
+    for (auto& sl : lib_) sl.reset();
     pitchBend_ = modWheel_ = chanPressure_ = 0.0f;
     sustain_ = false;
     noteStackSize_ = 0;
@@ -273,7 +275,19 @@ void Engine::runFx(float* l, float* r, int n)
             const int pi = newest->modOffset(k).param;
             if (pi >= P_FX_ORDER1) fxp_[pi] = newest->modulatedParams()[pi];
         }
+    // Effects library: Insert 1, Insert 2, then HELIX's FX rack, then FX 1, FX 2
+    fxlib::Context lc;
+    lc.bpm = ctx_.bpm;
+    lc.beat = ctx_.songBeats;
+    auto runSlot = [&](int s) {
+        const int b = P_I1_TYPE + s * (P_I2_TYPE - P_I1_TYPE);
+        lib_[s].process(l, r, n, (int)fxp_[b], fxp_[b + 1], fxp_ + b + 2, lc);
+    };
+    runSlot(0);
+    runSlot(1);
     fx_.process(l, r, n, fxp_, ctx_.bpm, ctx_.oversample);
+    runSlot(2);
+    runSlot(3);
     heavyFx_.store(fx_.heavyActive(), std::memory_order_relaxed);
 }
 

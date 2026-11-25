@@ -38,7 +38,7 @@ public:
         i.name = "HELIX";
         i.vendor = "Twisted Genetics";
         i.uniqueId = MPC_FOURCC('T', 'g', 'H', 'x');   // == "uid" in plugin.json
-        i.version = 3004;
+        i.version = 3005;
         i.isInstrument = true;
         i.numInputs = 0;
         i.numOutputs = 2;

@@ -27,7 +27,10 @@ enum MpcParam : int
     // 0.3.4 one list per filter for the FILTER page screen: the 13 HELIX types, then every Mega model x type.
     // Mirrors F Model / F Type / F Filter Type (the worker keeps both sides in step).
     MP_F1_FILTER, MP_F2_FILTER,
-    kMpcParamEnd
+    // 0.3.5 the effects library slots' knob names (read-only: their text is the name of knob A-F for the slot's
+    // effect; the app flips the value when the effect changes so the screen redraws). Slot s, knob k: MP_LIBNAME + 6s + k
+    MP_LIBNAME,
+    kMpcParamEnd = MP_LIBNAME + 24
 };
 constexpr int kMpcNumParams = kMpcParamEnd;
 constexpr int kNumPresetBanks = 8;

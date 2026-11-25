@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "helix/FxLibrary.h"
 #include "PluginEditor.h"
 #include "helix/WavetableGen.h"
 #include <chrono>
@@ -63,6 +64,18 @@ HelixProcessor::HelixProcessor()
             const auto name = library_.nameAt((int)plain);
             return name.empty() ? juce::String((int)plain) : juce::String(name);
         };
+    // Effects library knobs: the text follows the slot's effect ("2.40 s", "1/8 Dotted", "On")
+    for (int sl = 0; sl < helix::fxlib::kNumSlots; ++sl)
+        for (int k = 0; k < helix::fxlib::kNumKnobs; ++k)
+        {
+            const int b = helix::P_I1_TYPE + sl * (helix::P_I2_TYPE - helix::P_I1_TYPE);
+            params_[(size_t)(b + 2 + k)]->formatter = [this, b, k](float plain) {
+                float kn[helix::fxlib::kNumKnobs];
+                for (int i = 0; i < helix::fxlib::kNumKnobs; ++i) kn[i] = engine_.params().get(b + 2 + i);
+                const auto t = helix::fxlib::knobText(engine_.params().getInt(b), k, plain, kn);
+                return t.empty() ? juce::String("-") : juce::String(t);
+            };
+        }
     library_.setRoots({userWavetableFolder().getFullPathName().toStdString()});
     library_.rescan();
     juce::PropertiesFile::Options opts;

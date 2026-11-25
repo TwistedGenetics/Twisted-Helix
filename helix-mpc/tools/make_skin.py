@@ -571,8 +571,9 @@ def background(page):
     return im
 
 # ---------------------------------------------------------------- page description
-def K(param, name, bi=False, menu=False, vis=None, w=250):
-    return {"type": "knob", "param": param, "name": name, "bi": bi, "menu": menu, "vis": vis, "w": w}
+def K(param, name, bi=False, menu=False, vis=None, w=250, dyn=None):
+    """dyn: a read-only parameter whose value text is the knob's name (effects library: the name follows the effect)"""
+    return {"type": "knob", "param": param, "name": name, "bi": bi, "menu": menu, "vis": vis, "w": w, "dyn": dyn}
 def KS(param, name, bi=False):
     return {"type": "knobS", "param": param, "name": name, "bi": bi, "menu": False, "vis": None}
 def SCR(param, kind, w=220, overlay="menu", pos=None, vis=None):
@@ -715,6 +716,13 @@ def pages():
         S("EQ", [K("Low Freq", "Low Freq"), K("Low Gain", "Low Gain", bi=True), K("High Freq", "High Freq"),
                  K("High Gain", "High Gain", bi=True)], toggle="EQ"),
         S("EQ MID", [K("Mid Freq", "Mid Freq"), K("Mid Gain", "Mid Gain", bi=True), K("Mid Q", "Mid Q")])])
+    # Effects library slots: Insert 1 / 2 before the rack, FX 1 / 2 after it. The knob names follow the effect.
+    def lib(slot, title):
+        return [S(title, [K(slot + " Type", "Effect", w=309), K(slot + " Mix", "Mix"),
+                          K(slot + " A", "A", dyn=slot + " Name A"), K(slot + " B", "B", dyn=slot + " Name B")]),
+                S(title + "\nMORE", [K(slot + " " + k, k, dyn=slot + " Name " + k) for k in "CDEF"])]
+    page(4, 5, "INSERTS", lib("Insert 1", "INSERT 1") + lib("Insert 2", "INSERT 2"))
+    page(4, 6, "FX 1-2", lib("FX 1", "FX 1") + lib("FX 2", "FX 2"))
     FXS = ["Dist", "Chorus", "Phaser", "Delay", "Reverb", "OTT", "EQ"]
     page(4, 4, "FX ORDER", [S("FX ORDER\n%s" % ("%d-%d" % (i, i + 1) if i < 7 else "7"),
                               [PICK("FX Slot %d" % j, "Slot\n%d" % j, cols=4, labels=FXS, where="left", cap_w=70)
@@ -739,17 +747,15 @@ def pages():
                                      SEG("P2 Mode", "Mode", ["Retrig", "Free", "1-shot"])])])
     sub = 1
     for p_ in (1, 2):
-        page(6, sub, "P%d STEP" % p_, [S("P%d\n%d-%d" % (p_, r * 4 + 1, r * 4 + 4),
-                                         [K("P%d Step %d" % (p_, i), "Step %d" % i, bi=True)
-                                          for i in range(r * 4 + 1, r * 4 + 5)]) for r in range(4)])
-        # Massive-style: choose a step, then its curve from the library and its level
-        page(6, sub + 1, "P%d DRAW" % p_,
+        # Massive-style: draw the step levels, choose a step, then its curve from the library
+        # (0.3.5: the P STEP pages of 16 knobs went: the bars here are the levels, Step Level the chosen step's)
+        page(6, sub, "P%d DRAW" % p_,
              [S("P%d\n1-8" % p_, [BAR("P%d Step %d" % (p_, i), "P%d Shape %d" % (p_, i), i) for i in range(1, 9)]),
               S("P%d\n9-16" % p_, [BAR("P%d Step %d" % (p_, i), "P%d Shape %d" % (p_, i), i) for i in range(9, 17)]),
               S("CURVE", [PICK("P%d Curve" % p_, None, cols=12, icons=True, bw=86)]),
               S("STEP", [K("P%d Level" % p_, "Step Level", bi=True), K("P%d Step" % p_, "Step Rate"),
                          K("P%d Length" % p_, "Length")])])
-        sub += 2
+        sub += 1
 
     # ---- MACROS
     page(7, 0, "MACROS", [S("MACROS\n1-4", [K("Macro %d" % i, "Macro %d" % i) for i in range(1, 5)]),
@@ -1107,7 +1113,11 @@ class Builder:
             size = KNOB if t == "knob" else KNOB_S
             comp = self.knob_def(size, w, c["bi"])
             inval = self.vis(c)
-            out.append(self.name_label(c["name"], c["param"], x + size + 12, y + 26, w - size - 12, inval))
+            if c.get("dyn"):
+                out.append(entry("caption", "Label", label("Value", 24, "SemiBold", MUTED, handle="Data"),
+                                 bounds((x + size + 12, y + 26, w - size - 12, 32)), remap=[("Data", self.h(c["dyn"]))]))
+            else:
+                out.append(self.name_label(c["name"], c["param"], x + size + 12, y + 26, w - size - 12, inval))
             out.append(entry(c["param"], comp, o(("version", 1), ("handleName", "Data")),
                              bounds((x, y, w, h), focus="Yes", invalid="Hide", inval=inval), remap=[("Data", self.h(c["param"]))]))
             if inval:

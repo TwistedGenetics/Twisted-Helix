@@ -1,4 +1,5 @@
 #include "PluginEditor.h"
+#include "helix/FxLibrary.h"
 #include "helix/ModSystem.h"
 
 using namespace helix;
@@ -592,6 +593,24 @@ public:
         info_ = own(std::make_unique<juce::Label>());
         info_->setJustificationType(juce::Justification::topLeft);
         info_->setFont(ui::font(13.0f));
+        // Effects library: Insert 1 / 2 before the rack, FX 1 / 2 after it
+        lib_ = own(std::make_unique<PanelFrame>("Effects library   (Insert 1, Insert 2 > rack above > FX 1, FX 2)"));
+        static const char* slotNames[fxlib::kNumSlots] = {"INSERT 1", "INSERT 2", "FX 1", "FX 2"};
+        for (int sl = 0; sl < fxlib::kNumSlots; ++sl)
+        {
+            const int b = P_I1_TYPE + sl * (P_I2_TYPE - P_I1_TYPE);
+            LibRow lr;
+            lr.base = b;
+            lr.title = std::make_unique<juce::Label>(juce::String(), slotNames[sl]);
+            lr.title->setFont(ui::font(12.0f, true));
+            lib_->addAndMakeVisible(*lr.title);
+            lr.type = combo(b, lib_);
+            lr.mix = knob(b + 1, lib_, "Mix", ParamKnob::Size::Small);
+            for (int k = 0; k < fxlib::kNumKnobs; ++k) lr.knobs.push_back(knob(b + 2 + k, lib_, "-", ParamKnob::Size::Small));
+            lr.lastType = proc.engine().params().getInt(b);
+            for (int i = 0; i <= fxlib::kNumKnobs; ++i) lr.lastKnobs[i] = proc.engine().params().get(b + 1 + i);
+            libRows_.push_back(std::move(lr));
+        }
         select(0);
     }
 
@@ -620,7 +639,19 @@ public:
             const int w = juce::jmin(120, r.getWidth() / juce::jmax(1, n));
             for (int k = 0; k < n; ++k) d.knobs[(size_t)k]->setBounds(r.getX() + k * w, r.getY() + 20, w, 130);
         }
-        info_->setBounds(316, 310, 860, 380);
+        info_->setBounds(316, 306, 860, 44);
+        lib_->setBounds(308, 352, 876, 356);
+        auto lc = lib_->content().withTrimmedTop(2);
+        for (auto& lr : libRows_)
+        {
+            auto row = lc.removeFromTop(lc.getHeight() / (int)(&libRows_.back() - &lr + 1));
+            lr.title->setBounds(row.removeFromLeft(70));
+            lr.type->setBounds(row.removeFromLeft(150).withSizeKeepingCentre(146, 26));
+            row.removeFromLeft(6);
+            const int w = row.getWidth() / (1 + fxlib::kNumKnobs);
+            lr.mix->setBounds(row.removeFromLeft(w));
+            for (auto* k : lr.knobs) k->setBounds(row.removeFromLeft(w));
+        }
     }
 
     void tick() override
@@ -636,6 +667,35 @@ public:
             r.name->setToggleState(t == selected_, juce::dontSendNotification);
             r.power->setToggleState(proc.engine().params().getBool(d.on), juce::dontSendNotification);
             r.power->setVisible(true);
+        }
+        for (auto& lr : libRows_)
+        {
+            const auto& pr = proc.engine().params();
+            const int type = pr.getInt(lr.base);
+            // A new effect chosen in a slot starts from its own defaults (not when the knobs changed with it: a preset)
+            if (type != lr.lastType)
+            {
+                bool moved = false;
+                for (int i = 0; i <= fxlib::kNumKnobs; ++i) moved |= pr.get(lr.base + 1 + i) != lr.lastKnobs[i];
+                if (!moved)
+                {
+                    proc.setParamFromUI(lr.base + 1, fxlib::mixDefault(type));
+                    for (int k = 0; k < fxlib::kNumKnobs; ++k) proc.setParamFromUI(lr.base + 2 + k, fxlib::knobDefault(type, k));
+                }
+            }
+            for (int i = 0; i <= fxlib::kNumKnobs; ++i) lr.lastKnobs[i] = pr.get(lr.base + 1 + i);
+            float kn[fxlib::kNumKnobs];
+            for (int i = 0; i < fxlib::kNumKnobs; ++i) kn[i] = pr.get(lr.base + 2 + i);
+            for (int k = 0; k < fxlib::kNumKnobs; ++k)
+            {
+                const auto nm = fxlib::knobName(type, k, kn);
+                lr.knobs[(size_t)k]->setLabel(nm.empty() ? juce::String("-") : juce::String(nm));
+                lr.knobs[(size_t)k]->setEnabled(!nm.empty());
+                lr.knobs[(size_t)k]->setAlpha(nm.empty() ? 0.35f : 1.0f);
+            }
+            lr.mix->setEnabled(type != 0);
+            lr.mix->setAlpha(type != 0 ? 1.0f : 0.35f);
+            lr.lastType = type;
         }
     }
 
@@ -677,11 +737,22 @@ private:
             "Three-band upward and downward compressor (split at 120 Hz and 2.5 kHz): the modern bass sound. "
             "The most CPU-hungry effect.",
             "Low shelf, bell and high shelf, +-18 dB."};
-        info_->setText(juce::String("Signal flows down the rack. Use ^ v to reorder, the lamp to switch an effect on.\n\n") + help[t],
+        info_->setText(juce::String("Signal flows down the rack. Use ^ v to reorder, the lamp to switch an effect on.  ") + help[t],
                        juce::dontSendNotification);
         info_->setColour(juce::Label::textColourId, theme().muted);
     }
 
+    struct LibRow
+    {
+        int base = 0, lastType = -1;
+        float lastKnobs[fxlib::kNumKnobs + 1] = {};
+        std::unique_ptr<juce::Label> title;
+        ParamCombo* type = nullptr;
+        ParamKnob* mix = nullptr;
+        std::vector<ParamKnob*> knobs;
+    };
+    PanelFrame* lib_ = nullptr;
+    std::vector<LibRow> libRows_;
     struct Row { std::unique_ptr<juce::ToggleButton> power; std::unique_ptr<juce::TextButton> name, up, down; };
     struct Detail { PanelFrame* panel; std::vector<ParamCombo*> combos; std::vector<ParamKnob*> knobs; ParamToggle* sync = nullptr; };
     PanelFrame* rack_;
