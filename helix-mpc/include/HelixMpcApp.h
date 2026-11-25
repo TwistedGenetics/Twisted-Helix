@@ -51,6 +51,9 @@ public:
     TableLibrary& library() { return library_; }
     // The presets saved in <content>/Presets (sorted by path), as the plugin lists them after the factory ones.
     static std::vector<Preset> userPresets(const std::string& contentDir);
+    // User slot s (0..15): Content/User Slots/Slot NN.json, and the preset in it (false if empty)
+    static std::string userSlotPath(const std::string& contentDir, int s);
+    static bool loadUserSlot(const std::string& contentDir, int s, Preset& out);
 
 private:
     void workerLoop();
@@ -58,6 +61,7 @@ private:
     void scanContentImpl();
     void applyPreset(const Preset& p);
     void startPrint();
+    void saveUserSlot(int s);
     void flipPrintStatus();
 
     IPlatform& platform_;
@@ -87,6 +91,12 @@ private:
     LibSlot libSlot_[4];   // last shown list value, last core value
     int cpuCounter_ = 0;
     int lastCharFam_ = -99;
+    std::string saveStatus_;
+public:
+    // Program index of user slot U1 (= factory + Presets/ files when the program list was built)
+    void setProgramBase(int b) { programBase_ = b; }
+private:
+    int programBase_ = 1 << 20;
     int lastSceneParam_ = -1, lastEngineScene_ = -1;
     std::atomic<bool> sceneResync_{false};
     float lastMacro_[kNumMacros] = {-9, -9, -9, -9, -9, -9, -9, -9};

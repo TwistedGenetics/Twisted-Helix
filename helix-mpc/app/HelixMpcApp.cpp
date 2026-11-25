@@ -26,6 +26,8 @@ static const std::vector<std::string> bank = {"1-16", "17-32", "33-48", "49-64",
 static const std::vector<std::string> scenes = {"Scene 1", "Scene 2", "Scene 3", "Scene 4", "Scene 5", "Scene 6", "Scene 7",
                                                  "Scene 8", "Scene 9", "Scene 10", "Scene 11", "Scene 12", "Scene 13",
                                                  "Scene 14", "Scene 15", "Scene 16"};
+static const std::vector<std::string> userSlots = {"U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8", "U9", "U10", "U11",
+                                                    "U12", "U13", "U14", "U15", "U16"};
 static const std::vector<std::string> steps = {"Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6", "Step 7", "Step 8",
                                                 "Step 9", "Step 10", "Step 11", "Step 12", "Step 13", "Step 14", "Step 15", "Step 16"};
 }
@@ -106,6 +108,8 @@ static ParamDef extraDefs[kMpcNumParams - kMpcReserveEnd] = {
     {"mpc_co_nf", "CO Name F", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
     {"mpc_scene", "Scene", ParamKind::Choice, 0, 15, 0, "", &mpcchoices::scenes, false},
     {"mpc_scene_store", "Store Scene", ParamKind::Bool, 0, 1, 0, "", nullptr, false},
+    {"mpc_save_slot", "Save Slot", ParamKind::Choice, 0, kNumUserSlots - 1, 0, "", &mpcchoices::userSlots, false},
+    {"mpc_save_go", "Save", ParamKind::Bool, 0, 1, 0, "", nullptr, false},
 };
 static_assert(sizeof(extraDefs) / sizeof(extraDefs[0]) == kMpcNumParams - kMpcReserveEnd, "extraDefs out of step");
 
@@ -232,6 +236,25 @@ std::vector<Preset> HelixMpcApp::userPresets(const std::string& contentDir)
     return list;
 }
 
+std::string HelixMpcApp::userSlotPath(const std::string& contentDir, int s)
+{
+    char buf[32];
+    std::snprintf(buf, sizeof buf, "Slot %02d.json", s + 1);
+    return (fs::path(contentDir) / "User Slots" / buf).string();
+}
+
+bool HelixMpcApp::loadUserSlot(const std::string& contentDir, int s, Preset& out)
+{
+    try
+    {
+        std::ifstream in(userSlotPath(contentDir, s));
+        if (!in) return false;
+        std::stringstream ss; ss << in.rdbuf();
+        return Preset::fromString(ss.str(), out);
+    }
+    catch (...) { return false; }
+}
+
 void HelixMpcApp::scanContentImpl()
 {
     std::vector<Preset> list(factoryPresets().begin(), factoryPresets().end());
@@ -293,6 +316,12 @@ bool HelixMpcApp::formatValue(int index, float plain, std::string& out) const
             return true;
         }
         case MP_LOAD: case MP_MUTATE: case MP_S2T_GO: case MP_SCENE_STORE: out = plain >= 0.5f ? "..." : "Press"; return true;
+        case MP_SAVE_GO:
+        {
+            std::lock_guard<std::mutex> lk(presetsMutex_);
+            out = plain >= 0.5f ? std::string("...") : (saveStatus_.empty() ? std::string("Press") : saveStatus_);
+            return true;
+        }
         case MP_PR_GO: out = plain >= 0.5f || printing_.load() ? "..." : "Press"; return true;
         case MP_PR_STATUS:
         {
@@ -405,15 +434,42 @@ void HelixMpcApp::onProgramSelected(int index)
     // Programs: the factory presets, then the user presets that were in Presets/ when HELIX loaded (same order as
     // the browser's list). Plain values were set by the host; tables and LFO shapes are not parameters, so the whole
     // preset is applied.
+    // After them come the 16 user slots (U1-U16): whatever was last saved into the slot, read now.
     if (index < 0) return;
     if (index < (int)factoryPresets().size()) { applyPreset(factoryPresets()[(size_t)index]); return; }
     Preset p;
     {
         std::lock_guard<std::mutex> lk(presetsMutex_);
-        if (index >= (int)presets_.size()) return;
-        p = presets_[(size_t)index];
+        if (index >= programBase_ + kNumUserSlots) return;
+        if (index >= programBase_)
+        {
+            if (!loadUserSlot(platform_.contentDir(), index - programBase_, p)) return;
+        }
+        else if (index < (int)presets_.size()) p = presets_[(size_t)index];
+        else return;
     }
     applyPreset(p);
+}
+
+// Save into user slot s: the whole sound (tables, LFO shapes, scenes) as Content/User Slots/Slot NN.json. Picking
+// U<s+1> in the MPC's preset menu loads it straight away; the menu shows the new name from the next time HELIX loads.
+void HelixMpcApp::saveUserSlot(int s)
+{
+    std::string status;
+    try
+    {
+        Preset p = capturePreset(engine_, &library_);
+        p.name = currentName_.empty() ? "User " + std::to_string(s + 1) : currentName_;
+        const std::string path = userSlotPath(platform_.contentDir(), s);
+        std::error_code ec;
+        fs::create_directories(fs::path(path).parent_path(), ec);
+        std::ofstream out(path, std::ios::trunc);
+        out << p.toString();
+        status = out.good() ? "Saved U" + std::to_string(s + 1) : "Can't write";
+    }
+    catch (...) { status = "Can't write"; }
+    { std::lock_guard<std::mutex> lk(presetsMutex_); saveStatus_ = status; }
+    platform_.notifyParameter(MP_SAVE_GO, 0.0f);
 }
 
 std::string HelixMpcApp::saveState() const
@@ -653,6 +709,7 @@ void HelixMpcApp::tick()
 
     if (trigger(MP_PR_GO) && !printing_.load()) startPrint();
     if (trigger(MP_SCENE_STORE)) engine_.storeScene((int)getParam(MP_SCENE));
+    if (trigger(MP_SAVE_GO)) saveUserSlot((int)getParam(MP_SAVE_SLOT));
     if (printDone_.exchange(false))
     {
         const int req = printLoad_.exchange(-1);

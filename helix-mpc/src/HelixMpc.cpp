@@ -39,7 +39,7 @@ public:
         i.name = "HELIX";
         i.vendor = "Twisted Genetics";
         i.uniqueId = MPC_FOURCC('T', 'g', 'H', 'x');   // == "uid" in plugin.json
-        i.version = 4006;
+        i.version = 4007;
         i.isInstrument = true;
         i.numInputs = 0;
         i.numOutputs = 2;
@@ -60,8 +60,7 @@ public:
             v[(size_t)MP_PRESET] = (float)k;
             addProgram(f[k].name.c_str(), v);
         }
-        // ... and the user's own (saved with HELIX's Save into its Presets folder): they show in the MPC's preset
-        // menu from the next time HELIX loads. (The MPC's own save button, top right, adds them at once.)
+        // ... HELIX preset files the user copied into Content/Presets (listed when HELIX loads) ...
         const auto user = HelixMpcApp::userPresets(mpc::contentFolder());
         for (size_t k = 0; k < user.size(); ++k)
         {
@@ -70,7 +69,21 @@ public:
             v[(size_t)MP_PRESET] = (float)(f.size() + k);
             addProgram(("* " + user[k].name).c_str(), v);
         }
+        // ... and the 16 user slots, saved on the BROWSE page (SAVE strip). A slot is read when it is picked, so
+        // a sound saved a moment ago loads at once; the name shows here from the next time HELIX loads.
+        const int base = (int)(f.size() + user.size());
+        for (int s = 0; s < kNumUserSlots; ++s)
+        {
+            Preset sp;
+            const bool has = HelixMpcApp::loadUserSlot(mpc::contentFolder(), s, sp);
+            std::vector<float> v((size_t)kMpcNumParams);
+            for (int i = 0; i < kMpcNumParams; ++i) v[(size_t)i] = has && i < kNumParams ? sp.params[i] : mpcParamDef(i).def;
+            v[(size_t)MP_PRESET] = 0.0f;
+            const std::string nm = "U" + std::to_string(s + 1) + " " + (has ? sp.name : std::string("(empty)"));
+            addProgram(nm.c_str(), v);
+        }
         app_ = std::make_unique<HelixMpcApp>(*this);
+        app_->setProgramBase(base);
         for (int i = 0; i < kMpcNumParams; ++i) app_->setParam(i, get(i));
         midi_.reserve(1024);
     }

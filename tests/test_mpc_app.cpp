@@ -239,6 +239,20 @@ int main()
     app.tick();
     CHECK(std::fabs(app.engine().scenes().v[12][2].load() - 0.33f) < 1e-6f, "store into the shown scene");
 
+    // User slots: Save writes the sound into U3; picking U3 in the preset menu loads it back
+    app.setProgramBase((int)factoryPresets().size());
+    app.setParam(P_F1_CUTOFF, 777.0f);
+    app.setParam(MP_SAVE_SLOT, 2.0f);
+    app.setParam(MP_SAVE_GO, 1.0f);
+    app.tick();
+    CHECK(fs::exists(HelixMpcApp::userSlotPath(pf.dir, 2)), "slot file missing");
+    CHECK(app.formatValue(MP_SAVE_GO, 0.0f, text) && text == "Saved U3", "save status '%s'", text.c_str());
+    app.setParam(P_F1_CUTOFF, 2000.0f);
+    app.onProgramSelected((int)factoryPresets().size() + 2);
+    CHECK(std::fabs(app.getParam(P_F1_CUTOFF) - 777.0f) < 0.5f, "slot did not load (%f)", app.getParam(P_F1_CUTOFF));
+    app.onProgramSelected((int)factoryPresets().size() + 5);   // empty slot: nothing happens
+    CHECK(std::fabs(app.getParam(P_F1_CUTOFF) - 777.0f) < 0.5f, "empty slot changed the sound");
+
     { std::error_code ec; fs::remove_all(pf.dir, ec); }
     TEST_MAIN_END();
 }

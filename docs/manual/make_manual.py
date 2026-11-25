@@ -1119,14 +1119,16 @@ def chapter_presets():
     s += [table([["", "On the computer", "On the MPC"],
                  ["Load", "Click the preset name at the top of the window, use &lt; and &gt;, or double-click a preset on "
                   "the GLOBAL tab.",
-                  "The MPC's preset menu at the top of the screen (factory presets, then yours: those saved with the MPC's "
-                  "save button, and HELIX presets in Content/Presets, marked *), or <b>Preset</b> + <b>Load</b> on the "
+                  "The MPC's preset menu at the top of the screen: the factory presets, then HELIX presets copied into "
+                  "Content/Presets (marked *), then the 16 user slots <b>U1-U16</b>. Or <b>Preset</b> + <b>Load</b> on the "
                   "BROWSE page."],
                  ["Save", "<b>Save</b> at the top of the window: name and category; saved in Documents/HELIX/Presets.",
-                  "To put a sound in the MPC's preset menu: tap the MPC's <b>save button</b> (the disk icon at the top right "
-                  "of the plugin screen), name it, and it is in the menu straight away (the MPC keeps it in its Plugin "
-                  "Presets folder). Presets copied into HELIX's Content/Presets folder (from the computer) are listed in "
-                  "the menu too, marked *, from the next time HELIX loads."],
+                  "On the BROWSE page, <b>SAVE TO MENU</b> strip: pick a slot U1-U16 and press <b>Save</b> (it shows "
+                  "\"Saved U3\"). Choosing that slot in the preset menu loads the sound at once, tables, LFO shapes and "
+                  "scenes included; the slot's entry shows the preset's name (\"U3 Drift Reese\") from the next time HELIX "
+                  "loads, until then it keeps its old label. Slots are files in Content/User Slots. The MPC's own save "
+                  "button (disk icon) also works, but it saves into the MPC's Plugin Presets folder, which the MPC's "
+                  "preset browser shows, not HELIX's preset menu."],
                  ["Init", "<b>Init</b> (top of the window) resets everything to the starting sound.", "Start from a factory preset, or remove "
                   "HELIX from the track and add it again."]], [18, 76, 76])]
     s += H2("Mutate")
