@@ -124,6 +124,7 @@ void Voice::computeModulation(const EngineContext& ctx, int n)
             const ParamDef& d = paramDef(b + 3);
             rate = d.toPlain(clamp(d.toNormalised(p[b + 3]) + lfoRateOffset_[l], 0.0f, 1.0f));
         }
+        rate *= lfoJumpFactor(p, l);
         const float freePhase = mode == LfoMode::Free ? wrap01(ctx.lfoFreePhase[l] + p[b + 7]) : -1.0f;
         if (fresh_) lfo_[l].reset(p[b + 7], (uint32_t)(age_ * 7919u + (uint32_t)l * 104729u + 1u));
         src[SRC_LFO1 + l] = lfo_[l].advance(n, sr_, rate, (LfoShape)(int)p[b], mode, p[b + 5], p[b + 6], freePhase, l,
@@ -134,10 +135,9 @@ void Voice::computeModulation(const EngineContext& ctx, int n)
     for (int k = 0; k < kNumPerformers; ++k)
     {
         const int b = k == 0 ? P_P1_DIV : P_P2_DIV;
-        const double stepBeats = syncDivBeats((int)p[b]);
         const int mode = (int)p[b + 2];
         const int len = clamp((int)p[b + 1], 1, kMaxSteps);
-        double pos = (mode == 1 ? ctx.songBeats : beatsSinceStart_) / stepBeats;
+        double pos = performerSteps(p, k, mode == 1 ? ctx.songBeats : beatsSinceStart_);
         if (mode == 2) pos = std::min(pos, (double)len - 1e-6);   // one-shot holds the last step
         src[SRC_PERF1 + k] = performerValue(p, k, pos);
     }

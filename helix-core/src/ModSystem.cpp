@@ -138,19 +138,60 @@ float perfCurve(int c, float t)
         case 21: return 1.0f - std::floor(t * 4.0f) / 3.0f;                     // Stairs Down
         case 22: return std::fabs(sinePi(3.0f * t)) * (1.0f - t);               // Bounce
         case 23: return 0.0f;                                                   // Off
+        case 24: case 25: case 26: case 27:                                     // Roll x2 / x3 / x4 / x8: repeated hits
+        {
+            static const float k[] = {2.0f, 3.0f, 4.0f, 8.0f};
+            const float u = 1.0f - fr(k[c - 24] * t);
+            return u * u;
+        }
         default: return 1.0f;
     }
+}
+
+// Swing: each pair of steps keeps its length, the first is stretched and the second squeezed (swing 1 = 75/25).
+static double swingPos(double pos, float swing)
+{
+    if (swing <= 0.0f) return pos;
+    const double sw = 0.5 * clamp(swing, 0.0f, 1.0f);
+    const double pair = std::floor(pos * 0.5), u = pos - 2.0 * pair;
+    return 2.0 * pair + (u < 1.0 + sw ? u / (1.0 + sw) : 1.0 + (u - 1.0 - sw) / (1.0 - sw));
+}
+
+double performerSteps(const float* p, int pi, double beats)
+{
+    const int base = pi == 0 ? P_P1_DIV : P_P2_DIV;
+    static const double feel[] = {1.0, 0.5, 2.0, 1.5};
+    const int f = clamp((int)p[pi == 0 ? P_P1_FEEL : P_P2_FEEL], 0, 3);
+    return beats / syncDivBeats((int)p[base]) * feel[f];
+}
+
+float lfoJumpFactor(const float* p, int l)
+{
+    const int j = (int)p[P_L1_JUMP + l];
+    if (j <= 0 || p[P_MACRO1 + clamp((int)p[P_LJ_MACRO], 0, 7)] < 0.5f) return 1.0f;
+    static const float f[] = {1.0f, 2.0f, 3.0f, 4.0f, 8.0f, 0.5f};
+    return f[clamp(j, 0, 5)];
 }
 
 float performerValue(const float* p, int pi, double pos)
 {
     const int base = pi == 0 ? P_P1_DIV : P_P2_DIV;
     const int len = clamp((int)p[base + 1], 1, kMaxSteps);
-    pos = std::fmod(std::max(pos, 0.0), (double)len);
+    pos = swingPos(std::max(pos, 0.0), p[pi == 0 ? P_P1_SWING : P_P2_SWING]);
+    const double cycle = std::floor(pos / (double)len);
+    pos -= cycle * (double)len;
     const int k = std::min(len - 1, (int)pos);
     const float t = (float)(pos - k);
     const float v = p[base + 3 + k];
-    const int c = (int)p[base + 19 + k];
+    int c = (int)p[base + 19 + k];
+    // Fill: on the last pass of every 2 or 4, the last quarter of the pattern rolls (x4)
+    const int fill = (int)p[pi == 0 ? P_P1_FILL : P_P2_FILL];
+    if (fill > 0)
+    {
+        const int every = fill == 1 ? 2 : 4;
+        const int from = len - std::max(1, len / 4);
+        if ((int)std::fmod(cycle, (double)every) == every - 1 && k >= from && c != 23) return v * perfCurve(26, t);
+    }
     if (c == 3)                                                                 // Smooth: glide to the next step
     {
         const float vNext = p[base + 3 + (k + 1) % len];
@@ -158,5 +199,4 @@ float performerValue(const float* p, int pi, double pos)
     }
     return v * perfCurve(c, t);
 }
-
 } // namespace helix

@@ -104,11 +104,11 @@ void Engine::snapshotParams(const Transport& tr, int n)
     {
         const int b = P_L1_SHAPE + l * (P_L2_SHAPE - P_L1_SHAPE);
         if (ctx_.p[b + 2] >= 0.5f)   // synced: lock to the song position
-            ctx_.lfoFreePhase[l] = (float)std::fmod(ownBeats_ / syncDivBeats((int)ctx_.p[b + 4]), 1.0);
+            ctx_.lfoFreePhase[l] = (float)std::fmod(ownBeats_ * lfoJumpFactor(ctx_.p, l) / syncDivBeats((int)ctx_.p[b + 4]), 1.0);
         else
         {
             ctx_.lfoFreePhase[l] = freePhase_[l];
-            freePhase_[l] = wrap01(freePhase_[l] + ctx_.p[b + 3] * (float)n / (float)sampleRate_);
+            freePhase_[l] = wrap01(freePhase_[l] + ctx_.p[b + 3] * lfoJumpFactor(ctx_.p, l) * (float)n / (float)sampleRate_);
         }
     }
     ownBeats_ += (double)n / sampleRate_ * ctx_.bpm / 60.0;

@@ -564,7 +564,7 @@ void drawPerfCurve(juce::Graphics& g, int curve, juce::Rectangle<float> r, juce:
 
 // ------------------------------------------------------------------------------------------- curve library
 
-static constexpr int kLibCols = 12;
+static constexpr int kLibCols = 14;
 
 juce::Rectangle<float> CurveLibrary::cell(int i) const
 {

@@ -344,6 +344,9 @@ public:
             p.div = pg.combo(b + 4, holder, "Division");
             p.syncParam = b + 2;
             p.row[1] = {pg.knob(b + 5, holder, "Rise"), pg.knob(b + 6, holder, "Smooth"), pg.knob(b + 7, holder, "Phase"), pg.knob(b + 8, holder, "Steps")};
+            p.extra = {pg.combo(P_L1_JUMP + l, holder, "Jump"), pg.combo(P_LJ_MACRO, holder, "Jump Macro")};
+            p.extra[0]->box().setTooltip("Rate Jump: while the Jump Macro is past half way this LFO runs this many times faster "
+                                         "(x1/2: half as fast), still locked to the tempo");
             pages_.push_back(p);
         }
         for (int q = 0; q < 2; ++q)
@@ -355,7 +358,9 @@ public:
             auto* pv = pg.own(std::make_unique<PerformerView>(pg.proc, q), holder);
             p.view = pv;
             p.combos = {pg.combo(b, holder, "Step"), pg.combo(b + 2, holder, "Mode")};
-            p.row[1] = {pg.knob(b + 1, holder, "Length")};
+            p.row[1] = {pg.knob(b + 1, holder, "Length"), pg.knob(q == 0 ? P_P1_SWING : P_P2_SWING, holder, "Swing")};
+            p.extra = {pg.combo(q == 0 ? P_P1_FEEL : P_P2_FEEL, holder, "Feel"), pg.combo(q == 0 ? P_P1_FILL : P_P2_FILL, holder, "Fill")};
+            p.extra[1]->box().setTooltip("Fill: on the last pass of every 2 or 4, the last quarter of the steps rolls (x4)");
             // Massive-style curve library: drag a curve onto a step, or pick one and click a step's lane
             p.lib = pg.own(std::make_unique<CurveLibrary>(), holder);
             p.lib->setTooltip("Curve library: drag a curve onto a step, or click one and then click the steps' lane "
@@ -438,17 +443,29 @@ public:
             }
             else layoutRow(r1, {p.row[0].size() > 0 ? p.row[0][0] : nullptr, p.row[0].size() > 1 ? p.row[0][1] : nullptr,
                                 p.row[0].size() > 2 ? p.row[0][2] : nullptr, p.row[0].size() > 3 ? p.row[0][3] : nullptr});
+            if (!p.extra.empty())
+            {
+                // a column of menus at the right (LFO) or beside the knobs (performers)
+                auto col = p.lib ? juce::Rectangle<int>() : r.removeFromRight(110);
+                if (p.lib)
+                {
+                    for (auto* k : p.row[1]) { k->setBounds(r.removeFromLeft(76)); }
+                    col = r.removeFromLeft(110);
+                    r.removeFromLeft(6);
+                }
+                const int h = col.getHeight() / (int)p.extra.size();
+                for (auto* cb : p.extra) cb->setBounds(col.removeFromTop(h).withSizeKeepingCentre(104, juce::jmin(h, 44)));
+            }
             if (p.lib)
             {
-                p.row[1][0]->setBounds(r.removeFromLeft(80));
-                r.removeFromLeft(6);
+                if (p.extra.empty()) { p.row[1][0]->setBounds(r.removeFromLeft(80)); r.removeFromLeft(6); }
                 p.lib->setBounds(r.reduced(0, 4));
                 continue;
             }
             const int n = (int)p.row[1].size();
             if (n)
             {
-                const int w = r.getWidth() / 4;
+                const int w = r.getWidth() / juce::jmax(4, n);
                 for (int k = 0; k < n; ++k) p.row[1][(size_t)k]->setBounds(r.getX() + k * w, r.getY(), w, r.getHeight());
             }
         }
@@ -479,6 +496,7 @@ private:
         ParamKnob* rate = nullptr;
         ParamCombo* div = nullptr;
         CurveLibrary* lib = nullptr;
+        std::vector<ParamCombo*> extra;   // menus beside the bottom row (LFO Jump, performer Feel / Fill)
         int syncParam = -1;
     };
     static constexpr int kMoPage = 10;

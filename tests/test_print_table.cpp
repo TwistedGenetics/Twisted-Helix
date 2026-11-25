@@ -69,8 +69,8 @@ int main()
     CHECK(frameDiff(raw, 0, 31) > 0.05, "sweep did not change the table");
 
     // 3. WAV round trip.
-    const auto dir = std::filesystem::temp_directory_path() / "helix_print_test";
-    std::filesystem::remove_all(dir);
+    const auto dir = std::filesystem::temp_directory_path() / "helix_print_test";   // (remove_all with an error code: 32-bit ARM under qemu)
+    { std::error_code ec; std::filesystem::remove_all(dir, ec); }
     const std::string path = nextPrintPath(dir.string());
     CHECK(!path.empty() && path.find("Print 001.wav") != std::string::npos, "path %s", path.c_str());
     CHECK(writePrintWav(path, raw), "write failed");
@@ -80,7 +80,7 @@ int main()
     double d = 0;
     for (int i = 0; i < kFrameSize; ++i) d = std::max(d, (double)std::fabs(back->fullFrame(31)[i] - tg->fullFrame(31)[i]));
     CHECK(d < 1e-3, "re-imported table differs (%g)", d);
-    std::filesystem::remove_all(dir);
+    { std::error_code ec; std::filesystem::remove_all(dir, ec); }
 
     // 4. Silence is refused; source map covers every source.
     Preset s = p;

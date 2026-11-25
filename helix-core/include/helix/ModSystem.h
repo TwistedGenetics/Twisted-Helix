@@ -58,10 +58,14 @@ private:
 
 // Performer value at position pos (in steps, 0..len): per-step level -1..1 times the step's curve.
 float performerValue(const float* p, int perfIndex, double posSteps);
+// Steps of performer `perfIndex` played after `beats` quarter notes (Step rate and Feel), before swing.
+double performerSteps(const float* p, int perfIndex, double beats);
+// LFO rate multiplier from Jump (1 when off or the Jump Macro is below half way).
+float lfoJumpFactor(const float* p, int lfo);
 
 // Massive-style curve library: one curve per step, drawn across the step (t 0..1) and scaled by the
 // step's level. Curve 3 (Smooth) glides to the next step's level instead. 0..5 are the original six.
-constexpr int kNumPerfCurves = 24;
+constexpr int kNumPerfCurves = 28;
 float perfCurve(int curve, float t);
 
 // Source value curve: c in -1..1 bends |v| (c > 0 = exponential, c < 0 = logarithmic), keeps the sign.

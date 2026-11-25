@@ -540,6 +540,8 @@ PERF_CURVES = {
     "Sine x2": lambda u: abs(math.sin(2 * math.pi * u)), "Pulse x2": lambda u: 1.0 if _fr(2 * u) < 0.5 else 0.0,
     "Stairs Up": lambda u: math.floor(u * 4) / 3, "Stairs Dn": lambda u: 1 - math.floor(u * 4) / 3,
     "Bounce": lambda u: abs(math.sin(3 * math.pi * u)) * (1 - u), "Off": lambda u: 0.0,
+    "Roll x2": lambda u: (1 - _fr(2 * u)) ** 2, "Roll x3": lambda u: (1 - _fr(3 * u)) ** 2,
+    "Roll x4": lambda u: (1 - _fr(4 * u)) ** 2, "Roll x8": lambda u: (1 - _fr(8 * u)) ** 2,
 }
 
 def icon_box(w, h, fill, name):
@@ -707,6 +709,10 @@ def pages():
     page(3, 0, "LFO", [lfo(n) for n in range(1, 5)])
     page(3, 1, "LFO+", [S("LFO %d" % n, [TG("L%d Sync" % n, "Tempo Sync", 170), K("L%d Rise" % n, "Rise"), K("L%d Smooth" % n, "Smooth"),
                                          K("L%d Phase" % n, "Phase")]) for n in range(1, 5)])
+    # Steps per LFO (Steps shape), and Jump: while the Jump Macro is past half way, each LFO runs at its Jump x rate
+    page(3, 2, "STEPS/JUMP", [S("LFO\nSTEPS", [K("L%d Steps" % n, "LFO %d" % n) for n in range(1, 5)]),
+                              S("RATE\nJUMP", [K("L%d Jump" % n, "LFO %d" % n) for n in range(1, 5)]),
+                              S("JUMP\nMACRO", [PICK("Jump Macro", None, cols=8, labels=["M%d" % i for i in range(1, 9)])])])
 
     # ---- FX
     # Effects library slots: Insert 1 / 2 before the rack, FX 1 / 2 after it. The knob names follow the effect.
@@ -732,11 +738,13 @@ def pages():
                                                                     for m in range(r * 4 + 1, r * 4 + 5)]) for r in range(4)])
 
     # ---- PERFORMERS
-    page(6, 0, "PERF", [S("LFO\nSTEPS", [K("L%d Steps" % n, "LFO %d" % n) for n in range(1, 5)]),
-                        S("PERF 1", [K("P1 Step", "Step Rate"), K("P1 Length", "Length"),
-                                     SEG("P1 Mode", "Mode", ["Retrig", "Free", "1-shot"])]),
-                        S("PERF 2", [K("P2 Step", "Step Rate"), K("P2 Length", "Length"),
-                                     SEG("P2 Mode", "Mode", ["Retrig", "Free", "1-shot"])])])
+    def perf(n):
+        q = "P%d " % n
+        return [S("PERF %d" % n, [K(q + "Step", "Step Rate", w=230), K(q + "Length", "Length", w=210),
+                                  SEG(q + "Mode", "Mode", ["Retrig", "Free", "1-shot"]), K(q + "Swing", "Swing", w=210)]),
+                S("P%d FEEL" % n, [SEG(q + "Feel", "Feel", ["Normal", "Half", "Double", "Triplet"]),
+                                   SEG(q + "Fill", "Fill (last quarter rolls)", ["Off", "Every 2", "Every 4"])])]
+    page(6, 0, "PERF", perf(1) + perf(2))
     sub = 1
     for p_ in (1, 2):
         # Massive-style: draw the step levels, choose a step, then its curve from the library
@@ -744,7 +752,7 @@ def pages():
         page(6, sub, "P%d DRAW" % p_,
              [S("P%d\n1-8" % p_, [BAR("P%d Step %d" % (p_, i), "P%d Shape %d" % (p_, i), i) for i in range(1, 9)]),
               S("P%d\n9-16" % p_, [BAR("P%d Step %d" % (p_, i), "P%d Shape %d" % (p_, i), i) for i in range(9, 17)]),
-              S("CURVE", [PICK("P%d Curve" % p_, None, cols=12, icons=True, bw=86)]),
+              S("CURVE", [PICK("P%d Curve" % p_, None, cols=14, icons=True, bw=74)]),
               S("STEP", [K("P%d Level" % p_, "Step Level", bi=True), K("P%d Step" % p_, "Step Rate"),
                          K("P%d Length" % p_, "Length")])])
         sub += 1

@@ -841,7 +841,13 @@ def chapter_lfo():
                  ["Rise", "Fades the LFO in over up to 5 seconds after each note starts (delayed vibrato)."],
                  ["Smooth", "Rounds off sharp edges (makes S&amp;H and Square softer)."],
                  ["Phase", "Start point of the cycle."],
-                 ["Steps", "Number of steps (1-16) used by the Steps shape."]], [36, 134]),
+                 ["Steps", "Number of steps (1-16) used by the Steps shape."],
+                 ["Jump", "Rate jump: while the <b>Jump Macro</b> (one for all four LFOs, Macro 4 by default) is past half "
+                  "way, the LFO runs x2, x3, x4 or x8 faster, or x1/2 as fast. Synced LFOs stay locked to the beat, so a "
+                  "1/4 wobble jumps straight to 1/16 on the grid: put Jump on the wobble LFO and ride the macro (or map it "
+                  "to a pad) for the classic jump-up wobble switch."]], [36, 134]),
+          P("On the MPC, Steps and Jump are on the <b>STEPS/JUMP</b> page (LFO key); on the computer, Jump and Jump Macro "
+            "are the menus at the right of each LFO page."),
           Spacer(1, 4),
           P("The breakpoint shapes and step values come with presets. On the computer they are saved with your presets and "
             "projects; on the MPC they are loaded with presets (there is no editor for them on the MPC screen).")]
@@ -855,11 +861,17 @@ def chapter_lfo():
                  ["Length", "Number of steps, 1-16."],
                  ["Mode", "Retrig (start with each note), Free (follow the song position) or One-shot (play once, hold the "
                   "last step)."],
+                 ["Swing", "Delays every second step: 0% is straight, 50% a light shuffle, 100% a hard 75/25 swing. "
+                  "Each pair of steps keeps its length, so the pattern stays on the bar."],
+                 ["Feel", "<b>Normal</b>; <b>Half-time</b> (half speed: a 1/16 pattern plays as 1/8, the half-time "
+                  "drop); <b>Double</b>; <b>Triplet</b> (1.5 x as fast)."],
+                 ["Fill", "On the last pass of every 2 or every 4 (with a one-bar pattern: the end of each 2- or 4-bar "
+                  "phrase) the last quarter of the steps rolls x4, keeping their levels: a built-in fill. Off steps stay off."],
                  ["Step 1-16", "The level of each step, -100% … +100% (new steps start at 100%)."],
                  ["Curve 1-16", "The curve each step draws, chosen from the library below and scaled by the step's level."]],
                 [36, 134]),
           H3("The curve library"),
-          P("Like Massive, every step plays a curve from a library of 24. The first six are the shapes HELIX always had, "
+          P("Like Massive, every step plays a curve from a library of 28. The first six are the shapes HELIX always had, "
             "so older presets play exactly as before. <b>Smooth</b> is special: it glides from this step's level to the "
             "next step's level."),
           table([["Curves", "What they do"],
@@ -870,16 +882,20 @@ def chapter_lfo():
                  ["Exp, Bounce", "Plucks: a fast hit that decays; Bounce also bounces."],
                  ["Gate 1/4, 1/2, 3/4", "On for part of the step, then off: tight rhythmic gating."],
                  ["Saw x2, Saw Dn x2, Tri x2, Sine x2, Pulse x2", "Two cycles inside one step: double-time rolls."],
-                 ["Stairs Up / Dn", "Four steps up or down inside the step."]], [52, 118]),
+                 ["Stairs Up / Dn", "Four steps up or down inside the step."],
+                 ["Roll x2, x3, x4, x8", "Repeated plucks inside one step: drum-roll ratchets for the filter or the "
+                  "amp, from a double hit to a buzz roll."]], [52, 118]),
           P("<b>On the MPC</b>: the <b>P1 DRAW</b> and <b>P2 DRAW</b> pages (PERF key) work like Massive's performer. The "
             "top two rows are the 16 steps as bars: drag a bar up or down to draw its level (the middle is zero). Tap "
             "the number and curve under a bar (or just drag the bar) to choose that step: it lights up, and tapping a "
-            "curve in the library puts it on that step. <b>Step Level</b> sets the chosen step's level with a knob. The "
-            "P1 / P2 STEP pages have all 16 levels on knobs, for the Q-Links."),
+            "curve in the library puts it on that step. <b>Step Level</b> sets the chosen step's level with a knob. Step "
+            "rate, length, mode, Swing, Feel and Fill are on the <b>PERF</b> page."),
           P("<b>On the computer</b>: the library sits beside the performer display. Drag a curve onto a step, or click a "
             "curve and then click steps in the lane under the display to paint it. Draw the levels by dragging across the "
             "display: every step you pass sets its level to where the pointer is; "
-            "right-click a step for a menu of all curves.")]
+            "right-click a step for a menu of all curves. Swing is the knob beside Length, Feel and Fill the menus next to it."),
+          P("<b>Longer patterns</b>: Length counts steps, Step sets their size, so 16 steps of 1/8 is a 2-bar pattern and "
+            "16 of 1/4 a 4-bar one; Half-time doubles either.")]
     return s
 
 
