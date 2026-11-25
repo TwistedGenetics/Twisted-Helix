@@ -92,7 +92,12 @@ for tab in pd["tabs"]:
                 fails.append("%s: %s has no / wrong replacementStrings" % (name, p["name"]))
         if kind == "flip on touch" and len(p["choices"]) != 2 and not e["componentData"]["name"].startswith("tag"):
             fails.append("%s: %s flips but has %d choices" % (name, p["name"], len(p["choices"])))
-        if kind == "radio buttons":
+        if kind == "radio buttons" or (e["componentData"]["name"].startswith("bar sel") and "Button" in [k["type"] for k in kids]):
+            if e["componentData"]["name"].startswith("bar sel"):
+                b = [k for k in kids if k["type"] == "Button"]
+                if len(b) != 1 or b[0]["data"]["numButtonsInGroup"] != len(p["choices"]) or b[0]["data"].get("gestureBehaviour") != "Instant":
+                    fails.append("%s: %s step-select button miswired" % (name, e["componentData"]["name"]))
+                continue
             ids = sorted(k["data"]["buttonId"] for k in kids if k["type"] == "Button")
             nb = {k["data"]["numButtonsInGroup"] for k in kids if k["type"] == "Button"}
             if ids != list(range(len(p["choices"]))) or nb != {len(p["choices"])}:
@@ -123,6 +128,7 @@ for k, n in subs.items():
 old = json.load(open(a.ui))
 # Reached through an editing proxy (the app mirrors the chosen step): P1/P2 Shape n via P1/P2 Edit Step + Curve.
 PROXIED = {"P%d Shape %d" % (q, i): "P%d Curve" % q for q in (1, 2) for i in range(1, 17)}
+PROXIED.update({"F1 Type": "F1 Filter", "F2 Type": "F2 Filter"})
 missing = []
 for pg in old["pages"]:
     for c in pg["controls"]:

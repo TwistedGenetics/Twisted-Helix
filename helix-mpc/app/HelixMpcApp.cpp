@@ -24,6 +24,39 @@ static const std::vector<std::string> steps = {"Step 1", "Step 2", "Step 3", "St
                                                 "Step 9", "Step 10", "Step 11", "Step 12", "Step 13", "Step 14", "Step 15", "Step 16"};
 }
 
+static constexpr int kNumHelixTypes = 13;   // choices::filterType
+static constexpr int kNumKinds = 6;         // choices::filterKind
+
+// Filled on first use (not at static initialisation: choices:: lives in another file, whose globals may not be built
+// yet when this file's statics are), so extraDefs below only takes its address.
+static std::vector<std::string> gCombinedFilters;
+
+const std::vector<std::string>& combinedFilterChoices()
+{
+    if (gCombinedFilters.empty())
+    {
+        static const char* shortKind[] = {"LP", "HP", "BP", "Notch", "Peak", "AP"};
+        std::vector<std::string> out(choices::filterType.begin(), choices::filterType.end());
+        for (size_t m = 1; m < choices::filterModel.size(); ++m)
+            for (int k = 0; k < (int)choices::filterKind.size(); ++k) out.push_back(choices::filterModel[m] + " " + shortKind[k]);
+        gCombinedFilters = std::move(out);
+    }
+    return gCombinedFilters;
+}
+
+int combinedFilterIndex(int model, int helixType, int megaKind)
+{
+    if (model <= 0) return clamp(helixType, 0, kNumHelixTypes - 1);
+    return kNumHelixTypes + (model - 1) * kNumKinds + clamp(megaKind, 0, kNumKinds - 1);
+}
+
+void combinedFilterSplit(int index, int& model, int& helixType, int& megaKind)
+{
+    if (index < kNumHelixTypes) { model = 0; helixType = index; return; }
+    model = 1 + (index - kNumHelixTypes) / kNumKinds;
+    megaKind = (index - kNumHelixTypes) % kNumKinds;
+}
+
 static ParamDef extraDefs[kMpcNumParams - kMpcReserveEnd] = {
     {"mpc_preset", "Preset", ParamKind::Int, 0, kMaxPresets - 1, 0, "", nullptr, false},
     {"mpc_load", "Load", ParamKind::Bool, 0, 1, 0, "", nullptr, false},
@@ -41,12 +74,16 @@ static ParamDef extraDefs[kMpcNumParams - kMpcReserveEnd] = {
     {"mpc_p2_edit", "P2 Edit Step", ParamKind::Choice, 0, 15, 0, "", &mpcchoices::steps, false},
     {"mpc_p2_curve", "P2 Curve", ParamKind::Choice, 0, kNumPerfCurves - 1, 0, "", &choices::perfStepShape, false},
     {"mpc_p2_level", "P2 Level", ParamKind::Linear, -1, 1, 1, "", nullptr, false},
+    {"mpc_f1_filter", "F1 Filter", ParamKind::Choice, 0, 114, 0, "", &gCombinedFilters, false},
+    {"mpc_f2_filter", "F2 Filter", ParamKind::Choice, 0, 114, 0, "", &gCombinedFilters, false},
 };
+static_assert(sizeof(extraDefs) / sizeof(extraDefs[0]) == kMpcNumParams - kMpcReserveEnd, "extraDefs out of step");
 
 bool mpcIsFiller(int i) { return i >= kNumParams && i < kMpcReserveEnd; }
 
 const ParamDef& mpcParamDef(int i)
 {
+    combinedFilterChoices();   // make sure the list behind MP_F1/F2_FILTER is built
     if (i >= 0 && i < kNumParams) return paramDef(i);
     if (i >= kMpcReserveEnd && i < kMpcNumParams) return extraDefs[i - kMpcReserveEnd];
     static std::vector<ParamDef> fillers;
@@ -301,11 +338,61 @@ void HelixMpcApp::tick()
             if (pLevel != pe.level) write(levelP, pLevel);
             else if (level != pe.levelCore) show(ed + 2, level);
         }
+        // Dragging a step's bar on the DRAW page makes it the step being edited (only when one level moved,
+        // so a preset load does not jump the selection).
+        int moved = -1, nMoved = 0;
+        for (int k = 0; k < kMaxSteps; ++k)
+        {
+            const float lv = getParam(base + 3 + k);
+            if (pe.levels[k] != lv && pe.levels[k] > -9.0f) { moved = k; ++nMoved; }
+            pe.levels[k] = lv;
+        }
+        if (nMoved == 1 && moved != step)
+        {
+            setParam(ed, (float)moved);
+            platform_.notifyParameter(ed, (float)moved);
+            show(ed + 1, getParam(base + 19 + moved));
+            show(ed + 2, getParam(base + 3 + moved));
+            pe.step = moved;
+            pe.curve = getParam(ed + 1);
+            pe.shape = getParam(base + 19 + moved);
+            pe.level = getParam(ed + 2);
+            pe.levelCore = getParam(base + 3 + moved);
+            continue;
+        }
         pe.step = step;
         pe.curve = getParam(ed + 1);
         pe.shape = getParam(shapeP);
         pe.level = getParam(ed + 2);
         pe.levelCore = getParam(levelP);
+    }
+
+    // Filter lists (FILTER page screens): one value per filter covering HELIX types and Mega model x type.
+    for (int f = 0; f < 2; ++f)
+    {
+        const int proxy = f == 0 ? MP_F1_FILTER : MP_F2_FILTER;
+        const int pModel = f == 0 ? P_F1_MODEL : P_F2_MODEL, pType = f == 0 ? P_F1_TYPE : P_F2_TYPE,
+                  pKind = f == 0 ? P_F1_KIND : P_F2_KIND;
+        const int core = combinedFilterIndex((int)getParam(pModel), (int)getParam(pType), (int)getParam(pKind));
+        const int shown = (int)getParam(proxy);
+        int& lastProxy = filterProxy_[f][0];
+        int& lastCore = filterProxy_[f][1];
+        if (shown != lastProxy && lastProxy >= 0)
+        {
+            // turned on the FILTER page: write model + type
+            int m = 0, t = (int)getParam(pType), k = (int)getParam(pKind);
+            combinedFilterSplit(shown, m, t, k);
+            auto write = [&](int p, float v) { if (getParam(p) != v) { setParam(p, v); platform_.notifyParameter(p, v); } };
+            write(pModel, (float)m);
+            if (m == 0) write(pType, (float)t); else write(pKind, (float)k);
+        }
+        else if (core != lastCore || lastProxy < 0)
+        {
+            setParam(proxy, (float)core);
+            platform_.notifyParameter(proxy, (float)core);
+        }
+        lastProxy = (int)getParam(proxy);
+        lastCore = combinedFilterIndex((int)getParam(pModel), (int)getParam(pType), (int)getParam(pKind));
     }
 
     // Triggers (momentary parameters).

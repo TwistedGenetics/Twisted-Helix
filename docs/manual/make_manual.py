@@ -724,7 +724,9 @@ def chapter_filters():
             "<b>Type</b>. The other 17 models are the filters from Mega Synth. With one of those, <b>Type</b> is not used; "
             "the model is set with <b>Filter Type</b> (Low Pass, High Pass, Band Pass, Notch, Peak, All Pass) and "
             "<b>Slope</b> (6, 12, 18 or 24 dB, or <b>Model</b>: the model's own slope). Presets made before 0.3.1 use "
-            "HELIX and sound exactly as before. On the MPC these are on the <b>MODEL</b> page (FILTER key); on the computer "
+            "HELIX and sound exactly as before. On the MPC the screen on the FILTER page lists every choice: drag it through "
+            "the 13 HELIX types and then each model with each filter type (e.g. <b>TB-303 BP</b>); <b>Slope</b> is in "
+            "the MORE row. The <b>MODEL</b> page has the same settings as buttons. On the computer "
             "they are the three menus above each filter's knobs."),
           P("A model on Low Pass at its own slope is the original circuit model (its own stages, ladder and "
             "saturation). Any other type or slope runs a clean multimode filter that takes on the model's character: its "
@@ -827,9 +829,10 @@ def chapter_lfo():
                  ["Saw x2, Saw Dn x2, Tri x2, Sine x2, Pulse x2", "Two cycles inside one step: double-time rolls."],
                  ["Stairs Up / Dn", "Four steps up or down inside the step."]], [52, 118]),
           P("<b>On the MPC</b>: the <b>P1 DRAW</b> and <b>P2 DRAW</b> pages (PERF key) work like Massive's performer. The "
-            "top two rows are the 16 steps as bars: drag a bar up or down to draw its level (the middle is zero), and "
-            "the step's curve is shown under it. To change curves, tap a step in <b>EDIT STEP</b>, then tap a curve in "
-            "the library. The P1 / P2 STEP pages have the same levels on knobs, for the Q-Links."),
+            "top two rows are the 16 steps as bars: drag a bar up or down to draw its level (the middle is zero). Tap "
+            "the number and curve under a bar (or just drag the bar) to choose that step: it lights up, and tapping a "
+            "curve in the library puts it on that step. <b>Step Level</b> sets the chosen step's level with a knob. The "
+            "P1 / P2 STEP pages have all 16 levels on knobs, for the Q-Links."),
           P("<b>On the computer</b>: the library sits beside the performer display. Drag a curve onto a step, or click a "
             "curve and then click steps in the lane under the display to paint it. Draw the levels by dragging across the "
             "display: every step you pass sets its level to where the pointer is; "

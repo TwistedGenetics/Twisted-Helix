@@ -307,6 +307,33 @@ def noise_series(kind, n=240, seed=7):
         out.append((i / n, max(-1, min(1, x))))
     return out
 
+# Mega Synth models on the FILTER screen: "<Model> <LP|HP|BP|Notch|Peak|AP>" (HELIX types fall through to filter_curve).
+MEGA_RES = {"Polivoks": 0.8, "MS-20": 0.8, "Steiner-Parker": 0.6, "Acid": 0.6, "TB-303": 0.55, "Ladder": 0.5,
+            "Fat Cat": 0.45, "SEM": 0.25, "Oberheim": 0.25, "Sallen-Key": 0.3}
+def mega_filter_curve(name):
+    parts = name.rsplit(" ", 1)
+    if len(parts) != 2 or parts[1] not in ("LP", "HP", "BP", "Notch", "Peak", "AP"):
+        return filter_curve(name)
+    model, kind = parts
+    res = MEGA_RES.get(model, 0.35)
+    fc = 0.5
+    def lp(u):
+        x = u / fc
+        return 1 / math.sqrt(1 + x ** 4) * (1 + res * math.exp(-((u - fc) / 0.04) ** 2) * 2.2)
+    def to_v(g):
+        return -0.95 + 1.7 * min(1.15, g) / 1.15
+    if kind == "LP":
+        return sample(lambda u: to_v(lp(u)))
+    if kind == "HP":
+        return sample(lambda u: to_v(lp(1 - u)))
+    if kind == "BP":
+        return sample(lambda u: to_v(math.exp(-((u - fc) / (0.14 - 0.06 * res)) ** 2)))
+    if kind == "Notch":
+        return sample(lambda u: to_v(1 - math.exp(-((u - fc) / 0.05) ** 2)))
+    if kind == "Peak":
+        return sample(lambda u: to_v(0.5 + (0.45 + 0.3 * res) * math.exp(-((u - fc) / 0.07) ** 2)))
+    return sample(lambda u: to_v(0.62))   # All Pass: flat level (it only shifts phase)
+
 def filter_curve(name):
     fc = 0.5
     def lp(u, order, res=0.35):
@@ -438,6 +465,8 @@ def screen_film(kind, choices, w, h):
         return [screen_frame(w, h, [(noise_series(c), 1.6, 1)]) for c in choices]
     if kind == "filter":
         return [screen_frame(w, h, [(filter_curve(c), 3.5, 1)]) for c in choices]
+    if kind == "mfilter":
+        return [screen_frame(w, h, [(mega_filter_curve(c), 3.5, 1)]) for c in choices]
     if kind == "lfo":
         return [screen_frame(w, h, [(lfo_shape(c), 3.2, 1)]) for c in choices]
     if kind == "dist":
@@ -536,9 +565,6 @@ def background(page):
         d.rectangle((tx0, y + BORDER, tx0 + TAG_W - 1, y + STRIP_H - BORDER - 1), fill=FRAME)
         d.rectangle((tx0 + TAG_W, y + BORDER, tx0 + TAG_W + BORDER - 1, y + STRIP_H - BORDER - 1), fill=GROUND)
         for c in st["cells"]:
-            if c["type"] == "bar":
-                x, yy, w, h = c["rect"]
-                draw_text(im, str(c["num"]), x + 16, yy + h - 15, 24, 700, LINE)
             if c["type"] == "env":
                 x, yy, w, h = c["rect"]
                 d.rectangle((x, yy, x + w - 1, yy + h - 1), fill=SCREEN, outline=BTN_EDGE, width=3)
@@ -561,10 +587,19 @@ def SEG(param, name, labels, widths=None):
     return {"type": "seg", "param": param, "name": name, "labels": labels, "widths": widths}
 def ENV(a, d, s, r, w=196):
     return {"type": "env", "params": (a, d, s, r), "w": w}
+def step_select_img(w, h, num, on):
+    """See-through select button under a draw bar: the step number, an outline, lit (translucent) when chosen."""
+    im = Image.new("RGBA", (w, h), (96, 214, 244, 110) if on else (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, w - 1, h - 1), outline=(LED_ON if on else BTN_EDGE) + (255,), width=4 if on else 1)
+    d.text((16, h / 2), str(num), font=pil_font(24, 700), fill=LINE + (255,), anchor="mm")
+    return im
+
 def BAR(param, shape, num, w=118):
     """A vertical bipolar bar you drag up and down (Massive-style step drawing), with the step number and the step's
     curve under it."""
-    return {"type": "bar", "param": param, "shape": shape, "num": num, "w": w}
+    return {"type": "bar", "param": param, "shape": shape, "num": num, "w": w,
+            "edit": param.split(" ")[0] + " Edit Step"}
 def VAL(param, name, w=230):
     return {"type": "readout", "param": param, "name": name, "w": w}
 def PICK(param, caption=None, cols=None, labels=None, icons=False, where="top", bw=None, cap_w=None):
@@ -622,10 +657,12 @@ def pages():
 
     # ---- FILTER
     def filt(n):
-        return [S("FILTER %d" % n, [SCR("F%d Type" % n, "filter", 260), K("F%d Cutoff" % n, "Cutoff"), K("F%d Reso" % n, "Reso"),
-                                    K("F%d Drive" % n, "Drive")], toggle="Filter %d" % n),
-                S("F%d MORE" % n, [K("F%d Key Trk" % n, "Key Track"), K("F%d Fat" % n, "Fat"), K("F%d Level" % n, "Level")]
-                  + ([K("Ser/Par", "Ser / Par")] if n == 2 else []))]
+        # The screen is one list per filter: the 13 HELIX types, then every Mega model x type (kept in step with the
+        # MODEL page by the app). Slope applies to the Mega models.
+        return [S("FILTER %d" % n, [SCR("F%d Filter" % n, "mfilter", 300), K("F%d Cutoff" % n, "Cutoff"),
+                                    K("F%d Reso" % n, "Reso"), K("F%d Drive" % n, "Drive")], toggle="Filter %d" % n),
+                S("F%d MORE" % n, [K("F%d Key Trk" % n, "Key Track"), K("F%d Fat" % n, "Fat"), K("F%d Level" % n, "Level"),
+                                   K("F%d Slope" % n, "Slope")])]
     page(1, 0, "FILTER", filt(1) + filt(2))
     # Mega Synth models: Model HELIX = the original filter (F Type above); any other model uses Type + Slope
     def model(n):
@@ -633,7 +670,7 @@ def pages():
         return [S("F%d MODEL" % n, [K(f + "Model", "Model", w=320),
                                     PICK(f + "Slope", "Slope", cols=5, labels=["Model", "6", "12", "18", "24"], where="left")]),
                 S("F%d TYPE" % n, [PICK(f + "Filter Type", "Type", cols=6, labels=["LP", "HP", "BP", "Notch", "Peak", "AP"],
-                                        where="left")])]
+                                        where="left")] + ([K("Ser/Par", "Ser / Par")] if n == 2 else []))]
     page(1, 1, "MODEL", model(1) + model(2))
 
     # ---- ENV
@@ -709,8 +746,9 @@ def pages():
         page(6, sub + 1, "P%d DRAW" % p_,
              [S("P%d\n1-8" % p_, [BAR("P%d Step %d" % (p_, i), "P%d Shape %d" % (p_, i), i) for i in range(1, 9)]),
               S("P%d\n9-16" % p_, [BAR("P%d Step %d" % (p_, i), "P%d Shape %d" % (p_, i), i) for i in range(9, 17)]),
-              S("EDIT\nSTEP", [PICK("P%d Edit Step" % p_, None, cols=16, labels=[str(i) for i in range(1, 17)], bw=66)]),
-              S("CURVE", [PICK("P%d Curve" % p_, None, cols=12, icons=True, bw=86)])])
+              S("CURVE", [PICK("P%d Curve" % p_, None, cols=12, icons=True, bw=86)]),
+              S("STEP", [K("P%d Level" % p_, "Step Level", bi=True), K("P%d Step" % p_, "Step Rate"),
+                         K("P%d Length" % p_, "Length")])])
         sub += 2
 
     # ---- MACROS
@@ -850,6 +888,15 @@ class Builder:
     def __init__(self, params, out):
         self.params = params
         self.by_name = {}
+        # host_sim cannot tell a list of more than ~64 entries from a float, so rebuild the combined filter lists
+        # (MP_F1/F2_FILTER: the HELIX types, then every Mega model x type) from their parts.
+        pn = {p["name"]: p for p in params}
+        for f in ("F1", "F2"):
+            p = pn.get(f + " Filter")
+            if p and not p["choices"] and f + " Type" in pn and f + " Model" in pn:
+                kinds = ["LP", "HP", "BP", "Notch", "Peak", "AP"]
+                p["kind"] = "choice"
+                p["choices"] = pn[f + " Type"]["choices"] + ["%s %s" % (m, k) for m in pn[f + " Model"]["choices"][1:] for k in kinds]
         for p in params:
             self.by_name.setdefault(p["name"], p)
         self.out = out
@@ -1105,6 +1152,22 @@ class Builder:
             out.append(entry("curve", "Image", o(("version", 2), ("imageType", "FilmStrip"), ("colour", "0"), ("image", fname),
                                                   ("numFrames", n), ("handleName", "Data")),
                              bounds((x + 34, y + h - 30, w - 36, 30), invalid="Hide"), remap=[("Data", self.h(c["shape"]))]))
+            # Tap the number / curve under a bar to choose that step for the curve library (a one-button piece of
+            # the Edit Step radio group; see-through, so the curve picture underneath shows; lit when chosen).
+            ep = self.discrete(c["edit"])
+            k = c["num"] - 1
+            bw_, bh_ = w, 32
+            on = self.save("stepsel_%d_%d_on.png" % (bw_, c["num"]), step_select_img(bw_, bh_, c["num"], True))
+            off = self.save("stepsel_%d_%d_off.png" % (bw_, c["num"]), step_select_img(bw_, bh_, c["num"], False))
+            skey = "hx stepsel %s %d" % (c["edit"], c["num"])
+            if skey not in self.comp_keys:
+                self.comp_keys.add(skey)
+                btn = entry("step", "Button", o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", k),
+                                                 ("numButtonsInGroup", len(ep["choices"])), ("handleName", "Data"),
+                                                 ("gestureBehaviour", "Instant")), bounds((0, 0, bw_, bh_)))
+                self.defs.append(o(("key", skey), ("value", component([btn]))))
+            out.append(entry("bar sel " + c["edit"] + " %d" % c["num"], skey, o(("version", 1), ("handleName", "Data")),
+                             bounds((x, y + h - bh_, bw_, bh_), invalid="Hide"), remap=[("Data", self.h(c["edit"]))]))
         elif t == "picture":
             fname, n = self.screen_strip(c["kind"], [], w, h)
             out.append(entry("picture", "Image", o(("version", 2), ("imageType", "Regular"), ("colour", "0"), ("image", fname)),
@@ -1312,6 +1375,9 @@ def preview(builder, outdir):
                     strip = Image.open(os.path.join(builder.out, "curves_%dx30.png" % (w - 36)))
                     fi = int(round(val(c["shape"]) * (len(builder.p(c["shape"])["choices"]) - 1)))
                     tab.paste(strip.crop((0, fi * 30, w - 36, fi * 30 + 30)), (cx + 34, cy + hh - 30))
+                    sel = int(round(val(c["edit"]) * 15)) == c["num"] - 1
+                    simg = step_select_img(w, 32, c["num"], sel)
+                    tab.paste(simg, (cx, cy + hh - 32), simg)
                     continue
                 if t in ("knob", "knobS"):
                     size = KNOB if t == "knob" else KNOB_S

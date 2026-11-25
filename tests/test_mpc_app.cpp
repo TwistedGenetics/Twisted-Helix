@@ -149,6 +149,29 @@ int main()
     CHECK(app.engine().params().get(P_P1_C5) == 9.0f && app.getParam(MP_P1_CURVE) == app.engine().params().get(P_P1_C1),
           "changing the edit step changed a curve");
 
+    // Dragging step 7's bar selects step 7 for curve editing.
+    app.tick();
+    app.engine().params().set(P_P1_S7, -0.3f);
+    app.tick();
+    CHECK((int)app.getParam(MP_P1_EDIT) == 6, "dragging bar 7 did not select it (edit step %d)", (int)app.getParam(MP_P1_EDIT) + 1);
+    CHECK(app.getParam(MP_P1_LEVEL) == -0.3f, "level readout did not follow the selected bar");
+
+    // FILTER page list: follows model / type set on the MODEL page, and writes them back when turned.
+    CHECK((int)combinedFilterChoices().size() == 115, "filter list has %d entries", (int)combinedFilterChoices().size());
+    app.engine().params().set(P_F1_MODEL, 13.0f);   // TB-303
+    app.engine().params().set(P_F1_KIND, 2.0f);     // BP
+    app.tick();
+    CHECK((int)app.getParam(MP_F1_FILTER) == combinedFilterIndex(13, 0, 2), "F1 list did not follow the model (%d)",
+          (int)app.getParam(MP_F1_FILTER));
+    CHECK(combinedFilterChoices()[(size_t)app.getParam(MP_F1_FILTER)] == "TB-303 BP", "list name %s",
+          combinedFilterChoices()[(size_t)app.getParam(MP_F1_FILTER)].c_str());
+    app.setParam(MP_F1_FILTER, 3.0f);               // a HELIX type
+    app.tick();
+    CHECK(app.engine().params().getInt(P_F1_MODEL) == 0 && app.engine().params().getInt(P_F1_TYPE) == 3, "HELIX type not written");
+    app.setParam(MP_F1_FILTER, (float)combinedFilterIndex(10, 0, 1));   // MS-20 HP
+    app.tick();
+    CHECK(app.engine().params().getInt(P_F1_MODEL) == 10 && app.engine().params().getInt(P_F1_KIND) == 1, "Mega model not written");
+
     { std::error_code ec; fs::remove_all(pf.dir, ec); }
     TEST_MAIN_END();
 }

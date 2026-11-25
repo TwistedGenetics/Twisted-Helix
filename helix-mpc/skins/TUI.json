@@ -3102,7 +3102,7 @@
      }
     },
     {
-     "key": "hx screen scr_filter_260.png",
+     "key": "hx screen scr_mfilter_300.png",
      "value": {
       "version": 2,
       "actions": [
@@ -3180,8 +3180,8 @@
          "data": {
           "version": 2,
           "knobType": "FilmStrip",
-          "filmStrip": "scr_filter_260.png",
-          "numFrames": 13,
+          "filmStrip": "scr_mfilter_300.png",
+          "numFrames": 115,
           "invert": false,
           "handleName": "Data"
          }
@@ -3196,7 +3196,7 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "6 6 260 122"
+         "bounds": "6 6 300 122"
         }
        },
        {
@@ -3233,7 +3233,7 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "12 88 248 34"
+         "bounds": "12 88 288 34"
         }
        }
       ]
@@ -9466,18 +9466,10 @@
      }
     },
     {
-     "key": "hx pick P1 Edit Step",
+     "key": "hx stepsel P1 Edit Step 1",
      "value": {
       "version": 2,
-      "actions": [
-       {
-        "version": 1,
-        "onAction": "Mouse Down",
-        "handler": "Q-Link",
-        "handleName": "Data",
-        "additionalData": ""
-       }
-      ],
+      "actions": [],
       "backgroundData": {
        "version": 1,
        "focussed": {
@@ -9498,39 +9490,12 @@
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "focus",
-         "type": "Focus",
-         "data": {
-          "version": 1,
-          "backgroundColour": "2446ace6",
-          "outlineColour": "ff46acec",
-          "backgroundInset": 0.0,
-          "outlineThickness": 4.0
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "WhenFocussed",
-         "boundsType": "Proportional",
-         "bounds": "0 0 1 1"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 0",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_1_on.png",
-          "offImage": "seg_66_1_off.png",
+          "onImage": "stepsel_118_1_on.png",
+          "offImage": "stepsel_118_1_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9547,19 +9512,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "6 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 2",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 1",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_2_on.png",
-          "offImage": "seg_66_2_off.png",
+          "onImage": "stepsel_118_2_on.png",
+          "offImage": "stepsel_118_2_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9576,19 +9565,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "69 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 3",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 2",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_3_on.png",
-          "offImage": "seg_66_3_off.png",
+          "onImage": "stepsel_118_3_on.png",
+          "offImage": "stepsel_118_3_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9605,19 +9618,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "132 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 4",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 3",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_4_on.png",
-          "offImage": "seg_66_4_off.png",
+          "onImage": "stepsel_118_4_on.png",
+          "offImage": "stepsel_118_4_off.png",
           "buttonId": 3,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9634,19 +9671,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "195 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 5",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 4",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_5_on.png",
-          "offImage": "seg_66_5_off.png",
+          "onImage": "stepsel_118_5_on.png",
+          "offImage": "stepsel_118_5_off.png",
           "buttonId": 4,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9663,19 +9724,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "258 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 6",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 5",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_6_on.png",
-          "offImage": "seg_66_6_off.png",
+          "onImage": "stepsel_118_6_on.png",
+          "offImage": "stepsel_118_6_off.png",
           "buttonId": 5,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9692,19 +9777,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "321 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 7",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 6",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_7_on.png",
-          "offImage": "seg_66_7_off.png",
+          "onImage": "stepsel_118_7_on.png",
+          "offImage": "stepsel_118_7_off.png",
           "buttonId": 6,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9721,19 +9830,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "384 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 8",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 7",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_8_on.png",
-          "offImage": "seg_66_8_off.png",
+          "onImage": "stepsel_118_8_on.png",
+          "offImage": "stepsel_118_8_off.png",
           "buttonId": 7,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9750,19 +9883,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "447 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 9",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 8",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_9_on.png",
-          "offImage": "seg_66_9_off.png",
+          "onImage": "stepsel_118_9_on.png",
+          "offImage": "stepsel_118_9_off.png",
           "buttonId": 8,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9779,19 +9936,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "510 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 10",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 9",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_10_on.png",
-          "offImage": "seg_66_10_off.png",
+          "onImage": "stepsel_118_10_on.png",
+          "offImage": "stepsel_118_10_off.png",
           "buttonId": 9,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9808,19 +9989,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "573 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 11",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 10",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_11_on.png",
-          "offImage": "seg_66_11_off.png",
+          "onImage": "stepsel_118_11_on.png",
+          "offImage": "stepsel_118_11_off.png",
           "buttonId": 10,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9837,19 +10042,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "636 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 12",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 11",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_12_on.png",
-          "offImage": "seg_66_12_off.png",
+          "onImage": "stepsel_118_12_on.png",
+          "offImage": "stepsel_118_12_off.png",
           "buttonId": 11,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9866,19 +10095,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "699 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 13",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 12",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_13_on.png",
-          "offImage": "seg_66_13_off.png",
+          "onImage": "stepsel_118_13_on.png",
+          "offImage": "stepsel_118_13_off.png",
           "buttonId": 12,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9895,19 +10148,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "762 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 14",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 13",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_14_on.png",
-          "offImage": "seg_66_14_off.png",
+          "onImage": "stepsel_118_14_on.png",
+          "offImage": "stepsel_118_14_off.png",
           "buttonId": 13,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9924,19 +10201,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "825 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 15",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 14",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_15_on.png",
-          "offImage": "seg_66_15_off.png",
+          "onImage": "stepsel_118_15_on.png",
+          "offImage": "stepsel_118_15_off.png",
           "buttonId": 14,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9953,19 +10254,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "888 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P1 Edit Step 16",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 15",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_16_on.png",
-          "offImage": "seg_66_16_off.png",
+          "onImage": "stepsel_118_16_on.png",
+          "offImage": "stepsel_118_16_off.png",
           "buttonId": 15,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -9982,7 +10307,7 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "951 6 66 56"
+         "bounds": "0 0 118 32"
         }
        }
       ]
@@ -10744,18 +11069,10 @@
      }
     },
     {
-     "key": "hx pick P2 Edit Step",
+     "key": "hx stepsel P2 Edit Step 1",
      "value": {
       "version": 2,
-      "actions": [
-       {
-        "version": 1,
-        "onAction": "Mouse Down",
-        "handler": "Q-Link",
-        "handleName": "Data",
-        "additionalData": ""
-       }
-      ],
+      "actions": [],
       "backgroundData": {
        "version": 1,
        "focussed": {
@@ -10776,39 +11093,12 @@
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "focus",
-         "type": "Focus",
-         "data": {
-          "version": 1,
-          "backgroundColour": "2446ace6",
-          "outlineColour": "ff46acec",
-          "backgroundInset": 0.0,
-          "outlineThickness": 4.0
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "WhenFocussed",
-         "boundsType": "Proportional",
-         "bounds": "0 0 1 1"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 0",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_1_on.png",
-          "offImage": "seg_66_1_off.png",
+          "onImage": "stepsel_118_1_on.png",
+          "offImage": "stepsel_118_1_off.png",
           "buttonId": 0,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -10825,19 +11115,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "6 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 2",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 1",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_2_on.png",
-          "offImage": "seg_66_2_off.png",
+          "onImage": "stepsel_118_2_on.png",
+          "offImage": "stepsel_118_2_off.png",
           "buttonId": 1,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -10854,19 +11168,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "69 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 3",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 2",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_3_on.png",
-          "offImage": "seg_66_3_off.png",
+          "onImage": "stepsel_118_3_on.png",
+          "offImage": "stepsel_118_3_off.png",
           "buttonId": 2,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -10883,19 +11221,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "132 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 4",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 3",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_4_on.png",
-          "offImage": "seg_66_4_off.png",
+          "onImage": "stepsel_118_4_on.png",
+          "offImage": "stepsel_118_4_off.png",
           "buttonId": 3,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -10912,19 +11274,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "195 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 5",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 4",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_5_on.png",
-          "offImage": "seg_66_5_off.png",
+          "onImage": "stepsel_118_5_on.png",
+          "offImage": "stepsel_118_5_off.png",
           "buttonId": 4,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -10941,19 +11327,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "258 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 6",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 5",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_6_on.png",
-          "offImage": "seg_66_6_off.png",
+          "onImage": "stepsel_118_6_on.png",
+          "offImage": "stepsel_118_6_off.png",
           "buttonId": 5,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -10970,19 +11380,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "321 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 7",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 6",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_7_on.png",
-          "offImage": "seg_66_7_off.png",
+          "onImage": "stepsel_118_7_on.png",
+          "offImage": "stepsel_118_7_off.png",
           "buttonId": 6,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -10999,19 +11433,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "384 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 8",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 7",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_8_on.png",
-          "offImage": "seg_66_8_off.png",
+          "onImage": "stepsel_118_8_on.png",
+          "offImage": "stepsel_118_8_off.png",
           "buttonId": 7,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -11028,19 +11486,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "447 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 9",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 8",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_9_on.png",
-          "offImage": "seg_66_9_off.png",
+          "onImage": "stepsel_118_9_on.png",
+          "offImage": "stepsel_118_9_off.png",
           "buttonId": 8,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -11057,19 +11539,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "510 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 10",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 9",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_10_on.png",
-          "offImage": "seg_66_10_off.png",
+          "onImage": "stepsel_118_10_on.png",
+          "offImage": "stepsel_118_10_off.png",
           "buttonId": 9,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -11086,19 +11592,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "573 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 11",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 10",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_11_on.png",
-          "offImage": "seg_66_11_off.png",
+          "onImage": "stepsel_118_11_on.png",
+          "offImage": "stepsel_118_11_off.png",
           "buttonId": 10,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -11115,19 +11645,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "636 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 12",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 11",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_12_on.png",
-          "offImage": "seg_66_12_off.png",
+          "onImage": "stepsel_118_12_on.png",
+          "offImage": "stepsel_118_12_off.png",
           "buttonId": 11,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -11144,19 +11698,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "699 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 13",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 12",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_13_on.png",
-          "offImage": "seg_66_13_off.png",
+          "onImage": "stepsel_118_13_on.png",
+          "offImage": "stepsel_118_13_off.png",
           "buttonId": 12,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -11173,19 +11751,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "762 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 14",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 13",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_14_on.png",
-          "offImage": "seg_66_14_off.png",
+          "onImage": "stepsel_118_14_on.png",
+          "offImage": "stepsel_118_14_off.png",
           "buttonId": 13,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -11202,19 +11804,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "825 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 15",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 14",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_15_on.png",
-          "offImage": "seg_66_15_off.png",
+          "onImage": "stepsel_118_15_on.png",
+          "offImage": "stepsel_118_15_off.png",
           "buttonId": 14,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -11231,19 +11857,43 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "888 6 66 56"
+         "bounds": "0 0 118 32"
         }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx stepsel P2 Edit Step 16",
+     "value": {
+      "version": 2,
+      "actions": [],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
        },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 15",
+         "name": "step",
          "type": "Button",
          "data": {
           "version": 2,
-          "onImage": "seg_66_16_on.png",
-          "offImage": "seg_66_16_off.png",
+          "onImage": "stepsel_118_16_on.png",
+          "offImage": "stepsel_118_16_off.png",
           "buttonId": 15,
           "numButtonsInGroup": 16,
           "handleName": "Data",
@@ -11260,7 +11910,7 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "951 6 66 56"
+         "bounds": "0 0 118 32"
         }
        }
       ]
@@ -13811,16 +14461,8 @@
     "value": ["Off", "On"]
    },
    {
-    "key": "Parameter 67",
-    "value": ["LP 12", "LP 24", "BP 12", "BP 24", "HP 12", "HP 24", "Notch 12", "Notch 24", "Ladder 24", "Comb +", "Comb -", "Formant", "Phaser"]
-   },
-   {
     "key": "Parameter 74",
     "value": ["Off", "On"]
-   },
-   {
-    "key": "Parameter 75",
-    "value": ["LP 12", "LP 24", "BP 12", "BP 24", "HP 12", "HP 24", "Notch 12", "Notch 24", "Ladder 24", "Comb +", "Comb -", "Formant", "Phaser"]
    },
    {
     "key": "Parameter 111",
@@ -14261,6 +14903,14 @@
    {
     "key": "Parameter 462",
     "value": ["Hold", "Ramp Up", "Ramp Down", "Smooth", "Triangle", "Exp", "Sine", "Exp Up", "Log Up", "Log Down", "S Up", "S Down", "Gate 1/2", "Gate 1/4", "Gate 3/4", "Saw x2", "Saw Dn x2", "Tri x2", "Sine x2", "Pulse x2", "Stairs Up", "Stairs Dn", "Bounce", "Off"]
+   },
+   {
+    "key": "Parameter 464",
+    "value": ["LP 12", "LP 24", "BP 12", "BP 24", "HP 12", "HP 24", "Notch 12", "Notch 24", "Ladder 24", "Comb +", "Comb -", "Formant", "Phaser", "Standard LP LP", "Standard LP HP", "Standard LP BP", "Standard LP Notch", "Standard LP Peak", "Standard LP AP", "Sallen-Key LP", "Sallen-Key HP", "Sallen-Key BP", "Sallen-Key Notch", "Sallen-Key Peak", "Sallen-Key AP", "Ladder LP", "Ladder HP", "Ladder BP", "Ladder Notch", "Ladder Peak", "Ladder AP", "Steiner-Parker LP", "Steiner-Parker HP", "Steiner-Parker BP", "Steiner-Parker Notch", "Steiner-Parker Peak", "Steiner-Parker AP", "State Var LP", "State Var HP", "State Var BP", "State Var Notch", "State Var Peak", "State Var AP", "OTA LP", "OTA HP", "OTA BP", "OTA Notch", "OTA Peak", "OTA AP", "Polivoks LP", "Polivoks HP", "Polivoks BP", "Polivoks Notch", "Polivoks Peak", "Polivoks AP", "Sw Cap LP", "Sw Cap HP", "Sw Cap BP", "Sw Cap Notch", "Sw Cap Peak", "Sw Cap AP", "Acid LP", "Acid HP", "Acid BP", "Acid Notch", "Acid Peak", "Acid AP", "MS-20 LP", "MS-20 HP", "MS-20 BP", "MS-20 Notch", "MS-20 Peak", "MS-20 AP", "Oberheim LP", "Oberheim HP", "Oberheim BP", "Oberheim Notch", "Oberheim Peak", "Oberheim AP", "SEM LP", "SEM HP", "SEM BP", "SEM Notch", "SEM Peak", "SEM AP", "TB-303 LP", "TB-303 HP", "TB-303 BP", "TB-303 Notch", "TB-303 Peak", "TB-303 AP", "Fat Cat LP", "Fat Cat HP", "Fat Cat BP", "Fat Cat Notch", "Fat Cat Peak", "Fat Cat AP", "Odyssey LP", "Odyssey HP", "Odyssey BP", "Odyssey Notch", "Odyssey Peak", "Odyssey AP", "CS-15 LP", "CS-15 HP", "CS-15 BP", "CS-15 Notch", "CS-15 Peak", "CS-15 AP", "SH-2 LP", "SH-2 HP", "SH-2 BP", "SH-2 Notch", "SH-2 Peak", "SH-2 AP"]
+   },
+   {
+    "key": "Parameter 465",
+    "value": ["LP 12", "LP 24", "BP 12", "BP 24", "HP 12", "HP 24", "Notch 12", "Notch 24", "Ladder 24", "Comb +", "Comb -", "Formant", "Phaser", "Standard LP LP", "Standard LP HP", "Standard LP BP", "Standard LP Notch", "Standard LP Peak", "Standard LP AP", "Sallen-Key LP", "Sallen-Key HP", "Sallen-Key BP", "Sallen-Key Notch", "Sallen-Key Peak", "Sallen-Key AP", "Ladder LP", "Ladder HP", "Ladder BP", "Ladder Notch", "Ladder Peak", "Ladder AP", "Steiner-Parker LP", "Steiner-Parker HP", "Steiner-Parker BP", "Steiner-Parker Notch", "Steiner-Parker Peak", "Steiner-Parker AP", "State Var LP", "State Var HP", "State Var BP", "State Var Notch", "State Var Peak", "State Var AP", "OTA LP", "OTA HP", "OTA BP", "OTA Notch", "OTA Peak", "OTA AP", "Polivoks LP", "Polivoks HP", "Polivoks BP", "Polivoks Notch", "Polivoks Peak", "Polivoks AP", "Sw Cap LP", "Sw Cap HP", "Sw Cap BP", "Sw Cap Notch", "Sw Cap Peak", "Sw Cap AP", "Acid LP", "Acid HP", "Acid BP", "Acid Notch", "Acid Peak", "Acid AP", "MS-20 LP", "MS-20 HP", "MS-20 BP", "MS-20 Notch", "MS-20 Peak", "MS-20 AP", "Oberheim LP", "Oberheim HP", "Oberheim BP", "Oberheim Notch", "Oberheim Peak", "Oberheim AP", "SEM LP", "SEM HP", "SEM BP", "SEM Notch", "SEM Peak", "SEM AP", "TB-303 LP", "TB-303 HP", "TB-303 BP", "TB-303 Notch", "TB-303 Peak", "TB-303 AP", "Fat Cat LP", "Fat Cat HP", "Fat Cat BP", "Fat Cat Notch", "Fat Cat Peak", "Fat Cat AP", "Odyssey LP", "Odyssey HP", "Odyssey BP", "Odyssey Notch", "Odyssey Peak", "Odyssey AP", "CS-15 LP", "CS-15 HP", "CS-15 BP", "CS-15 Notch", "CS-15 Peak", "CS-15 AP", "SH-2 LP", "SH-2 HP", "SH-2 BP", "SH-2 Notch", "SH-2 Peak", "SH-2 AP"]
    }
   ],
   "info": {
@@ -19571,8 +20221,8 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "F1 Type",
-        "type": "hx screen scr_filter_260.png",
+        "name": "F1 Filter",
+        "type": "hx screen scr_mfilter_300.png",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -19583,7 +20233,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 67"
+          "value": "Parameter 464"
          }
         ]
        },
@@ -19593,7 +20243,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "182 16 272 134"
+        "bounds": "182 16 312 134"
        }
       },
       {
@@ -19630,7 +20280,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "564 46 150 32"
+        "bounds": "591 46 150 32"
        }
       },
       {
@@ -19659,7 +20309,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "464 20 250 126"
+        "bounds": "491 20 250 126"
        }
       },
       {
@@ -19696,7 +20346,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "831 46 150 32"
+        "bounds": "844 46 150 32"
        }
       },
       {
@@ -19725,7 +20375,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "731 20 250 126"
+        "bounds": "744 20 250 126"
        }
       },
       {
@@ -19931,7 +20581,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "586 200 150 32"
+        "bounds": "558 200 150 32"
        }
       },
       {
@@ -19960,7 +20610,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "486 174 250 126"
+        "bounds": "458 174 250 126"
        }
       },
       {
@@ -19997,7 +20647,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "884 200 150 32"
+        "bounds": "827 200 150 32"
        }
       },
       {
@@ -20026,7 +20676,73 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "784 174 250 126"
+        "bounds": "727 174 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Slope]/Parameter 361"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1097 200 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "F1 Slope",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 361"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "997 174 250 126"
        }
       },
       {
@@ -20062,8 +20778,8 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "F2 Type",
-        "type": "hx screen scr_filter_260.png",
+        "name": "F2 Filter",
+        "type": "hx screen scr_mfilter_300.png",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -20074,7 +20790,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 75"
+          "value": "Parameter 465"
          }
         ]
        },
@@ -20084,7 +20800,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "182 324 272 134"
+        "bounds": "182 324 312 134"
        }
       },
       {
@@ -20121,7 +20837,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "564 354 150 32"
+        "bounds": "591 354 150 32"
        }
       },
       {
@@ -20150,7 +20866,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "464 328 250 126"
+        "bounds": "491 328 250 126"
        }
       },
       {
@@ -20187,7 +20903,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "831 354 150 32"
+        "bounds": "844 354 150 32"
        }
       },
       {
@@ -20216,7 +20932,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "731 328 250 126"
+        "bounds": "744 328 250 126"
        }
       },
       {
@@ -20541,7 +21257,7 @@
           "case": "Original"
          },
          "type": "Name",
-         "handleName": "WithName[Ser - Par]/Parameter 82"
+         "handleName": "WithName[Slope]/Parameter 364"
         }
        },
        "handle remapping": {
@@ -20561,7 +21277,7 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "Ser/Par",
+        "name": "F2 Slope",
         "type": "hx knob88",
         "data": {
          "version": 1,
@@ -20573,7 +21289,7 @@
         "map": [
          {
           "key": "Data",
-          "value": "Parameter 82"
+          "value": "Parameter 364"
          }
         ]
        },
@@ -21182,6 +21898,72 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "282 511 549 68"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Ser - Par]/Parameter 82"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "973 508 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "Ser/Par",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 82"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "873 482 250 126"
        }
       }
      ]
@@ -40506,6 +41288,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P1 Edit Step 1",
+        "type": "hx stepsel P1 Edit Step 1",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 116 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P1 Step 2",
         "type": "hx bar 118x96",
         "data": {
@@ -40562,6 +41373,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "356 118 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P1 Edit Step 2",
+        "type": "hx stepsel P1 Edit Step 2",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "322 116 118 32"
        }
       },
       {
@@ -40630,6 +41470,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P1 Edit Step 3",
+        "type": "hx stepsel P1 Edit Step 3",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "457 116 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P1 Step 4",
         "type": "hx bar 118x96",
         "data": {
@@ -40686,6 +41555,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "625 118 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P1 Edit Step 4",
+        "type": "hx stepsel P1 Edit Step 4",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "591 116 118 32"
        }
       },
       {
@@ -40754,6 +41652,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P1 Edit Step 5",
+        "type": "hx stepsel P1 Edit Step 5",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "726 116 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P1 Step 6",
         "type": "hx bar 118x96",
         "data": {
@@ -40810,6 +41737,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "894 118 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P1 Edit Step 6",
+        "type": "hx stepsel P1 Edit Step 6",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "860 116 118 32"
        }
       },
       {
@@ -40878,6 +41834,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P1 Edit Step 7",
+        "type": "hx stepsel P1 Edit Step 7",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "995 116 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P1 Step 8",
         "type": "hx bar 118x96",
         "data": {
@@ -40934,6 +41919,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "1163 118 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P1 Edit Step 8",
+        "type": "hx stepsel P1 Edit Step 8",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1129 116 118 32"
        }
       },
       {
@@ -41076,6 +42090,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P1 Edit Step 9",
+        "type": "hx stepsel P1 Edit Step 9",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 270 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P1 Step 10",
         "type": "hx bar 118x96",
         "data": {
@@ -41132,6 +42175,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "356 272 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P1 Edit Step 10",
+        "type": "hx stepsel P1 Edit Step 10",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "322 270 118 32"
        }
       },
       {
@@ -41200,6 +42272,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P1 Edit Step 11",
+        "type": "hx stepsel P1 Edit Step 11",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "457 270 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P1 Step 12",
         "type": "hx bar 118x96",
         "data": {
@@ -41256,6 +42357,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "625 272 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P1 Edit Step 12",
+        "type": "hx stepsel P1 Edit Step 12",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "591 270 118 32"
        }
       },
       {
@@ -41324,6 +42454,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P1 Edit Step 13",
+        "type": "hx stepsel P1 Edit Step 13",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "726 270 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P1 Step 14",
         "type": "hx bar 118x96",
         "data": {
@@ -41380,6 +42539,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "894 272 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P1 Edit Step 14",
+        "type": "hx stepsel P1 Edit Step 14",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "860 270 118 32"
        }
       },
       {
@@ -41448,6 +42636,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P1 Edit Step 15",
+        "type": "hx stepsel P1 Edit Step 15",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 458"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "995 270 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P1 Step 16",
         "type": "hx bar 118x96",
         "data": {
@@ -41510,82 +42727,8 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff181b2a",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[EDIT]/Parameter 458"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 357 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff181b2a",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[STEP]/Parameter 458"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 391 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "P1 Edit Step",
-        "type": "hx pick P1 Edit Step",
+        "name": "bar sel P1 Edit Step 16",
+        "type": "hx stepsel P1 Edit Step 16",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -41602,11 +42745,11 @@
        },
        "bounds": {
         "version": 1,
-        "acceptsHWFocus": "Yes",
+        "acceptsHWFocus": "No",
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "182 357 1023 68"
+        "bounds": "1129 270 118 32"
        }
       },
       {
@@ -41643,7 +42786,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "13 528 150 34"
+        "bounds": "13 374 150 34"
        }
       },
       {
@@ -41672,7 +42815,242 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "182 484 1011 121"
+        "bounds": "182 330 1011 121"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[STEP]/Parameter 460"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 528 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Step Level]/Parameter 460"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 508 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "P1 Level",
+        "type": "hx knob88_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 460"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 482 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Step Rate]/Parameter 147"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "586 508 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "P1 Step",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 147"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "486 482 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Length]/Parameter 148"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "884 508 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "P1 Length",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 148"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "784 482 250 126"
        }
       }
      ]
@@ -43275,6 +44653,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P2 Edit Step 1",
+        "type": "hx stepsel P2 Edit Step 1",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 116 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P2 Step 2",
         "type": "hx bar 118x96",
         "data": {
@@ -43331,6 +44738,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "356 118 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P2 Edit Step 2",
+        "type": "hx stepsel P2 Edit Step 2",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "322 116 118 32"
        }
       },
       {
@@ -43399,6 +44835,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P2 Edit Step 3",
+        "type": "hx stepsel P2 Edit Step 3",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "457 116 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P2 Step 4",
         "type": "hx bar 118x96",
         "data": {
@@ -43455,6 +44920,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "625 118 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P2 Edit Step 4",
+        "type": "hx stepsel P2 Edit Step 4",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "591 116 118 32"
        }
       },
       {
@@ -43523,6 +45017,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P2 Edit Step 5",
+        "type": "hx stepsel P2 Edit Step 5",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "726 116 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P2 Step 6",
         "type": "hx bar 118x96",
         "data": {
@@ -43579,6 +45102,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "894 118 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P2 Edit Step 6",
+        "type": "hx stepsel P2 Edit Step 6",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "860 116 118 32"
        }
       },
       {
@@ -43647,6 +45199,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P2 Edit Step 7",
+        "type": "hx stepsel P2 Edit Step 7",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "995 116 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P2 Step 8",
         "type": "hx bar 118x96",
         "data": {
@@ -43703,6 +45284,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "1163 118 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P2 Edit Step 8",
+        "type": "hx stepsel P2 Edit Step 8",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1129 116 118 32"
        }
       },
       {
@@ -43845,6 +45455,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P2 Edit Step 9",
+        "type": "hx stepsel P2 Edit Step 9",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 270 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P2 Step 10",
         "type": "hx bar 118x96",
         "data": {
@@ -43901,6 +45540,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "356 272 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P2 Edit Step 10",
+        "type": "hx stepsel P2 Edit Step 10",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "322 270 118 32"
        }
       },
       {
@@ -43969,6 +45637,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P2 Edit Step 11",
+        "type": "hx stepsel P2 Edit Step 11",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "457 270 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P2 Step 12",
         "type": "hx bar 118x96",
         "data": {
@@ -44025,6 +45722,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "625 272 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P2 Edit Step 12",
+        "type": "hx stepsel P2 Edit Step 12",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "591 270 118 32"
        }
       },
       {
@@ -44093,6 +45819,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P2 Edit Step 13",
+        "type": "hx stepsel P2 Edit Step 13",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "726 270 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P2 Step 14",
         "type": "hx bar 118x96",
         "data": {
@@ -44149,6 +45904,35 @@
         "whenVisible": "Always",
         "boundsType": "Absolute",
         "bounds": "894 272 82 30"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "bar sel P2 Edit Step 14",
+        "type": "hx stepsel P2 Edit Step 14",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "860 270 118 32"
        }
       },
       {
@@ -44217,6 +46001,35 @@
        "version": 2,
        "componentData": {
         "version": 1,
+        "name": "bar sel P2 Edit Step 15",
+        "type": "hx stepsel P2 Edit Step 15",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 461"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "995 270 118 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
         "name": "bar P2 Step 16",
         "type": "hx bar 118x96",
         "data": {
@@ -44279,82 +46092,8 @@
        "version": 2,
        "componentData": {
         "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff181b2a",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[EDIT]/Parameter 461"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 357 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "caption",
-        "type": "Label",
-        "data": {
-         "version": 1,
-         "textStyle": {
-          "version": 1,
-          "font": {
-           "version": 1,
-           "name": "Roboto",
-           "style": "Bold",
-           "height": 28.0
-          },
-          "colour": "ff181b2a",
-          "justification": "horizontallyCentred verticallyCentred",
-          "case": "Original"
-         },
-         "type": "Name",
-         "handleName": "WithName[STEP]/Parameter 461"
-        }
-       },
-       "handle remapping": {
-        "version": 1,
-        "map": []
-       },
-       "bounds": {
-        "version": 1,
-        "acceptsHWFocus": "No",
-        "showWhenDataModelInvalid": "Show",
-        "whenVisible": "Always",
-        "boundsType": "Absolute",
-        "bounds": "13 391 150 34"
-       }
-      },
-      {
-       "version": 2,
-       "componentData": {
-        "version": 1,
-        "name": "P2 Edit Step",
-        "type": "hx pick P2 Edit Step",
+        "name": "bar sel P2 Edit Step 16",
+        "type": "hx stepsel P2 Edit Step 16",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -44371,11 +46110,11 @@
        },
        "bounds": {
         "version": 1,
-        "acceptsHWFocus": "Yes",
+        "acceptsHWFocus": "No",
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "182 357 1023 68"
+        "bounds": "1129 270 118 32"
        }
       },
       {
@@ -44412,7 +46151,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "13 528 150 34"
+        "bounds": "13 374 150 34"
        }
       },
       {
@@ -44441,7 +46180,242 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "182 484 1011 121"
+        "bounds": "182 330 1011 121"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[STEP]/Parameter 463"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 528 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Step Level]/Parameter 463"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 508 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "P2 Level",
+        "type": "hx knob88_bi",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 463"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 482 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Step Rate]/Parameter 182"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "586 508 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "P2 Step",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 182"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "486 482 250 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Length]/Parameter 183"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "884 508 150 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "P2 Length",
+        "type": "hx knob88",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 183"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "784 482 250 126"
        }
       }
      ]

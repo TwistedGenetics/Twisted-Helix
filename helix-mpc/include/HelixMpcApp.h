@@ -72,8 +72,13 @@ private:
     int lastTable_[2] = {-1, -1};
     int lastProgram_ = -1;
     float lastCpuShown_ = -1.0f;
-    struct PerfEdit { int step = -1; float curve = -1, shape = -1, level = -9, levelCore = -9; };
+    struct PerfEdit
+    {
+        int step = -1; float curve = -1, shape = -1, level = -9, levelCore = -9;
+        float levels[16] = {-9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9};
+    };
     PerfEdit perfEdit_[2];
+    int filterProxy_[2][2] = {{-1, -1}, {-1, -1}};   // last shown list value, last core value
     int cpuCounter_ = 0;
 
     std::atomic<bool> quit_{false};
