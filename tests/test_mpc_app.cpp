@@ -4,6 +4,7 @@
 #include "Analysis.h"
 #include "HelixMpcApp.h"
 #include "helix/FxLibrary.h"
+#include "helix/Preset.h"
 #include "helix/WavIO.h"
 #include "helix/WavetableGen.h"
 #include <filesystem>
@@ -189,13 +190,26 @@ int main()
     app.tick();
     CHECK(std::fabs(app.getParam(P_X1_A) - 0.123f) < 1e-6f, "preset knob overwritten (%.3f)", (double)app.getParam(P_X1_A));
 
-    // An old project switching a rack effect on: it moves into a free slot.
-    app.setParam(P_X2_TYPE, 0.0f);
-    app.setParam(P_REV_ON, 1.0f);
-    app.setParam(P_REV_MIX, 0.33f);
-    app.tick();
-    CHECK(app.getParam(P_REV_ON) < 0.5f && std::string(fxlib::typeName((int)app.getParam(P_X2_TYPE))) == "HELIX Reverb"
-          && std::fabs(app.getParam(P_X2_MIX) - 0.33f) < 1e-6f, "rack reverb not folded (FX 2 = %s)", fxlib::typeName((int)app.getParam(P_X2_TYPE)));
+    // An old project (preset version 1) with a rack effect on: it moves into a free slot when loaded.
+    {
+        std::string text = capturePreset(app.engine(), nullptr).toString();
+        const auto at = text.find("\"version\": 2");
+        CHECK(at != std::string::npos, "version field not found");
+        if (at != std::string::npos) text.replace(at, 12, "\"version\": 1");
+        auto setv = [&](const char* id, const char* v) {
+            const std::string key = std::string("\"") + id + "\": ";
+            const auto k = text.find(key);
+            if (k == std::string::npos) return;
+            const auto e = text.find_first_of(",\n}", k + key.size());
+            text.replace(k + key.size(), e - k - key.size(), v);
+        };
+        setv("x2_type", "0"); setv("rev_on", "1"); setv("rev_mix", "0.33");
+        app.loadState(text);
+        app.tick();
+        CHECK(app.getParam(P_REV_ON) < 0.5f && std::string(fxlib::typeName((int)app.getParam(P_X2_TYPE))) == "HELIX Reverb"
+              && std::fabs(app.getParam(P_X2_MIX) - 0.33f) < 1e-6f, "rack reverb not folded (FX 2 = %s)",
+              fxlib::typeName((int)app.getParam(P_X2_TYPE)));
+    }
 
     { std::error_code ec; fs::remove_all(pf.dir, ec); }
     TEST_MAIN_END();

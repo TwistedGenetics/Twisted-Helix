@@ -66,10 +66,7 @@ public:
         for (size_t k = 0; k < user.size(); ++k)
         {
             std::vector<float> v((size_t)kMpcNumParams);
-            float folded[kNumParams];
-            std::copy(user[k].params, user[k].params + kNumParams, folded);
-            fxlib::foldRack(folded);
-            for (int i = 0; i < kMpcNumParams; ++i) v[(size_t)i] = i < kNumParams ? folded[i] : mpcParamDef(i).def;
+            for (int i = 0; i < kMpcNumParams; ++i) v[(size_t)i] = i < kNumParams ? user[k].params[i] : mpcParamDef(i).def;
             v[(size_t)MP_PRESET] = (float)(f.size() + k);
             addProgram(("* " + user[k].name).c_str(), v);
         }

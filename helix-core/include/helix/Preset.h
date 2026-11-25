@@ -20,7 +20,8 @@ namespace helix {
 class Engine;
 class TableLibrary;
 
-constexpr int kPresetVersion = 1;
+// 2 (0.3.6): the FX rack lives in the effect slots. Version-1 presets are folded when read (fxlib::foldRack).
+constexpr int kPresetVersion = 2;
 
 struct Preset
 {

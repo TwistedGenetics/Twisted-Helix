@@ -456,23 +456,6 @@ void HelixMpcApp::tick()
         lastCore = combinedFilterIndex((int)getParam(pModel), (int)getParam(pType), (int)getParam(pKind));
     }
 
-    // 0.3.6: the old FX rack lives in the effect slots. Anything that switches a rack effect on (an old project's
-    // saved values, automation) is moved into a free slot here, and the MPC is told about every change.
-    {
-        static const int rackOn[] = {P_DIST_ON, P_CHO_ON, P_PH_ON, P_DLY_ON, P_REV_ON, P_OTT_ON, P_EQ_ON};
-        bool any = false;
-        for (int p : rackOn) any |= getParam(p) >= 0.5f;
-        if (any)
-        {
-            std::vector<float> before((size_t)kNumParams), after((size_t)kNumParams);
-            for (int i = 0; i < kNumParams; ++i) before[(size_t)i] = after[(size_t)i] = getParam(i);
-            fxlib::foldRack(after.data());
-            for (int i = 0; i < kNumParams; ++i)
-                if (after[(size_t)i] != before[(size_t)i]) { setParam(i, after[(size_t)i]); platform_.notifyParameter(i, after[(size_t)i]); }
-            for (auto& ls : libSlot_) ls.type = -1;   // (types changed with their knobs: no defaults)
-        }
-    }
-
     // Effects library: a new effect in a slot gets its own defaults (unless the knobs moved with it: a preset), and
     // the knob names redraw.
     for (int sl = 0; sl < fxlib::kNumSlots; ++sl)

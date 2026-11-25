@@ -97,6 +97,8 @@ bool Preset::fromJson(const Json& j, Preset& out, std::string* error)
             p.lfoPoints[l] = n;
         }
     }
+    // Presets from before 0.3.6 (version 1): the FX rack's switched-on effects move into the effect slots.
+    if (version < 2) fxlib::foldRack(p.params);
     out = p;
     return true;
 }
@@ -141,7 +143,6 @@ void applyPreset(const Preset& p, Engine& e, TableLibrary* lib)
     }
     float params[kNumParams];
     std::copy(p.params, p.params + kNumParams, params);
-    fxlib::foldRack(params);   // presets from before 0.3.6: the FX rack's effects move into the effect slots
     if (lib)
         for (int s = 0; s < 2; ++s)
         {
