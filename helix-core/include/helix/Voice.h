@@ -1,6 +1,7 @@
 // One synth voice: two wavetable oscillators, sub, noise, two filters, four envelopes, four LFOs, two performers,
 // and its own copy of the modulated parameters.
 #pragma once
+#include "helix/CharOsc.h"
 #include "helix/Config.h"
 #include "helix/Envelope.h"
 #include "helix/Filter.h"
@@ -77,6 +78,7 @@ private:
     Lfo lfo_[kNumLfos];
     WtOscillator osc_[2];
     SubOscillator sub_;
+    CharOsc co_;
     NoiseSource noise_;
     Filter filt_[2];
     mega::MegaFilter mfilt_[2];   // F1/F2 Model > 0: the Mega Synth models
@@ -99,7 +101,7 @@ private:
 
     float oscL_[2][kCtrlBlock], oscR_[2][kCtrlBlock], oscM_[2][kCtrlBlock];
     float prevM_[2][kCtrlBlock];
-    float sub_buf_[kCtrlBlock], noise_buf_[kCtrlBlock];
+    float sub_buf_[kCtrlBlock], noise_buf_[kCtrlBlock], co_buf_[kCtrlBlock];
     float mo_buf_[kCtrlBlock];
     float driftPhase_ = 0.0f, driftFrom_ = 0.0f, driftTo_ = 0.0f;   // Reese drift     // modulation oscillator (sine, -1..1)
     float moPhase_ = 0.0f;

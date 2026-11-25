@@ -86,6 +86,7 @@ private:
     struct LibSlot { int type = -1; float knobs[7] = {}; };   // Mix + A..F as last seen
     LibSlot libSlot_[4];   // last shown list value, last core value
     int cpuCounter_ = 0;
+    int lastCharFam_ = -99;
 
     std::atomic<bool> quit_{false};
     std::thread worker_;

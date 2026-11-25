@@ -714,6 +714,39 @@ def chapter_subnoise():
                  ["Phase Lock", "Every note starts both oscillators and all unison voices at the same phase, so every hit "
                   "has the same punch (the random phase spread is skipped). Off: each note starts differently, which is "
                   "warmer for pads."]], [32, 138])]
+    s += H2("Character oscillator")
+    s += [P("A third sound source in every voice that plays one of Twisted Genetics' own bass and rave engines, the same "
+            "DSP as the microKORG 2 / NTS-1 units <b>Hoover</b>, <b>Dread Bass</b> and <b>Rollers</b>. Each is a "
+            "finished sound on its own, so the character oscillator is the quickest way to a hoover, a donk or a rolling "
+            "sub; layer it under the wavetables or use it alone (switch Osc A off). On the MPC it is the <b>CHAR OSC</b> "
+            "page (OSC key); on the computer the <b>Character Osc</b> panel on the GLOBAL tab."),
+          table([["Engine", "Sound"],
+                 ["Hoover, Mentasm, Hoover Reese, Rave", "The Hoover unit: a stack of PWM-saws (the Alpha Juno trick) with "
+                  "a pitch dive on each note, chorus smear and drift. Mentasm adds an octave-down layer, Rave an octave-up "
+                  "scream, Hoover Reese is two plain beating saws."],
+                 ["Dread, Donk, Growl, Dread Hoover", "Dread Bass: Dread is a 303-style square played backwards (the "
+                  "filter sweeps open), Donk a resonance ringing on a harmonic, Growl 2-op FM, Dread Hoover two detuned "
+                  "pulses."],
+                 ["Rollers Sub, Reese, Sub+Reese, Hoover", "Rollers: a clean sine sub and/or detuned drifting saws; drive "
+                  "and crunch only ever touch the top, so the sub stays clean."]], [44, 126]),
+          table([["Control", "What it does"],
+                 ["Engine", "Off or one of the twelve engines above."],
+                 ["Level / Semi / Pan", "Volume, transpose in semitones, position."],
+                 ["Timbre, Character, Drive, Sub", "The engine's four sound knobs; their names change with the engine "
+                  "(Hoover: Detune, PWM, Drive, Sub. Dread: Sweep, Reso, Crunch, Sub. Donk: Harmonic, Reso ... Rollers: "
+                  "Detune, Blend, Drive, Crunch). Timbre, Character and Drive (and Level) are matrix destinations."],
+                 ["Env / Time", "The engine's pitch envelope: Hoover dive (up to two octaves), Dread Bass pitch envelope "
+                  "(-24 to +48 semitones), Rollers pitch drop; Time is how long it takes."],
+                 ["To Filter 1 / 2", "Sends into the filters (Filter 1 at 100% by default). Both at 0: silent."]], [36, 134]),
+          P("The character oscillator follows glide and pitch bend and goes through HELIX's amp envelope, filters and "
+            "effects like the other sources.")]
+    s += H2("Chord memory")
+    s += [P("<b>Chord</b> (VOICE and CHAR OSC pages on the MPC, the Voices panel on the computer) makes every key play a chord: Octave, "
+            "Fifth, Power, Minor, Major, Minor 7, Major 7, Sus 4, Minor 9, Minor 11, Rave Stab (minor with octave and "
+            "tenth), Dub Stab and Hoover Oct (an octave below and above). One finger plays rave stabs; with the "
+            "Hoover engine it is the classic hoover chord. Chord works in Poly mode; each note keeps the chord it "
+            "started with, so changing Chord while holding keys never leaves notes hanging. Pads count as keys, so a "
+            "chord uses up to six voices per pad: raise Voices if stabs cut each other off.")]
     s += H2("Modulation oscillator")
     s += [P("The mod oscillator works like Massive's. It is a sine wave you never hear directly. It plays at the "
             "note's pitch plus <b>Pitch</b> and follows glide and pitch bend. It changes the other sounds in four "

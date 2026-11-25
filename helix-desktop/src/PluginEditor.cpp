@@ -1,4 +1,5 @@
 #include "PluginEditor.h"
+#include "helix/CharOsc.h"
 #include "helix/FxLibrary.h"
 #include "helix/ModSystem.h"
 
@@ -939,6 +940,15 @@ public:
                      knob(P_RS_GROWL, reese_, "Growl")};
         reeseAmt_ = {knob(P_RS_G_CUT, reese_, "Cutoff", ParamKnob::Size::Small), knob(P_RS_G_DRIVE, reese_, "Drive", ParamKnob::Size::Small),
                      knob(P_RS_G_POS, reese_, "Position", ParamKnob::Size::Small), knob(P_RS_G_WARP, reese_, "Warp", ParamKnob::Size::Small)};
+        // Character oscillator (Hoover / Dread Bass / Rollers engines): the knob names follow the engine
+        co_ = own(std::make_unique<PanelFrame>("Character Osc"));
+        coType_ = combo(P_CO_TYPE, co_);
+        coTop_ = {knob(P_CO_LEVEL, co_, "Level"), knob(P_CO_SEMI, co_, "Semi"), knob(P_CO_PAN, co_, "Pan"),
+                  knob(P_CO_TO_F1, co_, "To F1"), knob(P_CO_TO_F2, co_, "To F2")};
+        coKnobs_ = {knob(P_CO_TIMBRE, co_, "Timbre"), knob(P_CO_CHAR, co_, "Character"), knob(P_CO_DRIVE, co_, "Drive"),
+                    knob(P_CO_SUB, co_, "Sub"), knob(P_CO_ENV, co_, "Env"), knob(P_CO_TIME, co_, "Time")};
+        chord_ = combo(P_CHORD, voice_, "Chord memory");
+        chord_->box().setTooltip("Chord memory: every key plays this chord (poly mode)");
         presets_ = own(std::make_unique<PanelFrame>("Presets"));
         list_ = own(std::make_unique<juce::ListBox>("presets", this), presets_);
         list_->setRowHeight(28);
@@ -951,7 +961,7 @@ public:
         voice_->setBounds(0, 0, 580, 240);
         auto c = voice_->content();
         auto row = c.removeFromTop(52);
-        layoutRow(row.withHeight(44), {poly_, glideMode_, steal_}, 12);
+        layoutRow(row.withHeight(44), {poly_, glideMode_, steal_, chord_}, 12);
         c.removeFromTop(8);
         layoutRow(c, {vk_[0], vk_[1], vk_[2], vk_[3]});
         engine_->setBounds(0, 248, 580, 200);
@@ -971,7 +981,15 @@ public:
         r1.removeFromLeft(16);
         themeBox_->setBounds(r1.removeFromLeft(160).withTrimmedTop(14).withHeight(26));
         cpuArea_ = e.withTrimmedTop(16);
-        presets_->setBounds(588, 0, 596, 708);
+        co_->setBounds(588, 408, 596, 300);
+        {
+            coType_->setBounds(co_->titleArea().removeFromRight(200));
+            auto cc = co_->content();
+            auto top = cc.removeFromTop(cc.getHeight() / 2);
+            layoutRow(top, {coTop_[0], coTop_[1], coTop_[2], coTop_[3], coTop_[4]});
+            layoutRow(cc, {coKnobs_[0], coKnobs_[1], coKnobs_[2], coKnobs_[3], coKnobs_[4], coKnobs_[5]});
+        }
+        presets_->setBounds(588, 0, 596, 400);
         auto pr = presets_->content();
         auto bar = pr.removeFromBottom(34);
         load_.setBounds(bar.removeFromLeft(120).reduced(0, 3));
@@ -1010,6 +1028,8 @@ public:
     {
         Page::tick();
         if (shownRows_ != (int)proc.presetList().size()) { shownRows_ = (int)proc.presetList().size(); list_->updateContent(); }
+        const int ct = proc.engine().params().getInt(P_CO_TYPE);
+        for (int k = 0; k < 6; ++k) coKnobs_[(size_t)k]->setLabel(ct > 0 ? juce::String(charKnobName(ct, k)) : juce::String("-"));
         repaint(cpuArea_.translated(engine_->getX(), engine_->getY()));
     }
 private:
@@ -1038,6 +1058,9 @@ private:
     juce::ComboBox* themeBox_;
     juce::ListBox* list_;
     PanelFrame* reese_ = nullptr;
+    PanelFrame* co_ = nullptr;
+    ParamCombo *coType_ = nullptr, *chord_ = nullptr;
+    std::vector<ParamKnob*> coTop_, coKnobs_;
     ParamToggle* reeseLock_ = nullptr;
     std::vector<ParamKnob*> reeseTop_, reeseAmt_;
     juce::TextButton load_{"Load"}, rescan_{"Refresh list"};

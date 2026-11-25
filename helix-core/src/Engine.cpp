@@ -216,12 +216,36 @@ void Engine::allNotesOff(bool hard)
     noteStackSize_ = 0;
 }
 
+// Chord memory: every played note also plays the chord's extra notes (poly mode only). The chord a note started
+// with is remembered, so its release lets go of the same notes even if Chord changed in between.
+void Engine::chordOn(int note, int vel)
+{
+    const int c = (int)ctx_.p[P_POLY_MODE] == 0 ? (int)params_.get(P_CHORD) : 0;
+    chordUsed_[note & 127] = (uint8_t)c;
+    noteOn(note, vel);
+    int iv[6];
+    const int k = choices::chordIntervals(c, iv);
+    for (int i = 0; i < k; ++i)
+        if (note + iv[i] >= 0 && note + iv[i] < 128) noteOn(note + iv[i], vel);
+}
+
+void Engine::chordOff(int note)
+{
+    const int c = chordUsed_[note & 127];
+    chordUsed_[note & 127] = 0;
+    noteOff(note);
+    int iv[6];
+    const int k = choices::chordIntervals(c, iv);
+    for (int i = 0; i < k; ++i)
+        if (note + iv[i] >= 0 && note + iv[i] < 128) noteOff(note + iv[i]);
+}
+
 void Engine::handleMidi(const MidiMsg& m)
 {
     switch (m.status())
     {
-        case 0x90: if (m.data[2] > 0) noteOn(m.data[1], m.data[2]); else noteOff(m.data[1]); break;
-        case 0x80: noteOff(m.data[1]); break;
+        case 0x90: if (m.data[2] > 0) chordOn(m.data[1], m.data[2]); else chordOff(m.data[1]); break;
+        case 0x80: chordOff(m.data[1]); break;
         case 0xA0:   // poly aftertouch (pad pressure)
             for (Voice& v : voices_) if (v.active() && v.note() == m.data[1]) v.setPressure((float)m.data[2] / 127.0f);
             break;

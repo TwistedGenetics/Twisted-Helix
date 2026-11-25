@@ -44,6 +44,20 @@ const std::vector<std::string> perfStepShape = {"Hold", "Ramp Up", "Ramp Down", 
                                                 "Gate 1/2", "Gate 1/4", "Gate 3/4", "Saw x2", "Saw Dn x2", "Tri x2",
                                                 "Sine x2", "Pulse x2", "Stairs Up", "Stairs Dn", "Bounce", "Off",
                                                 "Roll x2", "Roll x3", "Roll x4", "Roll x8"};
+const std::vector<std::string> charType = {"Off", "Hoover", "Mentasm", "Hoover Reese", "Rave", "Dread", "Donk", "Growl",
+                                          "Dread Hoover", "Rollers Sub", "Rollers Reese", "Rollers Sub+Reese",
+                                          "Rollers Hoover"};
+const std::vector<std::string> chordMemory = {"Off", "Octave", "Fifth", "Power", "Minor", "Major", "Minor 7", "Major 7",
+                                             "Sus 4", "Minor 9", "Minor 11", "Rave Stab", "Dub Stab", "Hoover Oct"};
+int chordIntervals(int c, int* out)
+{
+    static const int iv[14][6] = {{0}, {1, 12}, {1, 7}, {2, 7, 12}, {2, 3, 7}, {2, 4, 7}, {3, 3, 7, 10}, {3, 4, 7, 11},
+                                  {2, 5, 7}, {4, 3, 7, 10, 14}, {5, 3, 7, 10, 14, 17}, {4, 3, 7, 12, 15}, {3, 7, 10, 15},
+                                  {2, -12, 12}};
+    if (c < 0 || c > 13) return 0;
+    for (int k = 0; k < iv[c][0]; ++k) out[k] = iv[c][k + 1];
+    return iv[c][0];
+}
 const std::vector<std::string> perfFeel = {"Normal", "Half-time", "Double", "Triplet"};
 const std::vector<std::string> perfFill = {"Off", "Every 2", "Every 4"};
 const std::vector<std::string> lfoJump = {"Off", "x2", "x3", "x4", "x8", "x1/2"};

@@ -33,7 +33,9 @@ enum MpcParam : int
     // 0.4.2 Print to wavetable: render the patch (sweeping a control) into a new table in Wavetables/Prints
     MP_PR_SRC = MP_LIBNAME + 24, MP_PR_FRAMES, MP_PR_LEN, MP_PR_NOTE, MP_PR_SLOT, MP_PR_FX, MP_PR_GO,
     MP_PR_STATUS,                 // read-only: "Printing...", the new table's name or the error (value flips to redraw)
-    kMpcParamEnd
+    // 0.4.4 character oscillator knob names (read-only, follow the engine like the effect slots' names)
+    MP_CONAME,
+    kMpcParamEnd = MP_CONAME + 6
 };
 constexpr int kMpcNumParams = kMpcParamEnd;
 constexpr int kNumPresetBanks = 8;

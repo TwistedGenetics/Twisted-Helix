@@ -13,6 +13,7 @@ void Voice::prepare(float sampleRate)
     for (auto& o : osc_) o.setSampleRate(sampleRate);
     sub_.setSampleRate(sampleRate);
     noise_.setSampleRate(sampleRate);
+    co_.prepare(sampleRate);
     for (auto& f : filt_) f.prepare(sampleRate);
     std::memset(prevM_, 0, sizeof prevM_);
     stealLen_ = std::max(1, (int)(0.003f * sampleRate));   // 3 ms steal fade
@@ -39,6 +40,7 @@ void Voice::startNow(const NoteStart& s)
     amp_.hardReset();
     amp_.gate(true);
     for (auto& e : env_) { e.hardReset(); e.gate(true); }
+    co_.start(true);
 }
 
 void Voice::start(const NoteStart& s) { stealing_ = false; startNow(s); }
@@ -66,6 +68,7 @@ void Voice::legatoTo(int note, float velocity, bool glide, bool retrigger)
         amp_.gate(true);
         for (auto& e : env_) e.gate(true);
         beatsSinceStart_ = 0.0;
+        co_.start(false);
     }
 }
 
@@ -357,6 +360,21 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
     }
     else bufClear(noise_buf_, n);
 
+    // Character oscillator (Hoover / Dread Bass / Rollers engines)
+    const int coType = (int)vp[P_CO_TYPE];
+    if (coType > 0)
+    {
+        CharKnobs k;
+        k.timbre = clamp(vp[P_CO_TIMBRE], 0.0f, 1.0f);
+        k.character = clamp(vp[P_CO_CHAR], 0.0f, 1.0f);
+        k.drive = clamp(vp[P_CO_DRIVE], 0.0f, 1.0f);
+        k.sub = vp[P_CO_SUB];
+        k.env = vp[P_CO_ENV];
+        k.time = vp[P_CO_TIME];
+        co_.render(coType, clamp(pitch_ + bend + vp[P_CO_SEMI], 0.0f, 127.0f), k, co_buf_, n);
+        bufScale(co_buf_, std::max(0.0f, vp[P_CO_LEVEL]), n);
+    }
+
     // Modulation oscillator: a sine at the note's pitch + MO Pitch (follows glide and bend)
     moOn_ = vp[P_MO_ON] >= 0.5f;
     if (moOn_)
@@ -419,6 +437,17 @@ void Voice::render(const EngineContext& ctx, float* l, float* r, int n)
                 bufMixIn(busL_[f], sub_buf_, gl * send, n);
                 bufMixIn(busR_[f], sub_buf_, gr * send, n);
             }
+    }
+    if (coType > 0)
+    {
+        float gl, gr; panGains(vp[P_CO_PAN] + panMod_, gl, gr);
+        for (int f = 0; f < 2; ++f)
+        {
+            const float send = f == 0 ? vp[P_CO_TO_F1] : vp[P_CO_TO_F2];
+            if (send <= 0.0f) continue;
+            bufMixIn(busL_[f], co_buf_, gl * send, n);
+            bufMixIn(busR_[f], co_buf_, gr * send, n);
+        }
     }
     if (vp[P_NOISE_ON] >= 0.5f)
     {

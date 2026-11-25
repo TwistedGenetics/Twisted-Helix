@@ -88,6 +88,9 @@ private:
     void handleMidi(const MidiMsg& m);
     void noteOn(int note, int vel);
     void noteOff(int note);
+    void chordOn(int note, int vel);
+    void chordOff(int note);
+    uint8_t chordUsed_[128] = {};
     void allNotesOff(bool hard);
     void renderBlock(float* l, float* r, int n);
     void snapshotParams(const Transport& tr, int n);

@@ -673,6 +673,16 @@ def pages():
         S("GROWL\nMOVES", [K("Growl Cutoff", "Cutoff", bi=True), K("Growl Drive", "Drive"), K("Growl Pos", "Position", bi=True),
                            K("Growl Warp", "Warp")])])
 
+    # Character oscillator: Twisted Genetics' Hoover / Dread Bass / Rollers engines; the knob names follow the engine
+    page(0, 6, "CHAR OSC", [
+        S("CHAR\nOSC", [K("Char Osc", "Engine", w=330), K("CO Level", "Level", w=220), K("CO Semi", "Semi", bi=True, w=220),
+                        K("CO Pan", "Pan", bi=True, w=220)]),
+        S("SOUND", [K("CO Timbre", "Timbre", dyn="CO Name A"), K("CO Character", "Character", dyn="CO Name B"),
+                    K("CO Drive", "Drive", dyn="CO Name C"), K("CO Sub", "Sub", dyn="CO Name D")]),
+        S("ENV\nROUTE", [K("CO Env", "Env", bi=True, dyn="CO Name E"), K("CO Env Time", "Time", dyn="CO Name F"),
+                         K("CO > F1", "To Filter 1"), K("CO > F2", "To Filter 2")]),
+        S("CHORD", [K("Chord", "Chord Memory", w=360)])])
+
     # ---- FILTER
     def filt(n):
         # The screen is one list per filter: the 13 HELIX types, then every Mega model x type (kept in step with the
@@ -777,7 +787,8 @@ def pages():
                                      K("Voices", "Voices"), K("Glide", "Glide")]),
                          S("PLAY", [SEG("Glide Mode", "Glide", ["Always", "Legato"]), SEG("Steal", "Steal", ["Oldest", "Quietest"]),
                                     K("Bend Range", "Bend Range"), K("Vel Sens", "Vel Sens")]),
-                         S("ENGINE", [SEG("Quality", "Quality", ["Eco", "Normal", "High"]), TG("CPU Guard", "CPU Guard")])])
+                         S("ENGINE", [SEG("Quality", "Quality", ["Eco", "Normal", "High"]), TG("CPU Guard", "CPU Guard")]),
+                         S("CHORD", [K("Chord", "Chord Memory", w=360)])])
     return P
 
 FN_NAMES = ["OSC", "FILTER", "ENV", "LFO", "FX", "MOD", "PERF", "MACRO", "BROWSE"]

@@ -1,5 +1,6 @@
 #include "HelixMpcApp.h"
 #include "helix/PrintTable.h"
+#include "helix/CharOsc.h"
 #include "helix/FxLibrary.h"
 #include "helix/ModSystem.h"
 #include "helix/WavetableGen.h"
@@ -94,6 +95,12 @@ static ParamDef extraDefs[kMpcNumParams - kMpcReserveEnd] = {
     {"mpc_pr_fx", "Print FX", ParamKind::Bool, 0, 1, 1, "", nullptr, false},
     {"mpc_pr_go", "Print", ParamKind::Bool, 0, 1, 0, "", nullptr, false},
     {"mpc_pr_status", "Print Status", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
+    {"mpc_co_na", "CO Name A", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
+    {"mpc_co_nb", "CO Name B", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
+    {"mpc_co_nc", "CO Name C", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
+    {"mpc_co_nd", "CO Name D", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
+    {"mpc_co_ne", "CO Name E", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
+    {"mpc_co_nf", "CO Name F", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
 };
 static_assert(sizeof(extraDefs) / sizeof(extraDefs[0]) == kMpcNumParams - kMpcReserveEnd, "extraDefs out of step");
 
@@ -307,6 +314,11 @@ bool HelixMpcApp::formatValue(int index, float plain, std::string& out) const
         }
         return -1;
     };
+    if (index >= MP_CONAME && index < MP_CONAME + 6)
+    {
+        out = charKnobName(engine_.params().getInt(P_CO_TYPE), index - MP_CONAME);
+        return true;
+    }
     if (index >= MP_LIBNAME && index < MP_LIBNAME + fxlib::kNumSlots * fxlib::kNumKnobs)
     {
         const int s = (index - MP_LIBNAME) / fxlib::kNumKnobs, k = (index - MP_LIBNAME) % fxlib::kNumKnobs;
@@ -565,6 +577,22 @@ void HelixMpcApp::tick()
             }
         ls.type = type;
         for (int i = 0; i <= fxlib::kNumKnobs; ++i) ls.knobs[i] = getParam(b + 1 + i);
+    }
+
+    // Character oscillator: the knob names follow the engine
+    {
+        const int ct = engine_.params().getInt(P_CO_TYPE);
+        const int fam = ct >= kCharDread && ct <= kCharDreadHoover ? 10 + ct : charFamily(ct);   // Dread modes differ
+        if (fam != lastCharFam_)
+        {
+            lastCharFam_ = fam;
+            for (int k = 0; k < 6; ++k)
+            {
+                const float v = getParam(MP_CONAME + k) >= 0.5f ? 0.0f : 1.0f;
+                setParam(MP_CONAME + k, v);
+                platform_.notifyParameter(MP_CONAME + k, v);
+            }
+        }
     }
 
     // Triggers (momentary parameters).
