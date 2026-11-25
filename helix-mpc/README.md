@@ -48,14 +48,16 @@ edits it. 9 function keys; press a key again for its next page:
 | FX | FX · FX+ · CHO/PHS · EQ · FX ORDER | distortion, delay, reverb, OTT · crusher, delay time / tone, reverb damp / predelay, OTT up / down · chorus, phaser · 3-band EQ · effect order |
 | MOD | M1-4 … M13-16 · M CURVE | the 16 mod-matrix slots (source, destination, amount, aux) and their curves |
 | PERF | PERF · P1 STEP · P1 SHAPE · P2 STEP · P2 SHAPE | LFO step counts, performer rate / length / mode, the performers' 16 steps and step shapes |
-| MACRO | MACROS | Macro 1-8: put these on the Q-Links in your projects |
-| BROWSE | BROWSE · SAMPLE · VOICE | Preset, Load, Mutate 10%, CPU, Pad Browse / Bank · Sample > Table · master, voices, glide, bend, quality |
+| MACRO | MACROS · SCENES | Macro 1-8: put these on the Q-Links in your projects · pad scenes, Filth, Pad Browse / Bank |
+| BROWSE | BROWSE · TABLES · VOICE | Preset, Load, Mutate 10%, CPU, Name (on-screen keyboard), Slot, Save · Sample > Table, Print · master, voices, glide, bend, quality |
 
 In Program Q-Link mode the knobs are Macro 1-8, F1 Cutoff / Reso / Drive, A and B WT Pos, Delay Mix, Reverb Mix
 and Master.
 
-- **Presets**: the MPC's own preset menu lists the 24 factory presets; the **Preset** control + **Load** also
-  reaches your `Content/Presets`.
+- **Presets**: the MPC's own preset menu lists the factory presets, your `Content/Presets` files and the user slots
+  U001-U128. The BROWSE page's **Preset** control lists the same entries in the same order and follows the menu.
+- **Saving**: type the name on the BROWSE page's keyboard, pick a **Slot** and press **Save**. The slot, the
+  **Preset** box and the MPC's preset menu show the new name straight away.
 - **Pad Browse** (instead of "hold Shift to audition", which a plugin cannot see): while it is on, pads 1-16
   load presets of the chosen **Pad Bank** and play them.
 - **CPU** shows HELIX's own load ("23%", "ECO2" when the CPU guard has stepped quality down).

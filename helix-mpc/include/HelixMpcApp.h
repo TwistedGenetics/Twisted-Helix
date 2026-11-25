@@ -64,6 +64,9 @@ private:
     void startPrint();
     void saveUserSlot(int s);
     void syncNameEditor();
+    void typeKey(int key);
+    int slotBase() const;                          // browser index of U001 (call with presetsMutex_ held)
+    void nudge(int index);                         // re-send a parameter with a tiny change so its text redraws
     void flipPrintStatus();
 
     IPlatform& platform_;
@@ -98,6 +101,10 @@ private:
     std::vector<std::string> slotNames_;         // user slot names ("" = empty), for the Save Slot display
     std::atomic<bool> nameReset_{true};
     int lastNameCursor_ = -1, lastNameChar_ = -1;
+    std::mutex keyMutex_;
+    std::vector<int> keys_;                      // NAME keyboard taps, queued by setParam (never missed)
+    bool caps_ = false;
+    bool nudged_[kMpcNumParams - kMpcReserveEnd] = {};
 public:
     // Program index of user slot U1 (= factory + Presets/ files when the program list was built)
     void setProgramBase(int b) { programBase_ = b; }

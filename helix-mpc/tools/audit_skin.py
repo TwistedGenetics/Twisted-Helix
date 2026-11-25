@@ -78,6 +78,13 @@ for tab in pd["tabs"]:
                 seen_params.add(pidx(e["componentData"]["data"][k]))
             touch.append((e["componentData"]["name"], (x, y, w, h)))
             continue
+        if e["componentData"]["name"].startswith("keys"):
+            # the NAME keyboard: buttons with ids 1..n on Name Key, springing back to 0 when the finger lifts
+            pi = pidx(rm.get("Data")); seen_params.add(pi); per_kind["keyboard keys"] += 1
+            kk = [k["componentData"] for k in defs[typ]["componentsData"]]
+            if not rm.get("Data", "").startswith("ResetOnGestureEnd/") or any(k["data"].get("gestureBehaviour") != "Instant" for k in kk):
+                fails.append("%s: keyboard keys miswired" % name)
+            continue
         if typ not in defs:
             fails.append("%s: %s uses unknown component %s" % (name, e["componentData"]["name"], typ)); continue
         pi = pidx(rm.get("Data"))
@@ -136,6 +143,8 @@ FOLDED = {"FX Slot %d" % i for i in range(1, 8)} | {"Distortion", "Dist Type", "
     "Delay Fdbk", "Delay Tone", "Delay Mix", "Reverb", "Reverb Type", "Rev Size", "Rev Decay", "Rev Damp", "Rev Predelay",
     "Reverb Mix", "OTT", "OTT Depth", "OTT Time", "OTT Upward", "OTT Down", "OTT Out", "EQ", "Low Freq", "Low Gain",
     "Mid Freq", "Mid Gain", "Mid Q", "High Freq", "High Gain"}
+# 0.5.2: the name editor's cursor / letter dials and Clear gave way to the NAME page keyboard
+FOLDED |= {"Name Cursor", "Name Letter", "Clear Name"}
 missing = []
 for pg in old["pages"]:
     for c in pg["controls"]:

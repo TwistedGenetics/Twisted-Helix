@@ -36,6 +36,9 @@ public:
 
     // The host's current program (built-in preset), or -1 if the host has none. Polled by the app's worker.
     virtual int currentProgram() const { return -1; }
+    // A program's name and values changed (a user slot was saved into): the host's preset menu re-reads it.
+    virtual void updateProgram(int index, const std::string& name, const std::vector<float>& plainValues)
+    { (void)index; (void)name; (void)plainValues; }
 
     // ---- encoders
     // Q-Link knobs per page (16 on MPCs). Banks of four are described by the skin, not by code.

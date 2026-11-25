@@ -41,7 +41,10 @@ enum MpcParam : int
     // 0.4.7 user slots: 16 entries at the end of the MPC's preset menu; Save writes the sound into the chosen one
     MP_SAVE_SLOT, MP_SAVE_GO,
     // 0.4.8 naming before saving: a cursor, the letter under it (jog wheel / Q-Link), the name shown, Clear
+    //      (0.5.2: CURSOR, LETTER and CLEAR are no longer on the screen; the keyboard below replaced them)
     MP_NAME_CURSOR, MP_NAME_CHAR, MP_NAME_SHOW, MP_NAME_CLEAR,
+    // 0.5.2 the on-screen keyboard on the NAME page: key id while touched (see nameKeyLabel), 0 when lifted
+    MP_NAME_KEY,
     kMpcParamEnd
 };
 constexpr int kMpcNumParams = kMpcParamEnd;
@@ -49,6 +52,11 @@ constexpr int kNumPresetBanks = 8;
 constexpr int kMaxPresets = 256;
 constexpr int kNumUserSlots = 128;  // "U001" .. "U128" programs, files in Content/User Slots
 constexpr int kMaxNameLen = 20;
+// The NAME page keyboard: ids 1-40 are the four rows of characters, then SPACE, DEL, CLEAR, CAPS.
+constexpr int kNameKeyRows = 4, kNameKeysPerRow = 10;
+constexpr int kKeySpace = 41, kKeyDel = 42, kKeyClear = 43, kKeyCaps = 44, kNumNameKeys = 44;
+// The character key id k types (upper case; "" for SPACE / DEL / CLEAR / CAPS)
+char nameKeyChar(int k);
 
 // Definition of an MPC parameter: core params, fillers (hidden, id "reserved_N") and the MPC-only ones.
 const ParamDef& mpcParamDef(int index);

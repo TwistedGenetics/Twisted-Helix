@@ -25,6 +25,9 @@ struct FakePlatform : IPlatform
     void notifyParameter(int index, float v) override { notified[index] = v; }
     void requestDisplayRefresh() override {}
     int currentProgram() const override { return program; }
+    int progIndex = -1; std::string progName; std::vector<float> progValues;
+    void updateProgram(int index, const std::string& name, const std::vector<float>& v) override
+    { progIndex = index; progName = name; progValues = v; }
 };
 
 static void block(HelixMpcApp& app, std::vector<MidiMsg> ev = {}, int n = 256)
@@ -53,7 +56,7 @@ int main()
     HelixMpcApp app(pf, false);   // no worker thread: the test calls tick() itself
     app.prepare(44100.0, 512);
     app.waitIdle();
-    CHECK(app.numPresets() == (int)factoryPresets().size() + 1, "presets: %d", app.numPresets());
+    CHECK(app.numPresets() == (int)factoryPresets().size() + 1 + kNumUserSlots, "presets: %d", app.numPresets());
     CHECK(app.presetName((int)factoryPresets().size()) == "My Wobble", "user preset name");
 
     // Pad browse: pad 3 (note 38) selects preset 2 and is replayed once the preset is in.
@@ -243,21 +246,18 @@ int main()
     // User slots: name the sound, Save into U003; picking U003 in the preset menu loads it back
     app.setProgramBase((int)factoryPresets().size());
     app.setParam(P_F1_CUTOFF, 777.0f);
-    app.setParam(MP_NAME_CLEAR, 1.0f);
+    // the keyboard: each tap is a key id, then 0 when the finger lifts (taps between two worker ticks all count)
+    auto key = [&](int k) { app.setParam(MP_NAME_KEY, (float)k); app.setParam(MP_NAME_KEY, 0.0f); };
+    auto keyOf = [](char c) { for (int k = 1; k <= 40; ++k) if (nameKeyChar(k) == c) return k; return 0; };
+    key(kKeyClear);
+    for (char c : std::string("DUB 2X")) key(c == ' ' ? kKeySpace : keyOf(c));
+    key(kKeyDel);
     app.tick();
-    const std::string word = "Dub 2";
-    for (size_t k = 0; k < word.size(); ++k)
-    {
-        app.setParam(MP_NAME_CURSOR, (float)k);
-        app.tick();
-        const char* chars = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        app.setParam(MP_NAME_CHAR, (float)(std::strchr(chars, word[k]) - chars));
-        app.tick();
-    }
-    app.setParam(MP_NAME_CURSOR, 1.0f);
+    CHECK(app.formatValue(MP_NAME_SHOW, 0.0f, text) && text == "Dub 2_", "name shown '%s'", text.c_str());
+    key(kKeyCaps); key(keyOf('A')); key(kKeyDel); key(kKeyCaps);
     app.tick();
-    CHECK(app.formatValue(MP_NAME_SHOW, 0.0f, text) && text == "D[u]b 2", "name shown '%s'", text.c_str());
-    CHECK(app.formatValue(MP_NAME_CHAR, app.getParam(MP_NAME_CHAR), text) && text == "u", "letter under cursor '%s'", text.c_str());
+    CHECK(app.formatValue(MP_NAME_SHOW, 0.0f, text) && text == "Dub 2_", "caps / del '%s'", text.c_str());
+    CHECK(app.formatValue(MP_NAME_KEY, (float)kKeySpace, text) && text == "Space", "key text '%s'", text.c_str());
     app.setParam(MP_SAVE_SLOT, 2.0f);
     app.setParam(MP_SAVE_GO, 1.0f);
     app.tick();
@@ -265,9 +265,26 @@ int main()
     CHECK(app.formatValue(MP_SAVE_GO, 0.0f, text) && text == "Saved U3", "save status '%s'", text.c_str());
     CHECK(app.formatValue(MP_SAVE_SLOT, 2.0f, text) && text == "U003 Dub 2", "slot shows '%s'", text.c_str());
     CHECK(app.formatValue(MP_SAVE_SLOT, 127.0f, text) && text == "U128 (empty)", "last slot '%s'", text.c_str());
+    // the MPC's preset menu entry is renamed at once, and HELIX's own browser shows the saved slot
+    CHECK(pf.progIndex == (int)factoryPresets().size() + 2 && pf.progName == "U003 Dub 2", "program renamed: %d '%s'",
+          pf.progIndex, pf.progName.c_str());
+    CHECK(pf.progValues.size() == (size_t)kMpcNumParams && std::fabs(pf.progValues[P_F1_CUTOFF] - 777.0f) < 0.5f,
+          "program values follow the save");
+    const int slotShown = (int)std::lround(app.getParam(MP_PRESET));
+    CHECK(app.formatValue(MP_PRESET, (float)slotShown, text) && text == "U003 Dub 2", "browser on '%s'", text.c_str());
+    CHECK(pf.notified.count(MP_SAVE_SLOT) && pf.notified[MP_SAVE_SLOT] != 2.0f
+          && std::lround(pf.notified[MP_SAVE_SLOT]) == 2, "slot box re-sent with a new value so it redraws");
+    // the browser lists the slots after the factory and file presets, and loads them
+    app.setParam(P_F1_CUTOFF, 2000.0f);
+    app.loadPresetIndex(slotShown);
+    CHECK(std::fabs(app.getParam(P_F1_CUTOFF) - 777.0f) < 0.5f, "browser did not load the slot");
     app.setParam(P_F1_CUTOFF, 2000.0f);
     app.onProgramSelected((int)factoryPresets().size() + 2);
     CHECK(std::fabs(app.getParam(P_F1_CUTOFF) - 777.0f) < 0.5f, "slot did not load (%f)", app.getParam(P_F1_CUTOFF));
+    CHECK(std::lround(app.getParam(MP_PRESET)) == slotShown, "the browser follows the MPC's preset menu (slot)");
+    app.onProgramSelected(40);
+    CHECK(std::lround(app.getParam(MP_PRESET)) == 40 && pf.notified[MP_PRESET] == 40.0f, "the browser follows past Filth Sweep");
+    app.onProgramSelected((int)factoryPresets().size() + 2);
     CHECK(app.currentPresetName() == "Dub 2", "loaded name '%s'", app.currentPresetName().c_str());
     app.onProgramSelected((int)factoryPresets().size() + 5);   // empty slot: nothing happens
     CHECK(std::fabs(app.getParam(P_F1_CUTOFF) - 777.0f) < 0.5f, "empty slot changed the sound");

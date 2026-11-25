@@ -1147,15 +1147,16 @@ def chapter_presets():
                   "the GLOBAL tab.",
                   "The MPC's preset menu at the top of the screen: the factory presets, then HELIX presets copied into "
                   "Content/Presets (marked *), then the 128 user slots <b>U001-U128</b>. Or <b>Preset</b> + <b>Load</b> on the "
-                  "BROWSE page."],
+                  "BROWSE page: it lists the same entries in the same order (user slots included) and follows the MPC's "
+                  "preset menu."],
                  ["Save", "<b>Save</b> at the top of the window: name and category; saved in Documents/HELIX/Presets.",
-                  "On the BROWSE page. <b>NAME</b>: the box shows the name, with the letter under the cursor in [ ]. "
-                  "Turn <b>Cursor</b> to move along it and <b>Letter</b> to change that letter (jog wheel or Q-Link; "
-                  "space, A-Z, a-z, 0-9 and - _ . # &amp; + ! ( ) '). Loading a preset puts its name there to edit; "
-                  "<b>Clear</b> starts from empty. <b>SAVE TO MENU</b>: turn <b>Slot</b> (U001-U128; it shows the name "
-                  "already in each slot or (empty)) and press <b>Save</b> (\"Saved U3\"). Choosing that slot in the "
-                  "preset menu loads the sound at once, tables, LFO shapes and scenes included; the menu entry shows "
-                  "the new name (\"U003 Dub 2\") from the next time HELIX loads, until then its old label. Saving over "
+                  "On the BROWSE page. Type the name on the <b>keyboard</b> (A-Z, 0-9, &amp; - . '): each word starts "
+                  "with a capital, <b>CAPS</b> types all capitals, <b>DEL</b> removes the last letter, <b>CLEAR</b> starts "
+                  "from empty, <b>SPACE</b> adds a space. The <b>Name</b> box shows it as you type. Loading a preset puts "
+                  "its name there to edit. <b>SAVE TO MENU</b>: turn <b>Slot</b> (U001-U128; it shows the name "
+                  "already in each slot or (empty)) and press <b>Save</b> (\"Saved U3\"). The slot, the BROWSE page's "
+                  "<b>Preset</b> and the MPC's preset menu entry show the new name (\"U003 Dub 2\") straight away, and "
+                  "choosing that slot loads the sound, tables, LFO shapes and scenes included. Saving over "
                   "a slot replaces it. Slots are files in Content/User Slots (Slot 01.json ... Slot 128.json). The MPC's own save "
                   "button (disk icon) also works, but it saves into the MPC's Plugin Presets folder, which the MPC's "
                   "preset browser shows, not HELIX's preset menu."],
@@ -1233,7 +1234,7 @@ def chapter_mpc():
             "Macro 1-8, F1 Cutoff, F1 Reso, F1 Drive, A WT Pos, B WT Pos, Delay Mix, Reverb Mix and Master.", "small")]
     s += H2("Pad Browse: audition presets from the pads")
     s += [P("A plugin cannot see the MPC's Shift button, so instead of 'hold Shift to audition', HELIX has <b>Pad Browse</b> "
-            "on the BROWSE page:"),
+            "on the MACROS key's SCENES page:"),
           *steps(["Turn <b>Pad Browse</b> on.",
                   "Choose a <b>Pad Bank</b> (1-16, 17-32 and so on).",
                   "Hit pads 1-16 (MIDI notes 36-51): each pad loads the matching preset and plays it, so you hear the new "

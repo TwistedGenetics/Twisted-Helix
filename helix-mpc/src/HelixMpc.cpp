@@ -9,6 +9,7 @@
 #include "mpc_plugin.h"
 #include "HelixMpcApp.h"
 #include "helix/FxLibrary.h"
+#include <algorithm>
 #include <memory>
 
 using namespace helix;
@@ -39,7 +40,7 @@ public:
         i.name = "HELIX";
         i.vendor = "Twisted Genetics";
         i.uniqueId = MPC_FOURCC('T', 'g', 'H', 'x');   // == "uid" in plugin.json
-        i.version = 5001;
+        i.version = 5002;
         i.isInstrument = true;
         i.numInputs = 0;
         i.numOutputs = 2;
@@ -78,11 +79,13 @@ public:
             const bool has = HelixMpcApp::loadUserSlot(mpc::contentFolder(), s, sp);
             std::vector<float> v((size_t)kMpcNumParams);
             for (int i = 0; i < kMpcNumParams; ++i) v[(size_t)i] = has && i < kNumParams ? sp.params[i] : mpcParamDef(i).def;
-            v[(size_t)MP_PRESET] = 0.0f;
+            v[(size_t)MP_PRESET] = (float)(base + s);
+            v[(size_t)MP_SAVE_SLOT] = (float)s;
             char num[8];
             std::snprintf(num, sizeof num, "U%03d", s + 1);
             const std::string nm = std::string(num) + " " + (has ? sp.name : std::string("(empty)"));
             addProgram(nm.c_str(), v);
+            programs_.back().name.reserve(64);   // renamed in place on Save (see updateProgram): no reallocation
         }
         app_ = std::make_unique<HelixMpcApp>(*this);
         app_->setProgramBase(base);
@@ -138,6 +141,16 @@ public:
     }
     void requestDisplayRefresh() override { requestDisplayUpdate(); }
     int currentProgram() const override { return mpc::Plugin::currentProgram(); }
+    void updateProgram(int index, const std::string& name, const std::vector<float>& plain) override
+    {
+        // A user slot was saved: its entry in the MPC's preset menu takes the new name and values at once.
+        // The name is rewritten in place (its capacity was reserved), then the host is asked to re-read the list.
+        if (index < 0 || index >= (int)programs_.size()) return;
+        mpc::Program& pr = programs_[(size_t)index];
+        pr.name.assign(name, 0, std::min<size_t>(name.size(), 63));
+        for (size_t i = 0; i < pr.plainValues.size() && i < plain.size(); ++i) pr.plainValues[i] = plain[i];
+        requestDisplayUpdate();
+    }
 
 private:
     static constexpr int kMaxMidi = 1024;

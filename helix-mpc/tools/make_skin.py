@@ -816,6 +816,15 @@ def PICK(param, caption=None, cols=None, labels=None, icons=False, where="top", 
     Instant). Replaces list pop-ups, which the MPC firmware can open empty. caption: None, or shown "top"/"left"."""
     return {"type": "pick", "param": param, "caption": caption, "cols": cols, "labels": labels, "icons": icons,
             "where": where, "bw": bw, "cap_w": cap_w or PICK_CAP_W}
+# The NAME page keyboard: Name Key ids (helix-mpc MpcParams.h): 1-40 the character rows, 41 SPACE ... 44 CAPS.
+KEY_ROWS = ["1234567890", "QWERTYUIOP", "ASDFGHJKL&", "ZXCVBNM-.'"]
+def KEYS(rows, kh):
+    """Keyboard keys: rows = [[(id, label, width), ...], ...]. One radio group on Name Key; the MPC puts Name Key back
+    to 0 when the finger lifts (ResetOnGestureEnd), so a key is lit only while it is touched."""
+    return {"type": "keys", "param": "Name Key", "rows": rows, "kh": kh}
+def key_row(r):
+    return [(r * 10 + i + 1, ch, 90) for i, ch in enumerate(KEY_ROWS[r])]
+
 def S(title, cells, toggle=None):
     return {"title": title, "cells": cells, "toggle": toggle}
 
@@ -989,17 +998,18 @@ def pages():
     page(7, 1, "SCENES", [S("SCENE", [PICK("Scene", None, cols=8, labels=[str(i) for i in range(1, 17)], bw=118)]),
                           S("SCENE\nSETUP", [K("Scene Morph", "Morph Time"), TG("Store Scene", "Store", 170),
                                              TG("Scene Pads", "Scene Pads", 190)]),
-                          S("FILTH", [K("Filth", "Filth (Mod Wheel)", w=360)])])
+                          S("FILTH", [K("Filth", "Filth (Mod Wheel)", w=360)]),
+                          # (0.5.2: moved here from BROWSE, which now has the name keyboard)
+                          S("PADS", [TG("Pad Browse", "Pad Browse", 190), PICK("Pad Bank", "Pad\nBank", cols=4, where="left")])])
 
     # ---- BROWSE / GLOBAL
     page(8, 0, "BROWSE", [S("PRESET", [K("Preset", "Preset", w=380), TG("Load", "Load", 150), TG("Mutate 10%", "Mutate 10%", 170),
                                        VAL("CPU", "CPU Load", 170)]),
-                          S("PADS", [TG("Pad Browse", "Pad Browse", 190), PICK("Pad Bank", "Pad\nBank", cols=4, where="left")]),
-                          # User slots U001-U128 (the end of the MPC's preset menu): name the sound, pick a slot, Save
-                          S("NAME", [VAL("Name", "Name (letter in [ ] is under the cursor)", 470),
-                                     K("Name Cursor", "Cursor", w=190), K("Name Letter", "Letter", w=190),
-                                     TG("Clear Name", "Clear", 140)]),
-                          S("SAVE TO\nMENU", [K("Save Slot", "Slot", w=560), TG("Save", "Save", 220)])])
+                          # User slots U001-U128 (the end of the MPC's preset menu): type the name, pick a slot, Save
+                          S("SAVE TO\nMENU", [VAL("Name", "Name (type it on the keys below)", 560),
+                                              K("Save Slot", "Slot", w=300), TG("Save", "Save", 150)]),
+                          S("NAME\nKEYS", [KEYS([key_row(0) + [(42, "DEL", 90)], key_row(1) + [(43, "CLEAR", 90)]], 64)]),
+                          S("", [KEYS([key_row(2) + [(44, "CAPS", 90)], key_row(3) + [(41, "SPACE", 90)]], 64)])])
     # Sample > Table, and Print to wavetable: render the patch (sweeping one control) into Wavetables/Prints
     page(8, 1, "TABLES", [S("SAMPLE\n> TABLE", [K("Sample", "Sample", w=380), TG("Make Table", "Make Table", 170)]),
                           S("TABLE\nSETUP", [PICK("Frames", "Frames"), SEG("To Osc", "To Osc", ["Osc A", "Osc B"])]),
@@ -1053,6 +1063,9 @@ def cell_size(c):
         if c["caption"]:
             return c["cap_w"] + gw, gh
         return gw, gh
+    if t == "keys":
+        return (max(sum(w for _, _, w in row) + 6 * (len(row) - 1) for row in c["rows"]),
+                len(c["rows"]) * c["kh"] + 6 * (len(c["rows"]) - 1))
     if t == "seg":
         ws = c["widths"] or [max(76, int(text_w(l, 24) + 2 * SEG_PAD)) for l in c["labels"]]
         c["seg_w"] = ws
@@ -1572,6 +1585,26 @@ class Builder:
             out.append(entry(c["param"], key, o(("version", 1), ("handleName", "Data")),
                              bounds((x - m, by - m, total + 2 * m, box_h + 2 * m), focus="Yes", invalid="Hide"),
                              remap=[("Data", self.h(c["param"]))]))
+        elif t == "keys":
+            p = self.p(c["param"])
+            n = int(p["max"]) + 1 if "max" in p else 45
+            kids = []
+            for r_, row in enumerate(c["rows"]):
+                bx = 0
+                for kid, lab, kw in row:
+                    on = self.save("key_%dx%d_%d_on.png" % (kw, c["kh"], kid), labelled_box(kw, c["kh"], ORANGE, lab, 32 if len(lab) == 1 else 22))
+                    off = self.save("key_%dx%d_%d_off.png" % (kw, c["kh"], kid), labelled_box(kw, c["kh"], BTN_OFF, lab, 32 if len(lab) == 1 else 22))
+                    kids.append(entry("key %d" % kid, "Button",
+                                      o(("version", 2), ("onImage", on), ("offImage", off), ("buttonId", kid), ("numButtonsInGroup", n),
+                                        ("handleName", "Data"), ("gestureBehaviour", "Instant")),
+                                      bounds((bx, r_ * (c["kh"] + 6), kw, c["kh"]))))
+                    bx += kw + 6
+            key = "hx keys %d %d" % (x, y)
+            if key not in self.comp_keys:
+                self.comp_keys.add(key)
+                self.defs.append(o(("key", key), ("value", component(kids))))
+            out.append(entry("keys %d" % y, key, o(("version", 1), ("handleName", "Data")),
+                             bounds((x, y, w, h), invalid="Hide"), remap=[("Data", "ResetOnGestureEnd/" + self.h(c["param"]))]))
         elif t == "pick":
             p = self.discrete(c["param"])
             labels = c["pick_labels"]
@@ -1612,7 +1645,7 @@ class Builder:
         for r, st in enumerate(page["strips"]):
             col = 0
             for c in st["cells"]:
-                if c["type"] in ("env", "picture", "readout", "bar"):
+                if c["type"] in ("env", "picture", "readout", "bar", "keys"):
                     continue
                 if col > 3:
                     raise SystemExit("page %s strip %s has more than four Q-Link controls" % (page["name"], st["title"]))
@@ -1758,6 +1791,13 @@ def preview(builder, outdir):
                         bx, by = gx + c_ * (c["bw_n"] - 3), gy + r_ * (PICK_H - 3)
                         fn = ("pick_%d_%s_%s.png" if c["icons"] else "seg_%d_%s_%s.png") % (c["bw_n"], slug(lab), "on" if i == cur else "off")
                         tab.paste(Image.open(os.path.join(builder.out, fn)), (bx, by))
+                elif t == "keys":
+                    for r_, row in enumerate(c["rows"]):
+                        bx = cx
+                        for kid, lab, kw_ in row:
+                            tab.paste(Image.open(os.path.join(builder.out, "key_%dx%d_%d_off.png" % (kw_, c["kh"], kid))),
+                                      (bx, cy + r_ * (c["kh"] + 6)))
+                            bx += kw_ + 6
         canvas.paste(tab, (0, 110))
         dc = ImageDraw.Draw(canvas)
         f = pil_font(22, 600)
