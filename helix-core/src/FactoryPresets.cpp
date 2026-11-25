@@ -6,6 +6,8 @@
 #include "helix/Oscillator.h"
 #include "helix/Preset.h"
 #include "helix/WavetableGen.h"
+#include "helix/CharOsc.h"
+#include <string>
 
 namespace helix {
 
@@ -88,6 +90,46 @@ struct B
     B& chorus(int mode, float mix, float depth = 0.5f, float rate = 0.4f) { return set(P_CHO_ON, 1).set(P_CHO_MODE, (float)mode).set(P_CHO_MIX, mix).set(P_CHO_DEPTH, depth).set(P_CHO_RATE, rate); }
     B& ott(float depth) { return set(P_OTT_ON, 1).set(P_OTT_DEPTH, depth); }
     B& macros(std::initializer_list<float> v) { int k = 0; for (float x : v) set(P_MACRO1 + k++, x); return *this; }
+
+    // ---- 0.4.6 pack helpers
+    B& co(int type, float level, float timbre, float chr, float drive, float sub, float env = 0.0f, float time = 0.35f,
+          float toF1 = 1.0f)
+    {
+        return set(P_CO_TYPE, (float)type).set(P_CO_LEVEL, level).set(P_CO_TIMBRE, timbre).set(P_CO_CHAR, chr)
+              .set(P_CO_DRIVE, drive).set(P_CO_SUB, sub).set(P_CO_ENV, env).set(P_CO_TIME, time).set(P_CO_TO_F1, toF1);
+    }
+    B& guard(float freq = 120.0f, float level = 0.0f, float warmth = 0.2f)
+    {
+        return set(P_SG_ON, 1).set(P_SG_FREQ, freq).set(P_SG_LEVEL, level).set(P_SG_WARMTH, warmth);
+    }
+    B& chord(int c) { return set(P_CHORD, (float)c); }
+    // effect library slot 0..3 (Insert 1, Insert 2, FX 1, FX 2) by type name; knobs A.. (0..1), the rest default
+    B& fx(int sl, const char* type, float mix, std::initializer_list<float> knobs = {})
+    {
+        int t = 0;
+        for (int i = 1; i < fxlib::numTypes(); ++i) if (std::string(fxlib::typeName(i)) == type) t = i;
+        const int b = P_I1_TYPE + sl * (P_I2_TYPE - P_I1_TYPE);
+        set(b, (float)t).set(b + 1, mix);
+        for (int k = 0; k < fxlib::kNumKnobs; ++k) set(b + 2 + k, fxlib::knobDefault(t, k));
+        int k = 0; for (float v : knobs) set(b + 2 + k++, v);
+        return *this;
+    }
+    B& model(int f, int mdl, int kind, int slope = 0)
+    {
+        const int o = f == 1 ? 0 : P_F2_MODEL - P_F1_MODEL;
+        const int fo = f == 1 ? 0 : P_F2_ON - P_F1_ON;
+        return set(P_F1_ON + fo, 1).set(P_F1_MODEL + o, (float)mdl).set(P_F1_KIND + o, (float)kind).set(P_F1_SLOPE + o, (float)slope);
+    }
+    B& reese(float drift, float rate, float growl, bool lock = true)
+    {
+        return set(P_RS_DRIFT, drift).set(P_RS_DRIFT_RATE, rate).set(P_RS_GROWL, growl).set(P_RS_LOCK, lock ? 1.0f : 0.0f);
+    }
+    B& groove(int n, float swing, int feel = 0, int fill = 0)
+    {
+        return set(n == 1 ? P_P1_SWING : P_P2_SWING, swing).set(n == 1 ? P_P1_FEEL : P_P2_FEEL, (float)feel)
+              .set(n == 1 ? P_P1_FILL : P_P2_FILL, (float)fill);
+    }
+    B& oscOff(int s) { return set(s == 0 ? P_A_ON : P_B_ON, 0.0f); }
 };
 
 // Divisions (choices::syncDiv)
@@ -108,6 +150,148 @@ B reeseCore(const char* name, const char* comment)
      .mod(M1, P_F1_CUTOFF, 0.35f).mod(M2, P_A_DETUNE, 0.4f)
      .macros({0.0f, 0.0f, 0.0f, 0.0f});
     return b;
+}
+
+// Mega filter models (choices::filterModel) and kinds, slopes
+enum { M_LADDER = 3, M_STEINER = 4, M_SVF = 5, M_POLIVOKS = 7, M_MS20 = 10, M_SEM = 12, M_303 = 13 };
+enum { K_LP = 0, K_HP = 1, K_BP = 2 };
+enum { S_MODEL = 0, S_12 = 2, S_18 = 3, S_24 = 4 };
+// Chords (choices::chordMemory)
+enum { CH_OCT = 1, CH_MINOR = 4, CH_MIN7 = 6, CH_MIN9 = 9, CH_RAVE = 11, CH_DUB = 12, CH_HOOVER_OCT = 13 };
+
+// 0.4.6 jungle / drum & bass pack: 10 reese, 6 sub, 6 hoover / stab, 4 pads, 4 FX. Uses the newer engine parts
+// (character oscillator, Reese drift and growl, sub guardian, Mega filters, performer swing / feel / fills, LFO
+// jump, chord memory, pad scenes, filth). Masters set in buildPack's table below.
+void buildPack(std::vector<Preset>& v)
+{
+    std::vector<Preset> pk;
+    auto add = [&](B& b) { pk.push_back(b.p); };
+    auto rs = [](const char* name, const char* comment) {
+        B b = reeseCore(name, comment);
+        b.p.category = "Reese";
+        return b;
+    };
+
+    // ------------------------------------------------------------------ REESE
+    { B b = rs("Drift Reese", "Reese whose detune never sits still (Drift), sub guardian keeping the low end mono and "
+                              "clean. Macro 1 filter, Macro 2 detune, mod wheel = filth.");
+      b.reese(0.6f, 0.35f, 0.0f).guard(110.0f, 0.0f, 0.3f).set(P_FILTH, 0.7f).dist(0, 0.3f, 0.5f); add(b); }
+    { B b = rs("Growl Reese", "Growl on a 1/8 LFO: cutoff, drive, positions and warps talk together. Macro 3 = growl depth.");
+      b.table(0, BuiltinTable::Growl).set(P_A_POS, 0.3f).reese(0.3f, 0.3f, 0.0f).set(P_RS_G_CUT, 2.5f)
+       .lfo(1, 0, true, D1_8, 1).mod(L1, P_RS_GROWL, 0.6f, M3).guard(120.0f).macros({0.0f, 0.0f, 0.8f}).ott(0.4f); add(b); }
+    { B b = rs("Neuro Jump", "Formant neuro bass; the wobble LFO jumps x4 (1/4 to 1/16) while Macro 4 is up. Filth on the wheel.");
+      b.table(0, BuiltinTable::Vowels).set(P_A_POS, 0.2f).filter(2, FilterType::Formant, 900.0f, 0.5f).set(P_FILTER_BLEND, 1.0f)
+       .lfo(1, 0, true, D1_4, 1).set(P_L1_JUMP, 3.0f).set(P_LJ_MACRO, 3.0f).mod(L1, P_A_POS, 0.45f).mod(L1, P_F2_CUTOFF, 0.3f)
+       .reese(0.3f, 0.4f, 0.3f).set(P_FILTH, 0.9f).guard(130.0f).ott(0.6f).dist(2, 0.25f, 0.4f); add(b); }
+    { B b = rs("Hoover Reese Stack", "Wavetable Reese over the Hoover unit's two beating saws, drifting apart.");
+      b.co(kCharHooverReese, 0.6f, 0.5f, 0.3f, 0.2f, 0.0f).reese(0.45f, 0.25f, 0.0f).guard(110.0f).chorus(1, 0.2f); add(b); }
+    { B b = rs("Steppa Reese", "Performer 1 rolls the filter in 1/16s with swing and a fill at the end of every 4 bars.");
+      b.perf(1, D1_16, {1, 0.3f, 0.7f, 0.2f, 1, 0.4f, 0.8f, 0.1f, 1, 0.3f, 0.7f, 0.2f, 1, 0.5f, 0.9f, 0.3f}, {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5})
+       .groove(1, 0.45f, 0, 2).mod(P1, P_F1_CUTOFF, 0.4f).reese(0.3f, 0.3f, 0.0f).guard(120.0f).dist(0, 0.3f, 0.5f); add(b); }
+    { B b = rs("Half-time Reese", "The same roll at half time, with x3 roll curves on the off-beats: halftime / 85 BPM weight.");
+      b.perf(1, D1_16, {1, 0.5f, 0.9f, 0.4f, 1, 0.5f, 0.9f, 0.4f}, {3, 25, 5, 25, 3, 25, 5, 25})
+       .groove(1, 0.0f, 1, 0).mod(P1, P_F1_CUTOFF, 0.45f).reese(0.4f, 0.2f, 0.1f).guard(120.0f).dist(0, 0.35f, 0.5f); add(b); }
+    { B b = rs("Ladder Reese", "Mega ladder filter driven hard, 24 dB. Macro 1 opens it.");
+      b.model(1, M_LADDER, K_LP, S_24).set(P_F1_CUTOFF, 700.0f).set(P_F1_RES, 0.35f).set(P_F1_DRIVE, 0.6f)
+       .reese(0.35f, 0.3f, 0.0f).guard(120.0f); add(b); }
+    { B b = rs("303 Reese", "TB-303 model at 18 dB with an accenting performer: acid meets Reese.");
+      b.model(1, M_303, K_LP, S_18).set(P_F1_CUTOFF, 500.0f).set(P_F1_RES, 0.6f)
+       .perf(1, D1_16, {1, 0.2f, 0.6f, 0.2f, 0.9f, 0.2f, 0.5f, 1}, {5, 5, 5, 5, 5, 5, 5, 5}).mod(P1, P_F1_CUTOFF, 0.5f)
+       .reese(0.25f, 0.3f, 0.0f).guard(120.0f).dist(1, 0.25f, 0.4f); add(b); }
+    { B b("Rollers Reese", "Reese", "The Rollers unit alone: clean sub under drifting saws, drive only on the top.");
+      b.oscOff(0).co(kCharRollSubReese, 0.9f, 0.45f, 0.6f, 0.35f, 0.0f).filter(1, FilterType::LP24, 2500.0f, 0.1f)
+       .env(1, 2.0f, 300.0f, 1.0f, 120.0f).mono(30.0f).mod(M1, P_F1_CUTOFF, 0.35f).mod(M2, P_CO_TIMBRE, 0.4f).ott(0.3f); add(b); }
+    { B b = rs("Dread Reese", "Reese with Dread Bass's backwards-303 sweep layered in, Amiga crunch on the wheel.");
+      b.co(kCharDread, 0.55f, 0.6f, 0.55f, 0.3f, 0.0f, 0.0f, 0.4f).set(P_FILTH, 0.6f).reese(0.3f, 0.3f, 0.0f).guard(120.0f)
+       .fx(0, "Amiga", 0.35f); add(b); }
+
+    // ------------------------------------------------------------------ SUB
+    { B b("Guardian Sub", "Sub", "Triangle and sine sub through a tube drive, with the sub guardian keeping the lowest octave pure.");
+      b.table(0, BuiltinTable::BasicShapes).set(P_A_POS, kTri).subOsc(0, 0.7f).filter(1, FilterType::LP24, 1200.0f, 0.0f)
+       .env(1, 2.0f, 200.0f, 1.0f, 90.0f).mono(25.0f).guard(100.0f, 0.0f, 0.35f).dist(0, 0.5f, 0.7f); add(b); }
+    { B b("Rollers Sub", "Sub", "The Rollers sine sub with a short pitch drop on every note: steppers' weight.");
+      b.oscOff(0).co(kCharRollSub, 1.0f, 0.3f, 0.2f, 0.15f, 0.0f, 0.25f, 0.2f).set(P_F1_ON, 0)
+       .env(1, 1.0f, 300.0f, 1.0f, 100.0f).mono(20.0f); add(b); }
+    { B b("808 Drop", "Sub", "Long sine boom with a fifth-down pitch drop, driven, guarded below 90 Hz.");
+      b.set(P_A_POS, kSine).env(1, 0.5f, 1500.0f, 0.0f, 400.0f).env(2, 0.5f, 120.0f, 0.0f, 80.0f, -0.6f)
+       .mod(E2, -DST_PITCH, 0.3f).mono(0.0f, false).set(P_F1_ON, 0).guard(90.0f, 0.0f, 0.4f).dist(0, 0.55f, 0.6f, 5000.0f); add(b); }
+    { B b("Donk Sub", "Sub", "Dread Bass's donk: the resonance lands on the 5th harmonic and rings out.");
+      b.oscOff(0).co(kCharDonk, 1.0f, 0.68f, 0.7f, 0.1f, 0.35f, 0.0f, 0.3f).set(P_F1_ON, 0)
+       .env(1, 1.0f, 400.0f, 0.0f, 150.0f).mono(0.0f, false); add(b); }
+    { B b("Pluck Sub", "Sub", "Short sine-triangle pluck for fast basslines; velocity opens it.");
+      b.set(P_A_POS, 0.15f).subOsc(0, 0.5f).filter(1, FilterType::LP12, 600.0f, 0.1f, 0.2f, 0.5f)
+       .env(1, 1.0f, 220.0f, 0.0f, 80.0f).env(2, 0.5f, 120.0f, 0.0f, 60.0f).mod(E2, P_F1_CUTOFF, 0.3f).mod(VEL, P_F1_CUTOFF, 0.2f)
+       .mono(0.0f, false); add(b); }
+    { B b("Tri Sub Drive", "Sub", "Triangle sub through the Drive insert; above 120 Hz it gets dirty, below stays clean.");
+      b.set(P_A_POS, kTri).set(P_F1_ON, 0).env(1, 1.0f, 300.0f, 1.0f, 100.0f).mono(25.0f).guard(120.0f, 0.0f, 0.2f)
+       .fx(0, "Drive", 1.0f, {0.7f}); add(b); }
+
+    // ------------------------------------------------------------------ HOOVER / STAB
+    { B b("Unit Hoover", "Hoover", "The Hoover unit: PWM-saw stack with a pitch dive on every note and ensemble.");
+      b.oscOff(0).co(kCharHoover, 1.0f, 0.5f, 0.6f, 0.15f, 0.25f, 0.5f, 0.35f).filter(1, FilterType::LP24, 6000.0f, 0.1f)
+       .env(1, 3.0f, 400.0f, 0.9f, 250.0f).mono(70.0f).chorus(1, 0.4f).reverb(0, 0.15f, 0.4f); add(b); }
+    { B b("Mentasm Unit", "Hoover", "Mentasm mode: an octave-down PWM-saw growls under the stack. Macro 1 = PWM.");
+      b.oscOff(0).co(kCharMentasm, 1.0f, 0.55f, 0.5f, 0.25f, 0.2f, 0.35f, 0.4f).filter(1, FilterType::LP24, 4500.0f, 0.15f)
+       .env(1, 5.0f, 400.0f, 0.9f, 300.0f).mono(90.0f).mod(M1, P_CO_CHAR, 0.4f).chorus(1, 0.35f); add(b); }
+    { B b("Rave Scream", "Hoover", "Rave mode: octave-up scream layer, driven, ping-pong 1/8.");
+      b.oscOff(0).co(kCharRave, 1.0f, 0.6f, 0.7f, 0.45f, 0.1f, 0.4f, 0.3f).filter(1, FilterType::LP24, 8000.0f, 0.1f)
+       .env(1, 2.0f, 300.0f, 0.9f, 200.0f).mono(50.0f).delay(D1_8, 0.35f, 0.2f); add(b); }
+    { B b("Rave Stab Chord", "Stab", "One finger, a whole rave stab (Chord: Rave Stab). Snappy saws into a plate.");
+      b.set(P_A_POS, kSaw).unison(0, 3, 0.12f, 0.7f, 0.5f).filter(1, FilterType::LP24, 2500.0f, 0.2f)
+       .env(1, 1.0f, 300.0f, 0.0f, 200.0f).env(2, 0.5f, 200.0f, 0.0f, 100.0f).mod(E2, P_F1_CUTOFF, 0.35f).chord(CH_RAVE)
+       .set(P_VOICES, 8.0f).reverb(0, 0.25f, 0.45f); add(b); }
+    { B b("Dub Stab Chord", "Stab", "Dub Stab chord memory into the Dub Delay: one key, the whole skank.");
+      b.set(P_A_POS, kSquare).filter(1, FilterType::BP12, 1200.0f, 0.3f).env(1, 0.5f, 180.0f, 0.0f, 120.0f).chord(CH_DUB)
+       .set(P_VOICES, 8.0f).fx(2, "Dub Delay", 0.4f).reverb(1, 0.25f, 0.6f); add(b); }
+    { B b("Hoover Oct Stab", "Stab", "The Hoover unit with Chord: Hoover Oct (an octave below and above): the hoover chord.");
+      b.oscOff(0).co(kCharHoover, 0.8f, 0.45f, 0.6f, 0.2f, 0.0f, 0.3f, 0.3f).chord(CH_HOOVER_OCT).set(P_VOICES, 8.0f)
+       .filter(1, FilterType::LP24, 5000.0f, 0.1f).env(1, 2.0f, 500.0f, 0.6f, 300.0f).chorus(1, 0.3f).reverb(0, 0.2f, 0.5f); add(b); }
+
+    // ------------------------------------------------------------------ PADS
+    { B b("Reinforced Pad", "Pad", "Wide saw pad through the Ensemble and Super-Massive: 94-era atmospherics.");
+      b.set(P_A_POS, kSaw).unison(0, 5, 0.2f, 0.8f, 0.9f).filter(1, FilterType::LP12, 2200.0f, 0.1f)
+       .env(1, 600.0f, 1000.0f, 0.8f, 1800.0f).lfo(1, 0, false, 0.15f, 1).mod(L1, P_F1_CUTOFF, 0.12f)
+       .fx(0, "Ensemble", 0.5f).fx(2, "Super-Massive", 0.4f); add(b); }
+    { B b("Dread Pad", "Pad", "Minor 9 from every key (chord memory), slow filter, vinyl air. Keep it to single notes.");
+      b.set(P_A_POS, 0.55f).unison(0, 3, 0.1f, 0.6f, 0.8f).set(P_VOICES, 8.0f).chord(CH_MIN9).filter(1, FilterType::LP24, 1400.0f, 0.15f)
+       .env(1, 800.0f, 1200.0f, 0.8f, 2000.0f).set(P_NOISE_ON, 1).set(P_NOISE_TYPE, 3.0f).set(P_NOISE_LEVEL, 0.1f)
+       .reverb(1, 0.4f, 0.8f, 0.8f); add(b); }
+    { B b("Amen Air", "Pad", "Vowel table drifting through the SP-1200: grainy, breathing pad for intros.");
+      b.table(0, BuiltinTable::Vowels).set(P_A_POS, 0.3f).unison(0, 3, 0.1f, 0.6f, 0.7f).filter(1, FilterType::LP12, 3000.0f, 0.1f)
+       .env(1, 500.0f, 1000.0f, 0.8f, 1500.0f).lfo(1, 6, false, 0.2f, 1).mod(L1, P_A_POS, 0.25f)
+       .fx(0, "SP-1200", 0.6f).reverb(1, 0.35f, 0.7f); add(b); }
+    { B b("Scene Pad", "Pad", "Built for pad scenes: Macro 1 filter, 2 detune, 3 table position, 4 reverb send. Scenes 1-16 "
+                              "climb from dark to wide open; turn Scene Pads on and play pads A01-A16.");
+      b.table(0, BuiltinTable::HarmonicSweep).set(P_A_POS, 0.2f).unison(0, 5, 0.08f, 0.7f, 0.9f).filter(1, FilterType::LP24, 500.0f, 0.15f)
+       .env(1, 400.0f, 1000.0f, 0.85f, 1500.0f).mod(M1, P_F1_CUTOFF, 0.55f).mod(M2, P_A_DETUNE, 0.4f).mod(M3, P_A_POS, 0.6f)
+       .set(P_SCENE_MORPH, 1200.0f).reverb(1, 0.3f, 0.7f); add(b); }
+
+    // ------------------------------------------------------------------ FX
+    { B b("Dive Bomb", "FX", "The Hoover unit's dive at full depth and length: a two-octave swoop into a hall.");
+      b.oscOff(0).co(kCharHoover, 1.0f, 0.6f, 0.7f, 0.3f, 0.0f, 1.0f, 0.85f).set(P_F1_ON, 0).env(1, 2.0f, 2000.0f, 0.7f, 800.0f)
+       .reverb(1, 0.4f, 0.75f); add(b); }
+    { B b("Jump Siren", "FX", "Siren on an LFO that jumps x4 faster while Macro 4 is up: ride it into the drop.");
+      b.set(P_A_POS, kTri).set(P_F1_ON, 0).lfo(1, 1, true, D1_2, 1).set(P_L1_JUMP, 3.0f).set(P_LJ_MACRO, 3.0f)
+       .mod(L1, -DST_PITCH, 0.3f).fx(2, "Tape Echo", 0.3f).reverb(0, 0.2f, 0.5f); add(b); }
+    { B b("Rewind", "FX", "Hold a note: the pitch winds down two octaves over two seconds, through a tape echo.");
+      b.set(P_A_POS, kSaw).unison(0, 3, 0.1f, 0.6f, 0.6f).filter(1, FilterType::LP24, 4000.0f, 0.1f)
+       .env(2, 2000.0f, 100.0f, 1.0f, 100.0f).mod(E2, -DST_PITCH, -1.0f).set(P_BEND_RANGE, 24.0f)
+       .fx(2, "Tape Echo", 0.35f); add(b); }
+    { B b("Filth Sweep", "FX", "Noise and growl table swept up by an envelope; the mod wheel adds filth on top.");
+      b.table(0, BuiltinTable::Growl).set(P_NOISE_ON, 1).set(P_NOISE_LEVEL, 0.3f).filter(1, FilterType::BP24, 400.0f, 0.4f)
+       .env(2, 2500.0f, 500.0f, 1.0f, 500.0f).mod(E2, P_F1_CUTOFF, 0.7f).mod(E2, P_A_POS, 0.8f).set(P_FILTH, 1.0f)
+       .reese(0.0f, 0.3f, 0.2f, false).reverb(1, 0.3f, 0.7f); add(b); }
+
+    // Gain staging (as the originals: the golden-test performance peaks near -3 dBFS)
+    static const float master[] = {
+        -6.5f, -4.0f, -5.5f, -5.5f, -7.0f, -8.5f, -4.5f, -9.0f, -2.5f, -6.5f,
+        -6.5f, -3.5f, -5.5f, -4.5f, -6.5f, -1.5f,
+        -2.0f, -3.5f, -2.5f, -10.0f, -11.5f, -7.5f,
+        -8.5f, -0.5f, -3.0f, -2.0f,
+        -4.0f, -2.5f, -2.0f, -1.0f};
+    static_assert(sizeof master / sizeof master[0] == 30, "one master per pack preset");
+    for (size_t i = 0; i < pk.size() && i < 30; ++i) pk[i].params[P_MASTER] = master[i];
+    for (auto& p : pk) v.push_back(p);
 }
 
 std::vector<Preset> build()
@@ -227,6 +411,7 @@ std::vector<Preset> build()
       b.set(P_A_POS, kSine).set(P_A_LEVEL, 0.8f).set(P_F1_ON, 0).env(1, 0.5f, 250.0f, 0.0f, 100.0f)
        .env(2, 0.5f, 180.0f, 0.0f, 100.0f, -0.4f).mod(E2, -DST_PITCH, 1.0f).dist(2, 0.3f, 0.5f)
        .delay(D1_16, 0.45f, 0.3f); add(b); }
+    buildPack(v);
     // Gain staging: master level per preset so the golden-test performance peaks near -3 dBFS and helix-render's
     // test riff (which ends on a four-note chord) stays below 0 dBFS.
     static const float master[] = {-6.0f, -6.0f, -3.0f, -9.5f, -5.0f, -6.0f, -2.5f, -4.5f, -6.5f, -12.5f, -1.0f, -1.0f,

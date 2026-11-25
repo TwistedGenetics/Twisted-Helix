@@ -102,7 +102,7 @@ static Json fingerprint(const Stereo& s)
 int main()
 {
     const auto& factory = factoryPresets();
-    CHECK(factory.size() == 24, "expected 24 factory presets, have %zu", factory.size());
+    CHECK(factory.size() == 54, "expected 54 factory presets (24 + the 0.4.6 pack of 30), have %zu", factory.size());
     std::set<std::string> names;
     for (const Preset& p : factory) names.insert(p.name);
     CHECK(names.size() == factory.size(), "factory preset names must be unique");

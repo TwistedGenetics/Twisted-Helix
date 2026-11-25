@@ -161,7 +161,7 @@ PRESETS = []
 for f in sorted(glob.glob(os.path.join(ROOT, "Presets", "*", "*.json"))):
     j = json.load(open(f))
     PRESETS.append(j)
-ORDER = ["Bass", "Lead", "Pad", "Atmos", "Stab", "FX"]
+ORDER = ["Bass", "Reese", "Sub", "Lead", "Hoover", "Pad", "Atmos", "Stab", "FX"]
 PRESETS.sort(key=lambda j: (ORDER.index(j["category"]) if j["category"] in ORDER else 99, j["name"]))
 assert len(PARAMS) > 300, "ParamList.inc parse failed"
 
@@ -421,7 +421,7 @@ def chapter_welcome():
                  ["Voices", "8 voices, poly / mono / legato, glide, click-free voice stealing"],
                  ["Effects", "Distortion, chorus / ensemble, phaser, delay, reverb, OTT, EQ, in any order"],
                  ["Wavetables", "8 built-in tables, Serum tables and single cycles, Sample → Table from your own audio"],
-                 ["Presets", "24 factory sounds, your own presets, Mutate"]], [38, 132])]
+                 ["Presets", "54 factory sounds (incl. the 30-sound jungle / DnB pack), your own presets, Mutate"]], [38, 132])]
     return s
 
 
@@ -451,7 +451,7 @@ def chapter_install():
                   "8 built-in tables when you turn A Table / B Table"],
                  ["Content/Samples", "Any WAVs you want to turn into wavetables (breaks, vocals, one-shots)",
                   "The Sample control on the TABLES page under BROWSE (Sample → Table)"],
-                 ["Content/Presets", "HELIX presets (.json), in sub-folders by category", "After the 24 factory presets "
+                 ["Content/Presets", "HELIX presets (.json), in sub-folders by category", "After the 54 factory presets "
                   "in the Preset list"]], [36, 70, 64])]
     s += [Spacer(1, 4), P("To update HELIX later, copy the new folder over the old one, then remove HELIX from the track and "
                           "add it again (restart the MPC if the screen layout changed). Your Content folder is part of the "
@@ -476,7 +476,7 @@ def chapter_quickstart():
     s = H1("3  Quick start")
     s += steps(["Load HELIX on a track. You hear the <b>Init</b> sound: a single sine-to-square wavetable through an open "
                 "filter.",
-                "Pick a factory preset. On the MPC use the MPC's own preset menu (the 24 factory presets) or the <b>Preset</b> "
+                "Pick a factory preset. On the MPC use the MPC's own preset menu (the 54 factory presets) or the <b>Preset</b> "
                 "control and <b>Load</b> on the BROWSE page. On the computer, click the preset name at the top of the window (or "
                 "use the &lt; and &gt; buttons next to it).",
                 "Play a few low notes with <b>Classic Reese</b> and turn <b>Macro 1</b> (filter) and <b>Macro 2</b> (detune). "
@@ -1106,6 +1106,11 @@ def chapter_presets():
     s = H1("14  Presets", need=135)
     s += shot("browser.jpg", "The GLOBAL tab on the computer: voices, engine quality, theme, CPU per voice and the preset list.")
     s += H2("Factory presets")
+    s += [P("The first 24 are the originals. The 30 after them (0.4.6) are a jungle / drum &amp; bass pack built on the "
+            "newer parts of HELIX: ten Reeses (drift, growl, performer swing and fills, Mega filters, the Rollers and "
+            "Dread Bass engines), six subs (most with the sub guardian on), six hoovers and stabs (the Hoover unit and "
+            "chord memory), four pads (Scene Pad is set up for pad scenes) and four FX. Many put Filth on the mod wheel; "
+            "try Macro 1-4 on all of them.")]
     rows = [["Category", "Preset", "Description"]]
     for j in PRESETS:
         rows.append([j["category"], "<b>%s</b>" % j["name"], j.get("comment", "")])
