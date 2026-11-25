@@ -1,4 +1,6 @@
 #include "PluginEditor.h"
+#include <functional>
+#include <map>
 #include "helix/CharOsc.h"
 #include "helix/FxLibrary.h"
 #include "helix/ModSystem.h"
@@ -23,7 +25,7 @@ public:
         setPower(std::make_unique<ParamToggle>(pg.proc, P_A_ON + o));
         view_ = pg.own(std::make_unique<WavetableView>(pg.proc, slot), this);
         addAndMakeVisible(table_);
-        table_.setTooltip("Wavetable: the 8 built-in tables, then your Wavetables folder");
+        table_.setTooltip("Wavetable: the built-in tables, your Wavetables folder and any folders you add (... menu)");
         table_.onChange = [this] {
             const int id = table_.getSelectedId();
             if (id > 0) page_.proc.setParamFromUI(slot_ == 0 ? P_A_TABLE : P_B_TABLE, (float)(id - 1));
@@ -78,17 +80,50 @@ public:
         view_->refresh();
         auto& lib = page_.proc.library();
         const int n = lib.count();
-        if (n != items_)
+        if (n != items_ || lib.scanSerial() != scanSerial_)
         {
             items_ = n;
-            table_.clear(juce::dontSendNotification);
-            for (int i = 0; i < n; ++i) table_.addItem(lib.nameAt(i), i + 1);
+            scanSerial_ = lib.scanSerial();
+            rebuildTableMenu();
         }
         const int sel = lib.wrap(page_.proc.engine().params().getInt(slot_ == 0 ? P_A_TABLE : P_B_TABLE)) + 1;
         if (table_.getSelectedId() != sel) table_.setSelectedId(sel, juce::dontSendNotification);
     }
 
 private:
+    // Built-ins at the top, then one sub-menu per folder ("HELIX" = Documents/HELIX/Wavetables, then each folder you
+    // added, with their sub-folders nested inside).
+    void rebuildTableMenu()
+    {
+        table_.clear(juce::dontSendNotification);
+        const auto entries = page_.proc.library().entries();
+        auto* root = table_.getRootMenu();
+        struct Node { juce::PopupMenu menu; std::map<juce::String, std::unique_ptr<Node>> kids; std::vector<juce::String> order; };
+        Node top;
+        for (size_t i = 0; i < entries.size(); ++i)
+        {
+            const auto& e = entries[i];
+            if (e.group.empty()) { root->addItem((int)i + 1, juce::String(e.name)); continue; }
+            Node* n = &top;
+            for (const auto& part : juce::StringArray::fromTokens(juce::String(e.group), "/", ""))
+            {
+                auto& k = n->kids[part];
+                if (!k) { k = std::make_unique<Node>(); n->order.push_back(part); }
+                n = k.get();
+            }
+            n->menu.addItem((int)i + 1, juce::String(e.name));
+        }
+        std::function<juce::PopupMenu(Node&)> build = [&](Node& n) {
+            juce::PopupMenu m;
+            for (const auto& name : n.order) m.addSubMenu(name, build(*n.kids[name]));
+            if (!n.order.empty() && n.menu.getNumItems() > 0) m.addSeparator();
+            for (juce::PopupMenu::MenuItemIterator it(n.menu); it.next();) m.addItem(it.getItem());
+            return m;
+        };
+        if (!top.order.empty()) root->addSeparator();
+        for (const auto& name : top.order) root->addSubMenu(name, build(*top.kids[name]));
+    }
+
     void step(int d)
     {
         const int n = juce::jmax(1, page_.proc.library().count());
@@ -123,12 +158,41 @@ private:
         }
         m.addSeparator();
         m.addItem(2, "Open the Wavetables folder");
-        m.addItem(3, "Rescan the Wavetables folder");
+        m.addItem(3, "Rescan the wavetable folders");
+        m.addItem(6, "Add a wavetable folder...");
+        {
+            juce::PopupMenu rm;
+            const auto folders = page_.proc.tableFolders();
+            for (int i = 0; i < folders.size(); ++i) rm.addItem(7000 + i, folders[i]);
+            m.addSubMenu("Remove a wavetable folder", rm, folders.size() > 0);
+        }
         juce::Component::SafePointer<OscPanel> self(this);
         m.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&more_), [self](int r) {
             if (!self || r == 0) return;
             if (r == 2) { HelixProcessor::userWavetableFolder().startAsProcess(); return; }
             if (r == 3) { self->page_.proc.library().rescan(); return; }
+            if (r == 6)
+            {
+                self->chooser_ = std::make_unique<juce::FileChooser>("Add a wavetable folder (Serum tables, WAV packs ...)",
+                                                                     juce::File::getSpecialLocation(juce::File::userHomeDirectory));
+                self->chooser_->launchAsync(juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectDirectories,
+                                            [self](const juce::FileChooser& fc) {
+                                                if (!self) return;
+                                                const auto f = fc.getResult();
+                                                if (!f.isDirectory()) return;
+                                                auto folders = self->page_.proc.tableFolders();
+                                                folders.addIfNotAlreadyThere(f.getFullPathName());
+                                                self->page_.proc.setTableFolders(folders);
+                                            });
+                return;
+            }
+            if (r >= 7000 && r < 7500)
+            {
+                auto folders = self->page_.proc.tableFolders();
+                folders.remove(r - 7000);
+                self->page_.proc.setTableFolders(folders);
+                return;
+            }
             auto& po = printOptions();
             if (r >= 1000 && r < 1000 + helix::kNumPrintSources) { po.source = r - 1000; self->page_.proc.startPrint(self->slot_, po); return; }
             if (r >= 2000 && r < 2300) { po.frames = r - 2000; return; }
@@ -155,6 +219,7 @@ private:
     juce::TextButton prevT_{"<"}, nextT_{">"}, more_{"..."};
     std::unique_ptr<juce::FileChooser> chooser_;
     int items_ = -1;
+    unsigned scanSerial_ = 0;
     ParamKnob *oct_, *semi_, *fine_, *pos_, *level_, *pan_, *uni_, *det_, *blend_, *spread_, *phase_, *rand_, *w1a_, *w2a_;
     ParamCombo *w1_, *w2_;
 };

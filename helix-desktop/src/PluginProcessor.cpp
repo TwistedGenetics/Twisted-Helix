@@ -76,8 +76,6 @@ HelixProcessor::HelixProcessor()
                 return t.empty() ? juce::String("-") : juce::String(t);
             };
         }
-    library_.setRoots({userWavetableFolder().getFullPathName().toStdString()});
-    library_.rescan();
     juce::PropertiesFile::Options opts;
     opts.applicationName = "HELIX-ui";   // not "HELIX": the standalone wrapper keeps its own HELIX.settings
     opts.folderName = "HELIX";
@@ -85,8 +83,35 @@ HelixProcessor::HelixProcessor()
     opts.osxLibrarySubFolder = "Application Support";
     opts.millisecondsBeforeSaving = 500;   // save soon after a change, not only on a clean exit
     settings_ = std::make_unique<juce::PropertiesFile>(opts);
+    applyTableFolders();   // HELIX's Wavetables folder plus the user's own folders, then scan
     refreshPresetList();
     startTimerHz(10);
+}
+
+// Wavetable folders the user added (on top of Documents/HELIX/Wavetables), kept in the UI settings.
+juce::StringArray HelixProcessor::tableFolders() const
+{
+    juce::StringArray a;
+    if (settings_) a.addLines(settings_->getValue("tableFolders"));
+    a.removeEmptyStrings();
+    return a;
+}
+
+void HelixProcessor::setTableFolders(const juce::StringArray& folders)
+{
+    juce::StringArray a(folders);
+    a.removeEmptyStrings();
+    a.removeDuplicates(false);
+    if (settings_) { settings_->setValue("tableFolders", a.joinIntoString("\n")); settings_->saveIfNeeded(); }
+    applyTableFolders();
+}
+
+void HelixProcessor::applyTableFolders()
+{
+    std::vector<std::string> roots{userWavetableFolder().getFullPathName().toStdString()};
+    for (const auto& f : tableFolders()) roots.push_back(f.toStdString());
+    library_.setRoots(std::move(roots));
+    library_.rescan();
 }
 
 juce::File HelixProcessor::userWavetableFolder()

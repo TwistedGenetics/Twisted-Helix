@@ -14,7 +14,7 @@ HP(P_QUALITY         , "quality", "Quality", ParamKind::Choice, 0.0f, 2.0f, 1.0f
 HP(P_AUTO_SCALE      , "auto_scale", "CPU Guard", ParamKind::Bool, 0.0f, 1.0f, 1.0f, "", nullptr, false)
 // ---- Oscillator A ----
 HP(P_A_ON            , "a_on", "Osc A", ParamKind::Bool, 0.0f, 1.0f, 1.0f, "", nullptr, false)
-HP(P_A_TABLE         , "a_table", "A Table", ParamKind::Int, 0.0f, 511.0f, 0.0f, "", nullptr, false)
+HP(P_A_TABLE         , "a_table", "A Table", ParamKind::Int, 0.0f, 2047.0f, 0.0f, "", nullptr, false)
 HP(P_A_POS           , "a_pos", "A WT Pos", ParamKind::Linear, 0.0f, 1.0f, 0.0f, "", nullptr, true)
 HP(P_A_OCT           , "a_oct", "A Octave", ParamKind::Int, -4.0f, 4.0f, 0.0f, "", nullptr, false)
 HP(P_A_SEMI          , "a_semi", "A Semi", ParamKind::Int, -24.0f, 24.0f, 0.0f, "st", nullptr, false)
@@ -35,7 +35,7 @@ HP(P_A_TO_F1         , "a_to_f1", "A > F1", ParamKind::Linear, 0.0f, 1.0f, 1.0f,
 HP(P_A_TO_F2         , "a_to_f2", "A > F2", ParamKind::Linear, 0.0f, 1.0f, 0.0f, "", nullptr, false)
 // ---- Oscillator B ----
 HP(P_B_ON            , "b_on", "Osc B", ParamKind::Bool, 0.0f, 1.0f, 0.0f, "", nullptr, false)
-HP(P_B_TABLE         , "b_table", "B Table", ParamKind::Int, 0.0f, 511.0f, 0.0f, "", nullptr, false)
+HP(P_B_TABLE         , "b_table", "B Table", ParamKind::Int, 0.0f, 2047.0f, 0.0f, "", nullptr, false)
 HP(P_B_POS           , "b_pos", "B WT Pos", ParamKind::Linear, 0.0f, 1.0f, 0.0f, "", nullptr, true)
 HP(P_B_OCT           , "b_oct", "B Octave", ParamKind::Int, -4.0f, 4.0f, 0.0f, "", nullptr, false)
 HP(P_B_SEMI          , "b_semi", "B Semi", ParamKind::Int, -24.0f, 24.0f, 0.0f, "st", nullptr, false)

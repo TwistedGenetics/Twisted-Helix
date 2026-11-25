@@ -214,6 +214,7 @@ void TableLibrary::doScanImpl()
     std::vector<TableEntry> found;
     // Walk each root: a folder holding only single-cycle WAVs and no sub-folders is one "folder of single cycles"
     // entry; other WAVs are tables of their own.
+    std::string idPrefix, groupRoot;   // per root: "" / "HELIX" for the first, "<name>/" / "<name>" for the others
     std::function<void(const std::string&, const std::string&, int)> walk = [&](const std::string& root, const std::string& dir, int depth) {
         std::error_code ec;
         const std::vector<std::string> items = listDirectory(dir);
@@ -235,9 +236,11 @@ void TableLibrary::doScanImpl()
             }
         }
         const std::string rel = fs::path(dir).lexically_relative(root).generic_string();
+        const std::string group = groupRoot + (dir == root ? std::string() : "/" + rel);
         if (dir != root && hasWav && !hasDir && !hasTable)
         {
-            found.push_back({"folder:" + rel, fs::path(dir).filename().string() + " (cycles)", dir, -1, true});
+            found.push_back({"folder:" + idPrefix + rel, fs::path(dir).filename().string() + " (cycles)", dir, -1, true,
+                             groupRoot + (fs::path(rel).parent_path().empty() ? std::string() : "/" + fs::path(rel).parent_path().generic_string())});
             return;   // its files are frames, not tables of their own
         }
         for (const std::string& c : items)
@@ -245,19 +248,28 @@ void TableLibrary::doScanImpl()
             if (fs::is_directory(c, ec)) { if (depth < 4) walk(root, c, depth + 1); continue; }
             std::string ext = fs::path(c).extension().string();
             std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
-            if (ext == ".wav") found.push_back({"file:" + fs::path(c).lexically_relative(root).generic_string(), fs::path(c).stem().string(), c, -1, false});
+            if (ext == ".wav") found.push_back({"file:" + idPrefix + fs::path(c).lexically_relative(root).generic_string(), fs::path(c).stem().string(), c, -1, false, group});
         }
     };
-    for (const std::string& root : roots)
+    for (size_t ri = 0; ri < roots.size(); ++ri)
     {
         std::error_code ec;
-        if (fs::is_directory(root, ec)) walk(fs::path(root).lexically_normal().generic_string(), fs::path(root).lexically_normal().generic_string(), 0);
+        const std::string root = fs::path(roots[ri]).lexically_normal().generic_string();
+        if (!fs::is_directory(root, ec)) continue;
+        std::string name = fs::path(root).filename().string();
+        if (name.empty()) name = fs::path(root).parent_path().filename().string();   // "/x/y/" -> "y"
+        idPrefix = ri == 0 ? std::string() : name + "/";
+        groupRoot = ri == 0 ? std::string("HELIX") : name;
+        const size_t from = found.size();
+        walk(root, root, 0);
+        // each root's tables together, in path order (the first root first)
+        std::sort(found.begin() + (long)from, found.end(), [](const TableEntry& a, const TableEntry& b) { return a.id < b.id; });
     }
-    std::sort(found.begin(), found.end(), [](const TableEntry& a, const TableEntry& b) { return a.id < b.id; });
     std::vector<TableEntry> all = builtinEntries();
     all.insert(all.end(), found.begin(), found.end());
-    if (all.size() > 512) all.resize(512);   // the table parameter's range
+    if ((int)all.size() > kMaxTables) all.resize((size_t)kMaxTables);   // the table parameters' range
     { std::lock_guard<std::mutex> lk(mutex_); entries_ = std::move(all); }
+    scanSerial_.fetch_add(1);
 }
 
 } // namespace helix

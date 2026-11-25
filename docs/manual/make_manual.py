@@ -629,7 +629,17 @@ def chapter_tables():
                  ["Any longer WAV (a break, a vocal)", "Turned into a 64-frame table with Sample → Table (below)."]], [58, 112]),
           Spacer(1, 4),
           P("HELIX reads 8, 16, 24 and 32-bit PCM and 32/64-bit float WAVs, mono or stereo (stereo files are mixed to mono). "
-            "Tables load in the background, so the sound never stops while you browse.")]
+            "Tables load in the background, so the sound never stops while you browse."),
+          H3("More wavetable folders (computer)"),
+          P("The AU / VST3 / Standalone can also scan folders you already have, such as Serum's tables or a wavetable "
+            "pack, without copying them. Click <b>…</b> in an oscillator's title bar and choose <b>Add a wavetable "
+            "folder…</b>, then pick the folder. Its tables (and those in its sub-folders) appear in both oscillators' "
+            "table menus, each folder as its own sub-menu: the built-in tables at the top, then <b>HELIX</b> (your "
+            "Documents/HELIX/Wavetables folder), then each added folder by name. Add as many folders as you like; "
+            "<b>Remove a wavetable folder</b> takes one off the list (the files are not touched) and <b>Rescan the "
+            "wavetable folders</b> picks up new files. The folders are remembered for every project. Presets remember "
+            "a table as its folder's name plus its place in the folder, so keep the folder name if you move it. Up to "
+            "2048 tables are listed in all; sub-folders more than four deep are not scanned.")]
     s += H2("Sample → Table")
     s += [P("Sample → Table cuts any sample into a wavetable. HELIX finds the pitch of the sample, then takes one cycle at "
             "a time from evenly spaced points through the sample, lines each cycle up on a zero crossing so it loops without "

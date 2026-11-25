@@ -102,6 +102,11 @@ public:
     // Print to wavetable (message thread): render the patch on a thread of its own into
     // Wavetables/Prints/Print NNN.wav, then select it on the oscillator `slot`.
     void startPrint(int slot, const helix::PrintOptions& o);
+
+    // Extra wavetable folders to scan (message thread); the tables appear in the oscillators' table menus.
+    juce::StringArray tableFolders() const;
+    void setTableFolders(const juce::StringArray& folders);
+    void applyTableFolders();
     bool printing() const { return printing_.load(); }
     juce::String printStatus() const { std::lock_guard<std::mutex> lk(printMutex_); return juce::String(printStatus_); }
 

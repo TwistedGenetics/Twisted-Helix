@@ -27,7 +27,10 @@ struct TableEntry
     std::string path;       // absolute path, empty for built-ins
     int builtin = -1;       // BuiltinTable index, or -1
     bool folder = false;
+    std::string group;      // where it lives, for the browser: "" built-in, else "<root>/<sub folder>"
 };
+
+constexpr int kMaxTables = 2048;   // the table parameters' range (0.5.3: was 512)
 
 class TableLibrary
 {
@@ -35,10 +38,13 @@ public:
     explicit TableLibrary(Engine& engine);
     ~TableLibrary();
 
-    // Folders to scan (any number). Call rescan() after changing them.
+    // Folders to scan (any number). Call rescan() after changing them. The first is HELIX's own Wavetables folder
+    // (ids "file:<path in it>"); tables in the others get ids "file:<folder name>/<path in it>", so two folders
+    // can hold files of the same name.
     void setRoots(std::vector<std::string> roots);
     void rescan();                                  // asynchronous
     bool scanning() const { return scanning_.load(); }
+    unsigned scanSerial() const { return scanSerial_.load(); }   // goes up after every finished scan
 
     // Snapshot of the entries (thread-safe copy).
     std::vector<TableEntry> entries() const;
@@ -86,6 +92,7 @@ private:
     std::deque<Job> jobs_;
     bool busy_ = false, quit_ = false;
     std::vector<std::string> roots_;
+    std::atomic<unsigned> scanSerial_{0};
     std::vector<TableEntry> entries_;
     std::string slotId_[kNumTableSlots];
     std::string lastError_;
