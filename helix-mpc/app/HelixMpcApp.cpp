@@ -541,7 +541,13 @@ void HelixMpcApp::syncNameEditor()
     const int cur = clamp((int)std::lround(getParam(MP_NAME_CURSOR)), 0, kMaxNameLen - 1);
     const int chr = clamp((int)std::lround(getParam(MP_NAME_CHAR)), 0, (int)kNameChars.size() - 1);
     bool redraw = false;
-    if (nameReset_.exchange(false)) { lastNameCursor_ = -1; redraw = true; }
+    // A preset load only re-reads the letter under the cursor; the Name box is told to redraw without its value
+    // changing (state saved with the project must come back exactly as it was).
+    if (nameReset_.exchange(false))
+    {
+        lastNameCursor_ = -1;
+        platform_.notifyParameter(MP_NAME_SHOW, getParam(MP_NAME_SHOW));
+    }
     if (getParam(MP_NAME_CLEAR) >= 0.5f)
     {
         setParam(MP_NAME_CLEAR, 0.0f);
@@ -554,6 +560,7 @@ void HelixMpcApp::syncNameEditor()
     const int curNow = clamp((int)std::lround(getParam(MP_NAME_CURSOR)), 0, kMaxNameLen - 1);
     if (curNow != lastNameCursor_)
     {
+        const bool moved = lastNameCursor_ != -1;
         lastNameCursor_ = curNow;
         char c = ' ';
         { std::lock_guard<std::mutex> lk(presetsMutex_); if (curNow < (int)nameBuf_.size()) c = nameBuf_[(size_t)curNow]; }
@@ -561,7 +568,7 @@ void HelixMpcApp::syncNameEditor()
         lastNameChar_ = k == std::string::npos ? 0 : (int)k;
         setParam(MP_NAME_CHAR, (float)lastNameChar_);
         platform_.notifyParameter(MP_NAME_CHAR, (float)lastNameChar_);
-        redraw = true;
+        redraw = redraw || moved;
     }
     else if (chr != lastNameChar_)
     {
