@@ -780,9 +780,11 @@ def pages():
     page(8, 0, "BROWSE", [S("PRESET", [K("Preset", "Preset", w=380), TG("Load", "Load", 150), TG("Mutate 10%", "Mutate 10%", 170),
                                        VAL("CPU", "CPU Load", 170)]),
                           S("PADS", [TG("Pad Browse", "Pad Browse", 190), PICK("Pad Bank", "Pad\nBank", cols=4, where="left")]),
-                          # User slots: the sound is saved into U1-U16, the last 16 entries of the MPC's preset menu
-                          S("SAVE TO\nMENU", [PICK("Save Slot", None, cols=8, labels=["U%d" % i for i in range(1, 17)], bw=96),
-                                              TG("Save", "Save", 170)])])
+                          # User slots U001-U128 (the end of the MPC's preset menu): name the sound, pick a slot, Save
+                          S("NAME", [VAL("Name", "Name (letter in [ ] is under the cursor)", 470),
+                                     K("Name Cursor", "Cursor", w=190), K("Name Letter", "Letter", w=190),
+                                     TG("Clear Name", "Clear", 140)]),
+                          S("SAVE TO\nMENU", [K("Save Slot", "Slot", w=560), TG("Save", "Save", 220)])])
     # Sample > Table, and Print to wavetable: render the patch (sweeping one control) into Wavetables/Prints
     page(8, 1, "TABLES", [S("SAMPLE\n> TABLE", [K("Sample", "Sample", w=380), TG("Make Table", "Make Table", 170)]),
                           S("TABLE\nSETUP", [PICK("Frames", "Frames"), SEG("To Osc", "To Osc", ["Osc A", "Osc B"])]),

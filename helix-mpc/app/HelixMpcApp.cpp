@@ -19,6 +19,9 @@ namespace fs = std::filesystem;
 
 // ------------------------------------------------------------------------------------------- param defs
 
+// Letters for naming presets on the MPC (Name Letter): space first, then A-Z, a-z, 0-9 and a few marks
+static const std::string kNameChars = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.#&+!()'";
+
 namespace mpcchoices {
 static const std::vector<std::string> frames = {"8", "16", "32", "64", "128", "256"};
 static const std::vector<std::string> slot = {"Osc A", "Osc B"};
@@ -26,8 +29,6 @@ static const std::vector<std::string> bank = {"1-16", "17-32", "33-48", "49-64",
 static const std::vector<std::string> scenes = {"Scene 1", "Scene 2", "Scene 3", "Scene 4", "Scene 5", "Scene 6", "Scene 7",
                                                  "Scene 8", "Scene 9", "Scene 10", "Scene 11", "Scene 12", "Scene 13",
                                                  "Scene 14", "Scene 15", "Scene 16"};
-static const std::vector<std::string> userSlots = {"U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8", "U9", "U10", "U11",
-                                                    "U12", "U13", "U14", "U15", "U16"};
 static const std::vector<std::string> steps = {"Step 1", "Step 2", "Step 3", "Step 4", "Step 5", "Step 6", "Step 7", "Step 8",
                                                 "Step 9", "Step 10", "Step 11", "Step 12", "Step 13", "Step 14", "Step 15", "Step 16"};
 }
@@ -108,8 +109,12 @@ static ParamDef extraDefs[kMpcNumParams - kMpcReserveEnd] = {
     {"mpc_co_nf", "CO Name F", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
     {"mpc_scene", "Scene", ParamKind::Choice, 0, 15, 0, "", &mpcchoices::scenes, false},
     {"mpc_scene_store", "Store Scene", ParamKind::Bool, 0, 1, 0, "", nullptr, false},
-    {"mpc_save_slot", "Save Slot", ParamKind::Choice, 0, kNumUserSlots - 1, 0, "", &mpcchoices::userSlots, false},
+    {"mpc_save_slot", "Save Slot", ParamKind::Int, 0, kNumUserSlots - 1, 0, "", nullptr, false},
     {"mpc_save_go", "Save", ParamKind::Bool, 0, 1, 0, "", nullptr, false},
+    {"mpc_name_cursor", "Name Cursor", ParamKind::Int, 0, kMaxNameLen - 1, 0, "", nullptr, false},
+    {"mpc_name_char", "Name Letter", ParamKind::Int, 0, (float)(kNameChars.size() - 1), 0, "", nullptr, false},
+    {"mpc_name_show", "Name", ParamKind::Linear, 0, 1, 0, "", nullptr, false},
+    {"mpc_name_clear", "Clear Name", ParamKind::Bool, 0, 1, 0, "", nullptr, false},
 };
 static_assert(sizeof(extraDefs) / sizeof(extraDefs[0]) == kMpcNumParams - kMpcReserveEnd, "extraDefs out of step");
 
@@ -257,6 +262,12 @@ bool HelixMpcApp::loadUserSlot(const std::string& contentDir, int s, Preset& out
 
 void HelixMpcApp::scanContentImpl()
 {
+    {
+        std::vector<std::string> names((size_t)kNumUserSlots);
+        for (int k = 0; k < kNumUserSlots; ++k) { Preset sp; if (loadUserSlot(platform_.contentDir(), k, sp)) names[(size_t)k] = sp.name.empty() ? "User" : sp.name; }
+        std::lock_guard<std::mutex> lk(presetsMutex_);
+        slotNames_ = std::move(names);
+    }
     std::vector<Preset> list(factoryPresets().begin(), factoryPresets().end());
     std::vector<std::string> samples;
     std::error_code ec;
@@ -316,6 +327,37 @@ bool HelixMpcApp::formatValue(int index, float plain, std::string& out) const
             return true;
         }
         case MP_LOAD: case MP_MUTATE: case MP_S2T_GO: case MP_SCENE_STORE: out = plain >= 0.5f ? "..." : "Press"; return true;
+        case MP_SAVE_SLOT:
+        {
+            const int sl = clamp((int)std::lround(plain), 0, kNumUserSlots - 1);
+            std::lock_guard<std::mutex> lk(presetsMutex_);
+            const std::string nm = sl < (int)slotNames_.size() ? slotNames_[(size_t)sl] : std::string();
+            std::snprintf(buf, sizeof buf, "U%03d", sl + 1);
+            out = std::string(buf) + " " + (nm.empty() ? std::string("(empty)") : nm);
+            return true;
+        }
+        case MP_NAME_CHAR:
+        {
+            const int c = clamp((int)std::lround(plain), 0, (int)kNameChars.size() - 1);
+            out = c == 0 ? std::string("Space") : std::string(1, kNameChars[(size_t)c]);
+            return true;
+        }
+        case MP_NAME_CURSOR:
+            std::snprintf(buf, sizeof buf, "%d", (int)std::lround(plain) + 1);
+            out = buf;
+            return true;
+        case MP_NAME_SHOW:
+        {
+            // the name with the letter under the cursor in brackets: "Dr[i]ft Reese"
+            std::lock_guard<std::mutex> lk(presetsMutex_);
+            std::string n = nameBuf_;
+            const int cur = clamp((int)std::lround(getParam(MP_NAME_CURSOR)), 0, kMaxNameLen - 1);
+            if ((int)n.size() <= cur) n.resize((size_t)cur + 1, ' ');
+            out = n.substr(0, (size_t)cur) + "[" + n[(size_t)cur] + "]" + n.substr((size_t)cur + 1);
+            while (!out.empty() && out.back() == ' ') out.pop_back();
+            return true;
+        }
+        case MP_NAME_CLEAR: out = plain >= 0.5f ? "..." : "Clear"; return true;
         case MP_SAVE_GO:
         {
             std::lock_guard<std::mutex> lk(presetsMutex_);
@@ -409,6 +451,12 @@ void HelixMpcApp::applyPreset(const Preset& p)
         if (v != before[i]) platform_.notifyParameter(i, v);
     }
     currentName_ = p.name;
+    {
+        std::lock_guard<std::mutex> lk(presetsMutex_);
+        nameBuf_ = p.name.size() > 2 && p.name.compare(p.name.size() - 2, 2, " *") == 0 ? p.name.substr(0, p.name.size() - 2) : p.name;
+        if ((int)nameBuf_.size() > kMaxNameLen) nameBuf_.resize((size_t)kMaxNameLen);
+    }
+    nameReset_ = true;
 }
 
 void HelixMpcApp::loadPresetIndex(int index, int auditionNote)
@@ -459,17 +507,76 @@ void HelixMpcApp::saveUserSlot(int s)
     try
     {
         Preset p = capturePreset(engine_, &library_);
-        p.name = currentName_.empty() ? "User " + std::to_string(s + 1) : currentName_;
+        std::string nm;
+        { std::lock_guard<std::mutex> lk(presetsMutex_); nm = nameBuf_; }
+        while (!nm.empty() && nm.back() == ' ') nm.pop_back();
+        while (!nm.empty() && nm.front() == ' ') nm.erase(nm.begin());
+        if (nm.empty()) nm = currentName_;
+        if (nm.size() > 2 && nm.compare(nm.size() - 2, 2, " *") == 0) nm.resize(nm.size() - 2);
+        p.name = nm.empty() ? "User " + std::to_string(s + 1) : nm;
         const std::string path = userSlotPath(platform_.contentDir(), s);
         std::error_code ec;
         fs::create_directories(fs::path(path).parent_path(), ec);
         std::ofstream out(path, std::ios::trunc);
         out << p.toString();
         status = out.good() ? "Saved U" + std::to_string(s + 1) : "Can't write";
+        if (out.good())
+        {
+            std::lock_guard<std::mutex> lk(presetsMutex_);
+            if ((int)slotNames_.size() < kNumUserSlots) slotNames_.resize((size_t)kNumUserSlots);
+            slotNames_[(size_t)s] = p.name;
+            currentName_ = p.name;
+        }
     }
     catch (...) { status = "Can't write"; }
     { std::lock_guard<std::mutex> lk(presetsMutex_); saveStatus_ = status; }
     platform_.notifyParameter(MP_SAVE_GO, 0.0f);
+    const float v = getParam(MP_SAVE_SLOT);
+    platform_.notifyParameter(MP_SAVE_SLOT, v);   // the slot now shows the new name
+}
+
+// The name editor: moving the cursor shows the letter there on Name Letter; turning Name Letter writes it.
+void HelixMpcApp::syncNameEditor()
+{
+    const int cur = clamp((int)std::lround(getParam(MP_NAME_CURSOR)), 0, kMaxNameLen - 1);
+    const int chr = clamp((int)std::lround(getParam(MP_NAME_CHAR)), 0, (int)kNameChars.size() - 1);
+    bool redraw = false;
+    if (nameReset_.exchange(false)) { lastNameCursor_ = -1; redraw = true; }
+    if (getParam(MP_NAME_CLEAR) >= 0.5f)
+    {
+        setParam(MP_NAME_CLEAR, 0.0f);
+        platform_.notifyParameter(MP_NAME_CLEAR, 0.0f);
+        { std::lock_guard<std::mutex> lk(presetsMutex_); nameBuf_.clear(); }
+        setParam(MP_NAME_CURSOR, 0.0f); platform_.notifyParameter(MP_NAME_CURSOR, 0.0f);
+        lastNameCursor_ = -1;
+        redraw = true;
+    }
+    const int curNow = clamp((int)std::lround(getParam(MP_NAME_CURSOR)), 0, kMaxNameLen - 1);
+    if (curNow != lastNameCursor_)
+    {
+        lastNameCursor_ = curNow;
+        char c = ' ';
+        { std::lock_guard<std::mutex> lk(presetsMutex_); if (curNow < (int)nameBuf_.size()) c = nameBuf_[(size_t)curNow]; }
+        size_t k = kNameChars.find(c);
+        lastNameChar_ = k == std::string::npos ? 0 : (int)k;
+        setParam(MP_NAME_CHAR, (float)lastNameChar_);
+        platform_.notifyParameter(MP_NAME_CHAR, (float)lastNameChar_);
+        redraw = true;
+    }
+    else if (chr != lastNameChar_)
+    {
+        lastNameChar_ = chr;
+        std::lock_guard<std::mutex> lk(presetsMutex_);
+        if ((int)nameBuf_.size() <= cur) nameBuf_.resize((size_t)cur + 1, ' ');
+        nameBuf_[(size_t)cur] = kNameChars[(size_t)chr];
+        redraw = true;
+    }
+    if (redraw)
+    {
+        const float v = getParam(MP_NAME_SHOW) >= 0.5f ? 0.0f : 1.0f;
+        setParam(MP_NAME_SHOW, v);
+        platform_.notifyParameter(MP_NAME_SHOW, v);
+    }
 }
 
 std::string HelixMpcApp::saveState() const
@@ -709,6 +816,7 @@ void HelixMpcApp::tick()
 
     if (trigger(MP_PR_GO) && !printing_.load()) startPrint();
     if (trigger(MP_SCENE_STORE)) engine_.storeScene((int)getParam(MP_SCENE));
+    syncNameEditor();
     if (trigger(MP_SAVE_GO)) saveUserSlot((int)getParam(MP_SAVE_SLOT));
     if (printDone_.exchange(false))
     {

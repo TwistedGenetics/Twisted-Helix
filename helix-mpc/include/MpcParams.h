@@ -39,12 +39,15 @@ enum MpcParam : int
     MP_SCENE = MP_CONAME + 6, MP_SCENE_STORE,
     // 0.4.7 user slots: 16 entries at the end of the MPC's preset menu; Save writes the sound into the chosen one
     MP_SAVE_SLOT, MP_SAVE_GO,
+    // 0.4.8 naming before saving: a cursor, the letter under it (jog wheel / Q-Link), the name shown, Clear
+    MP_NAME_CURSOR, MP_NAME_CHAR, MP_NAME_SHOW, MP_NAME_CLEAR,
     kMpcParamEnd
 };
 constexpr int kMpcNumParams = kMpcParamEnd;
 constexpr int kNumPresetBanks = 8;
 constexpr int kMaxPresets = 256;
-constexpr int kNumUserSlots = 16;   // "U1" .. "U16" programs, files in Content/User Slots
+constexpr int kNumUserSlots = 128;  // "U001" .. "U128" programs, files in Content/User Slots
+constexpr int kMaxNameLen = 20;
 
 // Definition of an MPC parameter: core params, fillers (hidden, id "reserved_N") and the MPC-only ones.
 const ParamDef& mpcParamDef(int index);

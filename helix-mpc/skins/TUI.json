@@ -26346,7 +26346,7 @@
      }
     },
     {
-     "key": "hx pick Save Slot",
+     "key": "hx knob88_w190",
      "value": {
       "version": 2,
       "actions": [
@@ -26356,6 +26356,20 @@
         "handler": "Q-Link",
         "handleName": "Data",
         "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Double Click",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay"
+       },
+       {
+        "version": 1,
+        "onAction": "Enter Pressed",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay"
        }
       ],
       "backgroundData": {
@@ -26405,16 +26419,15 @@
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 0",
-         "type": "Button",
+         "name": "knob",
+         "type": "Knob",
          "data": {
           "version": 2,
-          "onImage": "seg_96_u1_on.png",
-          "offImage": "seg_96_u1_off.png",
-          "buttonId": 0,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "knobType": "FilmStrip",
+          "filmStrip": "knob88.png",
+          "numFrames": 128,
+          "invert": false,
+          "handleName": "Data"
          }
         },
         "handle remapping": {
@@ -26427,23 +26440,31 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "6 6 96 56"
+         "bounds": "0 19 88 88"
         }
        },
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 1",
-         "type": "Button",
+         "name": "value",
+         "type": "Label",
          "data": {
-          "version": 2,
-          "onImage": "seg_96_u2_on.png",
-          "offImage": "seg_96_u2_off.png",
-          "buttonId": 1,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "version": 1,
+          "textStyle": {
+           "version": 1,
+           "font": {
+            "version": 1,
+            "name": "Roboto",
+            "style": "Bold",
+            "height": 32.0
+           },
+           "colour": "ffffffff",
+           "justification": "left verticallyCentred",
+           "case": "Original"
+          },
+          "type": "Value",
+          "handleName": "Data"
          }
         },
         "handle remapping": {
@@ -26456,23 +26477,88 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "99 6 96 56"
+         "bounds": "100 60 90 44"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx toggle Clear Name",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Toggle Switch",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "state",
+         "type": "Image",
+         "data": {
+          "version": 2,
+          "imageType": "FilmStrip",
+          "colour": "0",
+          "image": "toggle_clear_name.png",
+          "numFrames": 2,
+          "handleName": "Data"
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "Always",
+         "boundsType": "Absolute",
+         "bounds": "0 0 140 60"
         }
        },
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 2",
-         "type": "Button",
+         "name": "focus",
+         "type": "Focus",
          "data": {
-          "version": 2,
-          "onImage": "seg_96_u3_on.png",
-          "offImage": "seg_96_u3_off.png",
-          "buttonId": 2,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
          }
         },
         "handle remapping": {
@@ -26483,25 +26569,97 @@
          "version": 1,
          "acceptsHWFocus": "No",
          "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "192 6 96 56"
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "key": "hx knob88_w560",
+     "value": {
+      "version": 2,
+      "actions": [
+       {
+        "version": 1,
+        "onAction": "Mouse Down",
+        "handler": "Q-Link",
+        "handleName": "Data",
+        "additionalData": ""
+       },
+       {
+        "version": 1,
+        "onAction": "Double Click",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay"
+       },
+       {
+        "version": 1,
+        "onAction": "Enter Pressed",
+        "handler": "Show Overlay",
+        "handleName": "Data",
+        "additionalData": "hx knob overlay"
+       }
+      ],
+      "backgroundData": {
+       "version": 1,
+       "focussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       },
+       "unfocussed": {
+        "version": 1,
+        "colour": "0",
+        "image": ""
+       }
+      },
+      "ignoreMousePresses": false,
+      "disableCoarseDataWheel": false,
+      "componentsData": [
+       {
+        "version": 2,
+        "componentData": {
+         "version": 1,
+         "name": "focus",
+         "type": "Focus",
+         "data": {
+          "version": 1,
+          "backgroundColour": "2446ace6",
+          "outlineColour": "ff46acec",
+          "backgroundInset": 0.0,
+          "outlineThickness": 4.0
+         }
+        },
+        "handle remapping": {
+         "version": 1,
+         "map": []
+        },
+        "bounds": {
+         "version": 1,
+         "acceptsHWFocus": "No",
+         "showWhenDataModelInvalid": "Show",
+         "whenVisible": "WhenFocussed",
+         "boundsType": "Proportional",
+         "bounds": "0 0 1 1"
         }
        },
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 3",
-         "type": "Button",
+         "name": "knob",
+         "type": "Knob",
          "data": {
           "version": 2,
-          "onImage": "seg_96_u4_on.png",
-          "offImage": "seg_96_u4_off.png",
-          "buttonId": 3,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "knobType": "FilmStrip",
+          "filmStrip": "knob88.png",
+          "numFrames": 128,
+          "invert": false,
+          "handleName": "Data"
          }
         },
         "handle remapping": {
@@ -26514,23 +26672,31 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "285 6 96 56"
+         "bounds": "0 19 88 88"
         }
        },
        {
         "version": 2,
         "componentData": {
          "version": 1,
-         "name": "choice 4",
-         "type": "Button",
+         "name": "value",
+         "type": "Label",
          "data": {
-          "version": 2,
-          "onImage": "seg_96_u5_on.png",
-          "offImage": "seg_96_u5_off.png",
-          "buttonId": 4,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
+          "version": 1,
+          "textStyle": {
+           "version": 1,
+           "font": {
+            "version": 1,
+            "name": "Roboto",
+            "style": "Bold",
+            "height": 32.0
+           },
+           "colour": "ffffffff",
+           "justification": "left verticallyCentred",
+           "case": "Original"
+          },
+          "type": "Value",
+          "handleName": "Data"
          }
         },
         "handle remapping": {
@@ -26543,326 +26709,7 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "378 6 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 5",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u6_on.png",
-          "offImage": "seg_96_u6_off.png",
-          "buttonId": 5,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "471 6 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 6",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u7_on.png",
-          "offImage": "seg_96_u7_off.png",
-          "buttonId": 6,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "564 6 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 7",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u8_on.png",
-          "offImage": "seg_96_u8_off.png",
-          "buttonId": 7,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "657 6 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 8",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u9_on.png",
-          "offImage": "seg_96_u9_off.png",
-          "buttonId": 8,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "6 59 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 9",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u10_on.png",
-          "offImage": "seg_96_u10_off.png",
-          "buttonId": 9,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "99 59 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 10",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u11_on.png",
-          "offImage": "seg_96_u11_off.png",
-          "buttonId": 10,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "192 59 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 11",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u12_on.png",
-          "offImage": "seg_96_u12_off.png",
-          "buttonId": 11,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "285 59 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 12",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u13_on.png",
-          "offImage": "seg_96_u13_off.png",
-          "buttonId": 12,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "378 59 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 13",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u14_on.png",
-          "offImage": "seg_96_u14_off.png",
-          "buttonId": 13,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "471 59 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 14",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u15_on.png",
-          "offImage": "seg_96_u15_off.png",
-          "buttonId": 14,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "564 59 96 56"
-        }
-       },
-       {
-        "version": 2,
-        "componentData": {
-         "version": 1,
-         "name": "choice 15",
-         "type": "Button",
-         "data": {
-          "version": 2,
-          "onImage": "seg_96_u16_on.png",
-          "offImage": "seg_96_u16_off.png",
-          "buttonId": 15,
-          "numButtonsInGroup": 16,
-          "handleName": "Data",
-          "gestureBehaviour": "Instant"
-         }
-        },
-        "handle remapping": {
-         "version": 1,
-         "map": []
-        },
-        "bounds": {
-         "version": 1,
-         "acceptsHWFocus": "No",
-         "showWhenDataModelInvalid": "Show",
-         "whenVisible": "Always",
-         "boundsType": "Absolute",
-         "bounds": "657 59 96 56"
+         "bounds": "100 60 460 44"
         }
        }
       ]
@@ -26929,7 +26776,7 @@
          "showWhenDataModelInvalid": "Show",
          "whenVisible": "Always",
          "boundsType": "Absolute",
-         "bounds": "0 0 170 60"
+         "bounds": "0 0 220 60"
         }
        },
        {
@@ -30467,12 +30314,12 @@
     "value": ["Press", "..."]
    },
    {
-    "key": "Parameter 506",
-    "value": ["U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8", "U9", "U10", "U11", "U12", "U13", "U14", "U15", "U16"]
-   },
-   {
     "key": "Parameter 507",
     "value": ["Press", "..."]
+   },
+   {
+    "key": "Parameter 511",
+    "value": ["Clear", "..."]
    }
   ],
   "info": {
@@ -62478,6 +62325,346 @@
           "case": "Original"
          },
          "type": "Name",
+         "handleName": "WithName[NAME]/Parameter 510"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "13 374 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Name (letter in ( ) is under the cursor)]/Parameter 510"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 341 470 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "box",
+        "type": "Image",
+        "data": {
+         "version": 2,
+         "imageType": "Regular",
+         "colour": "0",
+         "image": "box_plain_470.png"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 381 470 60"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "value",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 32.0
+          },
+          "colour": "ffffffff",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Value",
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 510"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "188 381 470 60"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Cursor]/Parameter 508"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "781 354 90 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "Name Cursor",
+        "type": "hx knob88_w190",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 508"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "681 328 190 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Letter]/Parameter 509"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "994 354 90 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "Name Letter",
+        "type": "hx knob88_w190",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 509"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "894 328 190 126"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Clear]/Parameter 511"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1107 341 140 32"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "Clear Name",
+        "type": "hx toggle Clear Name",
+        "data": {
+         "version": 1,
+         "handleName": "Data"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": [
+         {
+          "key": "Data",
+          "value": "Parameter 511"
+         }
+        ]
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "Yes",
+        "showWhenDataModelInvalid": "Hide",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "1107 381 140 60"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "Bold",
+           "height": 28.0
+          },
+          "colour": "ff181b2a",
+          "justification": "horizontallyCentred verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
          "handleName": "WithName[SAVE TO]/Parameter 506"
         }
        },
@@ -62491,7 +62678,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "13 357 150 34"
+        "bounds": "13 511 150 34"
        }
       },
       {
@@ -62528,7 +62715,44 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "13 391 150 34"
+        "bounds": "13 545 150 34"
+       }
+      },
+      {
+       "version": 2,
+       "componentData": {
+        "version": 1,
+        "name": "caption",
+        "type": "Label",
+        "data": {
+         "version": 1,
+         "textStyle": {
+          "version": 1,
+          "font": {
+           "version": 1,
+           "name": "Roboto",
+           "style": "SemiBold",
+           "height": 24.0
+          },
+          "colour": "ffc6ccda",
+          "justification": "left verticallyCentred",
+          "case": "Original"
+         },
+         "type": "Name",
+         "handleName": "WithName[Slot]/Parameter 506"
+        }
+       },
+       "handle remapping": {
+        "version": 1,
+        "map": []
+       },
+       "bounds": {
+        "version": 1,
+        "acceptsHWFocus": "No",
+        "showWhenDataModelInvalid": "Show",
+        "whenVisible": "Always",
+        "boundsType": "Absolute",
+        "bounds": "288 508 460 32"
        }
       },
       {
@@ -62536,7 +62760,7 @@
        "componentData": {
         "version": 1,
         "name": "Save Slot",
-        "type": "hx pick Save Slot",
+        "type": "hx knob88_w560",
         "data": {
          "version": 1,
          "handleName": "Data"
@@ -62557,7 +62781,7 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "182 330 759 121"
+        "bounds": "188 482 560 126"
        }
       },
       {
@@ -62594,7 +62818,7 @@
         "showWhenDataModelInvalid": "Show",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "983 341 170 32"
+        "bounds": "796 495 220 32"
        }
       },
       {
@@ -62623,12 +62847,12 @@
         "showWhenDataModelInvalid": "Hide",
         "whenVisible": "Always",
         "boundsType": "Absolute",
-        "bounds": "983 381 170 60"
+        "bounds": "796 535 220 60"
        }
       }
      ]
     },
-    "qlinkBoundsData": ["10 10 1260 146", "10 164 1260 146", "10 318 1260 146"]
+    "qlinkBoundsData": ["10 10 1260 146", "10 164 1260 146", "10 318 1260 146", "10 472 1260 146"]
    },
    {
     "version": 1,

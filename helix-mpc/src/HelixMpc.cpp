@@ -39,7 +39,7 @@ public:
         i.name = "HELIX";
         i.vendor = "Twisted Genetics";
         i.uniqueId = MPC_FOURCC('T', 'g', 'H', 'x');   // == "uid" in plugin.json
-        i.version = 4007;
+        i.version = 4008;
         i.isInstrument = true;
         i.numInputs = 0;
         i.numOutputs = 2;
@@ -79,7 +79,9 @@ public:
             std::vector<float> v((size_t)kMpcNumParams);
             for (int i = 0; i < kMpcNumParams; ++i) v[(size_t)i] = has && i < kNumParams ? sp.params[i] : mpcParamDef(i).def;
             v[(size_t)MP_PRESET] = 0.0f;
-            const std::string nm = "U" + std::to_string(s + 1) + " " + (has ? sp.name : std::string("(empty)"));
+            char num[8];
+            std::snprintf(num, sizeof num, "U%03d", s + 1);
+            const std::string nm = std::string(num) + " " + (has ? sp.name : std::string("(empty)"));
             addProgram(nm.c_str(), v);
         }
         app_ = std::make_unique<HelixMpcApp>(*this);

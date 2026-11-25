@@ -39,6 +39,7 @@ public:
     // ---- presets (non-real-time)
     int numPresets() const;
     std::string presetName(int index) const;
+    std::string currentPresetName() const { return currentName_; }
     void loadPresetIndex(int index, int auditionNote = -1);
     // The host selected program n (factory preset n): apply the parts plain values cannot carry.
     void onProgramSelected(int index);
@@ -62,6 +63,7 @@ private:
     void applyPreset(const Preset& p);
     void startPrint();
     void saveUserSlot(int s);
+    void syncNameEditor();
     void flipPrintStatus();
 
     IPlatform& platform_;
@@ -92,6 +94,10 @@ private:
     int cpuCounter_ = 0;
     int lastCharFam_ = -99;
     std::string saveStatus_;
+    std::string nameBuf_;                       // the name being edited (guarded by presetsMutex_)
+    std::vector<std::string> slotNames_;         // user slot names ("" = empty), for the Save Slot display
+    std::atomic<bool> nameReset_{true};
+    int lastNameCursor_ = -1, lastNameChar_ = -1;
 public:
     // Program index of user slot U1 (= factory + Presets/ files when the program list was built)
     void setProgramBase(int b) { programBase_ = b; }

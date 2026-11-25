@@ -1120,13 +1120,17 @@ def chapter_presets():
                  ["Load", "Click the preset name at the top of the window, use &lt; and &gt;, or double-click a preset on "
                   "the GLOBAL tab.",
                   "The MPC's preset menu at the top of the screen: the factory presets, then HELIX presets copied into "
-                  "Content/Presets (marked *), then the 16 user slots <b>U1-U16</b>. Or <b>Preset</b> + <b>Load</b> on the "
+                  "Content/Presets (marked *), then the 128 user slots <b>U001-U128</b>. Or <b>Preset</b> + <b>Load</b> on the "
                   "BROWSE page."],
                  ["Save", "<b>Save</b> at the top of the window: name and category; saved in Documents/HELIX/Presets.",
-                  "On the BROWSE page, <b>SAVE TO MENU</b> strip: pick a slot U1-U16 and press <b>Save</b> (it shows "
-                  "\"Saved U3\"). Choosing that slot in the preset menu loads the sound at once, tables, LFO shapes and "
-                  "scenes included; the slot's entry shows the preset's name (\"U3 Drift Reese\") from the next time HELIX "
-                  "loads, until then it keeps its old label. Slots are files in Content/User Slots. The MPC's own save "
+                  "On the BROWSE page. <b>NAME</b>: the box shows the name, with the letter under the cursor in [ ]. "
+                  "Turn <b>Cursor</b> to move along it and <b>Letter</b> to change that letter (jog wheel or Q-Link; "
+                  "space, A-Z, a-z, 0-9 and - _ . # &amp; + ! ( ) '). Loading a preset puts its name there to edit; "
+                  "<b>Clear</b> starts from empty. <b>SAVE TO MENU</b>: turn <b>Slot</b> (U001-U128; it shows the name "
+                  "already in each slot or (empty)) and press <b>Save</b> (\"Saved U3\"). Choosing that slot in the "
+                  "preset menu loads the sound at once, tables, LFO shapes and scenes included; the menu entry shows "
+                  "the new name (\"U003 Dub 2\") from the next time HELIX loads, until then its old label. Saving over "
+                  "a slot replaces it. Slots are files in Content/User Slots (Slot 01.json ... Slot 128.json). The MPC's own save "
                   "button (disk icon) also works, but it saves into the MPC's Plugin Presets folder, which the MPC's "
                   "preset browser shows, not HELIX's preset menu."],
                  ["Init", "<b>Init</b> (top of the window) resets everything to the starting sound.", "Start from a factory preset, or remove "

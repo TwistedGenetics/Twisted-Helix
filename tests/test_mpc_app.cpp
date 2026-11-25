@@ -7,6 +7,7 @@
 #include "helix/Preset.h"
 #include "helix/WavIO.h"
 #include "helix/WavetableGen.h"
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <map>
@@ -239,17 +240,35 @@ int main()
     app.tick();
     CHECK(std::fabs(app.engine().scenes().v[12][2].load() - 0.33f) < 1e-6f, "store into the shown scene");
 
-    // User slots: Save writes the sound into U3; picking U3 in the preset menu loads it back
+    // User slots: name the sound, Save into U003; picking U003 in the preset menu loads it back
     app.setProgramBase((int)factoryPresets().size());
     app.setParam(P_F1_CUTOFF, 777.0f);
+    app.setParam(MP_NAME_CLEAR, 1.0f);
+    app.tick();
+    const std::string word = "Dub 2";
+    for (size_t k = 0; k < word.size(); ++k)
+    {
+        app.setParam(MP_NAME_CURSOR, (float)k);
+        app.tick();
+        const char* chars = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        app.setParam(MP_NAME_CHAR, (float)(std::strchr(chars, word[k]) - chars));
+        app.tick();
+    }
+    app.setParam(MP_NAME_CURSOR, 1.0f);
+    app.tick();
+    CHECK(app.formatValue(MP_NAME_SHOW, 0.0f, text) && text == "D[u]b 2", "name shown '%s'", text.c_str());
+    CHECK(app.formatValue(MP_NAME_CHAR, app.getParam(MP_NAME_CHAR), text) && text == "u", "letter under cursor '%s'", text.c_str());
     app.setParam(MP_SAVE_SLOT, 2.0f);
     app.setParam(MP_SAVE_GO, 1.0f);
     app.tick();
     CHECK(fs::exists(HelixMpcApp::userSlotPath(pf.dir, 2)), "slot file missing");
     CHECK(app.formatValue(MP_SAVE_GO, 0.0f, text) && text == "Saved U3", "save status '%s'", text.c_str());
+    CHECK(app.formatValue(MP_SAVE_SLOT, 2.0f, text) && text == "U003 Dub 2", "slot shows '%s'", text.c_str());
+    CHECK(app.formatValue(MP_SAVE_SLOT, 127.0f, text) && text == "U128 (empty)", "last slot '%s'", text.c_str());
     app.setParam(P_F1_CUTOFF, 2000.0f);
     app.onProgramSelected((int)factoryPresets().size() + 2);
     CHECK(std::fabs(app.getParam(P_F1_CUTOFF) - 777.0f) < 0.5f, "slot did not load (%f)", app.getParam(P_F1_CUTOFF));
+    CHECK(app.currentPresetName() == "Dub 2", "loaded name '%s'", app.currentPresetName().c_str());
     app.onProgramSelected((int)factoryPresets().size() + 5);   // empty slot: nothing happens
     CHECK(std::fabs(app.getParam(P_F1_CUTOFF) - 777.0f) < 0.5f, "empty slot changed the sound");
 

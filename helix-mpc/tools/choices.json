@@ -157,6 +157,5 @@
   "Print Sweep": ["Time", "Macro 1", "Macro 2", "Macro 3", "Macro 4", "Growl", "Pos A", "Pos B", "Cutoff 1", "Warp A"],
   "Print Frames": ["8", "16", "32", "64", "128", "256"],
   "Print To": ["Osc A", "Osc B"],
-  "Scene": ["Scene 1", "Scene 2", "Scene 3", "Scene 4", "Scene 5", "Scene 6", "Scene 7", "Scene 8", "Scene 9", "Scene 10", "Scene 11", "Scene 12", "Scene 13", "Scene 14", "Scene 15", "Scene 16"],
-  "Save Slot": ["U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8", "U9", "U10", "U11", "U12", "U13", "U14", "U15", "U16"]
+  "Scene": ["Scene 1", "Scene 2", "Scene 3", "Scene 4", "Scene 5", "Scene 6", "Scene 7", "Scene 8", "Scene 9", "Scene 10", "Scene 11", "Scene 12", "Scene 13", "Scene 14", "Scene 15", "Scene 16"]
 }
