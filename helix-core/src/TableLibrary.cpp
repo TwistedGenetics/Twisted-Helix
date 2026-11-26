@@ -1,4 +1,5 @@
 #include "helix/TableLibrary.h"
+#include <cstring>
 #include "helix/WavetableGen.h"
 #include "helix/WavetableImport.h"
 #include <algorithm>
@@ -62,11 +63,35 @@ bool TableLibrary::isLibraryId(const std::string& id)
 {
     return id.rfind("builtin:", 0) == 0 || id.rfind("file:", 0) == 0 || id.rfind("folder:", 0) == 0;
 }
+// An id's entry: exact first; for "file:" / "folder:" ids, failing that, the same file in another of the folders
+// (a table moved from the plugin's own Content/Wavetables to the shared VST2 Plugins/Content/Wavetables, or the
+// other way round, keeps working: "file:Wavetables/Bass.wav" finds "file:Bass.wav" and vice versa).
+static int findEntry(const std::vector<TableEntry>& entries, const std::string& id)
+{
+    for (size_t i = 0; i < entries.size(); ++i) if (entries[i].id == id) return (int)i;
+    for (const char* kind : {"file:", "folder:"})
+    {
+        const size_t k = std::strlen(kind);
+        if (id.compare(0, k, kind) != 0) continue;
+        const std::string rel = id.substr(k);
+        auto endsWith = [](const std::string& a, const std::string& b) {
+            return a.size() > b.size() && a.compare(a.size() - b.size(), b.size(), b) == 0 && a[a.size() - b.size() - 1] == '/';
+        };
+        for (size_t i = 0; i < entries.size(); ++i)
+        {
+            const std::string& e = entries[i].id;
+            if (e.compare(0, k, kind) != 0) continue;
+            const std::string er = e.substr(k);
+            if (endsWith(er, rel) || endsWith(rel, er)) return (int)i;
+        }
+    }
+    return -1;
+}
+
 int TableLibrary::indexOfId(const std::string& id) const
 {
     std::lock_guard<std::mutex> lk(mutex_);
-    for (size_t i = 0; i < entries_.size(); ++i) if (entries_[i].id == id) return (int)i;
-    return -1;
+    return findEntry(entries_, id);
 }
 std::string TableLibrary::slotId(int slot) const
 {
@@ -127,7 +152,8 @@ void TableLibrary::worker()
                 TableEntry e; bool ok = false;
                 {
                     std::lock_guard<std::mutex> lk(mutex_);
-                    for (auto& x : entries_) if (x.id == j.text) { e = x; ok = true; break; }
+                    const int at = findEntry(entries_, j.text);
+                    if (at >= 0) { e = entries_[(size_t)at]; ok = true; }
                 }
                 // Ids that name a file directly still load when the file is not in the library.
                 if (!ok && j.text.rfind("path:", 0) == 0) { e = {j.text, fs::path(j.text.substr(5)).stem().string(), j.text.substr(5), -1, false}; ok = true; }

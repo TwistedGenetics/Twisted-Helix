@@ -151,11 +151,29 @@ int s2tFrames(int c) { static const int f[] = {8, 16, 32, 64, 128, 256}; return 
 HelixMpcApp::HelixMpcApp(IPlatform& platform, bool startWorker) : platform_(platform)
 {
     for (int i = kMpcReserveEnd; i < kMpcNumParams; ++i) extra_[i - kMpcReserveEnd].store(extraDefs[i - kMpcReserveEnd].def);
-    library_.setRoots({(fs::path(platform_.contentDir()) / "Wavetables").string()});
+    library_.setRoots(tableRoots());
     library_.rescan();
     scanContent();
     if (startWorker) worker_ = std::thread([this] { workerLoop(); });
 }
+
+// Wavetable folders: the shared VST2 Plugins/Content/Wavetables first (made if missing), then the plugin's own
+// Content/Wavetables (tables already there keep working; they show as a "Wavetables" folder of their own).
+std::vector<std::string> HelixMpcApp::tableRoots() const
+{
+    std::vector<std::string> roots;
+    const std::string shared = platform_.sharedWavetablesDir();
+    if (!shared.empty())
+    {
+        std::error_code ec;
+        fs::create_directories(shared, ec);
+        if (fs::is_directory(shared, ec)) roots.push_back(shared);
+    }
+    roots.push_back((fs::path(platform_.contentDir()) / "Wavetables").string());
+    return roots;
+}
+
+std::string HelixMpcApp::tablesDir() const { return tableRoots().front(); }
 
 HelixMpcApp::~HelixMpcApp()
 {
@@ -179,7 +197,7 @@ void HelixMpcApp::startPrint()
     o.note = (int)std::lround(getParam(MP_PR_NOTE));
     o.effects = getParam(MP_PR_FX) >= 0.5f;
     const int slot = (int)getParam(MP_PR_SLOT);
-    const std::string dir = (fs::path(platform_.contentDir()) / "Wavetables" / "Prints").string();
+    const std::string dir = (fs::path(tablesDir()) / "Prints").string();   // the shared folder when there is one
     printing_ = true;
     flipPrintStatus();
     printThread_ = std::thread([this, patch, ta, tb, o, slot, dir] {
@@ -225,46 +243,83 @@ void HelixMpcApp::scanContent()
     try { scanContentImpl(); } catch (...) {}   // a broken drive must never take MPC down
 }
 
+// Presets live in the shared folder beside the plugins: "<...>/VST2 Plugins/Content/Presets/HELIX" (made on first
+// use), when HELIX's Content folder is "<...>/VST2 Plugins/<plugin folder>/Content" as on the MPC. Empty otherwise.
+std::string HelixMpcApp::sharedPresetsDir(const std::string& contentDir)
+{
+    try
+    {
+        const fs::path c = fs::path(contentDir).lexically_normal();
+        const fs::path leaf = c.filename().empty() ? c.parent_path().filename() : c.filename();
+        if (leaf != "Content") return {};
+        const fs::path plugins = (c.filename().empty() ? c.parent_path() : c).parent_path().parent_path();
+        if (plugins.empty() || plugins == plugins.root_path()) return {};
+        const fs::path home = plugins / "Content" / "Presets" / "HELIX";
+        std::error_code ec;
+        fs::create_directories(home, ec);
+        return fs::is_directory(home, ec) ? home.string() : std::string();
+    }
+    catch (...) { return {}; }
+}
+
+// User presets (.json, any sub-folders): the shared VST2 Plugins/Content/Presets/HELIX first, then the plugin's own
+// Content/Presets (presets from before 0.5.5 keep showing). The user slots' folder is not part of the list.
 std::vector<Preset> HelixMpcApp::userPresets(const std::string& contentDir)
 {
     std::vector<Preset> list;
     try
     {
-        const fs::path root(contentDir);
-        std::vector<std::string> all, files;
-        listFilesRecursive((root / "Presets").string(), all);
-        for (const std::string& f : all) if (fs::path(f).extension() == ".json") files.push_back(f);
-        std::sort(files.begin(), files.end());
-        for (const auto& f : files)
+        std::vector<std::string> roots;
+        const std::string shared = sharedPresetsDir(contentDir);
+        if (!shared.empty()) roots.push_back(shared);
+        roots.push_back((fs::path(contentDir) / "Presets").string());
+        for (const auto& root : roots)
         {
-            if ((int)(list.size() + factoryPresets().size()) >= kMaxPresets - kNumUserSlots) break;
-            std::ifstream in(f);
-            std::stringstream ss; ss << in.rdbuf();
-            Preset p;
-            if (Preset::fromString(ss.str(), p)) { if (p.name.empty()) p.name = fs::path(f).stem().string(); list.push_back(p); }
+            std::vector<std::string> all, files;
+            listFilesRecursive(root, all);
+            for (const std::string& f : all)
+                if (fs::path(f).extension() == ".json" && fs::path(f).parent_path().filename() != "User Slots") files.push_back(f);
+            std::sort(files.begin(), files.end());
+            for (const auto& f : files)
+            {
+                if ((int)(list.size() + factoryPresets().size()) >= kMaxPresets - kNumUserSlots) break;
+                std::ifstream in(f);
+                std::stringstream ss; ss << in.rdbuf();
+                Preset p;
+                if (Preset::fromString(ss.str(), p)) { if (p.name.empty()) p.name = fs::path(f).stem().string(); list.push_back(p); }
+            }
         }
     }
     catch (...) {}
     return list;
 }
 
+// User slots are saved in the shared folder (VST2 Plugins/Content/Presets/HELIX/User Slots) when there is one; a
+// slot saved before 0.5.5 in the plugin's own Content/User Slots still loads until it is saved over.
 std::string HelixMpcApp::userSlotPath(const std::string& contentDir, int s)
 {
     char buf[32];
     std::snprintf(buf, sizeof buf, "Slot %02d.json", s + 1);
-    return (fs::path(contentDir) / "User Slots" / buf).string();
+    const std::string shared = sharedPresetsDir(contentDir);
+    return ((shared.empty() ? fs::path(contentDir) : fs::path(shared)) / "User Slots" / buf).string();
 }
 
 bool HelixMpcApp::loadUserSlot(const std::string& contentDir, int s, Preset& out)
 {
-    try
+    char buf[32];
+    std::snprintf(buf, sizeof buf, "Slot %02d.json", s + 1);
+    for (const std::string& path : {userSlotPath(contentDir, s), (fs::path(contentDir) / "User Slots" / buf).string()})
     {
-        std::ifstream in(userSlotPath(contentDir, s));
-        if (!in) return false;
-        std::stringstream ss; ss << in.rdbuf();
-        return Preset::fromString(ss.str(), out);
+        try
+        {
+            std::ifstream in(path);
+            if (!in) continue;
+            std::stringstream ss; ss << in.rdbuf();
+            if (Preset::fromString(ss.str(), out)) return true;
+        }
+        catch (...) {}
     }
-    catch (...) { return false; }
+    return false;
 }
 
 void HelixMpcApp::scanContentImpl()
@@ -551,7 +606,7 @@ void HelixMpcApp::nudge(int index)
     platform_.notifyParameter(index, v);
 }
 
-// Save into user slot s: the whole sound (tables, LFO shapes, scenes) as Content/User Slots/Slot NN.json. Picking
+// Save into user slot s: the whole sound (tables, LFO shapes, scenes) as VST2 Plugins/Content/Presets/HELIX/User Slots/Slot NN.json. Picking
 // U<s+1> in the MPC's preset menu loads it straight away; the menu shows the new name from the next time HELIX loads.
 void HelixMpcApp::saveUserSlot(int s)
 {

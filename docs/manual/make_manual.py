@@ -444,15 +444,23 @@ def chapter_install():
                 "To play HELIX from the pads, set the pads to a chromatic layout (for example <b>Pad Perform → "
                 "Chromatic</b>), or play it from a keyboard or the sequencer."])
     s += [H3("Your own files on the MPC"),
-          P("Inside the HELIX folder there is a <b>Content</b> folder with three sub-folders. Copy files there from your "
+          P("<b>Wavetables</b> go in <b>VST2 Plugins/Content/Wavetables</b>: a shared folder beside your plugin folders "
+            "(not inside HELIX's), which HELIX makes the first time it loads. Tables there survive reinstalling HELIX and "
+            "other plugins can use the same folder (CHOPPAGE keeps its breaks in VST2 Plugins/Content/Breaks the same way). "
+            "Prints are saved there too, in Prints. Tables still in HELIX's own Content/Wavetables keep working: they "
+            "are listed after the shared ones, and a preset still finds a table you move from there to the shared folder. "
+            "Everything else goes in the <b>Content</b> folder inside the HELIX folder. Copy files there from your "
             "computer (or with the MPC's file browser):"),
           table([["Folder", "Put here", "Where it shows up"],
-                 ["Content/Wavetables", "Serum-style wavetables, single-cycle WAVs, or folders of single cycles", "After the "
-                  "8 built-in tables when you turn A Table / B Table"],
+                 ["VST2 Plugins/Content/Wavetables", "Serum-style wavetables, single-cycle WAVs, or folders of single cycles",
+                  "After the built-in tables when you turn A Table / B Table"],
                  ["Content/Samples", "Any WAVs you want to turn into wavetables (breaks, vocals, one-shots)",
                   "The Sample control on the TABLES page under BROWSE (Sample → Table)"],
-                 ["Content/Presets", "HELIX presets (.json), in sub-folders by category", "After the 54 factory presets "
-                  "in the Preset list"]], [36, 70, 64])]
+                 ["VST2 Plugins/Content/Presets/HELIX", "HELIX presets (.json), in sub-folders by category; your user "
+                  "slots are saved in its User Slots folder", "After the 54 factory presets in the Preset list"]], [36, 70, 64]),
+          P("Like the wavetables, the presets folder is shared beside the plugins (HELIX makes it on first load) so your "
+            "sounds survive reinstalling HELIX. Presets and slots saved before 0.5.5 in HELIX's own Content/Presets and "
+            "Content/User Slots still show; move them to the new folder when you like.")]
     s += [Spacer(1, 4), P("To update HELIX later, copy the new folder over the old one, then remove HELIX from the track and "
                           "add it again (restart the MPC if the screen layout changed). Your Content folder is part of the "
                           "plugin folder, so keep a copy of anything you put there.")]
@@ -616,7 +624,7 @@ def chapter_tables():
                  ["Digital Grit", "32", "Sine → saw at falling bit depth and sample rate (SP-1200 / S950 flavour)"]],
                 [36, 18, 116])]
     s += H2("Your own wavetables")
-    s += [P("Put WAV files in your Wavetables folder (on the MPC: <b>Content/Wavetables</b>; on the computer: "
+    s += [P("Put WAV files in your Wavetables folder (on the MPC: <b>VST2 Plugins/Content/Wavetables</b>; on the computer: "
             "<b>Documents/HELIX/Wavetables</b>). HELIX reads them like this:"),
           table([["What you put there", "How HELIX reads it"],
                  ["A Serum wavetable", "The frame size comes from the file's 'clm' information (usually 2048 samples); up to "
@@ -677,7 +685,7 @@ def chapter_tables():
                  ["Through FX", "On: the insert and FX slots (distortion, OTT ...) are printed too. Off: the dry voices only."],
                  ["Print / Made", "Press Print. It takes a second or two (longer on the MPC); <b>Made</b> then shows the "
                   "new table's name, or what went wrong."]], [32, 138]),
-          P("Prints are saved as <b>Wavetables/Prints/Print 001.wav</b>, 002 and so on (on the MPC in Content/Wavetables; "
+          P("Prints are saved as <b>Wavetables/Prints/Print 001.wav</b>, 002 and so on (on the MPC in VST2 Plugins/Content/Wavetables; "
             "on the computer in Documents/HELIX/Wavetables), as Serum-compatible tables, so they stay in the table list "
             "and your presets find them again. They load into Serum and other wavetable synths as well."),
           H3("On the MPC"),
@@ -1170,7 +1178,7 @@ def chapter_presets():
                  ["Load", "Click the preset name at the top of the window, use &lt; and &gt;, or double-click a preset on "
                   "the GLOBAL tab.",
                   "The MPC's preset menu at the top of the screen: the factory presets, then HELIX presets copied into "
-                  "Content/Presets (marked *), then the 128 user slots <b>U001-U128</b>. Or <b>Preset</b> + <b>Load</b> on the "
+                  "VST2 Plugins/Content/Presets/HELIX (marked *), then the 128 user slots <b>U001-U128</b>. Or <b>Preset</b> + <b>Load</b> on the "
                   "BROWSE page: it lists the same entries in the same order (user slots included) and follows the MPC's "
                   "preset menu."],
                  ["Save", "<b>Save</b> at the top of the window: name and category; saved in Documents/HELIX/Presets.",
@@ -1181,7 +1189,7 @@ def chapter_presets():
                   "already in each slot or (empty)) and press <b>Save</b> (\"Saved U3\"). The slot, the BROWSE page's "
                   "<b>Preset</b> and the MPC's preset menu entry show the new name (\"U003 Dub 2\") straight away, and "
                   "choosing that slot loads the sound, tables, LFO shapes and scenes included. Saving over "
-                  "a slot replaces it. Slots are files in Content/User Slots (Slot 01.json ... Slot 128.json). The MPC's own save "
+                  "a slot replaces it. Slots are files in VST2 Plugins/Content/Presets/HELIX/User Slots (Slot 01.json ... Slot 128.json). The MPC's own save "
                   "button (disk icon) also works, but it saves into the MPC's Plugin Presets folder, which the MPC's "
                   "preset browser shows, not HELIX's preset menu."],
                  ["Init", "<b>Init</b> (top of the window) resets everything to the starting sound.", "Start from a factory preset, or remove "
@@ -1326,7 +1334,7 @@ def chapter_troubleshooting():
                  ["HELIX appears but the screen is empty or generic", "Copy the whole HELIX folder again (the 'Plugin Skins' "
                   "folder holds the screen) and restart the MPC."],
                  ["No sound from the pads", "Set the pads to a chromatic layout, or turn Pad Browse off."],
-                 ["My wavetables are not in the list", "Are they WAV files in Content/Wavetables (MPC) or "
+                 ["My wavetables are not in the list", "Are they WAV files in VST2 Plugins/Content/Wavetables (MPC) or "
                   "Documents/HELIX/Wavetables (computer)? The list is read when HELIX opens: reload the plugin."],
                  ["A preset sounds different on another machine", "It probably uses one of your own wavetables: copy the "
                   "wavetable to the other machine's Wavetables folder."],

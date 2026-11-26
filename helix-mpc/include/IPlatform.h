@@ -27,6 +27,9 @@ public:
     // ---- file system (non-real-time)
     // Root of the plugin's own data: <plugin folder>/Content on the MPC.
     virtual std::string contentDir() const = 0;
+    // Shared wavetables beside the plugin folders: "<...>/VST2 Plugins/Content/Wavetables" on the MPC (made on first
+    // use, kept across reinstalls, usable by other plugins). Empty = none.
+    virtual std::string sharedWavetablesDir() const { return {}; }
 
     // ---- UI surface (non-real-time; never call from the audio thread)
     // A parameter changed inside the plugin (preset load, CPU readout): tell the host so the screen follows.

@@ -40,7 +40,7 @@ public:
         i.name = "HELIX";
         i.vendor = "Twisted Genetics";
         i.uniqueId = MPC_FOURCC('T', 'g', 'H', 'x');   // == "uid" in plugin.json
-        i.version = 5004;
+        i.version = 5005;
         i.isInstrument = true;
         i.numInputs = 0;
         i.numOutputs = 2;
@@ -134,6 +134,14 @@ public:
     // ---- IPlatform
     const char* platformName() const override { return "MPC (Plugin SDK)"; }
     std::string contentDir() const override { return mpc::contentFolder(); }
+    std::string sharedWavetablesDir() const override
+    {
+        // the plugin is ".../VST2 Plugins/Twisted Genetics - VST - HELIX": the shared folder is
+        // ".../VST2 Plugins/Content/Wavetables", beside the plugin folders (as CHOPPAGE's Content/Breaks)
+        const std::string& f = mpc::pluginFolder();
+        const auto slash = f.find_last_of('/');
+        return f.empty() || slash == std::string::npos || slash == 0 ? std::string() : f.substr(0, slash) + "/Content/Wavetables";
+    }
     void notifyParameter(int index, float plainValue) override
     {
         set(index, plainValue);            // framework value (the host reads this) -> parameterChanged -> app

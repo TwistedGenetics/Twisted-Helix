@@ -3,6 +3,7 @@
 #include "TestUtil.h"
 #include "Analysis.h"
 #include "HelixMpcApp.h"
+#include "helix/PrintTable.h"
 #include "helix/FxLibrary.h"
 #include "helix/Preset.h"
 #include "helix/WavIO.h"
@@ -22,6 +23,8 @@ struct FakePlatform : IPlatform
     int program = -1;
     const char* platformName() const override { return "fake"; }
     std::string contentDir() const override { return dir; }
+    std::string shared;
+    std::string sharedWavetablesDir() const override { return shared; }
     void notifyParameter(int index, float v) override { notified[index] = v; }
     void requestDisplayRefresh() override {}
     int currentProgram() const override { return program; }
@@ -288,6 +291,62 @@ int main()
     CHECK(app.currentPresetName() == "Dub 2", "loaded name '%s'", app.currentPresetName().c_str());
     app.onProgramSelected((int)factoryPresets().size() + 5);   // empty slot: nothing happens
     CHECK(std::fabs(app.getParam(P_F1_CUTOFF) - 777.0f) < 0.5f, "empty slot changed the sound");
+
+    // Shared wavetables (VST2 Plugins/Content/Wavetables beside the plugin folders): made on first load, listed
+    // first; tables in the plugin's own Content/Wavetables still listed; prints go to the shared folder; an id
+    // from before still finds its table after it is moved to the shared folder.
+    {
+        const fs::path vst = fs::temp_directory_path() / "helix_vst2";
+        { std::error_code ec; fs::remove_all(vst, ec); }
+        FakePlatform p2;
+        p2.dir = (vst / "Twisted Genetics - VST - HELIX" / "Content").string();
+        p2.shared = (vst / "Content" / "Wavetables").string();
+        std::vector<float> frames((size_t)4 * kFrameSize, 0.25f);
+        for (size_t i = 0; i < frames.size(); ++i) frames[i] = (float)std::sin(i * 0.01);
+        fs::create_directories(fs::path(p2.dir) / "Wavetables");
+        writePrintWav((fs::path(p2.dir) / "Wavetables" / "Old.wav").string(), frames);
+        HelixMpcApp a2(p2, false);
+        a2.waitIdle();
+        CHECK(fs::is_directory(p2.shared), "shared Wavetables folder not made");
+        CHECK(a2.library().indexOfId("file:Wavetables/Old.wav") >= 0, "own Content/Wavetables not listed");
+        CHECK(a2.library().indexOfId("file:Old.wav") >= 0, "an old id must still find the table");
+        writePrintWav((fs::path(p2.shared) / "New.wav").string(), frames);
+        a2.library().rescan();
+        a2.waitIdle();
+        const int iNew = a2.library().indexOfId("file:New.wav"), iOld = a2.library().indexOfId("file:Wavetables/Old.wav");
+        CHECK(iNew >= 0 && iOld > iNew, "shared tables first (%d, %d)", iNew, iOld);
+        a2.setParam(MP_PR_FRAMES, 0.0f);
+        a2.setParam(MP_PR_LEN, 0.25f);
+        a2.setParam(MP_PR_GO, 1.0f);
+        a2.tick();
+        a2.waitPrint();
+        a2.tick();
+        a2.waitIdle();
+        CHECK(fs::exists(fs::path(p2.shared) / "Prints" / "Print 001.wav"), "print not in the shared folder");
+
+        // Presets: VST2 Plugins/Content/Presets/HELIX (user slots inside it); old Content/Presets still listed
+        const fs::path presets = vst / "Content" / "Presets" / "HELIX";
+        CHECK(HelixMpcApp::sharedPresetsDir(p2.dir) == presets.string(), "shared presets dir '%s'", HelixMpcApp::sharedPresetsDir(p2.dir).c_str());
+        CHECK(HelixMpcApp::userSlotPath(p2.dir, 4) == (presets / "User Slots" / "Slot 05.json").string(), "slot path");
+        CHECK(HelixMpcApp::sharedPresetsDir(pf.dir).empty(), "no shared folder outside VST2 Plugins/<plugin>/Content");
+        Preset a, b;
+        a.name = "Shared One"; b.name = "Old One";
+        fs::create_directories(presets / "Bass");
+        std::ofstream(presets / "Bass" / "Shared One.json") << a.toString();
+        fs::create_directories(fs::path(p2.dir) / "Presets" / "Lead");
+        std::ofstream(fs::path(p2.dir) / "Presets" / "Lead" / "Old One.json") << b.toString();
+        fs::create_directories(fs::path(p2.dir) / "User Slots");
+        std::ofstream(fs::path(p2.dir) / "User Slots" / "Slot 07.json") << b.toString();   // a 0.5.4 slot
+        const auto list = HelixMpcApp::userPresets(p2.dir);
+        CHECK(list.size() == 2 && list[0].name == "Shared One" && list[1].name == "Old One", "user presets (%zu)", list.size());
+        Preset got;
+        CHECK(HelixMpcApp::loadUserSlot(p2.dir, 6, got) && got.name == "Old One", "old slot must still load");
+        a2.setParam(MP_SAVE_SLOT, 1.0f);
+        a2.setParam(MP_SAVE_GO, 1.0f);
+        a2.tick();
+        CHECK(fs::exists(presets / "User Slots" / "Slot 02.json"), "slot saved into the shared presets folder");
+        { std::error_code ec; fs::remove_all(vst, ec); }
+    }
 
     { std::error_code ec; fs::remove_all(pf.dir, ec); }
     TEST_MAIN_END();

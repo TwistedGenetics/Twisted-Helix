@@ -52,7 +52,9 @@ public:
     TableLibrary& library() { return library_; }
     // The presets saved in <content>/Presets (sorted by path), as the plugin lists them after the factory ones.
     static std::vector<Preset> userPresets(const std::string& contentDir);
-    // User slot s (0..15): Content/User Slots/Slot NN.json, and the preset in it (false if empty)
+    static std::string sharedPresetsDir(const std::string& contentDir);   // VST2 Plugins/Content/Presets/HELIX or ""
+    // User slot s: <shared presets>/User Slots/Slot NN.json (or Content/User Slots without a shared folder), and the
+    // preset in it (false if empty; a slot left in the old Content/User Slots still loads)
     static std::string userSlotPath(const std::string& contentDir, int s);
     static bool loadUserSlot(const std::string& contentDir, int s, Preset& out);
 
@@ -62,6 +64,8 @@ private:
     void scanContentImpl();
     void applyPreset(const Preset& p);
     void startPrint();
+    std::vector<std::string> tableRoots() const;
+    std::string tablesDir() const;   // where new tables (prints) go
     void saveUserSlot(int s);
     void syncNameEditor();
     void typeKey(int key);

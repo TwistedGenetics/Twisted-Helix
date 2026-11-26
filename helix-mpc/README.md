@@ -21,12 +21,20 @@ One folder runs on both MPC families:
 4. Add HELIX to a plugin program: it is under **External Plugins**. Set the track's pads to a chromatic layout
    (for example Pad Perform → Chromatic) to play it from the pads.
 
-Your own files go in the plugin folder's `Content/`:
-- `Content/Wavetables/`: Serum-style WAV tables, single-cycle WAVs, or folders of single cycles. They appear after
-  the built-in tables when you turn **A Table** / **B Table**.
-- `Content/Samples/`: WAVs (your breaks, vocals) for **Sample > Table** on the BROWSE page.
-- `Content/Presets/<Category>/*.json`: HELIX presets (from the desktop plugin or another MPC). They appear after
-  the 24 factory presets in the **Preset** list.
+Your own wavetables go in **`VST2 Plugins/Content/Wavetables`**: a shared folder beside your plugin folders
+(HELIX makes it the first time it loads), so tables don't live inside the plugin, survive reinstalls and can be
+used by other plugins (as CHOPPAGE's `VST2 Plugins/Content/Breaks`). Serum-style WAV tables, single-cycle WAVs, or
+folders of single cycles; they appear after the built-in tables when you turn **A Table** / **B Table**. Prints
+(Print to wavetable) are saved there too, in `Prints`. Tables still in the plugin's own `Content/Wavetables` keep
+working and are listed after the shared ones; a preset still finds a table you move from there to the shared folder.
+
+Presets live in **`VST2 Plugins/Content/Presets/HELIX`** (made on first load): put HELIX presets there
+(`<Category>/*.json`, from the desktop plugin or another MPC) and they appear after the factory presets; the user
+slots you save on the MPC go in its `User Slots` folder. Presets and slots left in the plugin's own `Content/Presets`
+and `Content/User Slots` still show.
+
+Samples go in the plugin folder's `Content/Samples/`: WAVs (your breaks, vocals) for **Sample > Table** on the
+BROWSE page.
 
 ## On the MPC
 The touch UI is the **Concrete Rack** skin: light concrete background, and every row of four Q-Links is one
@@ -54,7 +62,7 @@ edits it. 9 function keys; press a key again for its next page:
 In Program Q-Link mode the knobs are Macro 1-8, F1 Cutoff / Reso / Drive, A and B WT Pos, Delay Mix, Reverb Mix
 and Master.
 
-- **Presets**: the MPC's own preset menu lists the factory presets, your `Content/Presets` files and the user slots
+- **Presets**: the MPC's own preset menu lists the factory presets, your preset files (`VST2 Plugins/Content/Presets/HELIX`) and the user slots
   U001-U128. The BROWSE page's **Preset** control lists the same entries in the same order and follows the menu.
 - **Saving**: type the name on the BROWSE page's keyboard, pick a **Slot** and press **Save**. The slot, the
   **Preset** box and the MPC's preset menu show the new name straight away.
