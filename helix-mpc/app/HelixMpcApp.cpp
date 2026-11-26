@@ -522,6 +522,7 @@ bool HelixMpcApp::formatValue(int index, float plain, std::string& out) const
 void HelixMpcApp::applyPreset(const Preset& p)
 {
     sceneResync_ = true;   // a restored Scene value must not recall a scene over the preset's macros
+    proxyResync_ = true;
     float before[kNumParams];
     for (int i = 0; i < kNumParams; ++i) before[i] = engine_.params().get(i);
     helix::applyPreset(p, engine_, &library_);
@@ -709,8 +710,10 @@ std::string HelixMpcApp::saveState() const
 
 void HelixMpcApp::loadState(const std::string& json)
 {
+    std::lock_guard<std::recursive_mutex> tickLock(tickMutex_);
     Preset p;
     if (Preset::fromString(json, p)) applyPreset(p);
+    proxyResync_ = true;
 }
 
 void HelixMpcApp::process(float* l, float* r, int frames, const MidiMsg* midi, int numMidi, const Transport& tr)
@@ -739,7 +742,15 @@ void HelixMpcApp::process(float* l, float* r, int frames, const MidiMsg* midi, i
 
 void HelixMpcApp::tick()
 {
+    std::lock_guard<std::recursive_mutex> tickLock(tickMutex_);   // a state load never lands half way through a tick
     engine_.collectGarbage();
+    // After a state / preset load the sound's own values win: the proxies (performer step edit, filter lists) are
+    // re-shown from them instead of being written back over them.
+    if (proxyResync_.exchange(false))
+    {
+        for (auto& pe : perfEdit_) pe = PerfEdit{};
+        for (auto& fp : filterProxy_) { fp[0] = -1; fp[1] = -1; }
+    }
 
     // Program changes from the host's preset menu.
     const int prog = platform_.currentProgram();
